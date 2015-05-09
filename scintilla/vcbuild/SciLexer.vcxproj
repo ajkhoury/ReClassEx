@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName />
+    <SccLocalPath />
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\../bin\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\../bin\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\include;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_USRDLL;SCI_LEXER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Debug\SciLexer.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>link -lib %40rsp_scintillad.txt</Command>
+    </PostBuildEvent>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\../bin\SciLexer.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\../bin\SciLexer.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <LinkDLL>true</LinkDLL>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>.\../bin\SciLexer.dll</OutputFile>
+      <ImportLibrary>.\../bin\SciLexer.lib</ImportLibrary>
+      <AdditionalDependencies>imm32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MinSpace</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <AdditionalIncludeDirectories>..\include;..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_USRDLL;SCI_LEXER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Release\SciLexer.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>link -lib %40rsp_scintilla.txt</Command>
+    </PostBuildEvent>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\../bin\SciLexer.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\../bin\SciLexer.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <LinkDLL>true</LinkDLL>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>.\../bin\SciLexer.dll</OutputFile>
+      <ImportLibrary>.\../bin\SciLexer.lib</ImportLibrary>
+      <AdditionalDependencies>imm32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\AutoComplete.cxx" />
+    <ClCompile Include="..\src\CallTip.cxx" />
+    <ClCompile Include="..\src\CellBuffer.cxx" />
+    <ClCompile Include="..\src\CharClassify.cxx" />
+    <ClCompile Include="..\src\ContractionState.cxx" />
+    <ClCompile Include="..\src\Document.cxx" />
+    <ClCompile Include="..\src\DocumentAccessor.cxx" />
+    <ClCompile Include="..\src\Editor.cxx" />
+    <ClCompile Include="..\src\ExternalLexer.cxx" />
+    <ClCompile Include="..\src\Indicator.cxx" />
+    <ClCompile Include="..\src\KeyMap.cxx" />
+    <ClCompile Include="..\src\KeyWords.cxx" />
+    <ClCompile Include="..\src\LexAda.cxx" />
+    <ClCompile Include="..\src\LexAPDL.cxx" />
+    <ClCompile Include="..\src\LexAsm.cxx" />
+    <ClCompile Include="..\src\LexAsn1.cxx" />
+    <ClCompile Include="..\src\LexAU3.cxx" />
+    <ClCompile Include="..\src\LexAVE.cxx" />
+    <ClCompile Include="..\src\LexBaan.cxx" />
+    <ClCompile Include="..\src\LexBash.cxx" />
+    <ClCompile Include="..\src\LexBasic.cxx" />
+    <ClCompile Include="..\src\LexBullant.cxx" />
+    <ClCompile Include="..\src\LexCaml.cxx" />
+    <ClCompile Include="..\src\LexCLW.cxx" />
+    <ClCompile Include="..\src\LexConf.cxx" />
+    <ClCompile Include="..\src\LexCPP.cxx" />
+    <ClCompile Include="..\src\LexCrontab.cxx" />
+    <ClCompile Include="..\src\LexCsound.cxx" />
+    <ClCompile Include="..\src\LexCSS.cxx" />
+    <ClCompile Include="..\src\LexEiffel.cxx" />
+    <ClCompile Include="..\src\LexErlang.cxx" />
+    <ClCompile Include="..\src\LexEScript.cxx" />
+    <ClCompile Include="..\src\LexFlagship.cxx" />
+    <ClCompile Include="..\src\LexForth.cxx" />
+    <ClCompile Include="..\src\LexFortran.cxx" />
+    <ClCompile Include="..\src\LexGui4Cli.cxx" />
+    <ClCompile Include="..\src\LexHaskell.cxx" />
+    <ClCompile Include="..\src\LexHTML.cxx" />
+    <ClCompile Include="..\src\LexInno.cxx" />
+    <ClCompile Include="..\src\LexKix.cxx" />
+    <ClCompile Include="..\src\LexLisp.cxx" />
+    <ClCompile Include="..\src\LexLout.cxx" />
+    <ClCompile Include="..\src\LexLua.cxx" />
+    <ClCompile Include="..\src\LexMatlab.cxx" />
+    <ClCompile Include="..\src\LexMetapost.cxx" />
+    <ClCompile Include="..\src\LexMMIXAL.cxx" />
+    <ClCompile Include="..\src\LexMPT.cxx" />
+    <ClCompile Include="..\src\LexMSSQL.cxx" />
+    <ClCompile Include="..\src\LexNsis.cxx" />
+    <ClCompile Include="..\src\LexOpal.cxx" />
+    <ClCompile Include="..\src\LexOthers.cxx" />
+    <ClCompile Include="..\src\LexPascal.cxx" />
+    <ClCompile Include="..\src\LexPB.cxx" />
+    <ClCompile Include="..\src\LexPerl.cxx" />
+    <ClCompile Include="..\src\LexPOV.cxx" />
+    <ClCompile Include="..\src\LexPS.cxx" />
+    <ClCompile Include="..\src\LexPython.cxx" />
+    <ClCompile Include="..\src\LexRebol.cxx" />
+    <ClCompile Include="..\src\LexRuby.cxx" />
+    <ClCompile Include="..\src\LexScriptol.cxx" />
+    <ClCompile Include="..\src\LexSmalltalk.cxx" />
+    <ClCompile Include="..\src\LexSpecman.cxx" />
+    <ClCompile Include="..\src\LexSpice.cxx" />
+    <ClCompile Include="..\src\LexSQL.cxx" />
+    <ClCompile Include="..\src\LexTADS3.cxx" />
+    <ClCompile Include="..\src\LexTCL.cxx" />
+    <ClCompile Include="..\src\LexTeX.cxx" />
+    <ClCompile Include="..\src\LexVB.cxx" />
+    <ClCompile Include="..\src\LexVerilog.cxx" />
+    <ClCompile Include="..\src\LexVHDL.cxx" />
+    <ClCompile Include="..\src\LexYAML.cxx" />
+    <ClCompile Include="..\src\LineMarker.cxx" />
+    <ClCompile Include="..\win32\PlatWin.cxx" />
+    <ClCompile Include="..\src\PropSet.cxx" />
+    <ClCompile Include="..\src\RESearch.cxx" />
+    <ClCompile Include="..\src\ScintillaBase.cxx" />
+    <ClCompile Include="..\win32\ScintillaWin.cxx" />
+    <ClCompile Include="..\src\Style.cxx" />
+    <ClCompile Include="..\src\StyleContext.cxx" />
+    <ClCompile Include="..\src\UniConversion.cxx" />
+    <ClCompile Include="..\src\ViewStyle.cxx" />
+    <ClCompile Include="..\src\WindowAccessor.cxx" />
+    <ClCompile Include="..\src\XPM.cxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\win32\ScintRes.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">\Downloads\Personal_C___Compiler_src\personal_cpp_compiler_src\scintilla\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">\Downloads\Personal_C___Compiler_src\personal_cpp_compiler_src\scintilla\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Platform.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\win32\Margin.cur" />
+    <CustomBuild Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

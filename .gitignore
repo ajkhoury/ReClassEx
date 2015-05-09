@@ -1,0 +1,39 @@
+Thumbs.db
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.sln.docstates
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+*.vssscc
+$tf*/
+ipch/reclass 2011-8d0c3c71/reclass_64_dbg-87e0d70c.ipch
+ipch/reclass 2011-8d0c3c71/reclass_64-f2ef185a.ipch
+ipch/reclass 2011-8d0c3c71/reclass_64-f7637f20.ipch
+ipch/reclass 2011-8d0c3c71/reclass_dbg-f6860885.ipch
+ipch/reclass 2011-8d0c3c71/reclass-3d20dc19.ipch
+ipch/reclass 2011-8d0c3c71/reclass-c7cb1a17.ipch
+ipch/reclass 2011-8d0c3c71/reclass-cb66f813.ipch
+ReClass.opensdf
+ReClass.sdf
+SDK/TestPlugin/TestPlugin.sdf
