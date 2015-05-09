@@ -501,6 +501,7 @@ void CChildView::OnRButtonDown(UINT nFlags, CPoint point)
 					CRect client;
 					GetClientRect(&client);
 					ClientToScreen(&client);
+
 					CMenu menu;
 					menu.LoadMenuA(MAKEINTRESOURCE(IDR_MENU_QUICKMODIFY));
 					menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, client.left + HotSpots[i].Rect.left + point.x, client.top + point.y, this);
