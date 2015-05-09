@@ -843,9 +843,9 @@ public:
 			DWORD_PTR addy = Spot.Address;
 			//todo alignment
 			//printf( "Reading: %p\n", addy );
-			ReadMemory(addy,&addy,8);
+			ReadMemory(addy, &addy, sizeof(DWORD_PTR));
 			char* code[512];
-			ReadMemory(addy,code,512);
+			ReadMemory(addy, code, 512);
 
 			DISASM MyDisasm;
 			memset (&MyDisasm, 0, sizeof(DISASM));
