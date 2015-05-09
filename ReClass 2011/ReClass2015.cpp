@@ -49,7 +49,7 @@ CReClass2015App::CReClass2015App()
 {
 	m_bHiColorIcons = TRUE;
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
-	SetAppID(_T( "ReClass.2015.5b"));
+	SetAppID(_T( "ReClass.2015.1.5.0.2"));
 
 	#ifndef NDEBUG
 	CreateConsole();
@@ -78,7 +78,7 @@ void getDebugPriv()
 	CloseHandle( hToken );
 }
 
-extern bool Scintilla_RegisterClasses( void *hInstance );
+extern bool Scintilla_RegisterClasses(void *hInstance);
 extern bool Scintilla_ReleaseResources();
 
 BOOL CReClass2015App::InitInstance()
@@ -182,9 +182,9 @@ BOOL CReClass2015App::InitInstance()
 	//FontWidth = 8;
 	//FontHeight = 8;
 
-	Font.CreateFont(16, 8, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Fixedsys");
 	FontWidth = 8;
-	FontHeight = 14;
+	FontHeight = 16;
+	Font.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Terminal");
 	//SmallFont.CreateFont(12, 8, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Terminal");
 
 	//hProcess = CheckForProcess("winmine.exe");

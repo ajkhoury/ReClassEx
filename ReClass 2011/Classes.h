@@ -199,7 +199,7 @@ public:
 		if (bSelected)
 			View.dc->FillSolidRect(0, y, View.client->right, Height, crSelect);
 		CRect pos;
-		pos.SetRect(0, y, View.client->right, y + Height);
+		pos.SetRect(0, y, 1024, y + Height);
 		AddHotSpot(View, pos, CString(), 0, HS_SELECT);
 	}
 

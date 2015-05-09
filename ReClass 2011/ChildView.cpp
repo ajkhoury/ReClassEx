@@ -93,6 +93,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_WM_LBUTTONDBLCLK()
 	ON_WM_CREATE()
 	ON_WM_LBUTTONDOWN()
+	ON_WM_RBUTTONDOWN()
 	ON_WM_SIZE()
 	ON_WM_VSCROLL()
 	ON_WM_ERASEBKGND()
@@ -257,7 +258,7 @@ void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 					__int64 nextAddress = HotSpots[i].Address + firstSelected->object->GetMemorySize();
 					#else
 					int nextAddress = HotSpots[i].Address + firstSelected->object->GetMemorySize();
-					#endif
+					#endif				
 
 					UINT newIndex = 0;
 					for (int j = 0; HotSpots[i + j].Address != nextAddress; j++)
@@ -321,21 +322,21 @@ void CChildView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	CWnd::OnLButtonDblClk( nFlags, point );
 
-	for ( UINT i=0; i < HotSpots.size( );i++ )
+	for ( UINT i = 0; i < HotSpots.size();i++ )
 	{
-		if ( HotSpots[i].Rect.PtInRect( point ) )
+		if ( HotSpots[i].Rect.PtInRect(point) )
 		{
-			if (HotSpots[i].Type == HS_EDIT )
+			if (HotSpots[i].Type == HS_EDIT)
 			{
 				// Sets the edit "window" to where to cursor was editing at
 				m_Edit.SetWindowPos(NULL, HotSpots[i].Rect.left, HotSpots[i].Rect.top, HotSpots[i].Rect.Width(), HotSpots[i].Rect.Height(), 0);
 				m_Edit.spot = HotSpots[i];
-				m_Edit.MinWidth = m_Edit.spot.Rect.Width( );// + 10;
-				m_Edit.SetWindowTextA( HotSpots[i].Text );
-				m_Edit.ShowWindow( SW_NORMAL );
-				m_Edit.SetMargins( 0, 99999 );
-				m_Edit.ShowScrollBar( 0, true );
-				m_Edit.SetFocus( );
+				m_Edit.MinWidth = m_Edit.spot.Rect.Width();// + 10;
+				m_Edit.SetWindowTextA( HotSpots[i].Text);
+				m_Edit.ShowWindow(SW_NORMAL);
+				m_Edit.SetMargins(0, 99999);
+				m_Edit.ShowScrollBar(0, true);
+				m_Edit.SetFocus();
 
 				//printf( "Create\n" );
 
@@ -347,9 +348,9 @@ void CChildView::OnLButtonDblClk(UINT nFlags, CPoint point)
 				//m_Edit.CreateSolidCaret( FontWidth, FontHeight );
 				//m_Edit.ShowCaret( );
 				
-				m_Edit.LimitText( 99999 );
+				m_Edit.LimitText(99999);
 
-				m_Edit.SetSel( 0, 2048 );
+				m_Edit.SetSel(0, 2048);
 				//m_Edit.SetSel( 0, 1024 );
 				return;
 			}
@@ -387,11 +388,9 @@ void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 
 			if (HotSpots[i].Type == HS_OPENCLOSE)
 				pHitObject->bOpen[HotSpots[i].Level] = !pHitObject->bOpen[HotSpots[i].Level];
-
-			if (HotSpots[i].Type == HS_CLICK)  
+			else if (HotSpots[i].Type == HS_CLICK)  
 				pHitObject->Update(HotSpots[i]);
-
-			if (HotSpots[i].Type == HS_SELECT)
+			else if (HotSpots[i].Type == HS_SELECT)
 			{
 				if (nFlags == MK_LBUTTON)
 				{
@@ -456,18 +455,18 @@ void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 					}
 				}
 			}
-			if (HotSpots[i].Type == HS_DROP)
+			else if (HotSpots[i].Type == HS_DROP)
 			{
 				CRect client;
 				GetClientRect(&client);
 				ClientToScreen(&client);
 				CMenu menu;
 				menu.LoadMenuA(MAKEINTRESOURCE(IDR_MENU_QUICKMODIFY));
-				menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION,client.left + HotSpots[i].Rect.left,client.top + HotSpots[i].Rect.bottom,this);
+				menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, client.left + HotSpots[i].Rect.left, client.top + HotSpots[i].Rect.bottom, this);
 			}
-			if (HotSpots[i].Type == HS_DELETE)
+			else if (HotSpots[i].Type == HS_DELETE)
 			{
-				isDeleting = true;
+				isDeleting = true; // Ghetto fix to stop crashing from OnMouseHover
 				for (UINT i = 0; i < Selected.size(); i++)
 				{
 					CNodeClass* pClass = (CNodeClass*)Selected[i].object->pParent;
@@ -482,12 +481,35 @@ void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 				Selected.clear();
 				isDeleting = false;
 			}
-
 			Invalidate();
 		}
 	}
 
 	CWnd::OnLButtonDown(nFlags, point);
+}
+
+void CChildView::OnRButtonDown(UINT nFlags, CPoint point)
+{	
+	if (Selected.size() > 0)
+	{
+		for (UINT i = 0; i < HotSpots.size(); i++)
+		{
+			if (HotSpots[i].Rect.PtInRect(point))
+			{
+				if (HotSpots[i].Type == HS_SELECT)
+				{
+					CRect client;
+					GetClientRect(&client);
+					ClientToScreen(&client);
+					CMenu menu;
+					menu.LoadMenuA(MAKEINTRESOURCE(IDR_MENU_QUICKMODIFY));
+					menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, client.left + HotSpots[i].Rect.left + point.x, client.top + point.y, this);
+				}
+			}
+		}
+	}
+
+	CWnd::OnRButtonDown(nFlags, point);
 }
 
 void CChildView::OnPaint() 
