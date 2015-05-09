@@ -658,8 +658,9 @@ CString DisassembleCode(char *StartCodeSection, char *EndCodeSection, int Virtua
 	MyDisasm.Options = PrefixedNumeral;
 
 	bool Error = 0;
-	while ( !Error){
-		MyDisasm.SecurityBlock = (int) EndCodeSection - MyDisasm.EIP;
+	while (!Error)
+	{
+		MyDisasm.SecurityBlock = (int)EndCodeSection - MyDisasm.EIP;
 
 		int len = Disasm(&MyDisasm);
 		if (len == OUT_OF_BLOCK) Error = 1;

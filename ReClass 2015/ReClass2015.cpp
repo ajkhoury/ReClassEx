@@ -49,7 +49,7 @@ CReClass2015App::CReClass2015App()
 {
 	m_bHiColorIcons = TRUE;
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
-	SetAppID(_T( "ReClass.2015.1.5.0.2"));
+	SetAppID(_T( "ReClass.2015.0.5.0.2"));
 
 	#ifndef NDEBUG
 	CreateConsole();
@@ -97,7 +97,7 @@ BOOL CReClass2015App::InitInstance()
 	}
 
 	AfxEnableControlContainer();
-	SetRegistryKey(_T("ReClass 2014"));
+	SetRegistryKey(_T("ReClass 2015"));
 	EnableTaskbarInteraction(FALSE);
 	InitContextMenuManager();
 	InitKeyboardManager();

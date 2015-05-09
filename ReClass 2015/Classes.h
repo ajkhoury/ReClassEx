@@ -251,31 +251,31 @@ public:
 			AddIcon(View, 0, y, ICON_DROPARROW, 0, HS_DROP);
 	}
 
-	__int64 __resolvefbtype(__int64 lpFunc)
-	{
-		__int64 vtable;
-		ReadMemory(lpFunc, &vtable, 8);
-
-		if (vtable < 0x10000000)
-			return 1;
-
-		// Get first function
-		__int64 typeinfoptr;
-		ReadMemory(vtable, &typeinfoptr, 8);
-
-		// Get relative offset to typeinfo string
-		__int64 typeoffset;
-		ReadMemory(typeinfoptr + 3, &typeoffset, 4);
-
-		typeoffset = typeinfoptr + typeoffset + 7;
-
-		__int64 TYPESTRING;
-		ReadMemory(typeoffset, &TYPESTRING, 8);
-
-		printf("%I64X -> %I64X\n", typeoffset, TYPESTRING);
-
-		return TYPESTRING;
-	};
+	//__int64 __resolvefbtype(__int64 lpFunc)
+	//{
+	//	__int64 vtable;
+	//	ReadMemory(lpFunc, &vtable, 8);
+	//
+	//	if (vtable < 0x10000000)
+	//		return 1;
+	//
+	//	// Get first function
+	//	__int64 typeinfoptr;
+	//	ReadMemory(vtable, &typeinfoptr, 8);
+	//
+	//	// Get relative offset to typeinfo string
+	//	__int64 typeoffset;
+	//	ReadMemory(typeinfoptr + 3, &typeoffset, 4);
+	//
+	//	typeoffset = typeinfoptr + typeoffset + 7;
+	//
+	//	__int64 TYPESTRING;
+	//	ReadMemory(typeoffset, &TYPESTRING, 8);
+	//
+	//	printf("%I64X -> %I64X\n", typeoffset, TYPESTRING);
+	//
+	//	return TYPESTRING;
+	//}
 
 	int AddComment(ViewInfo& View,int x,int y)
 	{
@@ -283,8 +283,8 @@ public:
 		x = AddText(View, x, y, crComment, 70, " %s", Comment);
 
 		// Added
-		if ( GetType( ) == nt_int64 )
-		{
+		//if (GetType() == nt_int64)
+		//{
 			//DWORD_PTR Val = *((DWORD_PTR*)&((BYTE*)View.pData)[offset]);
 			//x = AddText(View, x, y, crValue, NONE, "(0x%I64X)", Val);
 
@@ -301,7 +301,7 @@ public:
 			//
 			//	x = AddText(View, x, y, crValue, NONE, "(0x%I64X) {%I64X->%I64X=fb::%s}", Val, strptr, str, GetStringFromMemory(szBuffer, 40).GetString());
 			//}
-		};
+		//}
 
 		if (GetType() == nt_hex64)
 		{
@@ -1855,31 +1855,34 @@ public:
 	{
 		StandardUpdate(Spot);
 		int v = atoi(Spot.Text);
-		if (v < 0) return;
+		if (v < 0) 
+			return;
+
 		if (Spot.ID == 0)
 		{
-			if (v == 0) return;
+			if (v == 0)
+				return;
 			Total = (DWORD)v;
 		}
-		if (Spot.ID == 1)
+		else if (Spot.ID == 1)
 		{
-			if (v >= ( int ) Total) return;
+			if (v >= (int)Total) 
+				return;
 			Current = (DWORD)v;
 		}
-		if (Spot.ID == 2)
+		else if (Spot.ID == 2)
 		{
-			if (Current>0) Current--;
+			if (Current > 0)
+				Current--;
 		}
-		if (Spot.ID == 3)
+		else if (Spot.ID == 3)
 		{
-			if (Current<Total-1) Current++;
+			if (Current < Total - 1)
+				Current++;
 		}
 	};
 
-	virtual int GetMemorySize()
-	{
-		return pNode->GetMemorySize() * Total;
-	}
+	virtual int GetMemorySize() { return pNode->GetMemorySize() * Total; }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -1939,10 +1942,7 @@ public:
 		StandardUpdate(Spot);
 	}
 
-	virtual int GetMemorySize()
-	{
-		return pNode->GetMemorySize();
-	}
+	virtual int GetMemorySize() { return pNode->GetMemorySize(); }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -1972,12 +1972,14 @@ public:
 		if (bOpen[View.Level])
 		{
 			ViewInfo newView;
+
 			newView = View;
-			//printf( "4444 set\n" );
 			newView.Address = View.Address + offset;
 			newView.pData =  (void*)((DWORD_PTR)newView.pData + offset);
+
 			y = pNode->Draw(newView, x, y);
-		};
+		}
+
 		return y;
 	}
 };
