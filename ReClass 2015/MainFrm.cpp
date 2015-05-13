@@ -529,8 +529,8 @@ void CMainFrame::OnButtonSelectprocess()
 					dc.SelectObject(pOldBmp);
 					dc.DeleteDC();
 
-					DWORD MsgID = WM_PROCESSMENU + ProcMenuItems.size();
-					menu.AppendMenu( MF_STRING | MF_ENABLED, MsgID , ProcInfo.szExeFile );
+					DWORD MsgID = (DWORD)(WM_PROCESSMENU + ProcMenuItems.size());
+					menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID, ProcInfo.szExeFile );
 					menu.SetMenuItemBitmaps(MsgID, MF_BYCOMMAND, pBitmap, pBitmap);
 
 					ProcMenuItems.push_back(Item); 

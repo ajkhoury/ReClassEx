@@ -45,17 +45,16 @@ void myCEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 		pChild->Invalidate();
 	}
 
-	//UINT limit = this->GetLimitText( );
-	printf("text %c %d %d\n", nChar, nRepCnt, nFlags);
+	UINT limit = this->GetLimitText();
+	printf("text %c %d %d limit: %i\n", nChar, nRepCnt, nFlags, limit);
 	CEdit::OnChar(nChar, nRepCnt, nFlags);
 }
 void myCEdit::OnEnChange()
 {
 	CString text;
-	GetWindowText( text );
-	int  w = ( text.GetLength( ) + 1 ) * FontWidth; // + 6;
-
-	printf( "change**\n" );
+	GetWindowText(text);
+	int  w = (text.GetLength() + 1) * FontWidth; // + 6;
+	//printf( "change**\n" );
 	if (w > MinWidth)
 		SetWindowPos(NULL, 0, 0, w, FontHeight, SWP_NOMOVE );
 }
@@ -332,9 +331,10 @@ void CChildView::OnLButtonDblClk(UINT nFlags, CPoint point)
 				m_Edit.SetWindowPos(NULL, HotSpots[i].Rect.left, HotSpots[i].Rect.top, HotSpots[i].Rect.Width(), HotSpots[i].Rect.Height(), 0);
 				m_Edit.spot = HotSpots[i];
 				m_Edit.MinWidth = m_Edit.spot.Rect.Width();// + 10;
-				m_Edit.SetWindowTextA( HotSpots[i].Text);
+				m_Edit.LimitText(9999);
+				m_Edit.SetWindowText(HotSpots[i].Text);
 				m_Edit.ShowWindow(SW_NORMAL);
-				m_Edit.SetMargins(0, 99999);
+				m_Edit.SetMargins(0, 9999);
 				m_Edit.ShowScrollBar(0, true);
 				m_Edit.SetFocus();
 
@@ -348,10 +348,10 @@ void CChildView::OnLButtonDblClk(UINT nFlags, CPoint point)
 				//m_Edit.CreateSolidCaret( FontWidth, FontHeight );
 				//m_Edit.ShowCaret( );
 				
-				m_Edit.LimitText(99999);
+				//m_Edit.LimitText(99999);
 
-				m_Edit.SetSel(0, 2048);
-				//m_Edit.SetSel( 0, 1024 );
+				//m_Edit.SetSel(0, 2048);
+				m_Edit.SetSel(0, 1024);
 				return;
 			}
 
@@ -496,15 +496,24 @@ void CChildView::OnRButtonDown(UINT nFlags, CPoint point)
 		{
 			if (HotSpots[i].Rect.PtInRect(point))
 			{
+				CNodeBase* pHitObject = (CNodeBase*)HotSpots[i].object;
 				if (HotSpots[i].Type == HS_SELECT)
 				{
-					CRect client;
-					GetClientRect(&client);
-					ClientToScreen(&client);
+					if (nFlags == MK_RBUTTON)
+					{
+						theApp.ClearSelection();
+						Selected.clear();
+						pHitObject->bSelected = true;
+						Selected.push_back(HotSpots[i]);
 
-					CMenu menu;
-					menu.LoadMenuA(MAKEINTRESOURCE(IDR_MENU_QUICKMODIFY));
-					menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, client.left + HotSpots[i].Rect.left + point.x, client.top + point.y, this);
+						CRect client;
+						GetClientRect(&client);
+						ClientToScreen(&client);
+
+						CMenu menu;
+						menu.LoadMenuA(MAKEINTRESOURCE(IDR_MENU_QUICKMODIFY));
+						menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, client.left + HotSpots[i].Rect.left + point.x, client.top + point.y, this);
+					}
 				}
 			}
 		}
@@ -836,7 +845,6 @@ void CChildView::ReplaceNode(CNodeClass* pClass, UINT idx, CNodeBase* pNewNode)
 	//printf( "OFFSET %p ********************************\n ", pOldNode->offset );
 	
 	// This looks wrong
-	// TODO: fix this
 	//if ( pOldNode->offset < 0x140000000 )
 	//{
 	//	pNewNode->offset = 0x140000000;
@@ -1169,7 +1177,6 @@ void CChildView::OnUpdateInsertInsert2048(CCmdUI *pCmdUI)
 
 void MakeBasicClass(CNodeClass* pClass)
 {
-
 #ifdef _WIN64
 	for (int i = 0; i < 64/8; i++)
 	{
@@ -1195,7 +1202,9 @@ void CChildView::ReplaceSelectedWithType(NodeType Type)
 {
 	std::vector<CNodeBase*> newSelected;
 
-	printf( "Replace Node Type %s\n", NodeTypeToString(Type));
+	#ifndef NDEBUG
+	printf("Replace Node Type %s\n", NodeTypeToString(Type));
+	#endif
 
 	for (UINT i = 0; i < Selected.size(); i++)
 	{
@@ -1557,7 +1566,8 @@ void CChildView::OnUpdateModifyShow(CCmdUI *pCmdUI)
 
 void CChildView::OnModifyHide()
 {
-	for(UINT i=0; i < Selected.size();i++) Selected[i].object->bHidden = true;
+	for(UINT i = 0; i < Selected.size(); i++)
+		Selected[i].object->bHidden = true;
 	Invalidate(FALSE);
 }
 
@@ -1569,7 +1579,7 @@ void CChildView::OnUpdateModifyHide(CCmdUI *pCmdUI)
 void CChildView::OnButtonEditcode()
 {
 	CDialogEdit dlg;
-	dlg.Title.Format("Code for %s",m_pClass->Name);
+	dlg.Title.Format("Code for %s", m_pClass->Name);
 	dlg.Text = m_pClass->Code;
 	dlg.DoModal();
 	m_pClass->Code = dlg.Text;
@@ -1579,11 +1589,15 @@ BOOL CChildView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 {
 	if (nCode == CN_UPDATE_COMMAND_UI)
 	{
-		if (nID >= WM_CHANGECLASSMENU && nID   < (WM_CHANGECLASSMENU+WM_MAXITEMS)){ ((CCmdUI*)pExtra)->Enable(TRUE); return TRUE;}
+		if (nID >= WM_CHANGECLASSMENU && nID < (WM_CHANGECLASSMENU+WM_MAXITEMS))
+		{ 
+			((CCmdUI*)pExtra)->Enable(TRUE); 
+			return TRUE;
+		}
 	}
 	if (nCode == CN_COMMAND)
 	{
-		if (nID >= WM_CHANGECLASSMENU && nID < (WM_CHANGECLASSMENU+WM_MAXITEMS) )
+		if (nID >= WM_CHANGECLASSMENU && nID < (WM_CHANGECLASSMENU+WM_MAXITEMS))
 		{
 			UINT idx = nID - WM_CHANGECLASSMENU;
 			CNodeBase* pNode = (CNodeBase*)ExchangeTarget.object;
@@ -1601,19 +1615,21 @@ BOOL CChildView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 
 void CChildView::OnEditCopy()
 {
+	
 	m_Edit.Copy();
 }
 
 void CChildView::OnEditPaste()
 {
-	//printf( "paste here\n" );
-	//m_Edit.LimitText( 999 );
-	m_Edit.Paste( );
+	printf("paste here\n");
+	m_Edit.SetLimitText(9999);
+	m_Edit.LimitText(9999);
+	m_Edit.Paste();
 }
 
 void CChildView::StandardTypeUpdate(CCmdUI *pCmdUI)
 {
-	if ( Selected.size( ) > 0 )
+	if (Selected.size() > 0)
 	{
 		if (Selected[0].object->GetType() == nt_class) 
 			return pCmdUI->Enable(FALSE);
@@ -1645,6 +1661,7 @@ void CChildView::OnButtonOne()
 	CMemory mem;
 	for (UINT i = 0; i < Selected.size(); i++)
 	{
+		
 		DWORD s = Selected[i].object->GetMemorySize();
 		DWORD_PTR a = Selected[i].Address;
 		mem.SetSize(s);
@@ -1662,14 +1679,16 @@ void CChildView::OnButtonRandom()
 {
 	CMemory mem;
 	srand(GetTickCount());
-	for (UINT i=0; i < Selected.size();i++)
+	for (UINT i = 0; i < Selected.size(); i++)
 	{
 		DWORD s = Selected[i].object->GetMemorySize();
 		DWORD_PTR a = Selected[i].Address;
 		mem.SetSize(s);
-		for (UINT r=0; r < s; r++) 
+
+		for (UINT r = 0; r < s; r++) 
 			mem.pMemory[r] = rand();
-		WriteMemory(a,mem.pMemory,s);
+		
+		WriteMemory(a, mem.pMemory, s);
 	}
 
 }

@@ -58,17 +58,17 @@ const COLORREF purple = RGB( 128, 0, 255 );
 /// Default color scheme
 static SScintillaColors g_rgbSyntaxCpp[] = 
 {
-	{	SCE_C_COMMENT,			green },
-	{	SCE_C_COMMENTLINE,		green },
-	{	SCE_C_COMMENTDOC,		green },
-	{	SCE_C_NUMBER,			darkblue },
-	{	SCE_C_STRING,			red },
-	{	SCE_C_CHARACTER,		yellow },
-	{	SCE_C_UUID,				cyan },
-	{	SCE_C_OPERATOR,			red },
-	{	SCE_C_PREPROCESSOR,		blue },
-	{	SCE_C_WORD,				blue },
-	{	-1,						0 }
+	{ SCE_C_COMMENT,		green },
+	{ SCE_C_COMMENTLINE,	green },
+	{ SCE_C_COMMENTDOC,		green },
+	{ SCE_C_NUMBER,			darkblue },
+	{ SCE_C_STRING,			red },
+	{ SCE_C_CHARACTER,		yellow },
+	{ SCE_C_UUID,			cyan },
+	{ SCE_C_OPERATOR,		red },
+	{ SCE_C_PREPROCESSOR,	blue },
+	{ SCE_C_WORD,			blue },
+	{ -1,					0 }
 };
 
 IMPLEMENT_DYNAMIC(CDialogEdit, CDialogEx)
@@ -110,45 +110,46 @@ void CDialogEdit::InitialiseEditor()
 		0, 0, 500, 400, GetSafeHwnd(), NULL /*(HMENU)GuiID*/,  AfxGetApp()->m_hInstance, NULL);	
 
 	// Did we get the editor window?
-	if ( !::IsWindow( m_hwndEditor ) )
-	{	TRACE( "Unable to create editor window\n" );
-	return;
+	if (!::IsWindow(m_hwndEditor))
+	{	
+		TRACE( "Unable to create editor window\n" );
+		return;
 	} // end if
 
 	// CPP lexer
-	SendEditor( SCI_SETLEXER, SCLEX_CPP );
+	SendEditor(SCI_SETLEXER, SCLEX_CPP);
 
 	// Set number of style bits to use
-	SendEditor( SCI_SETSTYLEBITS, 5 );
+	SendEditor(SCI_SETSTYLEBITS, 5);
 
 	// Set tab width
-	SendEditor( SCI_SETTABWIDTH, 4 );
+	SendEditor( SCI_SETTABWIDTH, 4);
 
 	// Use CPP keywords
-	SendEditor( SCI_SETKEYWORDS, 0, (LPARAM)g_cppKeyWords );
+	SendEditor( SCI_SETKEYWORDS, 0, (LPARAM)g_cppKeyWords);
 
 	// Set up the global default style. These attributes are used wherever no explicit choices are made.
-	SetAStyle( STYLE_DEFAULT, black, white , 10, "Sans Serif" );
+	SetAStyle(STYLE_DEFAULT, black, white, 12, "Sans Serif");
 
 	// Set caret foreground color
-	//SendEditor( SCI_SETCARETFORE, RGB( 255, 255, 255 ) );
+	SendEditor(SCI_SETCARETFORE,RGB( 255, 255, 255 ));
 
 	// Set all styles
-	SendEditor( SCI_STYLECLEARALL );
+	SendEditor(SCI_STYLECLEARALL);
 
 	// Set selection color
-	SendEditor( SCI_SETSELBACK, TRUE, RGB( 240, 240, 240 ) );
+	SendEditor(SCI_SETSELBACK, TRUE, RGB( 240, 240, 240 ));
 
 	// Set syntax colors
-	for ( long i = 0; g_rgbSyntaxCpp[ i ].iItem != -1; i++ )
+	for ( long i = 0; g_rgbSyntaxCpp[i].iItem != -1; i++ )
 	{
-		SendEditor(SCI_STYLESETFORE, g_rgbSyntaxCpp[ i ].iItem, g_rgbSyntaxCpp[ i ].rgb);
+		SendEditor(SCI_STYLESETFORE, g_rgbSyntaxCpp[i].iItem, g_rgbSyntaxCpp[i].rgb);
 	}
 
-	SendEditor( SCI_SETHSCROLLBAR, false );
-	//SendEditor( SCI_SETVIEWWS, SCWS_VISIBLEALWAYS );
-	SendEditor( SCI_SETMARGINWIDTHN, 0, 32);
-	SendEditor( SCI_SETMARGINWIDTHN, 1, 0);
+	SendEditor(SCI_SETHSCROLLBAR, false);
+	SendEditor(SCI_SETVIEWWS, SCWS_VISIBLEALWAYS);
+	SendEditor(SCI_SETMARGINWIDTHN, 0, 32);
+	SendEditor(SCI_SETMARGINWIDTHN, 1, 0);
 }
 
 BOOL CDialogEdit::OnInitDialog()
@@ -158,10 +159,10 @@ BOOL CDialogEdit::OnInitDialog()
 	SetWindowText(Title);
 	// Create the Scintilla editor	
 	InitialiseEditor();
-	SendEditor( SCI_SETTEXT, 0, (WPARAM)Text.GetBuffer() );
+	SendEditor(SCI_SETTEXT, 0, (WPARAM)Text.GetBuffer());
 	ShowWindow(SW_NORMAL);
 	SizeEditor();
-	SendEditor( SCI_SETSEL, 0, 0 );
+	SendEditor(SCI_SETSEL, 0, 0);
 
 	return FALSE;  // return TRUE unless you set the focus to a control
 }
@@ -170,14 +171,14 @@ BOOL CDialogEdit::OnInitDialog()
 void CDialogEdit::OnCancel()
 {
 	// Get text length
-	UINT uSize = SendEditor( SCI_GETLENGTH, 0, 0L );
-	if ( uSize )
+	UINT uSize = SendEditor(SCI_GETLENGTH, 0, 0L);
+	if (uSize)
 	{
-		char *pBuf = new char[ uSize + 1 + 8 ];
-		if ( pBuf )
+		char *pBuf = new char[uSize + 1 + 8];
+		if (pBuf)
 		{
-			SendEditor( SCI_GETTEXT, uSize + 1, (LPARAM)pBuf );
-			pBuf[ uSize ] = 0;
+			SendEditor(SCI_GETTEXT, uSize + 1, (LPARAM)pBuf);
+			pBuf[uSize] = '\0';
 			Text = pBuf;
 			delete pBuf;
 		}

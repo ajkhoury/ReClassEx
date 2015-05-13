@@ -94,17 +94,20 @@ extern bool gbFilterProcesses;
 
 extern CString tdHex;
 extern CString tdInt64;
-extern CString tdPChar;
+
 extern CString tdInt32;
 extern CString tdInt16;
 extern CString tdInt8;
 extern CString tdDWORD;
 extern CString tdWORD;
 extern CString tdBYTE;
+extern CString tdFloat;
+extern CString tdDouble;
 extern CString tdVec2;
 extern CString tdVec3;
 extern CString tdQuat;
 extern CString tdMatrix;
+extern CString tdPChar;
 
 #define WM_MAXITEMS 128
 
@@ -194,7 +197,6 @@ enum NodeType
 	nt_vtable,
 	nt_array,
 	nt_class,
-	nt_enum,
 	nt_pchar
 };
 

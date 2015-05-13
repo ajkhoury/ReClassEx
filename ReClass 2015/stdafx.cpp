@@ -49,6 +49,8 @@ CString tdInt8("__int8");
 CString tdDWORD("DWORD");
 CString tdWORD("WORD");
 CString tdBYTE("unsigned char");
+CString tdFloat("float");
+CString tdDouble("double");
 CString tdVec2("Vector2");
 CString tdVec3("Vector3");
 CString tdQuat("Vector4");
@@ -112,11 +114,13 @@ CString ReadMemoryString( DWORD_PTR address, SIZE_T max )
 
 void PauseResumeThreadList( bool bResumeThread ) 
 { 
-	if (hProcess == NULL) return;
+	if (hProcess == NULL)
+		return;
 	DWORD dwOwnerPID = GetProcessId(hProcess);
 
 	HANDLE hThreadSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0); 
-	if (hThreadSnap == INVALID_HANDLE_VALUE) return; 
+	if (hThreadSnap == INVALID_HANDLE_VALUE)
+		return; 
 
 	THREADENTRY32 te32;
 	ZeroMemory(&te32,sizeof(te32));

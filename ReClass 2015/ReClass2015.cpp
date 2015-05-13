@@ -61,9 +61,7 @@ CReClass2015App::CReClass2015App()
 
 void getDebugPriv()
 {
-	HANDLE hToken;
-	LUID sedebugnameValue;
-	TOKEN_PRIVILEGES tkp;
+	HANDLE hToken; LUID sedebugnameValue; TOKEN_PRIVILEGES tkp;
 	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken))
 		return;
 	if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &sedebugnameValue))
@@ -107,39 +105,34 @@ BOOL CReClass2015App::InitInstance()
 	ttParams.m_bVislManagerTheme = TRUE;
 	theApp.GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL, RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
 
-	crBackground	= GetProfileInt("Colors", "crBackground", crBackground);
-	crSelect		= GetProfileInt("Colors", "crSelect", crSelect);
-	crHidden		= GetProfileInt("Colors", "crHidden", crHidden);
-					  
-	crOffset		= GetProfileInt("Colors", "crOffset", crOffset);
-	crAddress		= GetProfileInt("Colors", "crAddress", crAddress);
-	crType			= GetProfileInt("Colors", "crType", crType);
-	crName			= GetProfileInt("Colors", "crName", crName);
-	crIndex			= GetProfileInt("Colors", "crIndex", crIndex);
-	crValue			= GetProfileInt("Colors", "crValue", crValue);
-	crComment		= GetProfileInt("Colors", "crComment", crComment);
-					  
-	crVTable		= GetProfileInt("Colors", "crVTable", crVTable);
-	crFunction		= GetProfileInt("Colors", "crFunction", crFunction);
-	crChar			= GetProfileInt("Colors", "crChar", crChar);
-	crCustom		= GetProfileInt("Colors", "crCustom", crCustom);
-	crHex			= GetProfileInt("Colors", "crHex", crHex);
-
-	gbOffset		= GetProfileInt("Display", "gbOffset", gbOffset) > 0 ? true : false;
-	gbAddress		= GetProfileInt("Display", "gbAddress", gbAddress) > 0 ? true : false;
-	gbText			= GetProfileInt("Display", "gbText", gbText) > 0 ? true : false;
-
-	gbFloat			= GetProfileInt("Display", "gbFloat", gbFloat) > 0 ? true : false;
-	gbInt			= GetProfileInt("Display", "gbInt", gbInt) > 0 ? true : false;
-	gbString		= GetProfileInt("Display", "gbString", gbString) > 0 ? true : false;
-	gbPointers		= GetProfileInt("Display", "gbPointers", gbPointers) > 0 ? true : false;
-
-	gbClassBrowser = GetProfileInt("Display", "gbClassBrowser", gbClassBrowser) > 0 ? true : false;
-	gbFilterProcesses = GetProfileInt("Display", "gbFilterProcesses", gbFilterProcesses) > 0 ? true : false;
+	crBackground		= GetProfileInt("Colors", "crBackground", crBackground);
+	crSelect			= GetProfileInt("Colors", "crSelect", crSelect);
+	crHidden			= GetProfileInt("Colors", "crHidden", crHidden);
+	crOffset			= GetProfileInt("Colors", "crOffset", crOffset);
+	crAddress			= GetProfileInt("Colors", "crAddress", crAddress);
+	crType				= GetProfileInt("Colors", "crType", crType);
+	crName				= GetProfileInt("Colors", "crName", crName);
+	crIndex				= GetProfileInt("Colors", "crIndex", crIndex);
+	crValue				= GetProfileInt("Colors", "crValue", crValue);
+	crComment			= GetProfileInt("Colors", "crComment", crComment);	  
+	crVTable			= GetProfileInt("Colors", "crVTable", crVTable);
+	crFunction			= GetProfileInt("Colors", "crFunction", crFunction);
+	crChar				= GetProfileInt("Colors", "crChar", crChar);
+	crCustom			= GetProfileInt("Colors", "crCustom", crCustom);
+	crHex				= GetProfileInt("Colors", "crHex", crHex);
+	gbOffset			= GetProfileInt("Display", "gbOffset", gbOffset) > 0 ? true : false;
+	gbAddress			= GetProfileInt("Display", "gbAddress", gbAddress) > 0 ? true : false;
+	gbText				= GetProfileInt("Display", "gbText", gbText) > 0 ? true : false;
+	gbFloat				= GetProfileInt("Display", "gbFloat", gbFloat) > 0 ? true : false;
+	gbInt				= GetProfileInt("Display", "gbInt", gbInt) > 0 ? true : false;
+	gbString			= GetProfileInt("Display", "gbString", gbString) > 0 ? true : false;
+	gbPointers			= GetProfileInt("Display", "gbPointers", gbPointers) > 0 ? true : false;
+	gbClassBrowser		= GetProfileInt("Display", "gbClassBrowser", gbClassBrowser) > 0 ? true : false;
+	gbFilterProcesses	= GetProfileInt("Display", "gbFilterProcesses", gbFilterProcesses) > 0 ? true : false;
 
 
 	// make toggle
-	gbTop		= false; //GetProfileInt("Display","gbTop",gbTop) > 0 ? true : false;
+	gbTop = false; //GetProfileInt("Display","gbTop",gbTop) > 0 ? true : false;
 
 	CMDIFrameWnd* pFrame = new CMainFrame();
 	m_pMainWnd = pFrame;
@@ -184,7 +177,8 @@ BOOL CReClass2015App::InitInstance()
 
 	FontWidth = 8;
 	FontHeight = 16;
-	Font.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Terminal");
+	Font.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Fixedsys");
+	FontHeight = 14;
 	//SmallFont.CreateFont(12, 8, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Terminal");
 
 	//hProcess = CheckForProcess("winmine.exe");
@@ -305,11 +299,11 @@ void CReClass2015App::OnUpdateButtonResume(CCmdUI *pCmdUI)
 
 void CReClass2015App::OnButtonKill()
 {
-	TerminateProcess(hProcess,0);
+	TerminateProcess(hProcess, 0);
 	hProcess = NULL;
 }
 
-void CReClass2015App::OnUpdateButtonKill(CCmdUI *pCmdUI)
+void CReClass2015App::OnUpdateButtonKill(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable((hProcess != NULL));
 }
@@ -317,7 +311,7 @@ void CReClass2015App::OnUpdateButtonKill(CCmdUI *pCmdUI)
 void CReClass2015App::CalcOffsets(CNodeClass* pClass)
 {
 	DWORD offset = 0;
-	for  (UINT i=0; i < pClass->Nodes.size();i++)
+	for  (UINT i = 0; i < pClass->Nodes.size(); i++)
 	{
 		pClass->Nodes[i]->offset = offset;
 		offset += pClass->Nodes[i]->GetMemorySize();
@@ -325,10 +319,8 @@ void CReClass2015App::CalcOffsets(CNodeClass* pClass)
 }
 void CReClass2015App::CalcAllOffsets()
 {
-	for (UINT i=0; i<Classes.size();i++)
-	{
+	for (UINT i = 0; i < Classes.size(); i++)
 		CalcOffsets(Classes[i]);
-	}
 }
 
 void CReClass2015App::OnFileNew() 
@@ -507,7 +499,7 @@ public:
 
 void CReClass2015App::OnFileImport()
 {
-	return;
+	//return;
 
 	CWaitCursor wait;
 
@@ -516,9 +508,9 @@ void CReClass2015App::OnFileImport()
 	std::vector<ImportNode> Import;
 	std::vector<ImportLink> Links;
 
-	char szFilters[]= "ReClass (*.rdc)|*.rdc|All Files (*.*)|*.*||";
+	char szFilters[] = "ReClass (*.rdc)|*.rdc|All Files (*.*)|*.*||";
 	CFileDialog fileDlg (TRUE, "rdc", "",OFN_FILEMUSTEXIST| OFN_HIDEREADONLY, szFilters, NULL);
-	if( fileDlg.DoModal ()==IDOK )
+	if( fileDlg.DoModal() == IDOK )
 	{
 		CString pathName = fileDlg.GetPathName();
 		try
@@ -657,9 +649,9 @@ void CReClass2015App::OnFileImport()
 				}
 			}
 			//Fix Links... some real ghetto shit here
-			for (UINT i=0; i < Links.size();i++)
+			for (UINT i = 0; i < Links.size(); i++)
 			{
-				for (UINT c=0; c < Classes.size();c++)
+				for (UINT c = 0; c < Classes.size(); c++)
 				{
 					if (Links[i].Name == Classes[c]->Name)
 					{
@@ -681,7 +673,7 @@ void CReClass2015App::OnFileImport()
 
 void CReClass2015App::ClearSelection()
 {
-	for (UINT i=0; i < Classes.size(); i++)
+	for (UINT i = 0; i < Classes.size(); i++)
 	{
 		Classes[i]->bSelected = false;
 		for (UINT n=0; n < Classes[i]->Nodes.size(); n++)
@@ -693,7 +685,8 @@ void CReClass2015App::ClearSelection()
 			if (t == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
-				for (UINT f=0; f < pVTable->Nodes.size(); f++) pVTable->Nodes[f]->bSelected = false;
+				for (UINT f=0; f < pVTable->Nodes.size(); f++)
+					pVTable->Nodes[f]->bSelected = false;
 			}
 			if (t == nt_array)
 			{
@@ -908,7 +901,7 @@ void CReClass2015App::SaveXML(char* FileName)
 	doc.LinkEndChild( root );  
 
 	TiXmlComment * comment = new TiXmlComment();
-	comment->SetValue("reclass 2014");  
+	comment->SetValue("reclass 2015");  
 	root->LinkEndChild(comment);  
 	//---------------------------------------------
 
@@ -922,20 +915,23 @@ void CReClass2015App::SaveXML(char* FileName)
 	settings->SetAttribute("tdDWORD", tdDWORD);
 	settings->SetAttribute("tdWORD", tdWORD);
 	settings->SetAttribute("tdBYTE", tdBYTE);
+	settings->SetAttribute("tdFloat", tdFloat);
+	settings->SetAttribute("tdDouble", tdDouble);
 	settings->SetAttribute("tdVec2", tdVec2);
 	settings->SetAttribute("tdVec3", tdVec3);
 	settings->SetAttribute("tdQuat", tdQuat);
 	settings->SetAttribute("tdMatrix", tdMatrix);
+	settings->SetAttribute("tdPChar", tdPChar);
 	root->LinkEndChild(settings);
 
 	settings = new TiXmlElement("Header");
-	settings->SetAttribute("Text",Header);
+	settings->SetAttribute("Text", Header);
 	root->LinkEndChild(settings);
 	settings = new TiXmlElement("Footer");
-	settings->SetAttribute("Text",Footer);
+	settings->SetAttribute("Text", Footer);
 	root->LinkEndChild(settings);
 	settings = new TiXmlElement("Notes");
-	settings->SetAttribute("Text",Notes);
+	settings->SetAttribute("Text", Notes);
 	root->LinkEndChild(settings);
 
 	for (UINT i = 0; i < Classes.size(); i++)
@@ -992,7 +988,7 @@ void CReClass2015App::SaveXML(char* FileName)
 			if (pNode->GetType() == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
-				for (UINT f=0; f < pVTable->Nodes.size();f++)
+				for (UINT f = 0; f < pVTable->Nodes.size(); f++)
 				{
 					CNodeFunctionPtr* pNodefun = (CNodeFunctionPtr*)pVTable->Nodes[f];
 					TiXmlElement *fun = new TiXmlElement("Function");
