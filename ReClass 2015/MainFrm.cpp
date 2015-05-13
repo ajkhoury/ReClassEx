@@ -274,9 +274,9 @@ void CMainFrame::OnApplicationLook(UINT id)
 		break;
 
 	case ID_VIEW_APPLOOK_OFF_2007_BLUE:
-		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_LunaBlue);
+		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_LunaBlue); 
 		break;
-
+		 
 	case ID_VIEW_APPLOOK_OFF_2007_BLACK:
 		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_ObsidianBlack);
 		break;
