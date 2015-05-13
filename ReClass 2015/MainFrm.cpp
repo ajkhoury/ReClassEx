@@ -52,6 +52,9 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_CHECK_TOPMOST, &CMainFrame::OnCheckTopmost)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_TOPMOST, &CMainFrame::OnUpdateCheckTopmost)
 
+	ON_COMMAND(ID_CHECK_FILTERPROCESSES, &CMainFrame::OnCheckFilterProcesses)
+	ON_UPDATE_COMMAND_UI(ID_CHECK_FILTERPROCESSES, &CMainFrame::OnUpdateCheckFilterProcesses)
+
 	ON_COMMAND(ID_CHECK_CLASSBROWSER, &CMainFrame::OnCheckClassBrowser)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_CLASSBROWSER, &CMainFrame::OnUpdateCheckClassBrowser)
 	ON_COMMAND(ID_BUTTON_LEFT, &CMainFrame::OnButtonLeft)
@@ -451,8 +454,11 @@ std::string CommonProcesses[] =
 	"notepad.exe",	"explorer.exe", "itunes.exe",	"sqlservr.exe",
 	"nvtray.exe",	"nvxdsync.exe", "lsass.exe",	"jusched.exe",
 	"conhost.exe",  "chrome.exe",	"firefox.exe", 	"winamp.exe",
-	"WinRAR.exe",	"calc.exe",		"taskhostex.exe", "Taskmgr.exe",
-	"plugin-container.exe"
+	"WinRAR.exe",	"calc.exe",	"taskhostex.exe", "Taskmgr.exe",
+	"plugin-container.exe",
+	"ReClass.exe",	"ReClass_64.exe",
+	"SettingSyncHost.exe",	"SkyDrive.exe",	"ctfmon.exe",	"RuntimeBroker.exe", // Win8 Processes
+	"BTTray.exe",	"BTStackServer.exe",	"Bluetooth Headset Helper.exe" // Win8 Bluetooth Processes
 };
 
 void CMainFrame::OnButtonSelectprocess()
@@ -481,7 +487,7 @@ void CMainFrame::OnButtonSelectprocess()
 			// Are we filtering out processes
 			if (gbFilterProcesses)
 			{
-				for (int i = 0; i < sizeof(CommonProcesses) / sizeof(CommonProcesses[0]) ; i++)
+				for (int i = 0; i < sizeof(CommonProcesses) / sizeof(*CommonProcesses) ; i++)
 				{
 					if (strcmp( ProcInfo.szExeFile, CommonProcesses[i].c_str()) == 0 )
 					{
@@ -695,6 +701,16 @@ void CMainFrame::OnCheckClassBrowser()
 void CMainFrame::OnUpdateCheckClassBrowser(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(gbClassBrowser);
+}
+
+void CMainFrame::OnUpdateCheckClassBrowser(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(gbClassBrowser);
+}
+
+void CMainFrame::OnCheckFilterProcesses()
+{
+	gbFilterProcesses = !gbFilterProcesses;
 }
 
 void CMainFrame::OnButtonLeft()
