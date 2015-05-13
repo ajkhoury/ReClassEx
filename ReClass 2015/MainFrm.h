@@ -95,6 +95,8 @@ public:
 	afx_msg void OnUpdateCheckTopmost(CCmdUI *pCmdUI);
 	afx_msg void OnCheckClassBrowser( );
 	afx_msg void OnUpdateCheckClassBrowser(CCmdUI *pCmdUI);
+	afx_msg void OnCheckFilterProcesses( );
+	afx_msg void OnUpdateCheckFilterProcesses(CCmdUI *pCmdUI);
 	afx_msg void OnButtonLeft();
 	afx_msg void OnButtonRight();
 	afx_msg void OnCheckFloat();
