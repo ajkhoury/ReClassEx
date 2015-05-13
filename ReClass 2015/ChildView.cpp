@@ -499,7 +499,7 @@ void CChildView::OnRButtonDown(UINT nFlags, CPoint point)
 				CNodeBase* pHitObject = (CNodeBase*)HotSpots[i].object;
 				if (HotSpots[i].Type == HS_SELECT)
 				{
-					if (nFlags == MK_RBUTTON)
+					if (nFlags == MK_RBUTTON) 
 					{
 						theApp.ClearSelection();
 						Selected.clear();
