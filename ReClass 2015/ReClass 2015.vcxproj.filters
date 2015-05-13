@@ -163,10 +163,10 @@
     <None Include="res\bitmap1.bmp">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\ReClass 2011.ico">
+    <None Include="res\ReClass2015.rc2">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\ReClass2015.rc2">
+    <None Include="res\ReClass2015.ico">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -505,7 +505,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="ReClass 2015.rc">
+    <ResourceCompile Include="ReClass2015.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

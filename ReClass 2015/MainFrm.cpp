@@ -87,7 +87,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	OnApplicationLook(ID_VIEW_APPLOOK_VS_2005/*theApp.m_nAppLook*/);
 
 	CMDITabInfo mdiTabParams;
-	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D; // other styles available...
+	mdiTabParams.m_style = CMFCTabCtrl::STYLE_FLAT; // other styles available...
 	mdiTabParams.m_bActiveTabCloseButton = TRUE;      // set to FALSE to place close button at right of tab area
 	mdiTabParams.m_bTabIcons = FALSE;    // set to TRUE to enable document icons on MDI taba
 	mdiTabParams.m_bAutoColor = FALSE;    // set to FALSE to disable auto-coloring of MDI tabs
@@ -133,11 +133,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CTEXT); pColor->SetColor(crChar);
 	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CCUSTOM); pColor->SetColor(crCustom);
 	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CHEX); pColor->SetColor(crHex);
-
-	//CreateConsole( );
-
-	// Why?
-	SetTimer( 69, 5000, NULL );
 
 	return 0;
 }
@@ -207,7 +202,8 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	if( !CMDIFrameWndEx::PreCreateWindow(cs) )
 		return FALSE;
 
-	if (gbTop) cs.dwExStyle |= WS_EX_TOPMOST;
+	if (gbTop)
+		cs.dwExStyle |= WS_EX_TOPMOST;
 
 	return TRUE;
 }
@@ -277,34 +273,31 @@ void CMainFrame::OnApplicationLook(UINT id)
 		m_wndRibbonBar.SetWindows7Look(TRUE);
 		break;
 
-	default:
-		switch (theApp.m_nAppLook)
-		{
-		case ID_VIEW_APPLOOK_OFF_2007_BLUE:
-			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_LunaBlue);
-			break;
+	case ID_VIEW_APPLOOK_OFF_2007_BLUE:
+		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_LunaBlue);
+		break;
 
-		case ID_VIEW_APPLOOK_OFF_2007_BLACK:
-			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_ObsidianBlack);
-			break;
+	case ID_VIEW_APPLOOK_OFF_2007_BLACK:
+		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_ObsidianBlack);
+		break;
 
-		case ID_VIEW_APPLOOK_OFF_2007_SILVER:
-			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Silver);
-			break;
+	case ID_VIEW_APPLOOK_OFF_2007_SILVER:
+		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Silver);
+		break;
 
-		case ID_VIEW_APPLOOK_OFF_2007_AQUA:
-			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Aqua);
-			break;
-		}
+	case ID_VIEW_APPLOOK_OFF_2007_AQUA:
+		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Aqua);
+		break;
 
-		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
+
+		//CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
 		CDockingManager::SetDockingMode(DT_SMART);
-		m_wndRibbonBar.SetWindows7Look(FALSE);
+		//m_wndRibbonBar.SetWindows7Look(FALSE);
 	}
 
 	RedrawWindow(NULL, NULL, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);
 
-	theApp.WriteInt(_T("ApplicationLook"), theApp.m_nAppLook);
+	theApp.WriteInt("ApplicationLook", theApp.m_nAppLook);
 }
 
 void CMainFrame::OnUpdateApplicationLook(CCmdUI* pCmdUI)
@@ -339,7 +332,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 	}
 	if (nCode == CN_COMMAND)
 	{
-		if (nID >= WM_CLASSMENU && nID < (WM_CLASSMENU+WM_MAXITEMS) )
+		if (nID >= WM_CLASSMENU && nID < (WM_CLASSMENU + WM_MAXITEMS) )
 		{
 			UINT idx = nID - WM_CLASSMENU;
 
@@ -352,7 +345,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 			pChild->m_wndView.m_pClass = pClass;
 			return TRUE;
 		}
-		if (nID >= WM_PROCESSMENU && nID < (WM_PROCESSMENU+WM_MAXITEMS) )
+		if (nID >= WM_PROCESSMENU && nID < (WM_PROCESSMENU + WM_MAXITEMS) )
 		{
 			UINT idx = nID - WM_PROCESSMENU;
 			ProcessID = ProcMenuItems[idx].ProcessId;
@@ -360,7 +353,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 			UpdateMemoryMap();
 			return TRUE;
 		}
-		if (nID >= WM_DELETECLASSMENU && nID < (WM_DELETECLASSMENU+WM_MAXITEMS) )
+		if (nID >= WM_DELETECLASSMENU && nID < (WM_DELETECLASSMENU + WM_MAXITEMS) )
 		{
 			UINT idx = nID - WM_DELETECLASSMENU;
 			theApp.DeleteClass(theApp.Classes[idx]);

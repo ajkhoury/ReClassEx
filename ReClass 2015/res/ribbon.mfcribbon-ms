@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <AFX_RIBBON>
     <HEADER>
-        <VERSION>1</VERSION>
+        <VERSION>2</VERSION>
     </HEADER>
     <RIBBON_BAR>
         <ELEMENT_NAME>RibbonBar</ELEMENT_NAME>

@@ -490,32 +490,34 @@ void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CChildView::OnRButtonDown(UINT nFlags, CPoint point)
 {	
-	if (Selected.size() > 0)
+	m_Edit.ShowWindow(SW_HIDE);
+	for (UINT i = 0; i < HotSpots.size(); i++)
 	{
-		for (UINT i = 0; i < HotSpots.size(); i++)
+		if (HotSpots[i].Rect.PtInRect(point))
 		{
-			if (HotSpots[i].Rect.PtInRect(point))
+			CNodeBase* pHitObject = (CNodeBase*)HotSpots[i].object;
+			if (HotSpots[i].Type == HS_CLICK)
+				pHitObject->Update(HotSpots[i]);
+			else if (HotSpots[i].Type == HS_SELECT)
 			{
-				CNodeBase* pHitObject = (CNodeBase*)HotSpots[i].object;
-				if (HotSpots[i].Type == HS_SELECT)
+				if (nFlags == MK_RBUTTON) 
 				{
-					if (nFlags == MK_RBUTTON) 
-					{
-						theApp.ClearSelection();
-						Selected.clear();
-						pHitObject->bSelected = true;
-						Selected.push_back(HotSpots[i]);
+					theApp.ClearSelection();
+					Selected.clear();
+					pHitObject->bSelected = true;
+					Selected.push_back(HotSpots[i]);
 
-						CRect client;
-						GetClientRect(&client);
-						ClientToScreen(&client);
+					CRect client;
+					GetClientRect(&client);
+					ClientToScreen(&client);
 
-						CMenu menu;
-						menu.LoadMenuA(MAKEINTRESOURCE(IDR_MENU_QUICKMODIFY));
-						menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, client.left + HotSpots[i].Rect.left + point.x, client.top + point.y, this);
-					}
+					CMenu menu;
+					menu.LoadMenuA(MAKEINTRESOURCE(IDR_MENU_QUICKMODIFY));
+					menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, client.left + HotSpots[i].Rect.left + point.x, client.top + point.y, this);
 				}
 			}
+
+			Invalidate();
 		}
 	}
 

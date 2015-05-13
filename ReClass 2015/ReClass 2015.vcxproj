@@ -300,7 +300,7 @@
     <None Include="res\properties_hc.bmp" />
     <None Include="res\properties_wnd.ico" />
     <None Include="res\properties_wnd_hc.ico" />
-    <None Include="res\ReClass 2015.ico" />
+    <None Include="res\ReClass2015.ico" />
     <None Include="res\ReClass2015.rc2" />
     <None Include="res\ribbon.mfcribbon-ms">
       <SubType>Designer</SubType>
@@ -1197,7 +1197,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="ReClass 2015.rc" />
+    <ResourceCompile Include="ReClass2015.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

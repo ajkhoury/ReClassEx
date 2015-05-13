@@ -37,7 +37,7 @@ public:
 
 	void SetSize(DWORD Size)
 	{
-		if ( (!pMemory) || (Size != MemorySize) )
+		if ((!pMemory) || (Size != MemorySize))
 		{
 			if (pMemory) delete pMemory;
 			pMemory = new BYTE[Size];
@@ -69,8 +69,8 @@ public:
 		bHidden = false;
 		bOpen.push_back(true);
 
-		for(int i = 0; i < 32; i++ )
-			bOpen.push_back( false );
+		for(int i = 0; i < 32; i++)
+			bOpen.push_back(false);
 
 		bSelected = false;
 
@@ -115,7 +115,7 @@ public:
 		View.HotSpots->push_back(spot);
 	}
 
-	int AddText( ViewInfo& View, int x, int y, DWORD color, int HitID, const char *fmt, ... )
+	int AddText(ViewInfo& View, int x, int y, DWORD color, int HitID, const char *fmt, ...)
 	{
 		va_list va_alist;
 		static char logbuf[1024];
@@ -126,24 +126,24 @@ public:
 
 		int width = ( int )strlen( logbuf ) * FontWidth;
 
-		if ( ( y >= -FontHeight ) && ( y + FontHeight <= View.client->bottom+FontHeight ) )
+		if ( ( y >= -FontHeight ) && ( y + FontHeight <= View.client->bottom+FontHeight ))
 		{
 			CRect pos;
 
-			if ( HitID != NONE )
+			if (HitID != NONE)
 			{
-				if ( width >= FontWidth * 2 )
-					pos.SetRect( x, y, x + width, y + FontHeight );
+				if (width >= FontWidth * 2)
+					pos.SetRect(x, y, x + width, y + FontHeight);
 				else
-					pos.SetRect( x, y, x + FontWidth * 2, y + FontHeight );
+					pos.SetRect(x, y, x + FontWidth * 2, y + FontHeight);
 
 				AddHotSpot( View, pos, CString(logbuf), HitID, HS_EDIT );
 			}
 
 			pos.SetRect(x, y, 0, 0);
-			View.dc->SetTextColor( color );
-			View.dc->SetBkMode( TRANSPARENT );
-			View.dc->DrawText( logbuf, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX );
+			View.dc->SetTextColor(color);
+			View.dc->SetBkMode(TRANSPARENT);
+			View.dc->DrawText(logbuf, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX);
 		}
 
 		return x + width;
@@ -182,7 +182,6 @@ public:
 			// full address
 			// printf( "%p + %p = %p\n", View.Address, offset, View.Address + offset );
 			// %0.9X //"%I64x",
-
 			x = AddText( View, x, y, crAddress, NONE, "%0.9I64X", View.Address + offset ) + FontWidth;
 			#else
 			x = AddText( View, x, y, crAddress, NONE, "%0.8X"	, View.Address + offset ) + FontWidth;
@@ -205,7 +204,8 @@ public:
 
 	int AddIcon(ViewInfo& View,int x,int y,int idx,int ID,int Type)
 	{
-		if ( (y > View.client->bottom) || (y+16 < 0) ) return x + 16;
+		if ( (y > View.client->bottom) || (y+16 < 0) )
+			return x + 16;
 
 		DrawIconEx(View.dc->m_hDC,x,y,Icons[idx],16,16,0,NULL,DI_NORMAL);
 		if (ID != -1)
@@ -341,10 +341,9 @@ public:
 				{
 					bool bAddStr = true;
 					char txt[64];
-					ReadMemory(Val, txt, 64); // TODO: find out why and how, and why it looks wrong
+					ReadMemory(Val, txt, 64);
 
-					// also this 4 !! not 8 !!
-					for ( int i = 0; i < 8; i++ )
+					for (int i = 0; i < 8; i++)
 					{
 						if (!isprint((BYTE)txt[i]))
 							bAddStr = false;
@@ -374,10 +373,14 @@ public:
 
 			if (gbInt)
 			{
-				//if (f > 140000000 && f < 80000000000) // in 64 bit address range
-				//	x = AddText(View, x, y, crValue, NONE, "(0x%I64X %i)", i, i);
-				//else
+				#ifdef _WIN64
+				if (f > 140000000 && f < 80000000000) // in 64 bit address range
+					x = AddText(View, x, y, crValue, NONE, "(0x%I64X %i)", i, i);
+				else
 					x = AddText(View, x, y, crValue, NONE, "(%i)", i);
+				#else
+				x = AddText(View, x, y, crValue, NONE, "(%i)", i);
+				#endif
 			}
 
 			// *** this is probably broken, let's fix it after

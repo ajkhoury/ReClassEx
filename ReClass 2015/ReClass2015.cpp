@@ -49,7 +49,7 @@ CReClass2015App::CReClass2015App()
 {
 	m_bHiColorIcons = TRUE;
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
-	SetAppID(_T( "ReClass.2015.0.5.0.2"));
+	SetAppID("ReClass.2015.0.5.0.2");
 
 	#ifndef NDEBUG
 	CreateConsole();
@@ -95,7 +95,7 @@ BOOL CReClass2015App::InitInstance()
 	}
 
 	AfxEnableControlContainer();
-	SetRegistryKey(_T("ReClass 2015"));
+	SetRegistryKey("ReClass 2015");
 	EnableTaskbarInteraction(FALSE);
 	InitContextMenuManager();
 	InitKeyboardManager();
@@ -215,7 +215,6 @@ int CReClass2015App::ExitInstance()
 	WriteProfileInt("Colors", "crBackground", crBackground);
 	WriteProfileInt("Colors", "crSelect", crSelect);
 	WriteProfileInt("Colors", "crHidden", crHidden);
-
 	WriteProfileInt("Colors", "crOffset", crOffset);
 	WriteProfileInt("Colors", "crAddress", crAddress);
 	WriteProfileInt("Colors", "crType", crType);
@@ -223,22 +222,18 @@ int CReClass2015App::ExitInstance()
 	WriteProfileInt("Colors", "crIndex", crIndex);
 	WriteProfileInt("Colors", "crValue", crValue);
 	WriteProfileInt("Colors", "crComment", crComment);
-
 	WriteProfileInt("Colors", "crVTable", crVTable);
 	WriteProfileInt("Colors", "crFunction", crFunction);
 	WriteProfileInt("Colors", "crChar", crChar);
 	WriteProfileInt("Colors", "crCustom", crCustom);
 	WriteProfileInt("Colors", "crHex", crHex);
-
 	WriteProfileInt("Display", "gbOffset", gbOffset);
 	WriteProfileInt("Display", "gbAddress", gbAddress);
 	WriteProfileInt("Display", "gbText", gbText);
-
 	WriteProfileInt("Display", "gbFloat", gbFloat);
 	WriteProfileInt("Display", "gbInt", gbInt);
 	WriteProfileInt("Display", "gbString", gbString);
 	WriteProfileInt("Display", "gbPointers", gbPointers);
-
 	WriteProfileInt("Display", "gbTop", gbTop);
 	WriteProfileInt("Display", "gbClassBrowser", gbClassBrowser);
 	WriteProfileInt("Display", "gbFilterProcesses", gbFilterProcesses);
@@ -263,6 +258,7 @@ void CReClass2015App::OnButtonReset()
 	Notes = "";
 
 	tdHex="char";
+	tdInt64="__int64";
 	tdInt32="__int32";
 	tdInt16="__int16";
 	tdInt8="__int8";
@@ -331,7 +327,9 @@ void CReClass2015App::OnFileNew()
 	//char name[64];
 	//sprintf(name,"Class%0.8X",GetTickCount());
 
-	printf( "[+] OnFileNew()\n" );
+	#ifndef NDEBUG
+	printf("[+] OnFileNew()\n");
+	#endif
 
 	CNodeClass* pClass = new CNodeClass;
 	theApp.Classes.push_back(pClass);
@@ -500,7 +498,6 @@ public:
 void CReClass2015App::OnFileImport()
 {
 	//return;
-
 	CWaitCursor wait;
 
 	CString sql;
@@ -563,7 +560,7 @@ void CReClass2015App::OnFileImport()
 				Classes.push_back(pClass);
 
 				//CMainFrame* pFrame = STATIC_DOWNCAST(CMainFrame, m_pMainWnd);
-				//CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2011TYPE, m_hMDIMenu, m_hMDIAccel);
+				//CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, m_hMDIMenu, m_hMDIAccel);
 				//
 				//pFrame->UpdateFrameTitleForDocument(pClass->Name);
 				//pChild->SetTitle(pClass->Name);
@@ -775,7 +772,9 @@ void CReClass2015App::OnButtonNewClass()
 	CMainFrame* pFrame = STATIC_DOWNCAST(CMainFrame, m_pMainWnd);
 	CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, m_hMDIMenu, m_hMDIAccel);
 
+	#ifndef NDEBUG
 	printf( "[+] OnButtonNewClass()\n");
+	#endif
 
 	//pChild->SetTitle(name);
 	//pChild->SetWindowTextA(name);
@@ -816,12 +815,11 @@ void CReClass2015App::OnButtonNotes()
 	Notes = dlg.Text;
 }
 
-void CReClass2015App::OnButtonParser( )
+void CReClass2015App::OnButtonParser()
 {
-	//LoadPlugin( GetFilePath( "\\Plugins\\TestPlugin.dll" ) );
-
+	//LoadPlugin(GetFilePath("\\Plugins\\TestPlugin.dll" ));
 	CDialogClasses dlg;
-	dlg.DoModal( );
+	dlg.DoModal();
 
 	//CDialogEdit dlg;
 	//dlg.Title = "Parser";
@@ -1253,7 +1251,7 @@ void CReClass2015App::OnButtonGenerate()
 
 	CString h,t;
 
-	h += "// Generated using ReClass 2014\r\n\r\n";
+	h += "// Generated using ReClass 2015\r\n\r\n";
 	h += Header + "\r\n";
 
 	for (UINT c = 0; c < Classes.size(); c++)
