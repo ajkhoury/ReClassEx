@@ -696,11 +696,6 @@ void CMainFrame::OnUpdateCheckClassBrowser(CCmdUI *pCmdUI)
 	pCmdUI->SetCheck(gbClassBrowser);
 }
 
-void CMainFrame::OnUpdateCheckClassBrowser(CCmdUI *pCmdUI)
-{
-	pCmdUI->SetCheck(gbClassBrowser);
-}
-
 void CMainFrame::OnCheckFilterProcesses()
 {
 	gbFilterProcesses = !gbFilterProcesses;
