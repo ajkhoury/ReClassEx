@@ -333,7 +333,7 @@ public:
 				if (gbPointers)
 				{
 					//printf( "<%p> here\n", Val );
-					if ( Val > 140000000 && Val < 80000000000 )
+					//if ( Val > 140000000 && Val < 80000000000 )
 						x = AddText(View,x,y,crOffset,NONE,"*->%s ",a);
 				}
 
