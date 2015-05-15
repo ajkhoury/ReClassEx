@@ -44,19 +44,18 @@ void myCEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 		pChild->ResizeNode((CNodeClass*)c->pParent, pChild->FindNodeIndex(c), before, after);
 		pChild->Invalidate();
 	}
-
-	UINT limit = this->GetLimitText();
-	printf("text %c %d %d limit: %i\n", nChar, nRepCnt, nFlags, limit);
 	CEdit::OnChar(nChar, nRepCnt, nFlags);
 }
+
 void myCEdit::OnEnChange()
 {
 	CString text;
 	GetWindowText(text);
 	int  w = (text.GetLength() + 1) * FontWidth; // + 6;
-	//printf( "change**\n" );
 	if (w > MinWidth)
+	{
 		SetWindowPos(NULL, 0, 0, w, FontHeight, SWP_NOMOVE );
+	}
 }
 
 BEGIN_MESSAGE_MAP(myCToolTip, CEdit)
@@ -211,8 +210,8 @@ int CChildView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	CRect rect(0, 0, 100, 100);
-	m_Edit.CreateEx(WS_EX_WINDOWEDGE, _T("EDIT"),  _T(" "), WS_CHILD | WS_TABSTOP, rect, this, 1);
-	//m_Edit.Create(WS_CHILD | WS_TABSTOP, rect, this, 1);
+	//m_Edit.CreateEx(WS_EX_WINDOWEDGE, _T("EDIT"),  _T(" "), WS_CHILD | WS_TABSTOP, rect, this, 1);
+	m_Edit.Create(WS_CHILD | WS_TABSTOP, rect, this, 1);
 	m_Edit.ShowWindow(SW_HIDE);
 	m_Edit.SetFont(&Font);
 
@@ -328,30 +327,15 @@ void CChildView::OnLButtonDblClk(UINT nFlags, CPoint point)
 			if (HotSpots[i].Type == HS_EDIT)
 			{
 				// Sets the edit "window" to where to cursor was editing at
-				m_Edit.SetWindowPos(NULL, HotSpots[i].Rect.left, HotSpots[i].Rect.top, HotSpots[i].Rect.Width(), HotSpots[i].Rect.Height(), 0);
+				m_Edit.SetWindowPos(NULL,HotSpots[i].Rect.left,HotSpots[i].Rect.top,HotSpots[i].Rect.Width(),HotSpots[i].Rect.Height(),SWP_NOZORDER);
 				m_Edit.spot = HotSpots[i];
-				m_Edit.MinWidth = m_Edit.spot.Rect.Width();// + 10;
-				m_Edit.LimitText(9999);
-				m_Edit.SetWindowText(HotSpots[i].Text);
+				m_Edit.MinWidth = m_Edit.spot.Rect.Width();
+				m_Edit.SetWindowTextA(HotSpots[i].Text);
 				m_Edit.ShowWindow(SW_NORMAL);
-				m_Edit.SetMargins(0, 9999);
-				m_Edit.ShowScrollBar(0, true);
 				m_Edit.SetFocus();
-
-				//printf( "Create\n" );
-
-				// m_Edit.SetWindowTextA( "7F72E270000" );
-
-				//HotSpots[i].Rect.InflateRect( 100, 100 );
-				
-				// commented out
-				//m_Edit.CreateSolidCaret( FontWidth, FontHeight );
-				//m_Edit.ShowCaret( );
-				
-				//m_Edit.LimitText(99999);
-
-				//m_Edit.SetSel(0, 2048);
-				m_Edit.SetSel(0, 1024);
+				//m_Edit.CreateSolidCaret(FontWidth,FontHeight);
+				//m_Edit.ShowCaret();
+				m_Edit.SetSel(0,1024);
 				return;
 			}
 
@@ -1617,15 +1601,11 @@ BOOL CChildView::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 
 void CChildView::OnEditCopy()
 {
-	
 	m_Edit.Copy();
 }
 
 void CChildView::OnEditPaste()
 {
-	printf("paste here\n");
-	m_Edit.SetLimitText(9999);
-	m_Edit.LimitText(9999);
 	m_Edit.Paste();
 }
 

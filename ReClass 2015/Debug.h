@@ -107,5 +107,17 @@ void EndianSwap( T* pObj )
 	std::reverse( pMem, pMem + sizeof( T ) );
 }
 
+bool IsValidPtr(DWORD_PTR Ptr)
+{
+	#ifdef _WIN64
+	if (Ptr >= 0x10000 && Ptr < 0x000F000000000000)
+		return true;
+	#else
+	if (Ptr >= 0x10000 && Ptr < 0xFFF00000)
+		return true;
+	#endif
+	return false;
+}
+
 
 #endif

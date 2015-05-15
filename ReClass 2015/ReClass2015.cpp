@@ -392,8 +392,7 @@ void CReClass2015App::OnFileNew()
 	pClass->Nodes.push_back( new CNodeVec3 );
 	pClass->Nodes.push_back( new CNodeQuat );
 	pClass->Nodes.push_back( new CNodeMatrix );
-	//pClass->Nodes.push_back( new CNodeHex32 );
-	pClass->Nodes.push_back( new CNodePChar ); //why is this here
+	pClass->Nodes.push_back( new CNodePChar );
 
 	//for (int i=0; i < 2; i++)
 	{
@@ -439,7 +438,6 @@ void CReClass2015App::OnFileNew()
 }
 
 // CAboutDlg dialog used for App About
-
 class CAboutDlg : public CDialogEx
 {
 public:
@@ -699,6 +697,7 @@ void CReClass2015App::ClearSelection()
 		}
 	}
 }
+
 void CReClass2015App::ClearHidden()
 {
 	for (UINT i=0; i < Classes.size(); i++)
@@ -728,6 +727,7 @@ void CReClass2015App::ClearHidden()
 		}
 	}
 }
+
 bool CReClass2015App::IsNodeValid(CNodeBase* pCheckNode)
 {
 	for (UINT i=0; i < Classes.size(); i++)
@@ -802,7 +802,6 @@ void CReClass2015App::OnButtonNewClass()
 #endif
 
 	CalcOffsets(pClass);
-	return;
 }
 
 
@@ -1103,7 +1102,7 @@ void CReClass2015App::OnFileOpen()
 		while( pClassElem )
 		{
 			int Type = -1;
-			pClassElem->QueryIntAttribute("Type",&Type);
+			pClassElem->QueryIntAttribute("Type", &Type);
 
 			if (Type != -1)
 			{
@@ -1112,13 +1111,16 @@ void CReClass2015App::OnFileOpen()
 				pNode->Name = pClassElem->Attribute("Name");
 				pNode->Comment = pClassElem->Attribute("Comment");
 				pNode->bHidden = atoi(pClassElem->Attribute("bHidden")) > 0 ? true : false;
-				pClassElem->QueryIntAttribute("Size",&Size);
+				pClassElem->QueryIntAttribute("Size", &Size);
 				pNode->pParent = pClass;
 				pClass->Nodes.push_back(pNode);
 		
-				if (Type == nt_custom)	((CNodeCustom*)pNode)->memsize = Size;
-				if (Type == nt_text)	((CNodeText*)pNode)->memsize = Size;
-				if (Type == nt_unicode) ((CNodeText*)pNode)->memsize = Size;
+				if (Type == nt_custom)	
+					((CNodeCustom*)pNode)->memsize = Size;
+				if (Type == nt_text)	
+					((CNodeText*)pNode)->memsize = Size;
+				if (Type == nt_unicode) 
+					((CNodeText*)pNode)->memsize = Size;
 				if (Type == nt_vtable)
 				{
 					TiXmlElement* pVTableElem;

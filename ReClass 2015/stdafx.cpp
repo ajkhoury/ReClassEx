@@ -638,6 +638,5 @@ DWORD_PTR ConvertStrToAddress(CString Address)
 		}
 	}
 
-
 	return Final;
 }

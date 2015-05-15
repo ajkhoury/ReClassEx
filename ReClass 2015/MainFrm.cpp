@@ -701,6 +701,11 @@ void CMainFrame::OnCheckFilterProcesses()
 	gbFilterProcesses = !gbFilterProcesses;
 }
 
+void CMainFrame::OnUpdateCheckFilterProcesses(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(gbFilterProcesses);
+}
+
 void CMainFrame::OnButtonLeft()
 {
 	RECT Screen;
