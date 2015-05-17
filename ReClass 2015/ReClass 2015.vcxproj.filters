@@ -1,0 +1,512 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="EXT">
+      <UniqueIdentifier>{5d26f7ca-9643-4f6b-b052-f0240ef57c70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EXT\scintilla">
+      <UniqueIdentifier>{1a819cc3-0347-4f8e-af31-8d4b343d3ea9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="res\output_wnd.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\output_wnd_hc.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\properties_wnd.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\properties_wnd_hc.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\properties.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\properties_hc.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\buttons.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\filelarge.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\filesmall.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\main.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\writelarge.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\writesmall.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\ribbon.mfcribbon-ms">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Toolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Toolbar256.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icon1.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\general_class_VS.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\general_method_VS.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\open.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\closed.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\general_interface_VS.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\close.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\add.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\speles_random_ico.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\arrow_icon.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\pointer.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\array.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\custom.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\enum.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\float.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\left.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\right.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\matrix.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\signed.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\text.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\unsigned.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\vector.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\icon.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\icon.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\toolbar1.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\bmp00001.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\bmp00002.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\button.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\about.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\exchange.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Images\camera.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\bitmap1.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\ReClass2015.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\ReClass2015.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChildFrm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChildView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SQLite\CppSQLite3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogEdit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogClasses.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReClass2015.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChildFrm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChildView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SQLite\CppSQLite3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogTypes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="i_sqlite.c">
+      <Filter>EXT</Filter>
+    </ClCompile>
+    <ClCompile Include="i_BeaEngine.cpp">
+      <Filter>EXT</Filter>
+    </ClCompile>
+    <ClCompile Include="i_tinyxml.cpp">
+      <Filter>EXT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\AutoComplete.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\CallTip.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\CellBuffer.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\CharClassify.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\ContractionState.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\Document.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\DocumentAccessor.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\Editor.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\ExternalLexer.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\Indicator.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\KeyMap.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\KeyWords.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexAda.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexAPDL.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexAsm.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexAsn1.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexAU3.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexAVE.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexBaan.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexBash.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexBasic.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexBullant.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexCaml.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexCLW.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexConf.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexCPP.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexCrontab.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexCsound.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexCSS.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexEiffel.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexErlang.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexEScript.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexFlagship.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexForth.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexFortran.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexGui4Cli.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexHaskell.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexHTML.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexInno.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexKix.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexLisp.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexLout.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexLua.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexMatlab.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexMetapost.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexMMIXAL.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexMPT.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexMSSQL.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexNsis.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexOpal.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexOthers.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexPascal.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexPB.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexPerl.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexPOV.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexPS.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexPython.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexRebol.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexRuby.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexScriptol.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexSmalltalk.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexSpecman.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexSpice.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexSQL.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexTADS3.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexTCL.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexTeX.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexVB.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexVerilog.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexVHDL.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LexYAML.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\LineMarker.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\PropSet.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\RESearch.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\ScintillaBase.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\Style.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\StyleContext.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\UniConversion.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\ViewStyle.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\WindowAccessor.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\src\XPM.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\win32\PlatWin.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scintilla\win32\ScintillaWin.cxx">
+      <Filter>EXT\scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogClasses.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ReClass2015.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ReClass2015.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

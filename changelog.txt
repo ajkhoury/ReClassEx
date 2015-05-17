@@ -1,0 +1,29 @@
+This is a complete port of ReClass to x64. ReClass was originally written by DrUnKeN ChEeTaH, later developed by @P47R!CK and @DogMatt. I will try to continue all the great work they've done over the years. I know there have been previous discussions on mods here and here. I will revisit all those ideas shortly, feel free to recommend any ideas and please post any problems you encounter running ReClass x64.
+
+Contact me by sending a message to IChooseYou @ unknowncheats.me
+
+[version 0.1b]
+
+- ribbon items have been slightly re-ordered
+- added a PCHAR type
+- fixed pasting issue where characters ended up being truncated, the subclassed edit control is now created with the ES_AUTOHSCROLL style
+- added a new class browser which can be removed and reverted to back to the original drop down menu
+- added an option to filter out commonly unused processes from the process list (svchost etc..)
+- fixed issue where some ribbon items were missing an OnUpdate command causing them not to be greyed out correctly
+- fixed GUI issue where Hex16 nodes had 8 character text preview
+- fixed formatting issue where FLOAT and DOUBLE would be padded with excessive spacing
+
+[version 0.1a]
+- added CNode64
+- converted many functions where 4 byte alignment was hard coded
+- added new functionality to insert and add 8 byte hex nodes
+- changed rarely used quaternion type to 16-byte aligned Vec3 which is displayed as Vec4
+- fixed numerous text padding and column spacing issues
+- fixed an issue where creating a ptr at an invalid address would incorrectly format offsets
+- fixed nt_function, nt_pointer, vtable node sizes
+- added limits to float preview where value must be > -99999.0 && < 99999.0
+- added limits to pointer preview where value must be > 140000000 && < 80000000000
+- fixed fill nodes bug where incorrect padding was being added to WORD and BYTE datatypes
+- sub-classed CEdit refused to take in more than 8 characters, fixed scrolling issue that caused this
+- created preview for __int64 type in hex format
+- double data type was broken due to incorrect mapping in the mfc ribbon
