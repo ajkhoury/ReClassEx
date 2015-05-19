@@ -142,7 +142,7 @@ static void ColouriseBashDoc(unsigned int startPos, int length, int initStyle,
 		bool Indent;		// indented delimiter (for <<-)
 		int DelimiterLength;	// strlen(Delimiter)
 		char *Delimiter;	// the Delimiter, 256: sizeof PL_tokenbuf
-		HereDocCls( ) {
+		HereDocCls() {
 			State = 0;
             Quote = 0;
             Quoted = false;
@@ -151,7 +151,7 @@ static void ColouriseBashDoc(unsigned int startPos, int length, int initStyle,
 			Delimiter = new char[HERE_DELIM_MAX];
 			Delimiter[0] = '\0';
 		}
-		~HereDocCls( ) {
+		~HereDocCls() {
 			delete []Delimiter;
 		}
 	};
@@ -163,7 +163,7 @@ static void ColouriseBashDoc(unsigned int startPos, int length, int initStyle,
 		int  Count;
 		char Up;
 		char Down;
-		QuoteCls( ) {
+		QuoteCls() {
 			this->New(1);
 		}
 		void New(int r) {
@@ -281,7 +281,7 @@ static void ColouriseBashDoc(unsigned int startPos, int length, int initStyle,
 				if (!iswordchar(chNext) && chNext != '+' && chNext != '-') {
 					// We need that if length of word == 1!
 					// This test is copied from the SCE_SH_WORD handler.
-					classifyWordBash(styler.GetStartSegment( ), i, keywords, styler);
+					classifyWordBash(styler.GetStartSegment(), i, keywords, styler);
 					state = SCE_SH_DEFAULT;
 				}
 			} else if (ch == '#') {
@@ -354,7 +354,7 @@ static void ColouriseBashDoc(unsigned int startPos, int length, int initStyle,
 			int digit = translateBashDigit(ch);
 			if (numBase == BASH_BASE_DECIMAL) {
 				if (ch == '#') {
-					numBase = getBashNumberBase(styler.GetStartSegment( ), i - 1, styler);
+					numBase = getBashNumberBase(styler.GetStartSegment(), i - 1, styler);
 					if (numBase == BASH_BASE_ERROR)	// take the rest as comment
 						goto numAtEnd;
 				} else if (!isdigit(ch))
@@ -401,7 +401,7 @@ static void ColouriseBashDoc(unsigned int startPos, int length, int initStyle,
 			if (!iswordchar(chNext) && chNext != '+' && chNext != '-') {
 				// "." never used in Bash variable names
 				// but used in file names
-				classifyWordBash(styler.GetStartSegment( ), i, keywords, styler);
+				classifyWordBash(styler.GetStartSegment(), i, keywords, styler);
 				state = SCE_SH_DEFAULT;
 				ch = ' ';
 			}
@@ -540,7 +540,7 @@ static void ColouriseBashDoc(unsigned int startPos, int length, int initStyle,
 			} else if (state == SCE_SH_SCALAR) {	// variable names
 				if (isEndVar(ch)) {
 					if ((state == SCE_SH_SCALAR)
-					    && i == (styler.GetStartSegment( ) + 1)) {
+					    && i == (styler.GetStartSegment() + 1)) {
 						// Special variable: $(, $_ etc.
 						styler.ColourTo(i, state);
 						state = SCE_SH_DEFAULT;

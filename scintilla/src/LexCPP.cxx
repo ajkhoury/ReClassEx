@@ -93,7 +93,7 @@ static void ColouriseCppDoc(unsigned int startPos, int length, int initStyle, Wo
 
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 
 		if (sc.atLineStart) {
 			if (sc.state == SCE_C_STRING) {
@@ -110,9 +110,9 @@ static void ColouriseCppDoc(unsigned int startPos, int length, int initStyle, Wo
 		// Handle line continuation generically.
 		if (sc.ch == '\\') {
 			if (sc.chNext == '\n' || sc.chNext == '\r') {
-				sc.Forward( );
+				sc.Forward();
 				if (sc.ch == '\r' && sc.chNext == '\n') {
-					sc.Forward( );
+					sc.Forward();
 				}
 				continuationLine = true;
 				continue;
@@ -164,13 +164,13 @@ static void ColouriseCppDoc(unsigned int startPos, int length, int initStyle, Wo
 				break;
 			case SCE_C_COMMENT:
 				if (sc.Match('*', '/')) {
-					sc.Forward( );
+					sc.Forward();
 					sc.ForwardSetState(SCE_C_DEFAULT);
 				}
 				break;
 			case SCE_C_COMMENTDOC:
 				if (sc.Match('*', '/')) {
-					sc.Forward( );
+					sc.Forward();
 					sc.ForwardSetState(SCE_C_DEFAULT);
 				} else if (sc.ch == '@' || sc.ch == '\\') { // JavaDoc and Doxygen support
 					// Verify that we have the conditions to mark a comment-doc-keyword
@@ -199,7 +199,7 @@ static void ColouriseCppDoc(unsigned int startPos, int length, int initStyle, Wo
 			case SCE_C_COMMENTDOCKEYWORD:
 				if ((styleBeforeDCKeyword == SCE_C_COMMENTDOC) && sc.Match('*', '/')) {
 					sc.ChangeState(SCE_C_COMMENTDOCKEYWORDERROR);
-					sc.Forward( );
+					sc.Forward();
 					sc.ForwardSetState(SCE_C_DEFAULT);
 				} else if (!IsADoxygenChar(sc.ch)) {
 					char s[100];
@@ -219,7 +219,7 @@ static void ColouriseCppDoc(unsigned int startPos, int length, int initStyle, Wo
 					sc.ChangeState(SCE_C_STRINGEOL);
 				} else if (sc.ch == '\\') {
 					if (sc.chNext == '\"' || sc.chNext == '\'' || sc.chNext == '\\') {
-						sc.Forward( );
+						sc.Forward();
 					}
 				} else if (sc.ch == '\"') {
 					sc.ForwardSetState(SCE_C_DEFAULT);
@@ -230,7 +230,7 @@ static void ColouriseCppDoc(unsigned int startPos, int length, int initStyle, Wo
 					sc.ChangeState(SCE_C_STRINGEOL);
 				} else if (sc.ch == '\\') {
 					if (sc.chNext == '\"' || sc.chNext == '\'' || sc.chNext == '\\') {
-						sc.Forward( );
+						sc.Forward();
 					}
 				} else if (sc.ch == '\'') {
 					sc.ForwardSetState(SCE_C_DEFAULT);
@@ -240,14 +240,14 @@ static void ColouriseCppDoc(unsigned int startPos, int length, int initStyle, Wo
 				if (sc.atLineStart) {
 					sc.SetState(SCE_C_DEFAULT);
 				} else if (sc.ch == '/') {
-					sc.Forward( );
+					sc.Forward();
 					while ((sc.ch < 0x80) && islower(sc.ch))
-						sc.Forward( );    // gobble regex flags
+						sc.Forward();    // gobble regex flags
 					sc.SetState(SCE_C_DEFAULT);
 				} else if (sc.ch == '\\') {
 					// Gobble up the quoted character
 					if (sc.chNext == '\\' || sc.chNext == '/') {
-						sc.Forward( );
+						sc.Forward();
 					}
 				}
 				break;
@@ -259,7 +259,7 @@ static void ColouriseCppDoc(unsigned int startPos, int length, int initStyle, Wo
 			case SCE_C_VERBATIM:
 				if (sc.ch == '\"') {
 					if (sc.chNext == '\"') {
-						sc.Forward( );
+						sc.Forward();
 					} else {
 						sc.ForwardSetState(SCE_C_DEFAULT);
 					}
@@ -275,7 +275,7 @@ static void ColouriseCppDoc(unsigned int startPos, int length, int initStyle, Wo
 		if (sc.state == SCE_C_DEFAULT) {
 			if (sc.Match('@', '\"')) {
 				sc.SetState(SCE_C_VERBATIM);
-				sc.Forward( );
+				sc.Forward();
 			} else if (IsADigit(sc.ch) || (sc.ch == '.' && IsADigit(sc.chNext))) {
 				if (lastWordWasUUID) {
 					sc.SetState(SCE_C_UUID);
@@ -296,7 +296,7 @@ static void ColouriseCppDoc(unsigned int startPos, int length, int initStyle, Wo
 				} else {
 					sc.SetState(SCE_C_COMMENT);
 				}
-				sc.Forward( );	// Eat the * so it isn't used for the end of the comment
+				sc.Forward();	// Eat the * so it isn't used for the end of the comment
 			} else if (sc.Match('/', '/')) {
 				if ((sc.Match("///") && !sc.Match("////")) || sc.Match("//!"))
 					// Support of Qt/Doxygen doc. style
@@ -314,8 +314,8 @@ static void ColouriseCppDoc(unsigned int startPos, int length, int initStyle, Wo
 				sc.SetState(SCE_C_PREPROCESSOR);
 				// Skip whitespace between # and preprocessor word
 				do {
-					sc.Forward( );
-				} while ((sc.ch == ' ' || sc.ch == '\t') && sc.More( ));
+					sc.Forward();
+				} while ((sc.ch == ' ' || sc.ch == '\t') && sc.More());
 				if (sc.atLineEnd) {
 					sc.SetState(SCE_C_DEFAULT);
 				}
@@ -330,7 +330,7 @@ static void ColouriseCppDoc(unsigned int startPos, int length, int initStyle, Wo
 		}
 		continuationLine = false;
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static bool IsStreamCommentStyle(int style) {

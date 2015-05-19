@@ -1,0 +1,4054 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: SciLexer - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x409 /fo"Debug/ScintRes.res" /i "\Code\robert\2006_07\Cint\scintilla\win32" /d "_DEBUG" "C:\Code\robert\2006_07\Cint\scintilla\win32\ScintRes.rc"" 
+Creating temporary file "C:\DOCUME~1\RUEBE3~1.ECH\LOCALS~1\Temp\RSP165.tmp" with contents
+[
+/nologo /G6 /MTd /W4 /Gm /GX /ZI /Od /I "..\include" /I "..\src" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "SCI_LEXER" /FR"Debug/" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Code\robert\2006_07\Cint\scintilla\src\AutoComplete.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\CallTip.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\CellBuffer.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\CharClassify.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\ContractionState.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\Document.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\DocumentAccessor.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\ExternalLexer.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\Indicator.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\KeyMap.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexAda.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexAPDL.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexAsm.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexAsn1.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexAU3.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexAVE.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexBaan.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexBash.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexBasic.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexBullant.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexCaml.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexCLW.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexConf.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexCPP.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexCrontab.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexCsound.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexCSS.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexEiffel.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexErlang.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexEScript.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexFlagship.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexForth.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexFortran.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexGui4Cli.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexHaskell.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexHTML.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexInno.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexKix.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexLisp.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexLout.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexLua.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexMatlab.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexMetapost.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexMMIXAL.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexMPT.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexMSSQL.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexNsis.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexOpal.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexOthers.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexPascal.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexPB.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexPerl.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexPOV.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexPS.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexPython.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexRebol.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexRuby.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexScriptol.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexSmalltalk.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexSpecman.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexSpice.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexSQL.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexTADS3.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexTCL.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexTeX.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexVB.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexVerilog.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexVHDL.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LexYAML.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\PropSet.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\RESearch.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\Style.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\StyleContext.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\UniConversion.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\ViewStyle.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\WindowAccessor.cxx"
+"C:\Code\robert\2006_07\Cint\scintilla\src\XPM.cxx"
+]
+Creating command line "xicl6.exe @C:\DOCUME~1\RUEBE3~1.ECH\LOCALS~1\Temp\RSP165.tmp" 
+Creating temporary file "C:\DOCUME~1\RUEBE3~1.ECH\LOCALS~1\Temp\RSP166.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib imm32.lib comctl32.lib /nologo /dll /incremental:yes /pdb:"../bin/SciLexer.pdb" /debug /machine:I386 /out:"../bin/SciLexer.dll" /implib:"../bin/SciLexer.lib" 
+.\Debug\AutoComplete.obj
+.\Debug\CallTip.obj
+.\Debug\CellBuffer.obj
+.\Debug\CharClassify.obj
+.\Debug\ContractionState.obj
+.\Debug\Document.obj
+.\Debug\DocumentAccessor.obj
+.\Debug\Editor.obj
+.\Debug\ExternalLexer.obj
+.\Debug\Indicator.obj
+.\Debug\KeyMap.obj
+.\Debug\KeyWords.obj
+.\Debug\LexAda.obj
+.\Debug\LexAPDL.obj
+.\Debug\LexAsm.obj
+.\Debug\LexAsn1.obj
+.\Debug\LexAU3.obj
+.\Debug\LexAVE.obj
+.\Debug\LexBaan.obj
+.\Debug\LexBash.obj
+.\Debug\LexBasic.obj
+.\Debug\LexBullant.obj
+.\Debug\LexCaml.obj
+.\Debug\LexCLW.obj
+.\Debug\LexConf.obj
+.\Debug\LexCPP.obj
+.\Debug\LexCrontab.obj
+.\Debug\LexCsound.obj
+.\Debug\LexCSS.obj
+.\Debug\LexEiffel.obj
+.\Debug\LexErlang.obj
+.\Debug\LexEScript.obj
+.\Debug\LexFlagship.obj
+.\Debug\LexForth.obj
+.\Debug\LexFortran.obj
+.\Debug\LexGui4Cli.obj
+.\Debug\LexHaskell.obj
+.\Debug\LexHTML.obj
+.\Debug\LexInno.obj
+.\Debug\LexKix.obj
+.\Debug\LexLisp.obj
+.\Debug\LexLout.obj
+.\Debug\LexLua.obj
+.\Debug\LexMatlab.obj
+.\Debug\LexMetapost.obj
+.\Debug\LexMMIXAL.obj
+.\Debug\LexMPT.obj
+.\Debug\LexMSSQL.obj
+.\Debug\LexNsis.obj
+.\Debug\LexOpal.obj
+.\Debug\LexOthers.obj
+.\Debug\LexPascal.obj
+.\Debug\LexPB.obj
+.\Debug\LexPerl.obj
+.\Debug\LexPOV.obj
+.\Debug\LexPS.obj
+.\Debug\LexPython.obj
+.\Debug\LexRebol.obj
+.\Debug\LexRuby.obj
+.\Debug\LexScriptol.obj
+.\Debug\LexSmalltalk.obj
+.\Debug\LexSpecman.obj
+.\Debug\LexSpice.obj
+.\Debug\LexSQL.obj
+.\Debug\LexTADS3.obj
+.\Debug\LexTCL.obj
+.\Debug\LexTeX.obj
+.\Debug\LexVB.obj
+.\Debug\LexVerilog.obj
+.\Debug\LexVHDL.obj
+.\Debug\LexYAML.obj
+.\Debug\LineMarker.obj
+.\Debug\PlatWin.obj
+.\Debug\PropSet.obj
+.\Debug\RESearch.obj
+.\Debug\ScintillaBase.obj
+.\Debug\ScintillaWin.obj
+.\Debug\Style.obj
+.\Debug\StyleContext.obj
+.\Debug\UniConversion.obj
+.\Debug\ViewStyle.obj
+.\Debug\WindowAccessor.obj
+.\Debug\XPM.obj
+.\Debug\ScintRes.res
+]
+Creating command line "xilink6.exe @C:\DOCUME~1\RUEBE3~1.ECH\LOCALS~1\Temp\RSP166.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+AutoComplete.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+CallTip.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\CallTip.cxx(164): remark #981: operands are evaluated in unspecified order
+   int ascent = surfaceWindow->Ascent(font) - surfaceWindow->InternalLeading(font);
+                                            ^
+
+CellBuffer.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+CharClassify.cxx
+ContractionState.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+Document.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Document.cxx(721): remark #981: operands are evaluated in unspecified order
+     if (LineStart(line) < LineEnd(line)) {
+                         ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Document.cxx(1140): remark #981: operands are evaluated in unspecified order
+        if (MakeUpperCase(ch) != MakeUpperCase(s[posMatch]))
+                              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Document.cxx(1510): remark #1418: external definition with no prior declaration
+  bool IsLineEndChar(char c) {
+       ^
+
+DocumentAccessor.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+Editor.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(22): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(23): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(30): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(31): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(41): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(42): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(554): remark #1418: external definition with no prior declaration
+  const char *ControlCharacterString(unsigned char ch) {
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(686): remark #981: operands are evaluated in unspecified order
+    LayoutLine(line, surface, vs, ll, wrapWidth);
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(690): remark #981: operands are evaluated in unspecified order
+     pt.x = ll->positions[ll->maxLineLength] - ll->positions[ll->LineStart(ll->lines)];
+                         ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(690): remark #981: operands are evaluated in unspecified order
+     pt.x = ll->positions[ll->maxLineLength] - ll->positions[ll->LineStart(ll->lines)];
+                                                                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(690): remark #981: operands are evaluated in unspecified order
+     pt.x = ll->positions[ll->maxLineLength] - ll->positions[ll->LineStart(ll->lines)];
+                                                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(690): remark #981: operands are evaluated in unspecified order
+     pt.x = ll->positions[ll->maxLineLength] - ll->positions[ll->LineStart(ll->lines)];
+                                             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(695): remark #981: operands are evaluated in unspecified order
+      pt.x = ll->positions[posInLine] - ll->positions[ll->LineStart(subLine)];
+                                                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(695): remark #981: operands are evaluated in unspecified order
+      pt.x = ll->positions[posInLine] - ll->positions[ll->LineStart(subLine)];
+                                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(746): remark #981: operands are evaluated in unspecified order
+    LayoutLine(lineDoc, surface, vs, ll, wrapWidth);
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(759): remark #981: operands are evaluated in unspecified order
+      if (pt.x < (((ll->positions[i] + ll->positions[i + 1]) / 2) - subLineStart) ||
+                                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(794): remark #981: operands are evaluated in unspecified order
+    LayoutLine(lineDoc, surface, vs, ll, wrapWidth);
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(808): remark #981: operands are evaluated in unspecified order
+      if (pt.x < (((ll->positions[i] + ll->positions[i + 1]) / 2) - subLineStart) ||
+                                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(836): remark #981: operands are evaluated in unspecified order
+    LayoutLine(lineDoc, surface, vs, ll, wrapWidth);
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(848): remark #981: operands are evaluated in unspecified order
+     if (x < (((ll->positions[i] + ll->positions[i + 1]) / 2) - subLineStart) ||
+                                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(922): remark #981: operands are evaluated in unspecified order
+   int maxLine = cs.DisplayFromDoc(lineDocMax) + cs.GetHeight(lineDocMax) - 1;
+                                               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(1177): remark #981: operands are evaluated in unspecified order
+    LayoutLine(lineDoc, surface, vs, ll, wrapWidth);
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(1584): remark #981: operands are evaluated in unspecified order
+        LayoutLine(lineToWrap, surface, vs, ll, wrapWidth);
+        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(1637): remark #1418: external definition with no prior declaration
+  const char *StringFromEOLMode(int eolMode) {
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(1662): remark #981: operands are evaluated in unspecified order
+      LayoutLine(line, surface, vs, ll, pixelWidth);
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(1664): remark #981: operands are evaluated in unspecified order
+       pdoc->InsertString(posLineStart + (subLine - 1) * strlen(eol) +
+                                                                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(1894): remark #1418: external definition with no prior declaration
+  void DrawTabArrow(Surface *surface, PRectangle rcTab, int ymid) {
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(1921): remark #981: operands are evaluated in unspecified order
+                       LinesOnScreen() + 1, pdoc->LinesTotal());
+                       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(1919): remark #981: operands are evaluated in unspecified order
+   return llc.Retrieve(lineNumber, lineCaret,
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(2532): remark #981: operands are evaluated in unspecified order
+        int normalCharHeight = surface->Ascent(ctrlCharsFont) -
+                                                              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(2695): remark #1599: declaration hides variable "markBit" (declared at line 2686)
+     for (int markBit = 0; (markBit < 32) && marksMasked; markBit++) {
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(2764): remark #981: operands are evaluated in unspecified order
+                            surfaceWindow, wMain.GetID());
+                                           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(2763): remark #981: operands are evaluated in unspecified order
+     pixmapLine->InitPixMap(rcClient.Width(), vs.lineHeight,
+                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(2766): remark #981: operands are evaluated in unspecified order
+                                 rcClient.Height(), surfaceWindow, wMain.GetID());
+                                                                   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(2765): remark #981: operands are evaluated in unspecified order
+     pixmapSelMargin->InitPixMap(vs.fixedColumnWidth,
+                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(2918): remark #981: operands are evaluated in unspecified order
+      GetHotSpotRange(ll->hsStart, ll->hsEnd);
+                                   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(2918): remark #981: operands are evaluated in unspecified order
+      GetHotSpotRange(ll->hsStart, ll->hsEnd);
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(2924): remark #981: operands are evaluated in unspecified order
+      Range rangeLine(pdoc->LineStart(lineDoc), pdoc->LineStart(lineDoc + 1));
+                                                ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(2999): remark #981: operands are evaluated in unspecified order
+        int xposCaret = ll->positions[offset] - ll->positions[ll->LineStart(subLine)] + xStart;
+                                                             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(2999): remark #981: operands are evaluated in unspecified order
+        int xposCaret = ll->positions[offset] - ll->positions[ll->LineStart(subLine)] + xStart;
+                                              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(3012): remark #981: operands are evaluated in unspecified order
+         widthOverstrikeCaret = ll->positions[offset + 1] - ll->positions[offset];
+                                                          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(3084): remark #1418: external definition with no prior declaration
+  ColourDesired InvertedLight(ColourDesired orig) {
+                ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(3095): remark #981: operands are evaluated in unspecified order
+   return ColourDesired(Platform::Minimum(r, 0xff), Platform::Minimum(g, 0xff), Platform::Minimum(b, 0xff));
+                                                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(3163): remark #981: operands are evaluated in unspecified order
+    lineNumberWidth = surfaceMeasure->WidthText(vsPrint.styles[STYLE_LINENUMBER].font,
+                                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(3243): remark #981: operands are evaluated in unspecified order
+     rcNumber.left -= surfaceMeasure->WidthText(
+                                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(3246): remark #981: operands are evaluated in unspecified order
+     surface->DrawTextNoClip(rcNumber, vsPrint.styles[STYLE_LINENUMBER].font,
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(3269): remark #981: operands are evaluated in unspecified order
+       nPrintPos += ll.LineStart(iwl + 1) - ll.LineStart(iwl);
+                                          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(3283): remark #981: operands are evaluated in unspecified order
+    return surface->WidthText(vs.styles[style].font, text, istrlen(text));
+                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(3480): remark #1599: declaration hides variable "i" (declared at line 3467)
+      for (int i = 0; i < xInsert - XFromPosition(currentPos); i++) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(3548): remark #981: operands are evaluated in unspecified order
+      if (pdoc->GetColumn(currentPos) <= pdoc->GetLineIndentation(lineCurrentPos) &&
+                                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(3595): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+    NotifyMacroRecord(SCI_REPLACESEL, 0, reinterpret_cast<sptr_t>(txt));
+                                         ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(3777): remark #981: operands are evaluated in unspecified order
+    if (cs.LinesDisplayed() < cs.LinesInDoc()) {
+                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4015): remark #981: operands are evaluated in unspecified order
+                        topLine + direction * LinesToScroll(), 0, MaxScrollPos());
+                                                                  ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4014): remark #981: operands are evaluated in unspecified order
+    topLineNew = Platform::Clamp(
+                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4035): remark #981: operands are evaluated in unspecified order
+    pdoc->ChangeCase(Range(SelectionStart(), SelectionEnd()),
+                                             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4172): remark #981: operands are evaluated in unspecified order
+    LayoutLine(line, surface, vs, ll, wrapWidth);
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4526): remark #981: operands are evaluated in unspecified order
+      pdoc->LineStart(lineEnd + 1));
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4525): remark #981: operands are evaluated in unspecified order
+     CopyRangeToClipboard(pdoc->LineStart(lineStart),
+     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4637): remark #981: operands are evaluated in unspecified order
+     if (pdoc->GetColumn(currentPos) <= pdoc->GetColumn(pdoc->GetLineIndentPosition(lineCurrentPos)) &&
+                                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4660): remark #981: operands are evaluated in unspecified order
+     if (pdoc->GetColumn(currentPos) <= pdoc->GetLineIndentation(lineCurrentPos) &&
+                                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4692): remark #981: operands are evaluated in unspecified order
+      SetSelection(pdoc->LineStart(lineCurrentPos), pdoc->LineStart(lineOfAnchor));
+                                                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4692): remark #981: operands are evaluated in unspecified order
+      SetSelection(pdoc->LineStart(lineCurrentPos), pdoc->LineStart(lineOfAnchor));
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4694): remark #981: operands are evaluated in unspecified order
+      SetSelection(pdoc->LineStart(lineCurrentPos + 1), pdoc->LineStart(lineOfAnchor));
+                                                        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4694): remark #981: operands are evaluated in unspecified order
+      SetSelection(pdoc->LineStart(lineCurrentPos + 1), pdoc->LineStart(lineOfAnchor));
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4697): remark #981: operands are evaluated in unspecified order
+      SetSelection(pdoc->LineStart(lineCurrentPos), pdoc->LineStart(lineOfAnchor));
+                                                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4697): remark #981: operands are evaluated in unspecified order
+      SetSelection(pdoc->LineStart(lineCurrentPos), pdoc->LineStart(lineOfAnchor));
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4699): remark #981: operands are evaluated in unspecified order
+      SetSelection(pdoc->LineStart(lineCurrentPos), pdoc->LineStart(lineOfAnchor + 1));
+                                                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4699): remark #981: operands are evaluated in unspecified order
+      SetSelection(pdoc->LineStart(lineCurrentPos), pdoc->LineStart(lineOfAnchor + 1));
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4713): remark #171: invalid type conversion: "sptr_t={long}" to "TextToFind *"
+   TextToFind *ft = reinterpret_cast<TextToFind *>(lParam);
+                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4755): remark #171: invalid type conversion: "sptr_t={long}" to "char *"
+   const char *txt = reinterpret_cast<char *>(lParam);
+                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4843): remark #981: operands are evaluated in unspecified order
+    CopySelectionFromRange(ss, SelectionStart(), SelectionEnd());
+                                                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(4843): remark #981: operands are evaluated in unspecified order
+    CopySelectionFromRange(ss, SelectionStart(), SelectionEnd());
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5061): remark #981: operands are evaluated in unspecified order
+                 pdoc->LineStart(lineAnchor_));
+                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5060): remark #981: operands are evaluated in unspecified order
+    SetSelection(pdoc->LineStart(lineCurrent_ + 1),
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5064): remark #981: operands are evaluated in unspecified order
+                 pdoc->LineStart(lineAnchor_ + 1));
+                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5063): remark #981: operands are evaluated in unspecified order
+    SetSelection(pdoc->LineStart(lineCurrent_),
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5067): remark #981: operands are evaluated in unspecified order
+                 pdoc->LineStart(lineAnchor_));
+                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5066): remark #981: operands are evaluated in unspecified order
+    SetSelection(pdoc->LineStart(lineAnchor_ + 1),
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5119): remark #981: operands are evaluated in unspecified order
+                   pdoc->ExtendWordSelect(originalAnchorPos, -1));
+                   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5118): remark #981: operands are evaluated in unspecified order
+      SetSelection(pdoc->ExtendWordSelect(currentPos, 1),
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5122): remark #981: operands are evaluated in unspecified order
+                   pdoc->ExtendWordSelect(originalAnchorPos, 1));
+                   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5121): remark #981: operands are evaluated in unspecified order
+      SetSelection(pdoc->ExtendWordSelect(currentPos, -1),
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5126): remark #981: operands are evaluated in unspecified order
+     SetSelection(pdoc->LineStart(lineAnchor + 1), pdoc->LineStart(lineAnchor));
+                                                   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5126): remark #981: operands are evaluated in unspecified order
+     SetSelection(pdoc->LineStart(lineAnchor + 1), pdoc->LineStart(lineAnchor));
+     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5150): remark #981: operands are evaluated in unspecified order
+                   pdoc->LineStart(lineAnchor));
+                   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5149): remark #981: operands are evaluated in unspecified order
+      SetSelection(pdoc->LineStart(lineAnchor + 1),
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5280): remark #981: operands are evaluated in unspecified order
+                    pdoc->ExtendWordSelect(originalAnchorPos, -1));
+                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5279): remark #981: operands are evaluated in unspecified order
+       SetSelection(pdoc->ExtendWordSelect(movePos, 1),
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5283): remark #981: operands are evaluated in unspecified order
+                    pdoc->ExtendWordSelect(originalAnchorPos, 1));
+                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5282): remark #981: operands are evaluated in unspecified order
+       SetSelection(pdoc->ExtendWordSelect(movePos, -1),
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5627): remark #981: operands are evaluated in unspecified order
+      SetTopLine(Platform::Clamp(lineDisplay - LinesOnScreen() + 1 + visibleSlop, 0, MaxScrollPos()));
+                                                                                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5627): remark #981: operands are evaluated in unspecified order
+      SetTopLine(Platform::Clamp(lineDisplay - LinesOnScreen() + 1 + visibleSlop, 0, MaxScrollPos()));
+                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5633): remark #981: operands are evaluated in unspecified order
+      SetTopLine(Platform::Clamp(lineDisplay - LinesOnScreen() / 2 + 1, 0, MaxScrollPos()));
+                                                                           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5633): remark #981: operands are evaluated in unspecified order
+      SetTopLine(Platform::Clamp(lineDisplay - LinesOnScreen() / 2 + 1, 0, MaxScrollPos()));
+                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5675): remark #981: operands are evaluated in unspecified order
+    LayoutLine(line, surface, vs, ll, wrapWidth);
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5687): remark #171: invalid type conversion: "sptr_t={long}" to "char *"
+   return reinterpret_cast<char *>(lParam);
+          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5811): remark #981: operands are evaluated in unspecified order
+       return 1 + SelectionEnd() - SelectionStart();
+                                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5860): remark #981: operands are evaluated in unspecified order
+    return pdoc->LineStart(wParam + 1) - pdoc->LineStart(wParam);
+                                       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5978): remark #171: invalid type conversion: "sptr_t={long}" to "TextRange *"
+     TextRange *tr = reinterpret_cast<TextRange *>(lParam);
+                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(5996): remark #171: invalid type conversion: "sptr_t={long}" to "RangeToFormat *"
+    return FormatRange(wParam != 0, reinterpret_cast<RangeToFormat *>(lParam));
+                                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6019): remark #981: operands are evaluated in unspecified order
+     pdoc->InsertString(CurrentPosition(), CharPtrFromSPtr(lParam), wParam);
+                                           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6019): remark #981: operands are evaluated in unspecified order
+     pdoc->InsertString(CurrentPosition(), CharPtrFromSPtr(lParam), wParam);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6027): remark #981: operands are evaluated in unspecified order
+     pdoc->InsertStyledString(CurrentPosition() * 2, CharPtrFromSPtr(lParam), wParam);
+                                                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6027): remark #981: operands are evaluated in unspecified order
+     pdoc->InsertStyledString(CurrentPosition() * 2, CharPtrFromSPtr(lParam), wParam);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6048): remark #981: operands are evaluated in unspecified order
+    pdoc->InsertString(pdoc->Length(), CharPtrFromSPtr(lParam), wParam);
+                                       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6048): remark #981: operands are evaluated in unspecified order
+    pdoc->InsertString(pdoc->Length(), CharPtrFromSPtr(lParam), wParam);
+          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6085): remark #171: invalid type conversion: "sptr_t={long}" to "unsigned char *"
+     pdoc->SetCharClasses(reinterpret_cast<unsigned char *>(lParam), CharClassify::ccWord);
+                          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6092): remark #171: invalid type conversion: "sptr_t={long}" to "unsigned char *"
+     pdoc->SetCharClasses(reinterpret_cast<unsigned char *>(lParam), CharClassify::ccSpace);
+                          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6180): remark #171: invalid type conversion: "sptr_t={long}" to "TextRange *"
+     TextRange *tr = reinterpret_cast<TextRange *>(lParam);
+                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6768): remark #383: value copied to temporary, reference to temporary used
+    vs.caretLineBackground.desired = wParam;
+                                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6934): remark #981: operands are evaluated in unspecified order
+                      Platform::HighShortFromLong(wParam), lParam);
+                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6933): remark #981: operands are evaluated in unspecified order
+    kmap.AssignCmdKey(Platform::LowShortFromLong(wParam),
+         ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6939): remark #981: operands are evaluated in unspecified order
+                      Platform::HighShortFromLong(wParam), SCI_NULL);
+                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(6938): remark #981: operands are evaluated in unspecified order
+    kmap.AssignCmdKey(Platform::LowShortFromLong(wParam),
+         ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(7110): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+    return reinterpret_cast<sptr_t>(pdoc);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(7114): remark #171: invalid type conversion: "sptr_t={long}" to "Document *"
+    SetDocPointer(reinterpret_cast<Document *>(lParam));
+                  ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(7122): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+     return reinterpret_cast<sptr_t>(doc);
+            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(7126): remark #171: invalid type conversion: "sptr_t={long}" to "Document *"
+    (reinterpret_cast<Document *>(lParam))->AddRef();
+     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Editor.cxx(7130): remark #171: invalid type conversion: "sptr_t={long}" to "Document *"
+    (reinterpret_cast<Document *>(lParam))->Release();
+     ^
+
+ExternalLexer.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ExternalLexer.cxx(32): remark #1418: external definition with no prior declaration
+  char **WordListsToStrings(WordList *val[]) {
+         ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ExternalLexer.cxx(52): remark #1418: external definition with no prior declaration
+  void DeleteWLStrings(char *strs[]) {
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ExternalLexer.cxx(121): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+    GetLexerCountFn GetLexerCount = (GetLexerCountFn)(sptr_t)lib->FindFunction("GetLexerCount");
+                                                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ExternalLexer.cxx(128): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+     GetLexerNameFn GetLexerName = (GetLexerNameFn)(sptr_t)lib->FindFunction("GetLexerName");
+                                                   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ExternalLexer.cxx(129): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+     ExtLexerFunction Lexer = (ExtLexerFunction)(sptr_t)lib->FindFunction("Lex");
+                                                ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ExternalLexer.cxx(130): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+     ExtFoldFunction Folder = (ExtFoldFunction)(sptr_t)lib->FindFunction("Fold");
+                                               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ExternalLexer.cxx(259): remark #1418: external definition with no prior declaration
+  LMMinder minder;
+           ^
+
+Indicator.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+KeyMap.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+KeyWords.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(124): remark #1418: external definition with no prior declaration
+  int wxForceScintillaLexers(void) {
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(140): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmAda);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(141): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmAns1);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(142): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmAPDL);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(143): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmAsm);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(144): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmASP);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(145): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmAU3);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(146): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmAVE);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(147): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmBaan);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(148): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmBash);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(149): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmBatch);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(150): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmBlitzBasic);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(151): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmBullant);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(152): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmCaml);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(153): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmClw);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(154): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmClwNoCase);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(155): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmConf);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(156): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmCPP);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(157): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmCPPNoCase);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(158): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmCsound);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(159): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmCss);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(160): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmDiff);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(161): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmEiffel);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(162): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmEiffelkw);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(163): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmErlang);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(164): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmErrorList);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(165): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmESCRIPT);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(166): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmF77);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(167): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmFlagShip);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(168): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmForth);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(169): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmFortran);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(170): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmFreeBasic);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(171): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmGui4Cli);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(172): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmHaskell);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(173): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmHTML);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(174): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmInno);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(175): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmKix);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(176): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmLatex);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(177): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmLISP);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(178): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmLot);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(179): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmLout);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(180): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmLua);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(181): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmMake);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(182): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmMatlab);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(183): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmMETAPOST);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(184): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmMMIXAL);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(185): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmMSSQL);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(186): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmNncrontab);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(187): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmNsis);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(188): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmNull);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(189): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmOctave);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(190): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmOpal);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(191): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmPascal);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(192): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmPB);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(193): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmPerl);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(194): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmPHP);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(195): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmPHPSCRIPT);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(196): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmPOV);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(197): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmProps);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(198): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmPS);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(199): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmPureBasic);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(200): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmPython);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(201): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmREBOL);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(202): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmRuby);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(203): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmScriptol);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(204): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmSmalltalk);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(205): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmSpecman);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(206): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmSpice);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(207): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmSQL);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(208): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmTADS3);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(209): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmTCL);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(210): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmTeX);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(211): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmVB);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(212): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmVBScript);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(213): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmVerilog);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(214): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmVHDL);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(215): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmXML);
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\KeyWords.cxx(216): remark #1419: external declaration in primary source file
+   LINK_LEXER(lmYAML);
+   ^
+
+LexAda.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexAda.cxx(38): remark #1418: external definition with no prior declaration
+  LexerModule lmAda(SCLEX_ADA, ColouriseDocument, "ada", NULL, adaWordListDesc);
+              ^
+
+LexAPDL.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexAPDL.cxx(136): remark #1418: external definition with no prior declaration
+  LexerModule lmAPDL(SCLEX_APDL, ColouriseAPDLDoc, "apdl", 0, apdlWordListDesc);
+              ^
+
+LexAsm.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexAsm.cxx(176): remark #1418: external definition with no prior declaration
+  LexerModule lmAsm(SCLEX_ASM, ColouriseAsmDoc, "asm", 0, asmWordListDesc);
+              ^
+
+LexAsn1.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexAsn1.cxx(181): remark #1418: external definition with no prior declaration
+  LexerModule lmAns1(SCLEX_ASN1, ColouriseAsn1Doc, "asn1", FoldAsn1Doc, asn1WordLists);
+              ^
+
+LexAU3.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexAU3.cxx(432): remark #1599: declaration hides variable "lineCurrent" (declared at line 202)
+       int lineCurrent = styler.GetLine(sc.currentPos);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexAU3.cxx(891): remark #1418: external definition with no prior declaration
+  LexerModule lmAU3(SCLEX_AU3, ColouriseAU3Doc, "au3", FoldAU3Doc , AU3WordLists);
+              ^
+
+LexAVE.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexAVE.cxx(224): remark #1418: external definition with no prior declaration
+  LexerModule lmAVE(SCLEX_AVE, ColouriseAveDoc, "ave", FoldAveDoc);
+              ^
+
+LexBaan.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexBaan.cxx(189): remark #1418: external definition with no prior declaration
+  LexerModule lmBaan(SCLEX_BAAN, ColouriseBaanDoc, "baan", FoldBaanDoc);
+              ^
+
+LexBash.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexBash.cxx(663): remark #1418: external definition with no prior declaration
+  LexerModule lmBash(SCLEX_BASH, ColouriseBashDoc, "bash", FoldBashDoc, bashWordListDesc);
+              ^
+
+LexBasic.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexBasic.cxx(361): remark #1418: external definition with no prior declaration
+  LexerModule lmBlitzBasic(SCLEX_BLITZBASIC, ColouriseBlitzBasicDoc, "blitzbasic",
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexBasic.cxx(364): remark #1418: external definition with no prior declaration
+  LexerModule lmPureBasic(SCLEX_PUREBASIC, ColourisePureBasicDoc, "purebasic",
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexBasic.cxx(367): remark #1418: external definition with no prior declaration
+  LexerModule lmFreeBasic(SCLEX_FREEBASIC, ColouriseFreeBasicDoc, "freebasic",
+              ^
+
+LexBullant.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexBullant.cxx(225): remark #1418: external definition with no prior declaration
+  LexerModule lmBullant(SCLEX_BULLANT, ColouriseBullantDoc, "bullant", 0, bullantWordListDesc);
+              ^
+
+LexCaml.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexCaml.cxx(170): remark #1418: external definition with no prior declaration
+  void ColouriseCamlDoc(
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexCaml.cxx(380): remark #1418: external definition with no prior declaration
+  void FoldCamlDoc(
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexCaml.cxx(398): remark #1418: external definition with no prior declaration
+  LexerModule lmCaml(SCLEX_CAML, ColouriseCamlDoc, "caml", FoldCamlDoc, camlWordListDesc);
+              ^
+
+LexCLW.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexCLW.cxx(672): remark #1418: external definition with no prior declaration
+  LexerModule lmClw(SCLEX_CLW, ColouriseClarionDocSensitive, "clarion", FoldClarionDoc, rgWordListDescriptions);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexCLW.cxx(675): remark #1418: external definition with no prior declaration
+  LexerModule lmClwNoCase(SCLEX_CLWNOCASE, ColouriseClarionDocInsensitive, "clarionnocase", FoldClarionDoc, rgWordListDescriptions);
+              ^
+
+LexConf.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexConf.cxx(184): remark #1418: external definition with no prior declaration
+  LexerModule lmConf(SCLEX_CONF, ColouriseConfDoc, "conf", 0, confWordListDesc);
+              ^
+
+LexCPP.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexCPP.cxx(460): remark #1418: external definition with no prior declaration
+  LexerModule lmCPP(SCLEX_CPP, ColouriseCppDocSensitive, "cpp", FoldCppDoc, cppWordLists);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexCPP.cxx(461): remark #1418: external definition with no prior declaration
+  LexerModule lmCPPNoCase(SCLEX_CPPNOCASE, ColouriseCppDocInsensitive, "cppnocase", FoldCppDoc, cppWordLists);
+              ^
+
+LexCrontab.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexCrontab.cxx(218): remark #1418: external definition with no prior declaration
+  LexerModule lmNncrontab(SCLEX_NNCRONTAB, ColouriseNncrontabDoc, "nncrontab", 0, cronWordListDesc);
+              ^
+
+LexCsound.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexCsound.cxx(207): remark #1418: external definition with no prior declaration
+  LexerModule lmCsound(SCLEX_CSOUND, ColouriseCsoundDoc, "csound", FoldCsoundInstruments, csoundWordListDesc);
+              ^
+
+LexCSS.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexCSS.cxx(303): remark #1418: external definition with no prior declaration
+  LexerModule lmCss(SCLEX_CSS, ColouriseCssDoc, "css", FoldCSSDoc, cssWordListDesc);
+              ^
+
+LexEiffel.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexEiffel.cxx(233): remark #1418: external definition with no prior declaration
+  LexerModule lmEiffel(SCLEX_EIFFEL, ColouriseEiffelDoc, "eiffel", FoldEiffelDocIndent, eiffelWordListDesc);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexEiffel.cxx(234): remark #1418: external definition with no prior declaration
+  LexerModule lmEiffelkw(SCLEX_EIFFELKW, ColouriseEiffelDoc, "eiffelkw", FoldEiffelDocKeyWords, eiffelWordListDesc);
+              ^
+
+LexErlang.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexErlang.cxx(516): remark #1418: external definition with no prior declaration
+  LexerModule lmErlang(
+              ^
+
+LexEScript.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexEScript.cxx(270): remark #1418: external definition with no prior declaration
+  LexerModule lmESCRIPT(SCLEX_ESCRIPT, ColouriseESCRIPTDoc, "escript", FoldESCRIPTDoc, ESCRIPTWordLists);
+              ^
+
+LexFlagship.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexFlagship.cxx(223): remark #1418: external definition with no prior declaration
+  LexerModule lmFlagShip(SCLEX_FLAGSHIP, ColouriseFlagShipDoc, "flagship", FoldFlagShipDoc, FSWordListDesc);
+              ^
+
+LexForth.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexForth.cxx(24): remark #1418: external definition with no prior declaration
+  bool is_whitespace(int ch){
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexForth.cxx(28): remark #1418: external definition with no prior declaration
+  bool is_blank(int ch){
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexForth.cxx(44): remark #1418: external definition with no prior declaration
+  char *buffer;
+        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexForth.cxx(46): remark #1418: external definition with no prior declaration
+  char getChar(bool is_bl){
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexForth.cxx(52): remark #1418: external definition with no prior declaration
+  char getCharBL(){
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexForth.cxx(56): remark #1418: external definition with no prior declaration
+  bool is_eol(char ch){
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexForth.cxx(60): remark #1418: external definition with no prior declaration
+  int parse(char ch, bool skip_eol){
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexForth.cxx(90): remark #1418: external definition with no prior declaration
+  bool _is_number(char *s,int base){
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexForth.cxx(103): remark #1418: external definition with no prior declaration
+  bool is_number(char *s){
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexForth.cxx(348): remark #1418: external definition with no prior declaration
+  LexerModule lmForth(SCLEX_FORTH, ColouriseForthDoc, "forth",FoldForthDoc,forthWordLists);
+              ^
+
+LexFortran.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexFortran.cxx(39): remark #1418: external definition with no prior declaration
+  unsigned int GetContinuedPos(unsigned int pos, Accessor &styler) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexFortran.cxx(370): remark #1599: declaration hides variable "k" (declared at line 304)
+        unsigned int k = 0;
+                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexFortran.cxx(451): remark #1418: external definition with no prior declaration
+  LexerModule lmFortran(SCLEX_FORTRAN, ColouriseFortranDocFreeFormat, "fortran", FoldFortranDocFreeFormat, FortranWordLists);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexFortran.cxx(452): remark #1418: external definition with no prior declaration
+  LexerModule lmF77(SCLEX_F77, ColouriseFortranDocFixFormat, "f77", FoldFortranDocFixFormat, FortranWordLists);
+              ^
+
+LexGui4Cli.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexGui4Cli.cxx(306): remark #1418: external definition with no prior declaration
+  LexerModule lmGui4Cli(SCLEX_GUI4CLI, ColouriseGui4CliDoc, "gui4cli", FoldGui4Cli, gui4cliWordListDesc);
+              ^
+
+LexHaskell.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexHaskell.cxx(262): remark #1418: external definition with no prior declaration
+  LexerModule lmHaskell(SCLEX_HASKELL, ColorizeHaskellDoc, "haskell");
+              ^
+
+LexHTML.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexHTML.cxx(2037): remark #1418: external definition with no prior declaration
+  LexerModule lmHTML(SCLEX_HTML, ColouriseHyperTextDoc, "hypertext", 0, htmlWordListDesc, 7);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexHTML.cxx(2038): remark #1418: external definition with no prior declaration
+  LexerModule lmXML(SCLEX_XML, ColouriseHyperTextDoc, "xml", 0, htmlWordListDesc, 7);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexHTML.cxx(2040): remark #1418: external definition with no prior declaration
+  LexerModule lmASP(SCLEX_ASP, ColouriseASPDoc, "asp", 0, htmlWordListDesc, 7);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexHTML.cxx(2041): remark #1418: external definition with no prior declaration
+  LexerModule lmPHP(SCLEX_PHP, ColourisePHPDoc, "php", 0, htmlWordListDesc, 7);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexHTML.cxx(2042): remark #1418: external definition with no prior declaration
+  LexerModule lmPHPSCRIPT(SCLEX_PHPSCRIPT, ColourisePHPScriptDoc, "phpscript", 0, phpscriptWordListDesc, 7);
+              ^
+
+LexInno.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexInno.cxx(290): remark #1418: external definition with no prior declaration
+  LexerModule lmInno(SCLEX_INNOSETUP, ColouriseInnoDoc, "inno", FoldInnoDoc, innoWordListDesc);
+              ^
+
+LexKix.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexKix.cxx(121): remark #1418: external definition with no prior declaration
+  LexerModule lmKix(SCLEX_KIX, ColouriseKixDoc, "kix");
+              ^
+
+LexLisp.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexLisp.cxx(275): remark #1418: external definition with no prior declaration
+  LexerModule lmLISP(SCLEX_LISP, ColouriseLispDoc, "lisp", FoldLispDoc, lispWordListDesc);
+              ^
+
+LexLout.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexLout.cxx(208): remark #1418: external definition with no prior declaration
+  LexerModule lmLout(SCLEX_LOUT, ColouriseLoutDoc, "lout", FoldLoutDoc, loutWordLists);
+              ^
+
+LexLua.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexLua.cxx(357): remark #1418: external definition with no prior declaration
+  LexerModule lmLua(SCLEX_LUA, ColouriseLuaDoc, "lua", FoldLuaDoc, luaWordListDesc);
+              ^
+
+LexMatlab.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexMatlab.cxx(223): remark #1418: external definition with no prior declaration
+  LexerModule lmMatlab(SCLEX_MATLAB, ColouriseMatlabDoc, "matlab", FoldMatlabDoc, matlabWordListDesc);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexMatlab.cxx(225): remark #1418: external definition with no prior declaration
+  LexerModule lmOctave(SCLEX_OCTAVE, ColouriseOctaveDoc, "octave", FoldOctaveDoc, octaveWordListDesc);
+              ^
+
+LexMetapost.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexMetapost.cxx(320): remark #1418: external definition with no prior declaration
+  LexerModule lmMETAPOST(SCLEX_METAPOST, ColouriseMETAPOSTDoc, "metapost", 0, metapostWordListDesc);
+              ^
+
+LexMMIXAL.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexMMIXAL.cxx(182): remark #1418: external definition with no prior declaration
+  LexerModule lmMMIXAL(SCLEX_MMIXAL, ColouriseMMIXALDoc, "mmixal", 0, MMIXALWordListDesc);
+              ^
+
+LexMPT.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexMPT.cxx(182): remark #1418: external definition with no prior declaration
+  LexerModule lmLot(SCLEX_LOT, ColourizeLotDoc, "lot", FoldLotDoc, emptyWordListDesc);
+              ^
+
+LexMSSQL.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexMSSQL.cxx(359): remark #1418: external definition with no prior declaration
+  LexerModule lmMSSQL(SCLEX_MSSQL, ColouriseMSSQLDoc, "mssql", FoldMSSQLDoc, sqlWordListDesc);
+              ^
+
+LexNsis.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexNsis.cxx(646): remark #1418: external definition with no prior declaration
+  LexerModule lmNsis(SCLEX_NSIS, ColouriseNsisDoc, "nsis", FoldNsisDoc, nsisWordLists);
+              ^
+
+LexOpal.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexOpal.cxx(518): remark #1418: external definition with no prior declaration
+  LexerModule lmOpal(SCLEX_OPAL, ColouriseOpalDoc, "opal", NULL, opalWordListDesc);
+              ^
+
+LexOthers.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexOthers.cxx(834): remark #981: operands are evaluated in unspecified order
+              (strstr(lineBuffer, " at (") < strstr(lineBuffer, ") : "))) {
+                                           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexOthers.cxx(853): remark #981: operands are evaluated in unspecified order
+              (strstr(lineBuffer, " at " ) < (strstr(lineBuffer, " line ")))) {
+                                           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexOthers.cxx(1134): remark #1418: external definition with no prior declaration
+  LexerModule lmBatch(SCLEX_BATCH, ColouriseBatchDoc, "batch", 0, batchWordListDesc);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexOthers.cxx(1135): remark #1418: external definition with no prior declaration
+  LexerModule lmDiff(SCLEX_DIFF, ColouriseDiffDoc, "diff", FoldDiffDoc, emptyWordListDesc);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexOthers.cxx(1136): remark #1418: external definition with no prior declaration
+  LexerModule lmProps(SCLEX_PROPERTIES, ColourisePropsDoc, "props", FoldPropsDoc, emptyWordListDesc);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexOthers.cxx(1137): remark #1418: external definition with no prior declaration
+  LexerModule lmMake(SCLEX_MAKEFILE, ColouriseMakeDoc, "makefile", 0, emptyWordListDesc);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexOthers.cxx(1138): remark #1418: external definition with no prior declaration
+  LexerModule lmErrorList(SCLEX_ERRORLIST, ColouriseErrorListDoc, "errorlist", 0, emptyWordListDesc);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexOthers.cxx(1139): remark #1418: external definition with no prior declaration
+  LexerModule lmLatex(SCLEX_LATEX, ColouriseLatexDoc, "latex", 0, emptyWordListDesc);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexOthers.cxx(1140): remark #1418: external definition with no prior declaration
+  LexerModule lmNull(SCLEX_NULL, ColouriseNullDoc, "null");
+              ^
+
+LexPascal.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexPascal.cxx(369): remark #1418: external definition with no prior declaration
+  LexerModule lmPascal(SCLEX_PASCAL, ColourisePascalDoc, "pascal", FoldPascalDoc, pascalWordListDesc);
+              ^
+
+LexPB.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexPB.cxx(66): remark #1418: external definition with no prior declaration
+  bool MatchUpperCase(Accessor &styler, int pos, const char *s)   //Same as styler.Match() but uppercase comparison (a-z,A-Z and space only)
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexPB.cxx(358): remark #1418: external definition with no prior declaration
+  LexerModule lmPB(SCLEX_POWERBASIC, ColourisePBDoc, "powerbasic", FoldPBDoc, pbWordListDesc);
+              ^
+
+LexPerl.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexPerl.cxx(1231): remark #1418: external definition with no prior declaration
+  LexerModule lmPerl(SCLEX_PERL, ColourisePerlDoc, "perl", FoldPerlDoc, perlWordListDesc);
+              ^
+
+LexPOV.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexPOV.cxx(312): remark #1418: external definition with no prior declaration
+  LexerModule lmPOV(SCLEX_POV, ColourisePovDoc, "pov", FoldPovDoc, povWordLists);
+              ^
+
+LexPS.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexPS.cxx(343): remark #1418: external definition with no prior declaration
+  LexerModule lmPS(SCLEX_PS, ColourisePSDoc, "ps", FoldPSDoc, psWordListDesc);
+              ^
+
+LexPython.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexPython.cxx(448): remark #1418: external definition with no prior declaration
+  LexerModule lmPython(SCLEX_PYTHON, ColourisePyDoc, "python", FoldPyDoc,
+              ^
+
+LexRebol.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexRebol.cxx(238): remark #981: operands are evaluated in unspecified order
+     } else if (IsBinaryStart(sc.ch, sc.chNext, sc.GetRelative(2), sc.GetRelative(3))) {
+                                                                   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexRebol.cxx(238): remark #981: operands are evaluated in unspecified order
+     } else if (IsBinaryStart(sc.ch, sc.chNext, sc.GetRelative(2), sc.GetRelative(3))) {
+                ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexRebol.cxx(318): remark #1418: external definition with no prior declaration
+  LexerModule lmREBOL(SCLEX_REBOL, ColouriseRebolDoc, "rebol", FoldRebolDoc, rebolWordListDesc);
+              ^
+
+LexRuby.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexRuby.cxx(354): remark #981: operands are evaluated in unspecified order
+          if (styler[i] != styler[j]) {
+                        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexRuby.cxx(1542): remark #1418: external definition with no prior declaration
+  LexerModule lmRuby(SCLEX_RUBY, ColouriseRbDoc, "ruby", FoldRbDoc, rubyWordListDesc);
+              ^
+
+LexScriptol.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexScriptol.cxx(33): remark #1599: declaration hides variable "i" (declared at line 24)
+      else for (unsigned int i = 0; i < end - start + 1; i++)  // test dotted idents
+                             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexScriptol.cxx(404): remark #1418: external definition with no prior declaration
+  LexerModule lmScriptol(SCLEX_SCRIPTOL, ColouriseSolDoc, "scriptol", FoldSolDoc);
+              ^
+
+LexSmalltalk.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexSmalltalk.cxx(317): remark #1418: external definition with no prior declaration
+  LexerModule lmSmalltalk(SCLEX_SMALLTALK, colorizeSmalltalkDoc, "smalltalk", NULL, smalltalkWordListDesc);
+              ^
+
+LexSpecman.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexSpecman.cxx(286): remark #1418: external definition with no prior declaration
+  LexerModule lmSpecman(SCLEX_SPECMAN, ColouriseSpecmanDocSensitive, "specman", FoldSpecmanDoc, specmanWordLists);
+              ^
+
+LexSpice.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexSpice.cxx(40): remark #1418: external definition with no prior declaration
+  LexerModule lmSpice(SCLEX_SPICE, ColouriseDocument, "spice", NULL, spiceWordListDesc);
+              ^
+
+LexSQL.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexSQL.cxx(342): remark #1418: external definition with no prior declaration
+  LexerModule lmSQL(SCLEX_SQL, ColouriseSQLDoc, "sql", FoldSQLDoc, sqlWordListDesc);
+              ^
+
+LexTADS3.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexTADS3.cxx(837): remark #1418: external definition with no prior declaration
+  LexerModule lmTADS3(SCLEX_TADS3, ColouriseTADS3Doc, "tads3", FoldTADS3Doc, tads3WordList);
+              ^
+
+LexTCL.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexTCL.cxx(362): remark #1418: external definition with no prior declaration
+  LexerModule lmTCL(SCLEX_TCL, ColouriseTCLDoc, "tcl", 0, tclWordListDesc);
+              ^
+
+LexTeX.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexTeX.cxx(288): remark #1418: external definition with no prior declaration
+  LexerModule lmTeX(SCLEX_TEX, ColouriseTeXDoc, "tex", 0, texWordListDesc);
+              ^
+
+LexVB.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexVB.cxx(268): remark #1418: external definition with no prior declaration
+  LexerModule lmVB(SCLEX_VB, ColouriseVBNetDoc, "vb", FoldVBDoc, vbWordListDesc);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexVB.cxx(269): remark #1418: external definition with no prior declaration
+  LexerModule lmVBScript(SCLEX_VBSCRIPT, ColouriseVBScriptDoc, "vbscript", FoldVBDoc, vbWordListDesc);
+              ^
+
+LexVerilog.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexVerilog.cxx(299): remark #1418: external definition with no prior declaration
+  LexerModule lmVerilog(SCLEX_VERILOG, ColouriseVerilogDoc, "verilog", FoldVerilogDoc, verilogWordLists);
+              ^
+
+LexVHDL.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexVHDL.cxx(258): remark #1599: declaration hides variable "j" (declared at line 199)
+      unsigned int j  = i+1;
+                   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexVHDL.cxx(338): remark #1599: declaration hides variable "j" (declared at line 258)
+                for(int j=i+1; j<styler.Length(); j++)
+                        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexVHDL.cxx(439): remark #1418: external definition with no prior declaration
+  LexerModule lmVHDL(SCLEX_VHDL, ColouriseVHDLDoc, "vhdl", FoldVHDLDoc, VHDLWordLists);
+              ^
+
+LexYAML.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LexYAML.cxx(305): remark #1418: external definition with no prior declaration
+  LexerModule lmYAML(SCLEX_YAML, ColouriseYAMLDoc, "yaml", FoldYAMLDoc, yamlWordListDesc);
+              ^
+
+LineMarker.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(22): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(23): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(30): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(31): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(41): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(42): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.cxx(75): remark #981: operands are evaluated in unspecified order
+   int minDim = Platform::Minimum(rc.Width(), rc.Height());
+                                              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.cxx(75): remark #981: operands are evaluated in unspecified order
+   int minDim = Platform::Minimum(rc.Width(), rc.Height());
+                ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.cxx(83): remark #981: operands are evaluated in unspecified order
+   if (rc.Width() > (rc.Height() * 2)) {
+                  ^
+
+PlatWin.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(40): remark #171: invalid type conversion: "LONG={long}" to "void *"
+   return reinterpret_cast<void *>(::GetWindowLong(hWnd, 0));
+          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(43): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+   ::SetWindowLong(hWnd, 0, reinterpret_cast<LONG>(ptr));
+                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(76): remark #1418: external definition with no prior declaration
+  bool IsNT() {
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(166): remark #981: operands are evaluated in unspecified order
+      PALETTERGB(desired.GetRed(), desired.GetGreen(), desired.GetBlue()));
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(166): remark #981: operands are evaluated in unspecified order
+      PALETTERGB(desired.GetRed(), desired.GetGreen(), desired.GetBlue()));
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(202): remark #304: access control not specified ("private" by default)
+  class FontCached : Font {
+                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(648): remark #981: operands are evaluated in unspecified order
+    rc.left, rc.top, rc.Width(), rc.Height(),
+                                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(647): remark #981: operands are evaluated in unspecified order
+   ::BitBlt(hdc,
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(672): remark #279: controlling expression is constant
+       PLATFORM_ASSERT(false);
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(697): remark #279: controlling expression is constant
+       PLATFORM_ASSERT(false);
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(944): remark #981: operands are evaluated in unspecified order
+    0, rc.left, rc.top, rc.Width(), rc.Height(), SWP_NOZORDER|SWP_NOACTIVATE);
+                                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(943): remark #981: operands are evaluated in unspecified order
+   ::SetWindowPos(reinterpret_cast<HWND>(id),
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1002): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+    reinterpret_cast<WPARAM>(font.GetID()), 0);
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1278): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+    ::SendMessage(lb, WM_SETFONT, reinterpret_cast<WPARAM>(fontCopy), 0);
+                                  ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1356): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+   int index = ::SendMessage(lb, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(s));
+                                                  ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1412): remark #171: invalid type conversion: "int" to "HBRUSH"
+     ::FillRect(pDrawItem->hDC, &rcImage, reinterpret_cast<HBRUSH>(COLOR_WINDOW+1));
+                                          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1413): remark #171: invalid type conversion: "int" to "HBRUSH"
+     ::FillRect(pDrawItem->hDC, &rcBox, reinterpret_cast<HBRUSH>(COLOR_HIGHLIGHT+1));
+                                        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1417): remark #171: invalid type conversion: "int" to "HBRUSH"
+     ::FillRect(pDrawItem->hDC, &pDrawItem->rcItem, reinterpret_cast<HBRUSH>(COLOR_WINDOW+1));
+                                                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1541): remark #981: operands are evaluated in unspecified order
+   PRectangle rc(0, 0, MinClientWidth(), ItemHeight());
+                                         ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1543): remark #981: operands are evaluated in unspecified order
+   return Point(rc.Width(), rc.Height());
+                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1549): remark #981: operands are evaluated in unspecified order
+     TextOffset() + ::GetSystemMetrics(SM_CXVSCROLL),
+                  ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1550): remark #981: operands are evaluated in unspecified order
+    ItemHeight() * lti.Count());
+                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1550): remark #981: operands are evaluated in unspecified order
+    ItemHeight() * lti.Count());
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1552): remark #981: operands are evaluated in unspecified order
+   return Point(rc.Width(), rc.Height());
+                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1704): remark #981: operands are evaluated in unspecified order
+   return Point(rc.Width(), rc.Height());
+                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1731): remark #171: invalid type conversion: "int" to "HBRUSH"
+   ::FillRect(bitmapDC, &rc, reinterpret_cast<HBRUSH>(COLOR_WINDOW+1));
+                             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1733): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+   ::SendMessage(lb, WM_PRINT, reinterpret_cast<WPARAM>(bitmapDC), PRF_CLIENT|PRF_NONCLIENT);
+                               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1784): remark #171: invalid type conversion: "LONG={long}" to "WNDPROC"
+   WNDPROC prevWndProc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+                         ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1803): remark #171: invalid type conversion: "int" to "HMENU"
+      reinterpret_cast<HMENU>(ctrlID),
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1806): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+     WNDPROC prevWndProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(lb, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(ControlWndProc)));
+                                                                                          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1806): remark #171: invalid type conversion: "LONG={long}" to "WNDPROC"
+     WNDPROC prevWndProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(lb, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(ControlWndProc)));
+                           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1807): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+     ::SetWindowLongPtr(lb, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(prevWndProc));
+                                           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1835): remark #171: invalid type conversion: "LPARAM={LONG={long}}" to "MEASUREITEMSTRUCT *"
+     MEASUREITEMSTRUCT *pMeasureItem = reinterpret_cast<MEASUREITEMSTRUCT *>(lParam);
+                                       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1841): remark #171: invalid type conversion: "LPARAM={LONG={long}}" to "DRAWITEMSTRUCT *"
+    Draw(reinterpret_cast<DRAWITEMSTRUCT *>(lParam));
+         ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1855): remark #171: invalid type conversion: "LPARAM={LONG={long}}" to "MINMAXINFO *"
+     MINMAXINFO *minMax = reinterpret_cast<MINMAXINFO*>(lParam);
+                          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1900): remark #171: invalid type conversion: "LPARAM={LONG={long}}" to "CREATESTRUCT *"
+    CREATESTRUCT *pCreate = reinterpret_cast<CREATESTRUCT *>(lParam);
+                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(1933): remark #1418: external definition with no prior declaration
+  bool ListBoxX_Unregister() {
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(2074): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+    reinterpret_cast<LPARAM>(lParam));
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(2158): remark #1418: external definition with no prior declaration
+  void Platform_Initialise(void *hInstance) {
+       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\PlatWin.cxx(2173): remark #1418: external definition with no prior declaration
+  void Platform_Finalise() {
+       ^
+
+PropSet.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\PropSet.cxx(500): remark #981: operands are evaluated in unspecified order
+    withVars.insert(varStart, val.c_str(), val.length());
+                                           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\PropSet.cxx(500): remark #981: operands are evaluated in unspecified order
+    withVars.insert(varStart, val.c_str(), val.length());
+             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\PropSet.cxx(553): remark #981: operands are evaluated in unspecified order
+    if (MakeUpperCase(target[i + lentarget - lensuffix]) !=
+                                                         ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\PropSet.cxx(636): remark #981: operands are evaluated in unspecified order
+     size_t newlenbase = strlen(base) + val.length() - lenvar;
+                                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\PropSet.cxx(828): remark #1418: external definition with no prior declaration
+  int cmpString(const void *a1, const void *a2) {
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\PropSet.cxx(833): remark #1418: external definition with no prior declaration
+  int cmpStringNoCase(const void *a1, const void *a2) {
+      ^
+
+RESearch.cxx
+C:\Code\robert\2006_07\Cint\scintilla\src\RESearch.cxx(283): remark #858: type qualifier on return type is meaningless
+  const char escapeValue(char ch) {
+             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\RESearch.cxx(283): remark #1418: external definition with no prior declaration
+  const char escapeValue(char ch) {
+             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\RESearch.cxx(634): remark #1419: external declaration in primary source file
+  extern void re_fail(char *,char);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\RESearch.cxx(657): remark #981: operands are evaluated in unspecified order
+     if (ci.CharAt(lp++) != *ap++)
+                         ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\RESearch.cxx(697): remark #981: operands are evaluated in unspecified order
+      if (ci.CharAt(bp++) != ci.CharAt(lp++))
+                          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\RESearch.cxx(716): remark #981: operands are evaluated in unspecified order
+      while ((lp < endp) && isinset(ap+1,ci.CharAt(lp)))
+                            ^
+
+ScintillaBase.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(22): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(23): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(30): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(31): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(41): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(42): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(221): remark #981: operands are evaluated in unspecified order
+      lenEntered, vs.lineHeight, IsUnicodeMode());
+                                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(220): remark #981: operands are evaluated in unspecified order
+   ac.Start(wMain, idAutoComplete, currentPos, LocationFromPosition(currentPos),
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(506): remark #171: invalid type conversion: "sptr_t={long}" to "const char *"
+    AutoCompleteStart(wParam, reinterpret_cast<const char *>(lParam));
+                              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(531): remark #171: invalid type conversion: "sptr_t={long}" to "char *"
+    ac.SetStopChars(reinterpret_cast<char *>(lParam));
+                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(535): remark #171: invalid type conversion: "sptr_t={long}" to "char *"
+    ac.Select(reinterpret_cast<char *>(lParam));
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(549): remark #171: invalid type conversion: "sptr_t={long}" to "char *"
+    ac.SetFillUpChars(reinterpret_cast<char *>(lParam));
+                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(568): remark #171: invalid type conversion: "sptr_t={long}" to "const char *"
+    AutoCompleteStart(0, reinterpret_cast<const char *>(lParam));
+                         ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(600): remark #171: invalid type conversion: "sptr_t={long}" to "const char *"
+    ac.lb->RegisterImage(wParam, reinterpret_cast<const char *>(lParam));
+                                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(616): remark #171: invalid type conversion: "sptr_t={long}" to "const char *"
+     reinterpret_cast<const char *>(lParam));
+     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(634): remark #383: value copied to temporary, reference to temporary used
+    ct.colourBG = ColourDesired(wParam);
+                  ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(640): remark #383: value copied to temporary, reference to temporary used
+    ct.colourUnSel = ColourDesired(wParam);
+                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(646): remark #383: value copied to temporary, reference to temporary used
+    ct.colourSel = ColourDesired(wParam);
+                   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(679): remark #171: invalid type conversion: "uptr_t={unsigned long}" to "const char *"
+    props.Set(reinterpret_cast<const char *>(wParam),
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(680): remark #171: invalid type conversion: "sptr_t={long}" to "const char *"
+              reinterpret_cast<const char *>(lParam));
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(684): remark #171: invalid type conversion: "uptr_t={unsigned long}" to "const char *"
+     SString val = props.Get(reinterpret_cast<const char *>(wParam));
+                             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(687): remark #171: invalid type conversion: "sptr_t={long}" to "char *"
+      char *ptr = reinterpret_cast<char *>(lParam);
+                  ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(695): remark #171: invalid type conversion: "uptr_t={unsigned long}" to "const char *"
+     SString val = props.GetExpanded(reinterpret_cast<const char *>(wParam));
+                                     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(698): remark #171: invalid type conversion: "sptr_t={long}" to "char *"
+      char *ptr = reinterpret_cast<char *>(lParam);
+                  ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(706): remark #171: invalid type conversion: "uptr_t={unsigned long}" to "const char *"
+    return props.GetInt(reinterpret_cast<const char *>(wParam), lParam);
+                        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(711): remark #171: invalid type conversion: "sptr_t={long}" to "const char *"
+     keyWordLists[wParam]->Set(reinterpret_cast<const char *>(lParam));
+                               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ScintillaBase.cxx(716): remark #171: invalid type conversion: "sptr_t={long}" to "const char *"
+    SetLexerLanguage(reinterpret_cast<const char *>(lParam));
+                     ^
+
+ScintillaWin.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\src\LineMarker.h(22): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+..\src\LineMarker.h(23): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+..\src\LineMarker.h(30): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+..\src\LineMarker.h(31): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+..\src\LineMarker.h(41): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+..\src\LineMarker.h(42): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(83): remark #1419: external declaration in primary source file
+  extern bool IsNT();
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(84): remark #1419: external declaration in primary source file
+  extern void Platform_Initialise(void *hInstance);
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(85): remark #1419: external declaration in primary source file
+  extern void Platform_Finalise();
+              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(422): remark #171: invalid type conversion: "uptr_t={ULONG_PTR={unsigned long}}" to "PAINTSTRUCT *"
+    pps = reinterpret_cast<PAINTSTRUCT*>(wParam);
+          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(555): remark #171: invalid type conversion: "uptr_t={ULONG_PTR={unsigned long}}" to "HDC"
+     HDC hdc = reinterpret_cast<HDC>(wParam);
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(666): remark #981: operands are evaluated in unspecified order
+    ButtonDown(Point::FromLong(lParam), ::GetMessageTime(),
+                                        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(666): remark #981: operands are evaluated in unspecified order
+    ButtonDown(Point::FromLong(lParam), ::GetMessageTime(),
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(680): remark #981: operands are evaluated in unspecified order
+     ::GetMessageTime(),
+     ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(679): remark #981: operands are evaluated in unspecified order
+    ButtonUp(Point::FromLong(lParam),
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(747): remark #981: operands are evaluated in unspecified order
+      Platform::IsKeyDown(VK_SHIFT),
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(746): remark #981: operands are evaluated in unspecified order
+     int ret = KeyDown(KeyTranslate(wParam),
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(775): remark #171: invalid type conversion: "uptr_t={ULONG_PTR={unsigned long}}" to "HWND"
+     HWND wOther = reinterpret_cast<HWND>(wParam);
+                   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(800): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+    if (wParam != reinterpret_cast<uptr_t>(MainHWND())) {
+                  ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(886): remark #171: invalid type conversion: "uptr_t={ULONG_PTR={unsigned long}}" to "int *"
+     *reinterpret_cast<int *>(wParam) = SelectionStart();
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(889): remark #171: invalid type conversion: "sptr_t={LONG_PTR={long}}" to "int *"
+     *reinterpret_cast<int *>(lParam) = SelectionEnd();
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(891): remark #981: operands are evaluated in unspecified order
+    return MAKELONG(SelectionStart(), SelectionEnd());
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(897): remark #171: invalid type conversion: "sptr_t={LONG_PTR={long}}" to "CharacterRange *"
+     CharacterRange *pCR = reinterpret_cast<CharacterRange *>(lParam);
+                           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(925): remark #171: invalid type conversion: "sptr_t={LONG_PTR={long}}" to "CharacterRange *"
+     CharacterRange *pCR = reinterpret_cast<CharacterRange *>(lParam);
+                           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(937): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+    return reinterpret_cast<sptr_t>(DirectFunction);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(940): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+    return reinterpret_cast<sptr_t>(this);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(948): remark #171: invalid type conversion: "sptr_t={LONG_PTR={long}}" to "const char *"
+    LexerManager::GetInstance()->Load(reinterpret_cast<const char*>(lParam));
+                                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(973): remark #171: invalid type conversion: "enum ScintillaWin::<unnamed>" to "TickerID"
+      ? reinterpret_cast<TickerID>(standardTimerID) : 0;
+        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(975): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+     ::KillTimer(MainHWND(), reinterpret_cast<uptr_t>(timer.tickerID));
+                             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(989): remark #171: invalid type conversion: "enum ScintillaWin::<unnamed>" to "IdlerID"
+      ? reinterpret_cast<IdlerID>(idleTimerID) : 0;
+        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(991): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+     ::KillTimer(MainHWND(), reinterpret_cast<uptr_t>(idler.idlerID));
+                             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1144): remark #981: operands are evaluated in unspecified order
+           MAKELONG(GetCtrlID(), SCEN_CHANGE),
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1145): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+    reinterpret_cast<LPARAM>(MainHWND()));
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1143): remark #981: operands are evaluated in unspecified order
+   ::SendMessage(::GetParent(MainHWND()), WM_COMMAND,
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1150): remark #981: operands are evaluated in unspecified order
+           MAKELONG(GetCtrlID(), focus ? SCEN_SETFOCUS : SCEN_KILLFOCUS),
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1151): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+    reinterpret_cast<LPARAM>(MainHWND()));
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1149): remark #981: operands are evaluated in unspecified order
+   ::SendMessage(::GetParent(MainHWND()), WM_COMMAND,
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1162): remark #981: operands are evaluated in unspecified order
+                 GetCtrlID(), reinterpret_cast<LPARAM>(&scn));
+                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1162): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+                 GetCtrlID(), reinterpret_cast<LPARAM>(&scn));
+                              ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1161): remark #981: operands are evaluated in unspecified order
+   ::SendMessage(::GetParent(MainHWND()), WM_NOTIFY,
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1362): remark #981: operands are evaluated in unspecified order
+    ct.wCallTip = ::CreateWindow(callClassName, TEXT("ACallTip"),
+                    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1362): remark #981: operands are evaluated in unspecified order
+    ct.wCallTip = ::CreateWindow(callClassName, TEXT("ACallTip"),
+                  ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1419): remark #1419: external declaration in primary source file
+  STDMETHODIMP_(ULONG)FormatEnumerator_AddRef(FormatEnumerator *fe);
+                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1420): remark #1418: external definition with no prior declaration
+  STDMETHODIMP FormatEnumerator_QueryInterface(FormatEnumerator *fe, REFIID riid, PVOID *ppv) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1435): remark #1418: external definition with no prior declaration
+  STDMETHODIMP_(ULONG)FormatEnumerator_Release(FormatEnumerator *fe) {
+                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1443): remark #1418: external definition with no prior declaration
+  STDMETHODIMP FormatEnumerator_Next(FormatEnumerator *fe, ULONG celt, FORMATETC *rgelt, ULONG *pceltFetched) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1461): remark #1418: external definition with no prior declaration
+  STDMETHODIMP FormatEnumerator_Skip(FormatEnumerator *fe, ULONG celt) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1465): remark #1418: external definition with no prior declaration
+  STDMETHODIMP FormatEnumerator_Reset(FormatEnumerator *fe) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1469): remark #1418: external definition with no prior declaration
+  STDMETHODIMP FormatEnumerator_Clone(FormatEnumerator *fe, IEnumFORMATETC **ppenum) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1495): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DropSource_QueryInterface(DropSource *ds, REFIID riid, PVOID *ppv) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1498): remark #1418: external definition with no prior declaration
+  STDMETHODIMP_(ULONG)DropSource_AddRef(DropSource *ds) {
+                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1501): remark #1418: external definition with no prior declaration
+  STDMETHODIMP_(ULONG)DropSource_Release(DropSource *ds) {
+                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1506): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DropSource_QueryContinueDrag(DropSource *, BOOL fEsc, DWORD grfKeyState) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1514): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DropSource_GiveFeedback(DropSource *, DWORD) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1532): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DataObject_QueryInterface(DataObject *pd, REFIID riid, PVOID *ppv) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1536): remark #1418: external definition with no prior declaration
+  STDMETHODIMP_(ULONG)DataObject_AddRef(DataObject *pd) {
+                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1539): remark #1418: external definition with no prior declaration
+  STDMETHODIMP_(ULONG)DataObject_Release(DataObject *pd) {
+                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1543): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DataObject_GetData(DataObject *pd, FORMATETC *pFEIn, STGMEDIUM *pSTM) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1547): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DataObject_GetDataHere(DataObject *, FORMATETC *, STGMEDIUM *) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1552): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DataObject_QueryGetData(DataObject *pd, FORMATETC *pFE) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1578): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DataObject_GetCanonicalFormatEtc(DataObject *pd, FORMATETC *, FORMATETC *pFEOut) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1591): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DataObject_SetData(DataObject *, FORMATETC *, STGMEDIUM *, BOOL) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1596): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DataObject_EnumFormatEtc(DataObject *pd, DWORD dwDirection, IEnumFORMATETC **ppEnum) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1614): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DataObject_DAdvise(DataObject *, FORMATETC *, DWORD, IAdviseSink *, PDWORD) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1619): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DataObject_DUnadvise(DataObject *, DWORD) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1624): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DataObject_EnumDAdvise(DataObject *, IEnumSTATDATA **) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1650): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DropTarget_QueryInterface(DropTarget *dt, REFIID riid, PVOID *ppv) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1654): remark #1418: external definition with no prior declaration
+  STDMETHODIMP_(ULONG)DropTarget_AddRef(DropTarget *dt) {
+                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1657): remark #1418: external definition with no prior declaration
+  STDMETHODIMP_(ULONG)DropTarget_Release(DropTarget *dt) {
+                      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1662): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DropTarget_DragEnter(DropTarget *dt, LPDATAOBJECT pIDataSource, DWORD grfKeyState,
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1666): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DropTarget_DragOver(DropTarget *dt, DWORD grfKeyState, POINTL pt, PDWORD pdwEffect) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1669): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DropTarget_DragLeave(DropTarget *dt) {
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1672): remark #1418: external definition with no prior declaration
+  STDMETHODIMP DropTarget_Drop(DropTarget *dt, LPDATAOBJECT pIDataSource, DWORD grfKeyState,
+               ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(1953): remark #981: operands are evaluated in unspecified order
+   return ::GetDeviceCaps(hdc, nIndex) == ::GetDeviceCaps(hOtherDC, nIndex);
+                                       ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(2280): remark #171: invalid type conversion: "LONG={long}" to "void *"
+   return reinterpret_cast<void *>(::GetWindowLong(hWnd, 0));
+          ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(2283): remark #1684: conversion from pointer to same-sized integral type (potential portability problem)
+   ::SetWindowLong(hWnd, 0, reinterpret_cast<LONG>(ptr));
+                            ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(2296): remark #171: invalid type conversion: "sptr_t={LONG_PTR={long}}" to "CREATESTRUCT *"
+     CREATESTRUCT *pCreate = reinterpret_cast<CREATESTRUCT *>(lParam);
+                             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(2346): remark #981: operands are evaluated in unspecified order
+   PLATFORM_ASSERT(::GetCurrentThreadId() == ::GetWindowThreadProcessId(sci->MainHWND(), NULL));
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\win32\ScintillaWin.cxx(2350): remark #1418: external definition with no prior declaration
+  extern "C" __declspec(dllexport) sptr_t __stdcall Scintilla_DirectFunction(
+                                                    ^
+
+Style.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Style.cxx(17): remark #981: operands are evaluated in unspecified order
+   Clear(ColourDesired(0, 0, 0), ColourDesired(0xff, 0xff, 0xff),
+                                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Style.cxx(17): remark #981: operands are evaluated in unspecified order
+   Clear(ColourDesired(0, 0, 0), ColourDesired(0xff, 0xff, 0xff),
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Style.cxx(23): remark #981: operands are evaluated in unspecified order
+   Clear(ColourDesired(0, 0, 0), ColourDesired(0xff, 0xff, 0xff),
+                                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Style.cxx(23): remark #981: operands are evaluated in unspecified order
+   Clear(ColourDesired(0, 0, 0), ColourDesired(0xff, 0xff, 0xff),
+   ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Style.cxx(51): remark #981: operands are evaluated in unspecified order
+   Clear(ColourDesired(0, 0, 0), ColourDesired(0xff, 0xff, 0xff),
+                                 ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\Style.cxx(51): remark #981: operands are evaluated in unspecified order
+   Clear(ColourDesired(0, 0, 0), ColourDesired(0xff, 0xff, 0xff),
+   ^
+
+StyleContext.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+UniConversion.cxx
+ViewStyle.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(22): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(23): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(30): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(31): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(41): remark #383: value copied to temporary, reference to temporary used
+    fore = ColourDesired(0,0,0);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\LineMarker.h(42): remark #383: value copied to temporary, reference to temporary used
+    back = ColourDesired(0xff,0xff,0xff);
+           ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ViewStyle.cxx(128): remark #383: value copied to temporary, reference to temporary used
+   indicators[0].fore = ColourDesired(0, 0x7f, 0);
+                        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ViewStyle.cxx(130): remark #383: value copied to temporary, reference to temporary used
+   indicators[1].fore = ColourDesired(0, 0, 0xff);
+                        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ViewStyle.cxx(132): remark #383: value copied to temporary, reference to temporary used
+   indicators[2].fore = ColourDesired(0xff, 0, 0);
+                        ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ViewStyle.cxx(271): remark #981: operands are evaluated in unspecified order
+    ColourDesired(0xff,0xff,0xff),
+    ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\ViewStyle.cxx(270): remark #981: operands are evaluated in unspecified order
+   styles[STYLE_DEFAULT].Clear(ColourDesired(0,0,0),
+                         ^
+
+WindowAccessor.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+..\include\SString.h(78): remark #444: destructor for base class "SContainer" is not virtual
+  class SBuffer : protected SContainer {
+                            ^
+
+..\include\SString.h(131): remark #444: destructor for base class "SContainer" is not virtual
+  class SString : protected SContainer {
+                            ^
+
+..\include\Scintilla.h(14): remark #193: zero used for undefined preprocessing identifier
+  #if LCCWIN
+      ^
+
+XPM.cxx
+..\include\Platform.h(172): remark #981: operands are evaluated in unspecified order
+    unsigned int r = ValueOfHex(val[0]) * 16 + ValueOfHex(val[1]);
+                                             ^
+
+..\include\Platform.h(173): remark #981: operands are evaluated in unspecified order
+    unsigned int g = ValueOfHex(val[2]) * 16 + ValueOfHex(val[3]);
+                                             ^
+
+..\include\Platform.h(174): remark #981: operands are evaluated in unspecified order
+    unsigned int b = ValueOfHex(val[4]) * 16 + ValueOfHex(val[5]);
+                                             ^
+
+C:\Code\robert\2006_07\Cint\scintilla\src\XPM.cxx(282): remark #1599: declaration hides variable "i" (declared at line 266)
+     for (int i = 0; i < len; i++) {
+              ^
+
+Linking...
+xilink6: executing 'C:\PROGRA~1\MICROS~2\VC98\Bin\link.exe'
+   Creating library ../bin/SciLexer.lib and object ../bin/SciLexer.exp
+Creating temporary file "C:\DOCUME~1\RUEBE3~1.ECH\LOCALS~1\Temp\RSP16A.bat" with contents
+[
+@echo off
+link -lib @rsp_scintillad.txt
+]
+Creating command line "C:\DOCUME~1\RUEBE3~1.ECH\LOCALS~1\Temp\RSP16A.bat"
+
+
+
+
+<h3>Results</h3>
+SciLexer.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

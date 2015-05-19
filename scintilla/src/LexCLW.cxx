@@ -200,7 +200,7 @@ static void ColouriseClarionDoc(unsigned int uiStartPos, int iLength, int iInitS
 	StyleContext scDoc(uiStartPos, iLength, iInitStyle, accStyler);
 
 	// lex source code
-    for (; scDoc.More( ); scDoc.Forward( ))
+    for (; scDoc.More(); scDoc.Forward())
 	{
 		//
 		// Determine if the current state should terminate.
@@ -217,7 +217,7 @@ static void ColouriseClarionDoc(unsigned int uiStartPos, int iLength, int iInitS
 					// Uncolour the . (dot) to default state, move forward one character,
 					// and change back to the label state.
 					scDoc.SetState(SCE_CLW_DEFAULT);
-					scDoc.Forward( );
+					scDoc.Forward();
 					scDoc.SetState(SCE_CLW_LABEL);
 				}
 				// Else check label
@@ -267,7 +267,7 @@ static void ColouriseClarionDoc(unsigned int uiStartPos, int iLength, int iInitS
 			if (scDoc.ch == ':') {
 				char cEquate[512];		// Equate buffer
 				// Move forward to include : (colon) in buffer
-				scDoc.Forward( );
+				scDoc.Forward();
 				// Buffer the equate string
 				scDoc.GetCurrent(cEquate,sizeof(cEquate));
 				// If case insensitive, convert string to UPPERCASE to match passed keywords.
@@ -346,7 +346,7 @@ static void ColouriseClarionDoc(unsigned int uiStartPos, int iLength, int iInitS
 				// the ' (single quote) as default state
 				// terminating the string state
 				scDoc.SetState(SCE_CLW_DEFAULT);
-				scDoc.Forward( );
+				scDoc.Forward();
 			}
 			// If the next character is an ' (single quote)
 			if (scDoc.chNext == '\'') {
@@ -354,7 +354,7 @@ static void ColouriseClarionDoc(unsigned int uiStartPos, int iLength, int iInitS
 				// colouring the next ' (single quote) as default state
 				// terminating the string state
 				scDoc.ForwardSetState(SCE_CLW_DEFAULT);
-				scDoc.Forward( );
+				scDoc.Forward();
 			}
 		}
 		// Picture String State Handling
@@ -441,7 +441,7 @@ static void ColouriseClarionDoc(unsigned int uiStartPos, int iLength, int iInitS
 				// Change to the compiler directive state, move forward,
 				// colouring the ? (question mark), change back to default state.
 				scDoc.ChangeState(SCE_CLW_COMPILER_DIRECTIVE);
-				scDoc.Forward( );
+				scDoc.Forward();
 				scDoc.SetState(SCE_CLW_DEFAULT);
 			}
 			// else an invalid character in column 1
@@ -510,7 +510,7 @@ static void ColouriseClarionDoc(unsigned int uiStartPos, int iLength, int iInitS
 		}
 	}
 	// lexing complete
-	scDoc.Complete( );
+	scDoc.Complete();
 }
 
 // Clarion Language Case Sensitive Colouring Procedure

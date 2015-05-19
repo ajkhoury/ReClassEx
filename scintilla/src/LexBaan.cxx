@@ -43,7 +43,7 @@ static void ColouriseBaanDoc(unsigned int startPos, int length, int initStyle, W
 
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 
 		if (sc.state == SCE_BAAN_OPERATOR) {
 			sc.SetState(SCE_BAAN_DEFAULT);
@@ -79,7 +79,7 @@ static void ColouriseBaanDoc(unsigned int startPos, int length, int initStyle, W
 		} else if (sc.state == SCE_BAAN_COMMENTDOC) {
 			if (sc.MatchIgnoreCase("enddllusage")) {
 				for (unsigned int i = 0; i < 10; i++){
-					sc.Forward( );
+					sc.Forward();
 				}
 				sc.ForwardSetState(SCE_BAAN_DEFAULT);
 			}
@@ -99,8 +99,8 @@ static void ColouriseBaanDoc(unsigned int startPos, int length, int initStyle, W
 			} else if (sc.MatchIgnoreCase("dllusage")){
 					sc.SetState(SCE_BAAN_COMMENTDOC);
 					do {
-						sc.Forward( );
-					} while ((!sc.atLineEnd) && sc.More( ));
+						sc.Forward();
+					} while ((!sc.atLineEnd) && sc.More());
 			} else if (IsAWordStart(sc.ch)) {
 					sc.SetState(SCE_BAAN_IDENTIFIER);
 			} else if (sc.Match('|')){
@@ -112,8 +112,8 @@ static void ColouriseBaanDoc(unsigned int startPos, int length, int initStyle, W
 				sc.SetState(SCE_BAAN_PREPROCESSOR);
 				// Skip whitespace between # and preprocessor word
 				do {
-					sc.Forward( );
-				} while (IsASpace(sc.ch) && sc.More( ));
+					sc.Forward();
+				} while (IsASpace(sc.ch) && sc.More());
 			} else if (isoperator(static_cast<char>(sc.ch))) {
 				sc.SetState(SCE_BAAN_OPERATOR);
 			}
@@ -127,7 +127,7 @@ static void ColouriseBaanDoc(unsigned int startPos, int length, int initStyle, W
 			visibleChars++;
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static void FoldBaanDoc(unsigned int startPos, int length, int initStyle, WordList *[],

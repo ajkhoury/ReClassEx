@@ -27,8 +27,7 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 *.vssscc
 $tf*/
-ipch/reclass 2015-29af2af9/reclass-cb66f813.ipch
 ReClass.sdf
 ReClass.opensdf
-ipch/reclass 2015-29af2af9/reclass_dbg-f6860885.ipch
 Reclass2015.rar
+*.ipch

@@ -109,7 +109,7 @@ static void ColouriseLuaDoc(
 		// shbang line: # is a comment only if first char of the script
 		sc.SetState(SCE_LUA_COMMENTLINE);
 	}
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 		if (sc.atLineEnd) {
 			// Update the line state, so it can be seen by next line
 			currentLine = styler.GetLine(sc.currentPos);
@@ -134,9 +134,9 @@ static void ColouriseLuaDoc(
 		if ((sc.state == SCE_LUA_STRING || sc.state == SCE_LUA_CHARACTER) &&
 		        sc.ch == '\\') {
 			if (sc.chNext == '\n' || sc.chNext == '\r') {
-				sc.Forward( );
+				sc.Forward();
 				if (sc.ch == '\r' && sc.chNext == '\n') {
-					sc.Forward( );
+					sc.Forward();
 				}
 				continue;
 			}
@@ -182,7 +182,7 @@ static void ColouriseLuaDoc(
 		} else if (sc.state == SCE_LUA_STRING) {
 			if (sc.ch == '\\') {
 				if (sc.chNext == '\"' || sc.chNext == '\'' || sc.chNext == '\\') {
-					sc.Forward( );
+					sc.Forward();
 				}
 			} else if (sc.ch == '\"') {
 				sc.ForwardSetState(SCE_LUA_DEFAULT);
@@ -193,7 +193,7 @@ static void ColouriseLuaDoc(
 		} else if (sc.state == SCE_LUA_CHARACTER) {
 			if (sc.ch == '\\') {
 				if (sc.chNext == '\"' || sc.chNext == '\'' || sc.chNext == '\\') {
-					sc.Forward( );
+					sc.Forward();
 				}
 			} else if (sc.ch == '\'') {
 				sc.ForwardSetState(SCE_LUA_DEFAULT);
@@ -206,13 +206,13 @@ static void ColouriseLuaDoc(
 				int sep = LongDelimCheck(sc);
 				if (sep == 1 && sepCount == 1) {    // [[-only allowed to nest
 					nestLevel++;
-					sc.Forward( );
+					sc.Forward();
 				}
 			} else if (sc.ch == ']') {
 				int sep = LongDelimCheck(sc);
 				if (sep == 1 && sepCount == 1) {    // un-nest with ]]-only
 					nestLevel--;
-					sc.Forward( );
+					sc.Forward();
 					if (nestLevel == 0) {
 						sc.ForwardSetState(SCE_LUA_DEFAULT);
 					}
@@ -256,7 +256,7 @@ static void ColouriseLuaDoc(
 						sc.Forward(sepCount);
 					}
 				} else {
-					sc.Forward( );
+					sc.Forward();
 				}
 			} else if (sc.atLineStart && sc.Match('$')) {
 				sc.SetState(SCE_LUA_PREPROCESSOR);	// Obsolete since Lua 4.0, but still in old code
@@ -265,7 +265,7 @@ static void ColouriseLuaDoc(
 			}
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static void FoldLuaDoc(unsigned int startPos, int length, int /* initStyle */, WordList *[],

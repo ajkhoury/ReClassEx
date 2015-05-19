@@ -42,8 +42,8 @@ char **WordListsToStrings(WordList *val[]) {
 			if (n != val[i]->len - 1)
 				words += " ";
 		}
-		wls[i] = new char[words.length( ) + 1];
-		strcpy(wls[i], words.c_str( ));
+		wls[i] = new char[words.length() + 1];
+		strcpy(wls[i], words.c_str());
 	}
 	wls[dim] = 0;
 	return wls;
@@ -64,12 +64,12 @@ void ExternalLexerModule::Lex(unsigned int startPos, int lengthDoc, int initStyl
 		return ;
 
 	char **kwds = WordListsToStrings(keywordlists);
-	char *ps = styler.GetProperties( );
+	char *ps = styler.GetProperties();
 
 	// The accessor passed in is always a DocumentAccessor so this cast and the subsequent
 	// access will work. Can not use the stricter dynamic_cast as that requires RTTI.
 	DocumentAccessor &da = static_cast<DocumentAccessor &>(styler);
-	WindowID wID = da.GetWindow( );
+	WindowID wID = da.GetWindow();
 
 	fneLexer(externalLanguage, startPos, lengthDoc, initStyle, kwds, wID, ps);
 
@@ -83,12 +83,12 @@ void ExternalLexerModule::Fold(unsigned int startPos, int lengthDoc, int initSty
 		return ;
 
 	char **kwds = WordListsToStrings(keywordlists);
-	char *ps = styler.GetProperties( );
+	char *ps = styler.GetProperties();
 
 	// The accessor passed in is always a DocumentAccessor so this cast and the subsequent
 	// access will work. Can not use the stricter dynamic_cast as that requires RTTI.
 	DocumentAccessor &da = static_cast<DocumentAccessor &>(styler);
-	WindowID wID = da.GetWindow( );
+	WindowID wID = da.GetWindow();
 
 	fneFolder(externalLanguage, startPos, lengthDoc, initStyle, kwds, wID, ps);
 
@@ -115,7 +115,7 @@ LexerLibrary::LexerLibrary(const char* ModuleName) {
 
 	// Load the DLL
 	lib = DynamicLibrary::Load(ModuleName);
-	if (lib->IsValid( )) {
+	if (lib->IsValid()) {
 		m_sModuleName = ModuleName;
 		//Cannot use reinterpret_cast because: ANSI C++ forbids casting between pointers to functions and objects
 		GetLexerCountFn GetLexerCount = (GetLexerCountFn)(sptr_t)lib->FindFunction("GetLexerCount");
@@ -133,7 +133,7 @@ LexerLibrary::LexerLibrary(const char* ModuleName) {
 			char lexname[100];
 			strcpy(lexname, "");
 
-			int nl = GetLexerCount( );
+			int nl = GetLexerCount();
 
 			for (int i = 0; i < nl; i++) {
 				GetLexerName(i, lexname, 100);
@@ -160,12 +160,12 @@ LexerLibrary::LexerLibrary(const char* ModuleName) {
 	next = NULL;
 }
 
-LexerLibrary::~LexerLibrary( ) {
-	Release( );
+LexerLibrary::~LexerLibrary() {
+	Release();
 	delete lib;
 }
 
-void LexerLibrary::Release( ) {
+void LexerLibrary::Release() {
 	//TODO maintain a list of lexers created, and delete them!
 	LexerMinder *lm;
 	LexerMinder *next;
@@ -188,14 +188,14 @@ void LexerLibrary::Release( ) {
 //------------------------------------------
 
 /// Return the single LexerManager instance...
-LexerManager *LexerManager::GetInstance( ) {
+LexerManager *LexerManager::GetInstance() {
 	if(!theInstance)
 		theInstance = new LexerManager;
 	return theInstance;
 }
 
 /// Delete any LexerManager instance...
-void LexerManager::DeleteInstance( )
+void LexerManager::DeleteInstance()
 {
 	if(theInstance) {
 		delete theInstance;
@@ -204,13 +204,13 @@ void LexerManager::DeleteInstance( )
 }
 
 /// protected constructor - this is a singleton...
-LexerManager::LexerManager( ) {
+LexerManager::LexerManager() {
 	first = NULL;
 	last = NULL;
 }
 
-LexerManager::~LexerManager( ) {
-	Clear( );
+LexerManager::~LexerManager() {
+	Clear();
 }
 
 void LexerManager::Load(const char* path)
@@ -230,7 +230,7 @@ void LexerManager::LoadLexerLibrary(const char* module)
 	}
 }
 
-void LexerManager::Clear( )
+void LexerManager::Clear()
 {
 	if (NULL != first) {
 		LexerLibrary *cur = first;
@@ -251,9 +251,9 @@ void LexerManager::Clear( )
 //
 //------------------------------------------
 
-LMMinder::~LMMinder( )
+LMMinder::~LMMinder()
 {
-	LexerManager::DeleteInstance( );
+	LexerManager::DeleteInstance();
 }
 
 LMMinder minder;

@@ -189,7 +189,7 @@ static void ColourisePascalDoc(unsigned int startPos, int length, int initStyle,
 			bool bDoublePoint = ((ch == '.') && (chPrev == '.'));
 			if ((!iswordchar(ch) && ch != '$' && ch != '#' && (ch != '@' || !bInAsm)) || bDoublePoint) {
 				if (bDoublePoint) i--;
-				int lStateChange = classifyWordPascal(styler.GetStartSegment( ), i - 1, keywordlists, styler, bInClassDefinition, bInAsm);
+				int lStateChange = classifyWordPascal(styler.GetStartSegment(), i - 1, keywordlists, styler, bInClassDefinition, bInAsm);
 
 				if(lStateChange == 1) {
 					styler.SetLineState(currentLine, 1);
@@ -241,9 +241,9 @@ static void ColourisePascalDoc(unsigned int startPos, int length, int initStyle,
 				}
 			} else if (state == SCE_C_COMMENTDOC) {
 				if (ch == ')' && chPrev == '*') {
-					if (((i > styler.GetStartSegment( ) + 2) || (
+					if (((i > styler.GetStartSegment() + 2) || (
 						(initStyle == SCE_C_COMMENTDOC) &&
-						(styler.GetStartSegment( ) == static_cast<unsigned int>(startPos))))) {
+						(styler.GetStartSegment() == static_cast<unsigned int>(startPos))))) {
 							ColourTo(styler, i, state, bInAsm);
 							state = SCE_C_DEFAULT;
 					}

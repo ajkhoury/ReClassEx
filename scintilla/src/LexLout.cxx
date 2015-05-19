@@ -46,7 +46,7 @@ static void ColouriseLoutDoc(unsigned int startPos, int length, int initStyle,
 
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 
 		if (sc.atLineStart && (sc.state == SCE_LOUT_STRING)) {
 			// Prevent SCE_LOUT_STRINGEOL from leaking back to previous line
@@ -66,7 +66,7 @@ static void ColouriseLoutDoc(unsigned int startPos, int length, int initStyle,
 		} else if (sc.state == SCE_LOUT_STRING) {
 			if (sc.ch == '\\') {
 				if (sc.chNext == '\"' || sc.chNext == '\\') {
-					sc.Forward( );
+					sc.Forward();
 				}
 			} else if (sc.ch == '\"') {
 				sc.ForwardSetState(SCE_LOUT_DEFAULT);
@@ -130,7 +130,7 @@ static void ColouriseLoutDoc(unsigned int startPos, int length, int initStyle,
 			visibleChars++;
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static void FoldLoutDoc(unsigned int startPos, int length, int, WordList *[],

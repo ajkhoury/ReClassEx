@@ -181,11 +181,11 @@ static void ColouriseMETAPOSTDoc(
 	bool inString  = false ;
 	bool inClause  = false ;
 
-	bool going = sc.More( ) ; // needed because of a fuzzy end of file state
+	bool going = sc.More() ; // needed because of a fuzzy end of file state
 
-	for (; going; sc.Forward( )) {
+	for (; going; sc.Forward()) {
 
-		if (! sc.More( )) { going = false ; } // we need to go one behind the end of text
+		if (! sc.More()) { going = false ; } // we need to go one behind the end of text
 
 		if (inClause) {
 			sc.SetState(SCE_METAPOST_TEXT) ;
@@ -213,7 +213,7 @@ static void ColouriseMETAPOSTDoc(
 				inString = false ; // not correct but we want to stimulate one-lines
 			}
 		} else {
-			if ((! isMETAPOSTidentifier(sc.ch)) && (sc.LengthCurrent( ) > 0)) {
+			if ((! isMETAPOSTidentifier(sc.ch)) && (sc.LengthCurrent() > 0)) {
 				if (sc.state == SCE_METAPOST_COMMAND) {
 					sc.GetCurrent(key, sizeof(key)) ;
 					if ((strcmp(key,"btex") == 0) || (strcmp(key,"verbatimtex") == 0)) {
@@ -305,7 +305,7 @@ static void ColouriseMETAPOSTDoc(
 
 	}
 
-	sc.Complete( );
+	sc.Complete();
 
 }
 

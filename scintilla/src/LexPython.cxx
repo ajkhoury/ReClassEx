@@ -126,7 +126,7 @@ static void ColourisePyDoc(unsigned int startPos, int length, int initStyle,
 	// Python uses a different mask because bad indentation is marked by oring with 32
 	StyleContext sc(startPos, endPos - startPos, initStyle, styler, 0x7f);
 
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 
 		if (sc.atLineStart) {
 			const char chBad = static_cast<char>(64);
@@ -159,7 +159,7 @@ static void ColourisePyDoc(unsigned int startPos, int length, int initStyle,
 				sc.ChangeState(SCE_P_STRINGEOL);
 				sc.ForwardSetState(SCE_P_DEFAULT);
 			}
-			if (!sc.More( ))
+			if (!sc.More())
 				break;
 		}
 
@@ -218,9 +218,9 @@ static void ColourisePyDoc(unsigned int startPos, int length, int initStyle,
 		} else if ((sc.state == SCE_P_STRING) || (sc.state == SCE_P_CHARACTER)) {
 			if (sc.ch == '\\') {
 				if ((sc.chNext == '\r') && (sc.GetRelative(2) == '\n')) {
-					sc.Forward( );
+					sc.Forward();
 				}
-				sc.Forward( );
+				sc.Forward();
 			} else if ((sc.state == SCE_P_STRING) && (sc.ch == '\"')) {
 				sc.ForwardSetState(SCE_P_DEFAULT);
 				needEOLCheck = true;
@@ -230,19 +230,19 @@ static void ColourisePyDoc(unsigned int startPos, int length, int initStyle,
 			}
 		} else if (sc.state == SCE_P_TRIPLE) {
 			if (sc.ch == '\\') {
-				sc.Forward( );
+				sc.Forward();
 			} else if (sc.Match("\'\'\'")) {
-				sc.Forward( );
-				sc.Forward( );
+				sc.Forward();
+				sc.Forward();
 				sc.ForwardSetState(SCE_P_DEFAULT);
 				needEOLCheck = true;
 			}
 		} else if (sc.state == SCE_P_TRIPLEDOUBLE) {
 			if (sc.ch == '\\') {
-				sc.Forward( );
+				sc.Forward();
 			} else if (sc.Match("\"\"\"")) {
-				sc.Forward( );
-				sc.Forward( );
+				sc.Forward();
+				sc.Forward();
 				sc.ForwardSetState(SCE_P_DEFAULT);
 				needEOLCheck = true;
 			}
@@ -252,7 +252,7 @@ static void ColourisePyDoc(unsigned int startPos, int length, int initStyle,
 		if (needEOLCheck && sc.atLineEnd) {
 			lineCurrent++;
 			styler.IndentAmount(lineCurrent, &spaceFlags, IsPyComment);
-			if (!sc.More( ))
+			if (!sc.More())
 				break;
 		}
 
@@ -274,15 +274,15 @@ static void ColourisePyDoc(unsigned int startPos, int length, int initStyle,
 			} else if (IsPyStringStart(sc.ch, sc.chNext, sc.GetRelative(2))) {
 				unsigned int nextIndex = 0;
 				sc.SetState(GetPyStringState(styler, sc.currentPos, &nextIndex));
-				while (nextIndex > (sc.currentPos + 1) && sc.More( )) {
-					sc.Forward( );
+				while (nextIndex > (sc.currentPos + 1) && sc.More()) {
+					sc.Forward();
 				}
 			} else if (IsAWordStart(sc.ch)) {
 				sc.SetState(SCE_P_IDENTIFIER);
 			}
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static bool IsCommentLine(int line, Accessor &styler) {
@@ -308,7 +308,7 @@ static void FoldPyDoc(unsigned int startPos, int length, int /*initStyle - unuse
                       WordList *[], Accessor &styler) {
 	const int maxPos = startPos + length;
 	const int maxLines = styler.GetLine(maxPos - 1);             // Requested last line
-	const int docLines = styler.GetLine(styler.Length( ) - 1);  // Available last line
+	const int docLines = styler.GetLine(styler.Length() - 1);  // Available last line
 	const bool foldComment = styler.GetPropertyInt("fold.comment.python") != 0;
 	const bool foldQuotes = styler.GetPropertyInt("fold.quotes.python") != 0;
 

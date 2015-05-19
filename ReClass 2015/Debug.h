@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string>
 
-#define VALID( x ) ( x != NULL && HIWORD( x ) )
+#define VALID(x) (x != NULL && HIWORD(x))
 
 void sleep(unsigned int mseconds)
 {
@@ -18,29 +18,16 @@ void sleep(unsigned int mseconds)
 	while (goal > clock());
 }
 
-static void CreateConsole( )
-{
-	int hConHandle = 0;   
-	HANDLE lStdHandle = 0;  
-	FILE *fp = 0;
-	AllocConsole( );
-	lStdHandle = GetStdHandle( STD_OUTPUT_HANDLE );
-	hConHandle = _open_osfhandle( PtrToUlong( lStdHandle ), _O_TEXT );
-	fp = _fdopen( hConHandle, "w" );
-	*stdout = *fp;
-	setvbuf( stdout, NULL, _IONBF, 0 );
-}
-
 bool DataCompare( BYTE* pData, BYTE* bMask, char * szMask )
 {
-	for( ; *szMask; ++szMask, ++pData, ++bMask )
-		if( *szMask == 'x' && *pData != *bMask )
+	for(; *szMask; ++szMask, ++pData, ++bMask)
+		if(*szMask == 'x' && *pData != *bMask)
 			return FALSE;
 
-	return ( *szMask == NULL );
+	return (*szMask == NULL);
 }
 
-PCHAR GetFilePath( PCHAR append )
+PCHAR GetFilePath(PCHAR append)
 {
 	const int MAXPATH = 256;
 	static char szFile[MAXPATH] = { };
@@ -49,10 +36,10 @@ PCHAR GetFilePath( PCHAR append )
 	GetModuleFileName( GetModuleHandle( NULL ), szFile, MAXPATH ); 
 	for( int i = 0; i < ( int )strlen( szFile ); i++ )
 	{
-		if( szFile[ strlen( szFile ) - i ] == '\\' )
+		if( szFile[strlen(szFile) - i ] == '\\')
 		{
-			szFile[ ( strlen( szFile ) -  i ) + 1 ] = '\0';
-			strcat_s( szFile, append );
+			szFile[(strlen(szFile) -  i) + 1] = '\0';
+			strcat_s(szFile, append);
 			return szFile;
 		}
 	}
@@ -62,7 +49,7 @@ PCHAR GetFilePath( PCHAR append )
 
 DWORD WINAPI lpThreadWait( LPVOID lpParam )
 {
-	while( ( GetAsyncKeyState( VK_SPACE ) & 1 ) == 0 )
+	while((GetAsyncKeyState( VK_SPACE ) & 1 ) == 0)
 	{
 		Sleep( 100 );
 	}
@@ -70,10 +57,9 @@ DWORD WINAPI lpThreadWait( LPVOID lpParam )
 	return 0;
 }
 
-void Pause( )
+void Pause()
 {
-	printf( "\n\nPress the space bar to continue...\n" );
-
+	printf("\n\nPress the space bar to continue...\n");
 	WaitForSingleObject( CreateThread( 0, 0, lpThreadWait, 0, 0, 0 ), INFINITE );
 }
 
@@ -107,7 +93,21 @@ void EndianSwap( T* pObj )
 	std::reverse( pMem, pMem + sizeof( T ) );
 }
 
-bool IsValidPtr(DWORD_PTR Ptr)
+static void CreateConsole()
+{
+	int hConHandle = 0;   
+	HANDLE lStdHandle = 0;  
+	FILE *fp = 0;
+	AllocConsole( );
+	lStdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	hConHandle = _open_osfhandle(PtrToUlong( lStdHandle ), _O_TEXT);
+	fp = _fdopen(hConHandle, "w");
+	*stdout = *fp;
+	setvbuf(stdout, NULL, _IONBF, 0);
+}
+
+
+static bool IsValidPtr(DWORD_PTR Ptr)
 {
 	#ifdef _WIN64
 	if (Ptr >= 0x10000 && Ptr < 0x000F000000000000)
@@ -118,6 +118,5 @@ bool IsValidPtr(DWORD_PTR Ptr)
 	#endif
 	return false;
 }
-
 
 #endif

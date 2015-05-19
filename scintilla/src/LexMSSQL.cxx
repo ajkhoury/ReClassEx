@@ -163,7 +163,7 @@ static void ColouriseMSSQLDoc(unsigned int startPos, int length,
                     styler.ColourTo(i - 1, state);
 					stateTmp = state;
                 } else
-                    stateTmp = classifyWordSQL(styler.GetStartSegment( ), i - 1, keywordlists, styler, state, prevState);
+                    stateTmp = classifyWordSQL(styler.GetStartSegment(), i - 1, keywordlists, styler, state, prevState);
 
 				prevState = state;
 
@@ -180,7 +180,7 @@ static void ColouriseMSSQLDoc(unsigned int startPos, int length,
 			}
 		} else if (state == SCE_MSSQL_GLOBAL_VARIABLE) {
 			if ((ch != '@') && !iswordchar(ch)) {
-				classifyWordSQL(styler.GetStartSegment( ), i - 1, keywordlists, styler, state, prevState);
+				classifyWordSQL(styler.GetStartSegment(), i - 1, keywordlists, styler, state, prevState);
 				prevState = state;
 				state = SCE_MSSQL_DEFAULT;
 			}
@@ -232,8 +232,8 @@ static void ColouriseMSSQLDoc(unsigned int startPos, int length,
 		// When the last char is part of the state...
 		} else if (state == SCE_MSSQL_COMMENT) {
 				if (ch == '/' && chPrev == '*') {
-					if (((i > (styler.GetStartSegment( ) + 2)) || ((initStyle == SCE_MSSQL_COMMENT) &&
-					    (styler.GetStartSegment( ) == startPos)))) {
+					if (((i > (styler.GetStartSegment() + 2)) || ((initStyle == SCE_MSSQL_COMMENT) &&
+					    (styler.GetStartSegment() == startPos)))) {
 						styler.ColourTo(i, state);
 						//~ state = SCE_MSSQL_COMMENT;
 					prevState = state;

@@ -396,45 +396,33 @@ public:
 			{
 				if (gbPointers)
 				{
-					x = AddText(View, x, y, crOffset, NONE, "*->%s ", a);
+					x = AddText(View, x, y, crOffset, NONE, "*->%s ", a); 
 
-					DWORD_PTR pRTTIObjectLocator = Val - sizeof(void*); //RTTI is at First VFunc - sizeof(void*)
-					if (!IsValidPtr(pRTTIObjectLocator))
-						return x;
+					DWORD_PTR pRTTIObjectLocator = Val - sizeof(void*); //RTTI is at First VFunc - sizeof(void*) 
+					if (!IsValidPtr(pRTTIObjectLocator)) 
+						return x; 
 
-					DWORD_PTR RTTIObjectLocator;
-					#ifdef _WIN64
-					ReadMemory(pRTTIObjectLocator, &RTTIObjectLocator, 4);
-					#else
-					ReadMemory(pRTTIObjectLocator, &RTTIObjectLocator, 8);
-					#endif
+					DWORD_PTR RTTIObjectLocator;  
+					ReadMemory(pRTTIObjectLocator, &RTTIObjectLocator, sizeof(DWORD_PTR)); 
 
-					DWORD_PTR pClassHierarchyDescriptor = RTTIObjectLocator + 0x10;
-					if (!IsValidPtr(pClassHierarchyDescriptor))
-						return x;
+					DWORD_PTR pClassHierarchyDescriptor = RTTIObjectLocator + 0x10; 
+					if (!IsValidPtr(pClassHierarchyDescriptor)) 
+						return x; 
 
-					DWORD_PTR ClassHierarchyDescriptor;
-					#ifdef _WIN64
-					ReadMemory(pClassHierarchyDescriptor, &ClassHierarchyDescriptor, 4);
-					#else
-					ReadMemory(pClassHierarchyDescriptor, &ClassHierarchyDescriptor, 8);
-					#endif					
+					DWORD_PTR ClassHierarchyDescriptor; 
+					ReadMemory(pClassHierarchyDescriptor, &ClassHierarchyDescriptor, sizeof(DWORD_PTR));				 
 
-					DWORD NumBaseClasses;
-					ReadMemory(ClassHierarchyDescriptor + 0x8, &NumBaseClasses, 4);
-					if (NumBaseClasses < 0 || NumBaseClasses > 25)
-						NumBaseClasses = 0;
+					DWORD NumBaseClasses; 
+					ReadMemory(ClassHierarchyDescriptor + 0x8, &NumBaseClasses, sizeof(DWORD)); 
+					if (NumBaseClasses < 0 || NumBaseClasses > 25) 
+						NumBaseClasses = 0; 
 
 					DWORD_PTR pBaseClassArray = ClassHierarchyDescriptor + 0x0C;
 					if (!IsValidPtr(pBaseClassArray))
 						return x;
 
 					DWORD_PTR BaseClassArray;
-					#ifdef _WIN64
-					ReadMemory(pBaseClassArray, &BaseClassArray, 4);
-					#else
-					ReadMemory(pBaseClassArray, &BaseClassArray, 8);
-					#endif	
+					ReadMemory(pBaseClassArray, &BaseClassArray, sizeof(DWORD_PTR));
 
 					x = AddText(View, x, y, crOffset, NONE, " RTTI: ");
 					for (int i = 0; i < NumBaseClasses; i++)
@@ -442,18 +430,18 @@ public:
 						if (i != 0 && i != NumBaseClasses)
 							x = AddText(View, x, y, crOffset, NONE, " inherits:");
 
-						DWORD pBaseClassDescriptor = BaseClassArray + (0x4 * i);
+						DWORD pBaseClassDescriptor = BaseClassArray + (4 * i);
 						if (!IsValidPtr(pBaseClassDescriptor))
 							continue;
 
 						DWORD BaseClassDescriptor;
-						ReadMemory(pBaseClassDescriptor, &BaseClassDescriptor, 4);
+						ReadMemory(pBaseClassDescriptor, &BaseClassDescriptor, sizeof(DWORD));
 
 						if (!IsValidPtr(BaseClassDescriptor))
 							continue;
 
 						DWORD TypeDescriptor; //pointer at 0x00 in BaseClassDescriptor
-						ReadMemory(BaseClassDescriptor, &TypeDescriptor, 4);
+						ReadMemory(BaseClassDescriptor, &TypeDescriptor, sizeof(DWORD));
 
 						std::string RTTIName;
 						bool FoundEnd = false;
@@ -461,7 +449,7 @@ public:
 						for (int j = 0; j < 45; j++)
 						{
 							char RTTINameChar;
-							ReadMemory(TypeDescriptor + 0x08 +j, &RTTINameChar, 1);
+							ReadMemory(TypeDescriptor + 0x08 + j, &RTTINameChar, 1);
 							if (RTTINameChar == '@' && LastChar == '@') //Names seem to be ended with @@
 							{
 								FoundEnd = true;

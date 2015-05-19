@@ -79,7 +79,7 @@ static void ColouriseErlangDoc(unsigned int startPos, int length, int initStyle,
    atom_parse_state_t parse_state = STATE_NULL;
    int radix_digits = 0;
    int exponent_digits = 0;
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
       if ( STATE_NULL != parse_state ) {
          switch (parse_state) {
          case STATE_NULL:
@@ -346,7 +346,7 @@ static void ColouriseErlangDoc(unsigned int startPos, int length, int initStyle,
 			}
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static int ClassifyFoldPointErlang(

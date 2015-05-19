@@ -46,7 +46,7 @@ static void ColouriseESCRIPTDoc(unsigned int startPos, int length, int initStyle
 
 	bool caseSensitive = styler.GetPropertyInt("escript.case.sensitive", 0) != 0;
 
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 
 		/*if (sc.atLineStart && (sc.state == SCE_ESCRIPT_STRING)) {
 			// Prevent SCE_ESCRIPT_STRINGEOL from leaking back to previous line
@@ -56,9 +56,9 @@ static void ColouriseESCRIPTDoc(unsigned int startPos, int length, int initStyle
 		// Handle line continuation generically.
 		if (sc.ch == '\\') {
 			if (sc.chNext == '\n' || sc.chNext == '\r') {
-				sc.Forward( );
+				sc.Forward();
 				if (sc.ch == '\r' && sc.chNext == '\n') {
-					sc.Forward( );
+					sc.Forward();
 				}
 				continue;
 			}
@@ -94,12 +94,12 @@ static void ColouriseESCRIPTDoc(unsigned int startPos, int length, int initStyle
 			}
 		} else if (sc.state == SCE_ESCRIPT_COMMENT) {
 			if (sc.Match('*', '/')) {
-				sc.Forward( );
+				sc.Forward();
 				sc.ForwardSetState(SCE_ESCRIPT_DEFAULT);
 			}
 		} else if (sc.state == SCE_ESCRIPT_COMMENTDOC) {
 			if (sc.Match('*', '/')) {
-				sc.Forward( );
+				sc.Forward();
 				sc.ForwardSetState(SCE_ESCRIPT_DEFAULT);
 			}
 		} else if (sc.state == SCE_ESCRIPT_COMMENTLINE) {
@@ -109,7 +109,7 @@ static void ColouriseESCRIPTDoc(unsigned int startPos, int length, int initStyle
 		} else if (sc.state == SCE_ESCRIPT_STRING) {
 			if (sc.ch == '\\') {
 				if (sc.chNext == '\"' || sc.chNext == '\\') {
-					sc.Forward( );
+					sc.Forward();
 				}
 			} else if (sc.ch == '\"') {
 				sc.ForwardSetState(SCE_ESCRIPT_DEFAULT);
@@ -124,7 +124,7 @@ static void ColouriseESCRIPTDoc(unsigned int startPos, int length, int initStyle
 				sc.SetState(SCE_ESCRIPT_IDENTIFIER);
 			} else if (sc.Match('/', '*')) {
 				sc.SetState(SCE_ESCRIPT_COMMENT);
-				sc.Forward( );	// Eat the * so it isn't used for the end of the comment
+				sc.Forward();	// Eat the * so it isn't used for the end of the comment
 			} else if (sc.Match('/', '/')) {
 				sc.SetState(SCE_ESCRIPT_COMMENTLINE);
 			} else if (sc.ch == '\"') {
@@ -138,7 +138,7 @@ static void ColouriseESCRIPTDoc(unsigned int startPos, int length, int initStyle
 		}
 
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 

@@ -432,13 +432,13 @@ static void ColouriseNsisDoc(unsigned int startPos, int length, int, WordList *k
           state = SCE_NSIS_DEFAULT;
 				else if( (isNsisChar(cCurrChar) && !isNsisChar( cNextChar) && cNextChar != '}') || cCurrChar == '}' )
 				{
-					state = classifyWordNsis( styler.GetStartSegment( ), i, keywordLists, styler );
+					state = classifyWordNsis( styler.GetStartSegment(), i, keywordLists, styler );
 					styler.ColourTo( i, state);
 					state = SCE_NSIS_DEFAULT;
 				}
 				else if( !isNsisChar( cCurrChar ) && cCurrChar != '{' && cCurrChar != '}' )
 				{
-          if( classifyWordNsis( styler.GetStartSegment( ), i-1, keywordLists, styler) == SCE_NSIS_NUMBER )
+          if( classifyWordNsis( styler.GetStartSegment(), i-1, keywordLists, styler) == SCE_NSIS_NUMBER )
              styler.ColourTo( i-1, SCE_NSIS_NUMBER );
 
 					state = SCE_NSIS_DEFAULT;
@@ -503,7 +503,7 @@ static void ColouriseNsisDoc(unsigned int startPos, int length, int, WordList *k
       // Covers "$INSTDIR and user vars like $MYVAR"
       else if( bVarInString && !isNsisChar(cNextChar) )
       {
-        int nWordState = classifyWordNsis( styler.GetStartSegment( ), i, keywordLists, styler);
+        int nWordState = classifyWordNsis( styler.GetStartSegment(), i, keywordLists, styler);
 				if( nWordState == SCE_NSIS_VARIABLE )
 					styler.ColourTo( i, SCE_NSIS_STRINGVAR);
         else if( bUserVars )

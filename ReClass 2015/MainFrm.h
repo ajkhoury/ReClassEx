@@ -40,6 +40,10 @@ public:
 // Implementation
 public:
 	virtual ~CMainFrame();
+#ifdef _DEBUG
+	virtual void AssertValid() const;
+	virtual void Dump(CDumpContext& dc) const;
+#endif
 
 public:  // control bar embedded members
 	CMFCRibbonBar     m_wndRibbonBar;

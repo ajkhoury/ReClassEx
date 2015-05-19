@@ -66,7 +66,7 @@ static void ColouriseFortranDoc(unsigned int startPos, int length, int initStyle
 	initStyle = styler.StyleAt(startPos - 1);
 	StyleContext sc(startPos, endPos-startPos, initStyle, styler);
 	/***************************************/
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 		// remember the start position of the line
 		if (sc.atLineStart) {
 			posLineStart = sc.currentPos;
@@ -80,10 +80,10 @@ static void ColouriseFortranDoc(unsigned int startPos, int length, int initStyle
 		if (isFixFormat && (toLineStart < 6 || toLineStart > 72)) {
 			if (toLineStart == 0 && (tolower(sc.ch) == 'c' || sc.ch == '*') || sc.ch == '!') {
 				sc.SetState(SCE_F_COMMENT);
-				while (!sc.atLineEnd && sc.More( )) sc.Forward( ); // Until line end
+				while (!sc.atLineEnd && sc.More()) sc.Forward(); // Until line end
 			} else if (toLineStart > 72) {
 				sc.SetState(SCE_F_COMMENT);
-				while (!sc.atLineEnd && sc.More( )) sc.Forward( ); // Until line end
+				while (!sc.atLineEnd && sc.More()) sc.Forward(); // Until line end
 			} else if (toLineStart < 5) {
 				if (IsADigit(sc.ch))
 					sc.SetState(SCE_F_LABEL);
@@ -114,10 +114,10 @@ static void ColouriseFortranDoc(unsigned int startPos, int length, int initStyle
 				int currentState = sc.state;
 				sc.SetState(SCE_F_CONTINUATION);
 				sc.ForwardSetState(SCE_F_DEFAULT);
-				while (IsASpace(sc.ch) && sc.More( )) sc.Forward( );
+				while (IsASpace(sc.ch) && sc.More()) sc.Forward();
 				if (sc.ch == '&') {
 					sc.SetState(SCE_F_CONTINUATION);
-					sc.Forward( );
+					sc.Forward();
 				}
 				sc.SetState(currentState);
 			}
@@ -151,7 +151,7 @@ static void ColouriseFortranDoc(unsigned int startPos, int length, int initStyle
 			prevState = sc.state;
 			if (sc.ch == '\'') {
 				if (sc.chNext == '\'') {
-					sc.Forward( );
+					sc.Forward();
 				} else {
 					sc.ForwardSetState(SCE_F_DEFAULT);
 					prevState = SCE_F_DEFAULT;
@@ -167,7 +167,7 @@ static void ColouriseFortranDoc(unsigned int startPos, int length, int initStyle
 				sc.ForwardSetState(SCE_F_DEFAULT);
 			} else if (sc.ch == '\"') {
 				if (sc.chNext == '\"') {
-					sc.Forward( );
+					sc.Forward();
 				} else {
 					sc.ForwardSetState(SCE_F_DEFAULT);
 					prevState = SCE_F_DEFAULT;
@@ -205,7 +205,7 @@ static void ColouriseFortranDoc(unsigned int startPos, int length, int initStyle
 			} else if ((tolower(sc.ch) == 'b' || tolower(sc.ch) == 'o' ||
 					    tolower(sc.ch) == 'z') && (sc.chNext == '\"' || sc.chNext == '\'')) {
 				sc.SetState(SCE_F_NUMBER);
-				sc.Forward( );
+				sc.Forward();
 			} else if (sc.ch == '.' && isalpha(sc.chNext)) {
 				sc.SetState(SCE_F_OPERATOR2);
 			} else if (IsAWordStart(sc.ch)) {
@@ -219,7 +219,7 @@ static void ColouriseFortranDoc(unsigned int startPos, int length, int initStyle
 			}
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 /***************************************/
 // To determine the folding level depending on keywords
@@ -339,7 +339,7 @@ static void FoldFortranDoc(unsigned int startPos, int length, int initStyle,
 								if (!IsALineEnd(chAtPos)) {
 									break;
 								} else {
-									if (lineCurrent < styler.GetLine(styler.Length( )-1)) {
+									if (lineCurrent < styler.GetLine(styler.Length()-1)) {
 										j = styler.LineStart(lineCurrent+1);
 										if (styler.StyleAt(j+5) == SCE_F_CONTINUATION) {
 											j += 5;

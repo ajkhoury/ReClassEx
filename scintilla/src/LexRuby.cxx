@@ -62,7 +62,7 @@ static bool inline iswhitespace(char ch) {
 #define actual_style(style) (style & STYLE_MASK)
 
 static bool followsDot(unsigned int pos, Accessor &styler) {
-    styler.Flush( );
+    styler.Flush();
     for (; pos >= 1; --pos) {
         int style = actual_style(styler.StyleAt(pos));
         char ch;
@@ -224,7 +224,7 @@ static bool currLineContainsHereDelims(int& startPos,
             
             return false;
         } else {
-            styler.Flush( );
+            styler.Flush();
             if (actual_style(styler.StyleAt(pos)) == SCE_RB_HERE_DELIM) {
                 break;
             }
@@ -297,7 +297,7 @@ static bool sureThisIsHeredoc(int iPrev,
     int prevStyle;
     int lineStart = styler.GetLine(iPrev);
     int lineStartPosn = styler.LineStart(lineStart);
-    styler.Flush( );
+    styler.Flush();
 
     // Find the first word after some whitespace
     int firstWordPosn = skipWhitespace(lineStartPosn, iPrev, styler);
@@ -376,10 +376,10 @@ static bool sureThisIsNotHeredoc(int lt2StartPos,
                                  Accessor &styler) {
     int prevStyle;
      // Use full document, not just part we're styling
-    int lengthDoc = styler.Length( );
+    int lengthDoc = styler.Length();
     int lineStart = styler.GetLine(lt2StartPos);
     int lineStartPosn = styler.LineStart(lineStart);
-    styler.Flush( );
+    styler.Flush();
     const bool definitely_not_a_here_doc = true;
     const bool looks_like_a_here_doc = false;
     
@@ -530,7 +530,7 @@ static void synchronizeDocStart(unsigned int& startPos,
                                 Accessor &styler,
                                 bool skipWhiteSpace=false) {
 
-    styler.Flush( );
+    styler.Flush();
     int style = actual_style(styler.StyleAt(startPos));
     switch (style) {
         case SCE_RB_STDIN:
@@ -596,7 +596,7 @@ static void ColouriseRbDoc(unsigned int startPos, int length, int initStyle,
 		int DelimiterLength;	// strlen(Delimiter)
 		char Delimiter[256];	// the Delimiter, limit of 256: from Perl
         bool CanBeIndented;
-		HereDocCls( ) {
+		HereDocCls() {
 			State = 0;
 			DelimiterLength = 0;
 			Delimiter[0] = '\0';
@@ -610,10 +610,10 @@ static void ColouriseRbDoc(unsigned int startPos, int length, int initStyle,
 		int  Count;
 		char Up;
 		char Down;
-		QuoteCls( ) {
-			this->New( );
+		QuoteCls() {
+			this->New();
 		}
-		void New( ) {
+		void New() {
 			Count = 0;
 			Up    = '\0';
 			Down  = '\0';
@@ -716,17 +716,17 @@ static void ColouriseRbDoc(unsigned int startPos, int length, int initStyle,
 			} else if (ch == '"') {
 				styler.ColourTo(i - 1, state);
 				state = SCE_RB_STRING;
-				Quote.New( );
+				Quote.New();
 				Quote.Open(ch);
 			} else if (ch == '\'') {
                 styler.ColourTo(i - 1, state);
                 state = SCE_RB_CHARACTER;
-                Quote.New( );
+                Quote.New();
                 Quote.Open(ch);
 			} else if (ch == '`') {
 				styler.ColourTo(i - 1, state);
 				state = SCE_RB_BACKTICKS;
-				Quote.New( );
+				Quote.New();
 				Quote.Open(ch);
 			} else if (ch == '@') {
                 // Instance or class var
@@ -746,7 +746,7 @@ static void ColouriseRbDoc(unsigned int startPos, int length, int initStyle,
                 // Ambigous operator
 				styler.ColourTo(i - 1, state);
 				state = SCE_RB_REGEX;
-                Quote.New( );
+                Quote.New();
                 Quote.Open(ch);
 			} else if (ch == '<' && chNext == '<' && chNext2 != '=') {
 
@@ -875,7 +875,7 @@ static void ColouriseRbDoc(unsigned int startPos, int length, int initStyle,
                 styler.ColourTo(i - 1, state);
                 bool have_string = false;
                 if (strchr(q_chars, chNext) && !isSafeWordcharOrHigh(chNext2)) {
-                    Quote.New( );
+                    Quote.New();
                     const char *hit = strchr(q_chars, chNext);
                     if (hit != NULL) {
                         state = q_states[hit - q_chars];
@@ -933,7 +933,7 @@ static void ColouriseRbDoc(unsigned int startPos, int length, int initStyle,
                     && (chNext == '('
                         || strchr(" \t\n\r", chNext) != NULL)
                     && (!strcmp(prevWord, "def")
-                        || followsDot(styler.GetStartSegment( ), styler))) {
+                        || followsDot(styler.GetStartSegment(), styler))) {
                     // <name>= is a name only when being def'd -- Get it the next time
                     // This means that <name>=<name> is always lexed as
                     // <name>, (op, =), <name>
@@ -952,7 +952,7 @@ static void ColouriseRbDoc(unsigned int startPos, int length, int initStyle,
                     // No need to handle this state -- we'll just move to the end
                     preferRE = false;
                 } else {
-					int wordStartPos = styler.GetStartSegment( );
+					int wordStartPos = styler.GetStartSegment();
                     int word_style = ClassifyWordRb(wordStartPos, i - 1, keywords, styler, prevWord);
                     switch (word_style) {
                         case SCE_RB_WORD:
@@ -1210,7 +1210,7 @@ static void ColouriseRbDoc(unsigned int startPos, int length, int initStyle,
     if (state == SCE_RB_WORD) {
         // We've ended on a word, possibly at EOF, and need to
         // classify it.
-        (void) ClassifyWordRb(styler.GetStartSegment( ), lengthDoc - 1, keywords, styler, prevWord);
+        (void) ClassifyWordRb(styler.GetStartSegment(), lengthDoc - 1, keywords, styler, prevWord);
     } else {
         styler.ColourTo(lengthDoc - 1, state);
     }
@@ -1225,7 +1225,7 @@ static void getPrevWord(int pos,
                         int word_state)
 {
     int i;
-    styler.Flush( );
+    styler.Flush();
     for (i = pos - 1; i > 0; i--) {
         if (actual_style(styler.StyleAt(i)) != word_state) {
             i++;
@@ -1271,14 +1271,14 @@ static bool keywordIsModifier(const char *word,
     int style = SCE_RB_DEFAULT;
 	int lineStart = styler.GetLine(pos);
     int lineStartPosn = styler.LineStart(lineStart);
-    styler.Flush( );
+    styler.Flush();
     while (--pos >= lineStartPosn) {
         style = actual_style(styler.StyleAt(pos));
 		if (style == SCE_RB_DEFAULT) {
 			if (iswhitespace(ch = styler[pos])) {
 				//continue
 			} else if (ch == '\r' || ch == '\n') {
-				// Scintilla's LineStart( ) and GetLine( ) routines aren't
+				// Scintilla's LineStart() and GetLine() routines aren't
 				// platform-independent, so if we have text prepared with
 				// a different system we can't rely on it.
 				return false;
@@ -1343,12 +1343,12 @@ static bool keywordDoStartsLoop(int pos,
     int style;
 	int lineStart = styler.GetLine(pos);
     int lineStartPosn = styler.LineStart(lineStart);
-    styler.Flush( );
+    styler.Flush();
     while (--pos >= lineStartPosn) {
         style = actual_style(styler.StyleAt(pos));
 		if (style == SCE_RB_DEFAULT) {
 			if ((ch = styler[pos]) == '\r' || ch == '\n') {
-				// Scintilla's LineStart( ) and GetLine( ) routines aren't
+				// Scintilla's LineStart() and GetLine() routines aren't
 				// platform-independent, so if we have text prepared with
 				// a different system we can't rely on it.
 				return false;

@@ -73,7 +73,7 @@ static void ColorizeHaskellDoc(unsigned int startPos, int length, int initStyle,
 
    StyleContext sc(startPos, length, initStyle, styler);
 
-   for (; sc.More( ); sc.Forward( )) {
+   for (; sc.More(); sc.Forward()) {
 
       // Check for state end
          // Operator
@@ -159,7 +159,7 @@ static void ColorizeHaskellDoc(unsigned int startPos, int length, int initStyle,
                sc.SetState(sc.state + 1);
          }
          else if (sc.Match("-}")) {
-            sc.Forward( );
+            sc.Forward();
             if (sc.state == SCE_HA_COMMENTBLOCK)
                sc.ForwardSetState(SCE_HA_DEFAULT);
             else
@@ -203,7 +203,7 @@ static void ColorizeHaskellDoc(unsigned int startPos, int length, int initStyle,
 
       }
    }
-   sc.Complete( );
+   sc.Complete();
 }
 
 // External stuff - used for dynamic-loading, not implemented in wxStyledTextCtrl yet.
@@ -224,13 +224,13 @@ void EXT_LEXER_DECL Lex(unsigned int lexer, unsigned int startPos, int length, i
    int i = 0;
    for (; i<nWL; i++)
    {
-      wl[i] = new WordList( );
+      wl[i] = new WordList();
       wl[i]->Set(words[i]);
    }
    wl[i] = 0;
 
    ColorizeHaskellDoc(startPos, length, initStyle, wl, wa);
-   wa.Flush( );
+   wa.Flush();
    for (i=nWL-1;i>=0;i--)
       delete wl[i];
    delete [] wl;
@@ -242,7 +242,7 @@ void EXT_LEXER_DECL Fold (unsigned int lexer, unsigned int startPos, int length,
 
 }
 
-int EXT_LEXER_DECL GetLexerCount( )
+int EXT_LEXER_DECL GetLexerCount()
 {
    return 1;
 }

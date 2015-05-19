@@ -70,15 +70,15 @@ static void ColouriseCharacter(StyleContext& sc, bool& apostropheStartsAttribute
 
 	// Skip the apostrophe and one more character (so that '' is shown as non-terminated and '''
 	// is handled correctly)
-	sc.Forward( );
-	sc.Forward( );
+	sc.Forward();
+	sc.Forward();
 
 	ColouriseContext(sc, '\'', SCE_ADA_CHARACTEREOL);
 }
 
 static void ColouriseContext(StyleContext& sc, char chEnd, int stateEOL) {
 	while (!sc.atLineEnd && !sc.Match(chEnd)) {
-		sc.Forward( );
+		sc.Forward();
 	}
 
 	if (!sc.atLineEnd) {
@@ -94,7 +94,7 @@ static void ColouriseComment(StyleContext& sc, bool& /*apostropheStartsAttribute
 	sc.SetState(SCE_ADA_COMMENTLINE);
 
 	while (!sc.atLineEnd) {
-		sc.Forward( );
+		sc.Forward();
 	}
 }
 
@@ -110,26 +110,26 @@ static void ColouriseLabel(StyleContext& sc, WordList& keywords, bool& apostroph
 	sc.SetState(SCE_ADA_LABEL);
 
 	// Skip "<<"
-	sc.Forward( );
-	sc.Forward( );
+	sc.Forward();
+	sc.Forward();
 
 	SString identifier;
 
 	while (!sc.atLineEnd && !IsSeparatorOrDelimiterCharacter(sc.ch)) {
 		identifier += static_cast<char>(tolower(sc.ch));
-		sc.Forward( );
+		sc.Forward();
 	}
 
 	// Skip ">>"
 	if (sc.Match('>', '>')) {
-		sc.Forward( );
-		sc.Forward( );
+		sc.Forward();
+		sc.Forward();
 	} else {
 		sc.ChangeState(SCE_ADA_ILLEGAL);
 	}
 
 	// If the name is an invalid identifier or a keyword, then make it invalid label
-	if (!IsValidIdentifier(identifier) || keywords.InList(identifier.c_str( ))) {
+	if (!IsValidIdentifier(identifier) || keywords.InList(identifier.c_str())) {
 		sc.ChangeState(SCE_ADA_ILLEGAL);
 	}
 
@@ -147,18 +147,18 @@ static void ColouriseNumber(StyleContext& sc, bool& apostropheStartsAttribute) {
 	// double points (ranges).
 	while (!IsSeparatorOrDelimiterCharacter(sc.ch) || (sc.ch == '.' && sc.chNext != '.')) {
 		number += static_cast<char>(sc.ch);
-		sc.Forward( );
+		sc.Forward();
 	}
 
 	// Special case: exponent with sign
 	if ((sc.chPrev == 'e' || sc.chPrev == 'E') &&
 	        (sc.ch == '+' || sc.ch == '-')) {
 		number += static_cast<char>(sc.ch);
-		sc.Forward ( );
+		sc.Forward ();
 
 		while (!IsSeparatorOrDelimiterCharacter(sc.ch)) {
 			number += static_cast<char>(sc.ch);
-			sc.Forward( );
+			sc.Forward();
 		}
 	}
 
@@ -173,7 +173,7 @@ static void ColouriseString(StyleContext& sc, bool& apostropheStartsAttribute) {
 	apostropheStartsAttribute = true;
 
 	sc.SetState(SCE_ADA_STRING);
-	sc.Forward( );
+	sc.Forward();
 
 	ColouriseContext(sc, '"', SCE_ADA_STRINGEOL);
 }
@@ -192,13 +192,13 @@ static void ColouriseWord(StyleContext& sc, WordList& keywords, bool& apostrophe
 
 	while (!sc.atLineEnd && !IsSeparatorOrDelimiterCharacter(sc.ch)) {
 		word += static_cast<char>(tolower(sc.ch));
-		sc.Forward( );
+		sc.Forward();
 	}
 
 	if (!IsValidIdentifier(word)) {
 		sc.ChangeState(SCE_ADA_ILLEGAL);
 
-	} else if (keywords.InList(word.c_str( ))) {
+	} else if (keywords.InList(word.c_str())) {
 		sc.ChangeState(SCE_ADA_WORD);
 
 		if (word != "all") {
@@ -226,10 +226,10 @@ static void ColouriseDocument(
 	int lineCurrent = styler.GetLine(startPos);
 	bool apostropheStartsAttribute = (styler.GetLineState(lineCurrent) & 1) != 0;
 
-	while (sc.More( )) {
+	while (sc.More()) {
 		if (sc.atLineEnd) {
 			// Go to the next line
-			sc.Forward( );
+			sc.Forward();
 			lineCurrent++;
 
 			// Remember the line state for future incremental lexing
@@ -273,7 +273,7 @@ static void ColouriseDocument(
 		}
 	}
 
-	sc.Complete( );
+	sc.Complete();
 }
 
 static inline bool IsDelimiterCharacter(int ch) {
@@ -321,7 +321,7 @@ static bool IsValidIdentifier(const SString& identifier) {
 	// First character can't be '_', so initialize the flag to true
 	bool lastWasUnderscore = true;
 
-	size_t length = identifier.length( );
+	size_t length = identifier.length();
 
 	// Zero-length identifiers are not valid (these can occur inside labels)
 	if (length == 0) {
@@ -356,7 +356,7 @@ static bool IsValidNumber(const SString& number) {
 	bool seenDot = false;
 
 	size_t i = 0;
-	size_t length = number.length( );
+	size_t length = number.length();
 
 	if (length == 0)
 		return false; // Just in case

@@ -68,17 +68,17 @@ static void colorFirstWord(WordList *keywordlists[], Accessor &styler,
 									StyleContext *sc, char *buff, int length, int)
 {
 	int c = 0;
-	while (sc->More( ) && isSpaceOrNL(sc->ch))
-	{	sc->Forward( );
+	while (sc->More() && isSpaceOrNL(sc->ch))
+	{	sc->Forward();
 	}
 	styler.ColourTo(sc->currentPos - 1, sc->state);
 
 	if (!IsAWordChar(sc->ch)) // comment, marker, etc..
 		return;
 
-	while (sc->More( ) && !isSpaceOrNL(sc->ch) && (c < length-1) && !isGCOperator(sc->ch))
+	while (sc->More() && !isSpaceOrNL(sc->ch) && (c < length-1) && !isGCOperator(sc->ch))
 	{	buff[c] = static_cast<char>(sc->ch);
-		++c; sc->Forward( );
+		++c; sc->Forward();
 	}
 	buff[c] = '\0';
 	char *p = buff;
@@ -132,7 +132,7 @@ ColouriseGui4CliDoc(unsigned int startPos, int length, int initStyle,
 	if (sc.state != SCE_GC_COMMENTBLOCK) // colorize 1st word..
 		colorFirstWord(keywordlists, styler, &sc, buff, BUFFSIZE, currentline);
 
-	while (sc.More( ))
+	while (sc.More())
 	{	noforward = 0;
 
 		switch (sc.ch)
@@ -142,12 +142,12 @@ ColouriseGui4CliDoc(unsigned int startPos, int length, int initStyle,
 					break;
 				if (sc.chNext == '/')	// line comment
 				{	sc.SetState (SCE_GC_COMMENTLINE);
-					sc.Forward( );
+					sc.Forward();
 					styler.ColourTo(sc.currentPos, sc.state);
 				}
 				else if (sc.chNext == '*')	// block comment
 				{	sc.SetState(SCE_GC_COMMENTBLOCK);
-					sc.Forward( );
+					sc.Forward();
 					styler.ColourTo(sc.currentPos, sc.state);
 				}
 				else
@@ -158,7 +158,7 @@ ColouriseGui4CliDoc(unsigned int startPos, int length, int initStyle,
 				if (sc.state == SCE_GC_STRING)
 					break;
 				if (sc.state == SCE_GC_COMMENTBLOCK && sc.chNext == '/')
-				{	sc.Forward( );
+				{	sc.Forward();
 					styler.ColourTo(sc.currentPos, sc.state);
 					sc.ChangeState (SCE_GC_DEFAULT);
 				}
@@ -189,7 +189,7 @@ ColouriseGui4CliDoc(unsigned int startPos, int length, int initStyle,
 					styler.ColourTo(sc.currentPos - 1, sc.state);
 					styler.ColourTo(sc.currentPos, SCE_GC_OPERATOR);
 					sc.ChangeState(SCE_GC_DEFAULT);
-					sc.Forward( );
+					sc.Forward();
 					colorFirstWord(keywordlists, styler, &sc, buff, BUFFSIZE, currentline);
 					noforward = 1; // don't move forward - already positioned at next char..
 				}
@@ -211,7 +211,7 @@ ColouriseGui4CliDoc(unsigned int startPos, int length, int initStyle,
 				{
 					oldstate = sc.state;
 					styler.ColourTo(sc.currentPos - 1, sc.state);
-					sc.Forward( ); // mark also the next char..
+					sc.Forward(); // mark also the next char..
 					styler.ColourTo(sc.currentPos, SCE_GC_OPERATOR);
 					sc.ChangeState(oldstate);
 				}
@@ -233,10 +233,10 @@ ColouriseGui4CliDoc(unsigned int startPos, int length, int initStyle,
 //			default :
 		}
 
-		if (!noforward) sc.Forward( );
+		if (!noforward) sc.Forward();
 
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 // Main folding function called by Scintilla - (based on props (.ini) files function)

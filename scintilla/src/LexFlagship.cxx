@@ -62,7 +62,7 @@ static void ColouriseFlagShipDoc(unsigned int startPos, int length, int initStyl
 
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 
 		if (sc.state == SCE_FS_OPERATOR) {
 			sc.SetState(SCE_FS_DEFAULT);
@@ -90,7 +90,7 @@ static void ColouriseFlagShipDoc(unsigned int startPos, int length, int initStyl
 			// state now as a following quote will start again
 			if (sc.ch == '\"') {
 				if (tolower(sc.chNext) == 'c') {
-					sc.Forward( );
+					sc.Forward();
 				}
 				sc.ForwardSetState(SCE_FS_DEFAULT);
 			} else if (sc.atLineEnd) {
@@ -99,7 +99,7 @@ static void ColouriseFlagShipDoc(unsigned int startPos, int length, int initStyl
 			}
 		} else if (sc.state == SCE_FS_COMMENT) {
 			if (sc.Match('*', '/')) {   // new code
-				sc.Forward( );
+				sc.Forward();
 				sc.ForwardSetState(SCE_FS_DEFAULT);
 			//if (sc.atLineEnd) {       // old code
 			//	sc.SetState(SCE_FS_DEFAULT);
@@ -123,7 +123,7 @@ static void ColouriseFlagShipDoc(unsigned int startPos, int length, int initStyl
 		if (sc.state == SCE_FS_DEFAULT) {
 			if (sc.Match('/', '*')) {  // New code
 				sc.SetState(SCE_FS_COMMENT);
-				sc.Forward( );	// Eat the * so it isn't used for the end of the comment
+				sc.Forward();	// Eat the * so it isn't used for the end of the comment
 			//if (sc.ch == '\'') {  // Old code
 			//	sc.SetState(SCE_FS_COMMENT); // old code
 			} else if (sc.Match('/', '/')) { // New code
@@ -165,7 +165,7 @@ static void ColouriseFlagShipDoc(unsigned int startPos, int length, int initStyl
 			visibleChars++;
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static void FoldFlagShipDoc(unsigned int startPos, int length, int,

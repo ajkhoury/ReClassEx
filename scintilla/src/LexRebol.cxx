@@ -92,7 +92,7 @@ static void ColouriseRebolDoc(unsigned int startPos, int length, int initStyle, 
 	if (startPos == 0) {
 		sc.SetState(SCE_REBOL_PREFACE);
 	}
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 
 		//--- What to do at line end ?
 		if (sc.atLineEnd) {
@@ -192,7 +192,7 @@ static void ColouriseRebolDoc(unsigned int startPos, int length, int initStyle, 
 		//--- Determine if the current state should terminate
 		if (sc.state == SCE_REBOL_QUOTEDSTRING || sc.state == SCE_REBOL_CHARACTER) {
 			if (sc.ch == '^' && sc.chNext == '\"') {
-				sc.Forward( );
+				sc.Forward();
 			} else if (sc.ch == '\"') {
 				sc.ForwardSetState(SCE_REBOL_DEFAULT);
 			}
@@ -257,13 +257,13 @@ static void ColouriseRebolDoc(unsigned int startPos, int length, int initStyle, 
 				sc.SetState(SCE_REBOL_TAG);
 			} else if (sc.ch == '#' && sc.chNext == '"') {
 				sc.SetState(SCE_REBOL_CHARACTER);
-				sc.Forward( );
+				sc.Forward();
 			} else if (sc.ch == '#' && sc.chNext != '"' && sc.chNext != '{' ) {
 				sc.SetState(SCE_REBOL_ISSUE);
 			}
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 

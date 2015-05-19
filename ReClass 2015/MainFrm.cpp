@@ -6,7 +6,7 @@
 #include "DialogClasses.h"
 #include "MainFrm.h"
 
-#ifndef NDEBUG
+#ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
@@ -73,7 +73,7 @@ END_MESSAGE_MAP()
 CMainFrame::CMainFrame()
 {
 	// TODO: add member initialization code here
-	theApp.m_nAppLook = theApp.GetInt("ApplicationLook", ID_VIEW_APPLOOK_WIN_XP);
+	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_OFF_2007_BLACK);
 }
 
 CMainFrame::~CMainFrame()
@@ -87,7 +87,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	// set the visual manager and style based on persisted value
-	OnApplicationLook(ID_VIEW_APPLOOK_VS_2005/*theApp.m_nAppLook*/);
+	OnApplicationLook(theApp.m_nAppLook);
 
 	CMDITabInfo mdiTabParams;
 	mdiTabParams.m_style = CMFCTabCtrl::STYLE_FLAT; // other styles available...
@@ -112,6 +112,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	}
 
+	SetTitle("Reclass 2015");
+
 	// Enable enhanced windows management dialog
 	EnableWindowsDialog(ID_WINDOW_MANAGER, ID_WINDOW_MANAGER, TRUE);
 
@@ -121,21 +123,24 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//Update Colors
 	CMFCRibbonColorButton* pColor;
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CBACKGROUND); pColor->SetColor(crBackground);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CSELECT); pColor->SetColor(crSelect);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CHIDDEN); pColor->SetColor(crHidden);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_COFFSET); pColor->SetColor(crOffset);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CADDRESS); pColor->SetColor(crAddress);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CTYPE); pColor->SetColor(crType);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CNAME); pColor->SetColor(crName);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CINDEX); pColor->SetColor(crIndex);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CVALUE); pColor->SetColor(crValue);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CCOMMENT); pColor->SetColor(crComment);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CVTABLE); pColor->SetColor(crVTable);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CFUNCTION); pColor->SetColor(crFunction);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CTEXT); pColor->SetColor(crChar);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CCUSTOM); pColor->SetColor(crCustom);
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CHEX); pColor->SetColor(crHex);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CBACKGROUND);	pColor->SetColor(crBackground);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CSELECT);		pColor->SetColor(crSelect);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CHIDDEN);		pColor->SetColor(crHidden);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_COFFSET);		pColor->SetColor(crOffset);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CADDRESS);		pColor->SetColor(crAddress);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CTYPE);			pColor->SetColor(crType);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CNAME);			pColor->SetColor(crName);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CINDEX);			pColor->SetColor(crIndex);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CVALUE);			pColor->SetColor(crValue);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CCOMMENT);		pColor->SetColor(crComment);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CVTABLE);		pColor->SetColor(crVTable);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CFUNCTION);		pColor->SetColor(crFunction);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CTEXT);			pColor->SetColor(crChar);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CCUSTOM);		pColor->SetColor(crCustom);
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CHEX);			pColor->SetColor(crHex);
+
+	// update after 5 seconds
+	SetTimer(0xB00B1E5, 5000, NULL);
 
 	return 0;
 }
@@ -222,6 +227,19 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 	UpdateMDITabbedBarsIcons();
 }
 
+// CMainFrame diagnostics
+#ifdef _DEBUG
+void CMainFrame::AssertValid() const
+{
+	CMDIFrameWndEx::AssertValid();
+}
+
+void CMainFrame::Dump(CDumpContext& dc) const
+{
+	CMDIFrameWndEx::Dump(dc);
+}
+#endif //_DEBUG
+
 // CMainFrame message handlers
 void CMainFrame::OnWindowManager()
 {
@@ -276,30 +294,33 @@ void CMainFrame::OnApplicationLook(UINT id)
 		m_wndRibbonBar.SetWindows7Look(TRUE);
 		break;
 
-	case ID_VIEW_APPLOOK_OFF_2007_BLUE:
-		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_LunaBlue); 
-		break;
-		 
-	case ID_VIEW_APPLOOK_OFF_2007_BLACK:
-		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_ObsidianBlack);
-		break;
+	default:
+		switch (theApp.m_nAppLook)
+		{
+		case ID_VIEW_APPLOOK_OFF_2007_BLUE:
+			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_LunaBlue);
+			break;
 
-	case ID_VIEW_APPLOOK_OFF_2007_SILVER:
-		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Silver);
-		break;
+		case ID_VIEW_APPLOOK_OFF_2007_BLACK:
+			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_ObsidianBlack);
+			break;
 
-	case ID_VIEW_APPLOOK_OFF_2007_AQUA:
-		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Aqua);
-		break;
+		case ID_VIEW_APPLOOK_OFF_2007_SILVER:
+			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Silver);
+			break;
 
+		case ID_VIEW_APPLOOK_OFF_2007_AQUA:
+			CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Aqua);
+			break;
+		}
 
-		//CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
+		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
 		CDockingManager::SetDockingMode(DT_SMART);
-		//m_wndRibbonBar.SetWindows7Look(FALSE);
+		m_wndRibbonBar.SetWindows7Look(FALSE);
+		break;
 	}
 
 	RedrawWindow(NULL, NULL, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);
-
 	theApp.WriteInt("ApplicationLook", theApp.m_nAppLook);
 }
 
@@ -352,7 +373,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 		{
 			UINT idx = nID - WM_PROCESSMENU;
 			ProcessID = ProcMenuItems[idx].ProcessId;
-			hProcess = OpenProcess(PROCESS_ALL_ACCESS,false,ProcessID);
+			hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, ProcessID);
 			UpdateMemoryMap();
 			return TRUE;
 		}
@@ -363,7 +384,6 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 			return TRUE;
 		}
 	}
-
 
 	return CMDIFrameWndEx::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
 }
@@ -666,7 +686,7 @@ void CMainFrame::OnUpdateButtonDeleteclass(CCmdUI *pCmdUI)
 
 void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 {
-	if (nIDEvent == 69)
+	if (nIDEvent == 0xB00B1E5)
 		UpdateMemoryMap();
 	CMDIFrameWndEx::OnTimer(nIDEvent);
 }

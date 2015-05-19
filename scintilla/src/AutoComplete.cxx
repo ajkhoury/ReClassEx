@@ -14,7 +14,7 @@
 #include "PropSet.h"
 #include "AutoComplete.h"
 
-AutoComplete::AutoComplete( ) :
+AutoComplete::AutoComplete() :
 	active(false),
 	separator(' '),
 	typesep('?'),
@@ -26,20 +26,20 @@ AutoComplete::AutoComplete( ) :
 	cancelAtStartPos(true),
 	autoHide(true),
 	dropRestOfWord(false)	{
-	lb = ListBox::Allocate( );
+	lb = ListBox::Allocate();
 	stopChars[0] = '\0';
 	fillUpChars[0] = '\0';
 }
 
-AutoComplete::~AutoComplete( ) {
+AutoComplete::~AutoComplete() {
 	if (lb) {
-		lb->Destroy( );
+		lb->Destroy();
 		delete lb;
 		lb = 0;
 	}
 }
 
-bool AutoComplete::Active( ) {
+bool AutoComplete::Active() {
 	return active;
 }
 
@@ -47,10 +47,10 @@ void AutoComplete::Start(Window &parent, int ctrlID,
 	int position, Point location, int startLen_, 
 	int lineHeight, bool unicodeMode) {
 	if (active) {
-		Cancel( );
+		Cancel();
 	}
 	lb->Create(parent, ctrlID, location, lineHeight, unicodeMode);
-	lb->Clear( );
+	lb->Clear();
 	active = true;
 	startLen = startLen_;
 	posStart = position;
@@ -78,7 +78,7 @@ void AutoComplete::SetSeparator(char separator_) {
 	separator = separator_;
 }
 
-char AutoComplete::GetSeparator( ) {
+char AutoComplete::GetSeparator() {
 	return separator;
 }
 
@@ -86,7 +86,7 @@ void AutoComplete::SetTypesep(char separator_) {
 	typesep = separator_;
 }
 
-char AutoComplete::GetTypesep( ) {
+char AutoComplete::GetTypesep() {
 	return typesep;
 }
 
@@ -100,18 +100,18 @@ void AutoComplete::Show(bool show) {
 		lb->Select(0);
 }
 
-void AutoComplete::Cancel( ) {
-	if (lb->Created( )) {
-		lb->Clear( );
-		lb->Destroy( );
+void AutoComplete::Cancel() {
+	if (lb->Created()) {
+		lb->Clear();
+		lb->Destroy();
 		active = false;
 	}
 }
 
 
 void AutoComplete::Move(int delta) {
-	int count = lb->Length( );
-	int current = lb->GetSelection( );
+	int count = lb->Length();
+	int current = lb->GetSelection();
 	current += delta;
 	if (current >= count)
 		current = count - 1;
@@ -126,7 +126,7 @@ void AutoComplete::Select(const char *word) {
 	const int maxItemLen=1000;
 	char item[maxItemLen];
 	int start = 0; // lower bound of the api array block to search
-	int end = lb->Length( ) - 1; // upper bound of the api array block to search
+	int end = lb->Length() - 1; // upper bound of the api array block to search
 	while ((start <= end) && (location == -1)) { // Binary searching loop
 		int pivot = (start + end) / 2;
 		lb->GetValue(pivot, item, maxItemLen);
@@ -167,7 +167,7 @@ void AutoComplete::Select(const char *word) {
 		}
 	}
 	if (location == -1 && autoHide)
-		Cancel( );
+		Cancel();
 	else
 		lb->Select(location);
 }

@@ -130,7 +130,7 @@ static void ColourisePerlDoc(unsigned int startPos, int length, int initStyle,
 		bool Quoted;		// true if Quote in ('\'','"','`')
 		int DelimiterLength;	// strlen(Delimiter)
 		char *Delimiter;	// the Delimiter, 256: sizeof PL_tokenbuf
-		HereDocCls( ) {
+		HereDocCls() {
 			State = 0;
             Quote = 0;
             Quoted = false;
@@ -138,7 +138,7 @@ static void ColourisePerlDoc(unsigned int startPos, int length, int initStyle,
 			Delimiter = new char[HERE_DELIM_MAX];
 			Delimiter[0] = '\0';
 		}
-		~HereDocCls( ) {
+		~HereDocCls() {
 			delete []Delimiter;
 		}
 	};
@@ -150,7 +150,7 @@ static void ColourisePerlDoc(unsigned int startPos, int length, int initStyle,
 		int  Count;
 		char Up;
 		char Down;
-		QuoteCls( ) {
+		QuoteCls() {
 			this->New(1);
 		}
 		void New(int r) {
@@ -348,7 +348,7 @@ static void ColourisePerlDoc(unsigned int startPos, int length, int initStyle,
                 // note: keywords assumed to be limited to [_a-zA-Z] only
                 if (state == SCE_PL_WORD) {
                     while (iswordstart(styler.SafeGetCharAt(kw))) kw++;
-                    if (!isPerlKeyword(styler.GetStartSegment( ), kw, keywords, styler)) {
+                    if (!isPerlKeyword(styler.GetStartSegment(), kw, keywords, styler)) {
                         state = SCE_PL_IDENTIFIER;
                     }
                 }
@@ -414,8 +414,8 @@ static void ColourisePerlDoc(unsigned int startPos, int length, int initStyle,
                 } else if (state == SCE_PL_WORD) {
                     i = kw - 1;
                     if (ch == '_' && chNext == '_' &&
-                        (isMatch(styler, lengthDoc, styler.GetStartSegment( ), "__DATA__")
-                      || isMatch(styler, lengthDoc, styler.GetStartSegment( ), "__END__"))) {
+                        (isMatch(styler, lengthDoc, styler.GetStartSegment(), "__DATA__")
+                      || isMatch(styler, lengthDoc, styler.GetStartSegment(), "__END__"))) {
                         styler.ColourTo(i, SCE_PL_DATASECTION);
                         state = SCE_PL_DATASECTION;
                     } else {
@@ -529,7 +529,7 @@ static void ColourisePerlDoc(unsigned int startPos, int length, int initStyle,
                 bool hereDocScalar = false;     // SCALAR [whitespace] '<<'
 				unsigned int bk = (i > 0)? i - 1: 0;
 				char bkch;
-				styler.Flush( );
+				styler.Flush();
                 if (styler.StyleAt(bk) == SCE_PL_DEFAULT)
                     hereDocSpace = true;
 				while ((bk > 0) && (styler.StyleAt(bk) == SCE_PL_DEFAULT ||
@@ -956,7 +956,7 @@ static void ColourisePerlDoc(unsigned int startPos, int length, int initStyle,
 					chNext = chNext2;
 				}
 				else if (isEndVar(ch)) {
-					if (i == (styler.GetStartSegment( ) + 1)) {
+					if (i == (styler.GetStartSegment() + 1)) {
 						// Special variable: $(, $_ etc.
 						styler.ColourTo(i, state);
 						state = SCE_PL_DEFAULT;

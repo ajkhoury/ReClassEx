@@ -50,7 +50,7 @@ static void ColouriseMMIXALDoc(unsigned int startPos, int length, int initStyle,
 
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	for (; sc.More( ); sc.Forward( ))
+	for (; sc.More(); sc.Forward())
 	{
 		// No EOL continuation
 		if (sc.atLineStart) {
@@ -169,7 +169,7 @@ static void ColouriseMMIXALDoc(unsigned int startPos, int length, int initStyle,
 			}
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static const char * const MMIXALWordListDesc[] = {

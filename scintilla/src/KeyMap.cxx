@@ -11,7 +11,7 @@
 
 #include "KeyMap.h"
 
-KeyMap::KeyMap( ) : kmap(0), len(0), alloc(0) {
+KeyMap::KeyMap() : kmap(0), len(0), alloc(0) {
 	for (int i = 0; MapDefault[i].key; i++) {
 		AssignCmdKey(MapDefault[i].key,
 			MapDefault[i].modifiers,
@@ -19,11 +19,11 @@ KeyMap::KeyMap( ) : kmap(0), len(0), alloc(0) {
 	}
 }
 
-KeyMap::~KeyMap( ) {
-	Clear( );
+KeyMap::~KeyMap() {
+	Clear();
 }
 
-void KeyMap::Clear( ) {
+void KeyMap::Clear() {
 	delete []kmap;
 	kmap = 0;
 	len = 0;

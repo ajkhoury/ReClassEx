@@ -9,7 +9,7 @@
 
 #include "ContractionState.h"
 
-OneLine::OneLine( ) {
+OneLine::OneLine() {
 	displayLine = 0;
 	//docLine = 0;
 	visible = true;
@@ -17,7 +17,7 @@ OneLine::OneLine( ) {
 	expanded = true;
 }
 
-ContractionState::ContractionState( ) {
+ContractionState::ContractionState() {
 	lines = 0;
 	size = 0;
 	linesInDoc = 1;
@@ -27,11 +27,11 @@ ContractionState::ContractionState( ) {
 	sizeDocLines = 0;
 }
 
-ContractionState::~ContractionState( ) {
-	Clear( );
+ContractionState::~ContractionState() {
+	Clear();
 }
 
-void ContractionState::MakeValid( ) const {
+void ContractionState::MakeValid() const {
 	if (!valid) {
 		// Could be cleverer by keeping the index of the last still valid entry
 		// rather than invalidating all.
@@ -67,7 +67,7 @@ void ContractionState::MakeValid( ) const {
 	}
 }
 
-void ContractionState::Clear( ) {
+void ContractionState::Clear() {
 	delete []lines;
 	lines = 0;
 	size = 0;
@@ -78,13 +78,13 @@ void ContractionState::Clear( ) {
 	sizeDocLines = 0;
 }
 
-int ContractionState::LinesInDoc( ) const {
+int ContractionState::LinesInDoc() const {
 	return linesInDoc;
 }
 
-int ContractionState::LinesDisplayed( ) const {
+int ContractionState::LinesDisplayed() const {
 	if (size != 0) {
-		MakeValid( );
+		MakeValid();
 	}
 	return linesInDisplay;
 }
@@ -93,7 +93,7 @@ int ContractionState::DisplayFromDoc(int lineDoc) const {
 	if (size == 0) {
 		return lineDoc;
 	}
-	MakeValid( );
+	MakeValid();
 	if ((lineDoc >= 0) && (lineDoc < linesInDoc)) {
 		return lines[lineDoc].displayLine;
 	}
@@ -107,7 +107,7 @@ int ContractionState::DocFromDisplay(int lineDisplay) const {
 		return linesInDoc;
 	if (size == 0)
 		return lineDisplay;
-	MakeValid( );
+	MakeValid();
 	if (docLines) {	// Valid allocation
 		return docLines[lineDisplay];
 	} else {
@@ -276,7 +276,7 @@ bool ContractionState::SetHeight(int lineDoc, int height) {
 	}
 }
 
-void ContractionState::ShowAll( ) {
+void ContractionState::ShowAll() {
 	delete []lines;
 	lines = 0;
 	size = 0;

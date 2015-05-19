@@ -118,7 +118,7 @@ static void ColouriseLispDoc(unsigned int startPos, int length, int initStyle, W
 		} else if (state == SCE_LISP_IDENTIFIER || state == SCE_LISP_SYMBOL) {
 			if (!isLispwordstart(ch)) {
 				if (state == SCE_LISP_IDENTIFIER) {
-					classifyWordLisp(styler.GetStartSegment( ), i - 1, keywords, keywords_kw, styler);
+					classifyWordLisp(styler.GetStartSegment(), i - 1, keywords, keywords_kw, styler);
 				} else {
 					styler.ColourTo(i - 1, state);
 				}
@@ -133,7 +133,7 @@ static void ColouriseLispDoc(unsigned int startPos, int length, int initStyle, W
 			}
 		} else if (state == SCE_LISP_MACRO_DISPATCH) {
 			if (!isdigit(ch)) {
-				if (ch != 'r' && ch != 'R' && (i - styler.GetStartSegment( )) > 1) {
+				if (ch != 'r' && ch != 'R' && (i - styler.GetStartSegment()) > 1) {
 					state = SCE_LISP_DEFAULT;
 				} else {
 					switch (ch) {

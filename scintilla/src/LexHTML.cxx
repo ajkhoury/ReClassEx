@@ -693,7 +693,7 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 			beforePreProc = state;
 			i++;
 			visibleChars++;
-			i += PrintScriptingIndicatorOffset(styler, styler.GetStartSegment( ) + 2, i + 10);
+			i += PrintScriptingIndicatorOffset(styler, styler.GetStartSegment() + 2, i + 10);
 			if (scriptLanguage == eScriptXML)
 				styler.ColourTo(i, SCE_H_XMLSTART);
 			else
@@ -787,21 +787,21 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 		         ((scriptLanguage == eScriptSGML) && (ch == '>') && (state != SCE_H_SGML_COMMENT))) {
 			if (state == SCE_H_ASPAT) {
 				aspScript = segIsScriptingIndicator(styler,
-				                                    styler.GetStartSegment( ), i - 1, aspScript);
+				                                    styler.GetStartSegment(), i - 1, aspScript);
 			}
 			// Bounce out of any ASP mode
 			switch (state) {
 			case SCE_HJ_WORD:
-				classifyWordHTJS(styler.GetStartSegment( ), i - 1, keywords2, styler, inScriptType);
+				classifyWordHTJS(styler.GetStartSegment(), i - 1, keywords2, styler, inScriptType);
 				break;
 			case SCE_HB_WORD:
-				classifyWordHTVB(styler.GetStartSegment( ), i - 1, keywords3, styler, inScriptType);
+				classifyWordHTVB(styler.GetStartSegment(), i - 1, keywords3, styler, inScriptType);
 				break;
 			case SCE_HP_WORD:
-				classifyWordHTPy(styler.GetStartSegment( ), i - 1, keywords4, styler, prevWord, inScriptType);
+				classifyWordHTPy(styler.GetStartSegment(), i - 1, keywords4, styler, prevWord, inScriptType);
 				break;
 			case SCE_HPHP_WORD:
-				classifyWordHTPHP(styler.GetStartSegment( ), i - 1, keywords5, styler);
+				classifyWordHTPHP(styler.GetStartSegment(), i - 1, keywords5, styler);
 				break;
 			case SCE_H_XCCOMMENT:
 				styler.ColourTo(i - 1, state);
@@ -899,7 +899,7 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 				styler.ColourTo(i - 2, StateToPrint);
 				state = SCE_H_SGML_COMMENT;
 			} else if (!issgmlwordchar(ch)) {
-				if (isWordHSGML(styler.GetStartSegment( ), i - 1, keywords6, styler)) {
+				if (isWordHSGML(styler.GetStartSegment(), i - 1, keywords6, styler)) {
 					styler.ColourTo(i - 1, StateToPrint);
 					state = SCE_H_SGML_1ST_PARAM;
 				} else {
@@ -1013,7 +1013,7 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 			break;
 		case SCE_H_TAGUNKNOWN:
 			if (!ishtmlwordchar(ch) && !((ch == '/') && (chPrev == '<')) && ch != '[') {
-				int eClass = classifyTagHTML(styler.GetStartSegment( ),
+				int eClass = classifyTagHTML(styler.GetStartSegment(),
 					i - 1, keywords, styler, tagDontFold, caseSensitive);
 				if (eClass == SCE_H_SCRIPT) {
 					if (!tagClosing) {
@@ -1067,12 +1067,12 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 			if (!ishtmlwordchar(ch) && ch != '/' && ch != '-') {
 				if (inScriptType == eNonHtmlScript) {
 					int scriptLanguagePrev = scriptLanguage;
-					clientScript = segIsScriptingIndicator(styler, styler.GetStartSegment( ), i - 1, scriptLanguage);
+					clientScript = segIsScriptingIndicator(styler, styler.GetStartSegment(), i - 1, scriptLanguage);
 					scriptLanguage = clientScript;
 					if ((scriptLanguagePrev != scriptLanguage) && (scriptLanguage == eScriptNone))
 						inScriptType = eHtml;
 				}
-				classifyAttribHTML(styler.GetStartSegment( ), i - 1, keywords, styler);
+				classifyAttribHTML(styler.GetStartSegment(), i - 1, keywords, styler);
 				if (ch == '>') {
 					styler.ColourTo(i, SCE_H_TAG);
 					if (inScriptType == eNonHtmlScript) {
@@ -1145,7 +1145,7 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 		case SCE_H_DOUBLESTRING:
 			if (ch == '\"') {
 				if (inScriptType == eNonHtmlScript) {
-					scriptLanguage = segIsScriptingIndicator(styler, styler.GetStartSegment( ), i, scriptLanguage);
+					scriptLanguage = segIsScriptingIndicator(styler, styler.GetStartSegment(), i, scriptLanguage);
 				}
 				styler.ColourTo(i, SCE_H_DOUBLESTRING);
 				state = SCE_H_OTHER;
@@ -1154,7 +1154,7 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 		case SCE_H_SINGLESTRING:
 			if (ch == '\'') {
 				if (inScriptType == eNonHtmlScript) {
-					scriptLanguage = segIsScriptingIndicator(styler, styler.GetStartSegment( ), i, scriptLanguage);
+					scriptLanguage = segIsScriptingIndicator(styler, styler.GetStartSegment(), i, scriptLanguage);
 				}
 				styler.ColourTo(i, SCE_H_SINGLESTRING);
 				state = SCE_H_OTHER;
@@ -1168,7 +1168,7 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 				} else if (ch == '\'' && chPrev == '=') {
 					state = SCE_H_SINGLESTRING;
 				} else {
-					if (IsNumber(styler.GetStartSegment( ), styler)) {
+					if (IsNumber(styler.GetStartSegment(), styler)) {
 						styler.ColourTo(i - 1, SCE_H_NUMBER);
 					} else {
 						styler.ColourTo(i - 1, StateToPrint);
@@ -1240,7 +1240,7 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 			break;
 		case SCE_HJ_WORD:
 			if (!iswordchar(ch)) {
-				classifyWordHTJS(styler.GetStartSegment( ), i - 1, keywords2, styler, inScriptType);
+				classifyWordHTJS(styler.GetStartSegment(), i - 1, keywords2, styler, inScriptType);
 				//styler.ColourTo(i - 1, eHTJSKeyword);
 				state = SCE_HJ_DEFAULT;
 				if (ch == '/' && chNext == '*') {
@@ -1370,7 +1370,7 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 			break;
 		case SCE_HB_WORD:
 			if (!iswordchar(ch)) {
-				state = classifyWordHTVB(styler.GetStartSegment( ), i - 1, keywords3, styler, inScriptType);
+				state = classifyWordHTVB(styler.GetStartSegment(), i - 1, keywords3, styler, inScriptType);
 				if (state == SCE_HB_DEFAULT) {
 					if (ch == '\"') {
 						state = SCE_HB_STRING;
@@ -1454,7 +1454,7 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 			break;
 		case SCE_HP_WORD:
 			if (!iswordchar(ch)) {
-				classifyWordHTPy(styler.GetStartSegment( ), i - 1, keywords4, styler, prevWord, inScriptType);
+				classifyWordHTPy(styler.GetStartSegment(), i - 1, keywords4, styler, prevWord, inScriptType);
 				state = SCE_HP_DEFAULT;
 				if (ch == '#') {
 					state = SCE_HP_COMMENTLINE;
@@ -1528,7 +1528,7 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 			///////////// start - PHP state handling
 		case SCE_HPHP_WORD:
 			if (!iswordchar(ch)) {
-				classifyWordHTPHP(styler.GetStartSegment( ), i - 1, keywords5, styler);
+				classifyWordHTPHP(styler.GetStartSegment(), i - 1, keywords5, styler);
 				if (ch == '/' && chNext == '*') {
 					i++;
 					state = SCE_HPHP_COMMENT;
@@ -1664,7 +1664,7 @@ static void ColouriseHyperTextDoc(unsigned int startPos, int length, int initSty
 		// Some of the above terminated their lexeme but since the same character starts
 		// the same class again, only reenter if non empty segment.
 
-		bool nonEmptySegment = i >= static_cast<int>(styler.GetStartSegment( ));
+		bool nonEmptySegment = i >= static_cast<int>(styler.GetStartSegment());
 		if (state == SCE_HB_DEFAULT) {    // One of the above succeeded
 			if ((ch == '\"') && (nonEmptySegment)) {
 				state = SCE_HB_STRING;
@@ -1776,8 +1776,8 @@ static void ColouriseHTMLPiece(StyleContext &sc, WordList *keywordlists[]) {
 	WordList &keywordsTags = *keywordlists[0];
 	if (sc.state == SCE_H_COMMENT) {
 		if (sc.Match("-->")) {
-			sc.Forward( );
-			sc.Forward( );
+			sc.Forward();
+			sc.Forward();
 			sc.ForwardSetState(SCE_H_DEFAULT);
 		}
 	} else if (sc.state == SCE_H_ENTITY) {
@@ -1805,7 +1805,7 @@ static void ColouriseHTMLPiece(StyleContext &sc, WordList *keywordlists[]) {
 				sc.ForwardSetState(SCE_H_DEFAULT);
 			} else if (sc.Match('/', '>')) {
 				sc.SetState(SCE_H_TAGEND);
-				sc.Forward( );
+				sc.Forward();
 				sc.ForwardSetState(SCE_H_DEFAULT);
 			} else {
 				sc.SetState(SCE_H_OTHER);
@@ -1826,7 +1826,7 @@ static void ColouriseHTMLPiece(StyleContext &sc, WordList *keywordlists[]) {
 			sc.ForwardSetState(SCE_H_DEFAULT);
 		} else if (sc.Match('/', '>')) {
 			sc.SetState(SCE_H_TAG);
-			sc.Forward( );
+			sc.Forward();
 			sc.ForwardSetState(SCE_H_DEFAULT);
 		} else if (sc.chPrev == '=') {
 			sc.SetState(SCE_H_VALUE);
@@ -1874,7 +1874,7 @@ static void ColouriseASPPiece(StyleContext &sc, WordList *keywordlists[]) {
 	// Possibly exit current state to either SCE_H_DEFAULT or SCE_HBA_DEFAULT
 	if ((sc.state == SCE_H_ASPAT || isASPScript(sc.state)) && sc.Match('%', '>')) {
 		sc.SetState(SCE_H_ASP);
-		sc.Forward( );
+		sc.Forward();
 		sc.ForwardSetState(SCE_H_DEFAULT);
 	}
 
@@ -1892,13 +1892,13 @@ static void ColouriseASPPiece(StyleContext &sc, WordList *keywordlists[]) {
 				sc.ChangeState(SCE_H_ASP);
 			else
 				sc.SetState(SCE_H_ASP);
-			sc.Forward( );
-			sc.Forward( );
+			sc.Forward();
+			sc.Forward();
 			if (sc.ch == '@') {
 				sc.ForwardSetState(SCE_H_ASPAT);
 			} else {
 				if (sc.ch == '=') {
-					sc.Forward( );
+					sc.Forward();
 				}
 				sc.SetState(SCE_HBA_DEFAULT);
 			}
@@ -1910,10 +1910,10 @@ static void ColouriseASPDoc(unsigned int startPos, int length, int initStyle, Wo
                                   Accessor &styler) {
 	// Lexer for HTML requires more lexical states (7 bits worth) than most lexers
 	StyleContext sc(startPos, length, initStyle, styler, 0x7f);
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 		ColouriseASPPiece(sc, keywordlists);
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static void ColourisePHPPiece(StyleContext &sc, WordList *keywordlists[]) {
@@ -1923,7 +1923,7 @@ static void ColourisePHPPiece(StyleContext &sc, WordList *keywordlists[]) {
 			(sc.state != SCE_HPHP_COMMENT) &&
 			(sc.Match('?', '>'))) {
 			sc.SetState(SCE_H_QUESTION);
-			sc.Forward( );
+			sc.Forward();
 			sc.ForwardSetState(SCE_H_DEFAULT);
 		}
 	}
@@ -1943,8 +1943,8 @@ static void ColourisePHPPiece(StyleContext &sc, WordList *keywordlists[]) {
 		}
 	} else if (sc.state == SCE_HPHP_COMMENT) {
 		if (sc.Match('*', '/')) {
-			sc.Forward( );
-			sc.Forward( );
+			sc.Forward();
+			sc.Forward();
 			sc.SetState(SCE_HPHP_DEFAULT);
 		}
 	} else if (sc.state == SCE_HPHP_HSTRING) {
@@ -1967,11 +1967,11 @@ static void ColourisePHPPiece(StyleContext &sc, WordList *keywordlists[]) {
 	if ((sc.state == SCE_H_DEFAULT) || (sc.state == SCE_H_TAGUNKNOWN)) {
 		if (sc.Match("<?php")) {
 			sc.SetState(SCE_H_QUESTION);
-			sc.Forward( );
-			sc.Forward( );
-			sc.Forward( );
-			sc.Forward( );
-			sc.Forward( );
+			sc.Forward();
+			sc.Forward();
+			sc.Forward();
+			sc.Forward();
+			sc.Forward();
 			sc.SetState(SCE_HPHP_DEFAULT);
 		}
 	}
@@ -2002,10 +2002,10 @@ static void ColourisePHPDoc(unsigned int startPos, int length, int initStyle, Wo
                                   Accessor &styler) {
 	// Lexer for HTML requires more lexical states (7 bits worth) than most lexers
 	StyleContext sc(startPos, length, initStyle, styler, 0x7f);
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 		ColourisePHPPiece(sc, keywordlists);
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static void ColourisePHPScriptDoc(unsigned int startPos, int length, int initStyle, WordList *keywordlists[],

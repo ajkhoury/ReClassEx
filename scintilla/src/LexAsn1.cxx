@@ -50,7 +50,7 @@ static void ColouriseAsn1Doc(unsigned int startPos, int length, int initStyle, W
 
 	// Parse the whole buffer character by character using StyleContext
 	StyleContext sc(startPos, length, initStyle, styler);
-	for (; sc.More( ); sc.Forward( ))
+	for (; sc.More(); sc.Forward())
 	{
 		// The state engine
 		switch (sc.state)
@@ -120,7 +120,7 @@ asn1_default:
 			if (sc.ch == '{')
 			{
 				// An OID definition starts here: enter the sub loop
-				for (; sc.More( ); sc.Forward( ))
+				for (; sc.More(); sc.Forward())
 				{
 					if (isAsn1Number (sc.ch) && (!isAsn1Char (sc.chPrev) || isAsn1Number (sc.chPrev)))
 						// The OID number is highlighted
@@ -139,7 +139,7 @@ asn1_default:
 			else if (isAsn1Number (sc.ch))
 			{
 				// A trap number definition starts here: enter the sub loop
-				for (; sc.More( ); sc.Forward( ))
+				for (; sc.More(); sc.Forward())
 				{
 					if (isAsn1Number (sc.ch))
 						// The trap number is highlighted
@@ -158,7 +158,7 @@ asn1_default:
 			break;
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static void FoldAsn1Doc(unsigned int, int, int, WordList *[], Accessor &styler)

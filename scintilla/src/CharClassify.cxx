@@ -14,7 +14,7 @@
 #pragma warning(disable: 4514)
 #endif
 
-CharClassify::CharClassify( ) {
+CharClassify::CharClassify() {
 	SetDefaultCharClasses(true);
 }
 

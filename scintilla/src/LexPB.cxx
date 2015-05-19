@@ -63,7 +63,7 @@ static inline bool IsAWordStart(const int ch)
     return (ch < 0x80) && (isalnum(ch) || ch == '_');
 }
 
-bool MatchUpperCase(Accessor &styler, int pos, const char *s)   //Same as styler.Match( ) but uppercase comparison (a-z,A-Z and space only)
+bool MatchUpperCase(Accessor &styler, int pos, const char *s)   //Same as styler.Match() but uppercase comparison (a-z,A-Z and space only)
 {
     char ch;
     for (int i=0; *s; i++)
@@ -84,7 +84,7 @@ static void ColourisePBDoc(unsigned int startPos, int length, int initStyle,Word
 
     StyleContext sc(startPos, length, initStyle, styler);
 
-    for (; sc.More( ); sc.Forward( )) {
+    for (; sc.More(); sc.Forward()) {
         switch (sc.state)
         {
             case SCE_B_OPERATOR:
@@ -169,8 +169,8 @@ static void ColourisePBDoc(unsigned int startPos, int length, int initStyle,Word
             else if (sc.ch == '!') {sc.SetState(SCE_B_ASM);}
             else if (isoperator(static_cast<char>(sc.ch)) || (sc.ch == '\\')) {sc.SetState(SCE_B_OPERATOR);}
         }
-    }      //for (; sc.More( ); sc.Forward( ))
-    sc.Complete( );
+    }      //for (; sc.More(); sc.Forward())
+    sc.Complete();
 }
 
 //The folding routine for PowerBasic toggles SUBs and FUNCTIONs only. This was exactly what I wanted,

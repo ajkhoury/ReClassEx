@@ -49,7 +49,7 @@ static void ColouriseEiffelDoc(unsigned int startPos,
 
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 
 		if (sc.state == SCE_EIFFEL_STRINGEOL) {
 			if (sc.ch != '\r' && sc.ch != '\n') {
@@ -76,18 +76,18 @@ static void ColouriseEiffelDoc(unsigned int startPos,
 			}
 		} else if (sc.state == SCE_EIFFEL_STRING) {
 			if (sc.ch == '%') {
-				sc.Forward( );
+				sc.Forward();
 			} else if (sc.ch == '\"') {
-				sc.Forward( );
+				sc.Forward();
 				sc.SetState(SCE_EIFFEL_DEFAULT);
 			}
 		} else if (sc.state == SCE_EIFFEL_CHARACTER) {
 			if (sc.ch == '\r' || sc.ch == '\n') {
 				sc.SetState(SCE_EIFFEL_STRINGEOL);
 			} else if (sc.ch == '%') {
-				sc.Forward( );
+				sc.Forward();
 			} else if (sc.ch == '\'') {
-				sc.Forward( );
+				sc.Forward();
 				sc.SetState(SCE_EIFFEL_DEFAULT);
 			}
 		}
@@ -108,7 +108,7 @@ static void ColouriseEiffelDoc(unsigned int startPos,
 			}
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static bool IsEiffelComment(Accessor &styler, int pos, int len) {

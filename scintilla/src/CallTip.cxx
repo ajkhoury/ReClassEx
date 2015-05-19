@@ -16,7 +16,7 @@
 static const int insetX = 5;    // text inset in x from calltip border
 static const int widthArrow = 14;
 
-CallTip::CallTip( ) {
+CallTip::CallTip() {
 	wCallTip = 0;
 	inCallTipMode = false;
 	posStartCallTip = 0;
@@ -36,9 +36,9 @@ CallTip::CallTip( ) {
 	colourLight.desired = ColourDesired(0xc0, 0xc0, 0xc0);
 }
 
-CallTip::~CallTip( ) {
-	font.Release( );
-	wCallTip.Destroy( );
+CallTip::~CallTip() {
+	font.Release();
+	wCallTip.Destroy();
 	delete []val;
 	val = 0;
 }
@@ -155,7 +155,7 @@ void CallTip::DrawChunk(Surface *surface, int &x, const char *s,
 }
 
 int CallTip::PaintContents(Surface *surfaceWindow, bool draw) {
-	PRectangle rcClientPos = wCallTip.GetClientPosition( );
+	PRectangle rcClientPos = wCallTip.GetClientPosition();
 	PRectangle rcClientSize(0, 0, rcClientPos.right - rcClientPos.left,
 	                        rcClientPos.bottom - rcClientPos.top);
 	PRectangle rcClient(1, 1, rcClientSize.right - 1, rcClientSize.bottom - 1);
@@ -207,7 +207,7 @@ int CallTip::PaintContents(Surface *surfaceWindow, bool draw) {
 void CallTip::PaintCT(Surface *surfaceWindow) {
 	if (!val)
 		return;
-	PRectangle rcClientPos = wCallTip.GetClientPosition( );
+	PRectangle rcClientPos = wCallTip.GetClientPosition();
 	PRectangle rcClientSize(0, 0, rcClientPos.right - rcClientPos.left,
 	                        rcClientPos.bottom - rcClientPos.top);
 	PRectangle rcClient(1, 1, rcClientSize.right - 1, rcClientSize.bottom - 1);
@@ -243,13 +243,13 @@ PRectangle CallTip::CallTipStart(int pos, Point pt, const char *defn,
 		delete []val;
 	val = new char[strlen(defn) + 1];
 	if (!val)
-		return PRectangle( );
+		return PRectangle();
 	strcpy(val, defn);
 	codePage = codePage_;
-	Surface *surfaceMeasure = Surface::Allocate( );
+	Surface *surfaceMeasure = Surface::Allocate();
 	if (!surfaceMeasure)
-		return PRectangle( );
-	surfaceMeasure->Init(wParent.GetID( ));
+		return PRectangle();
+	surfaceMeasure->Init(wParent.GetID());
 	surfaceMeasure->SetUnicodeMode(SC_CP_UTF8 == codePage);
 	surfaceMeasure->SetDBCSMode(codePage);
 	startHighlight = 0;
@@ -281,10 +281,10 @@ PRectangle CallTip::CallTipStart(int pos, Point pt, const char *defn,
 	return PRectangle(pt.x - offsetMain, pt.y + 1, pt.x + width - offsetMain, pt.y + 1 + height);
 }
 
-void CallTip::CallTipCancel( ) {
+void CallTip::CallTipCancel() {
 	inCallTipMode = false;
-	if (wCallTip.Created( )) {
-		wCallTip.Destroy( );
+	if (wCallTip.Created()) {
+		wCallTip.Destroy();
 	}
 }
 
@@ -293,8 +293,8 @@ void CallTip::SetHighlight(int start, int end) {
 	if ((start != startHighlight) || (end != endHighlight)) {
 		startHighlight = start;
 		endHighlight = end;
-		if (wCallTip.Created( )) {
-			wCallTip.InvalidateAll( );
+		if (wCallTip.Created()) {
+			wCallTip.InvalidateAll();
 		}
 	}
 }

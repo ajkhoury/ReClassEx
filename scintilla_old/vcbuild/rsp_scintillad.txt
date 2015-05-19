@@ -1,0 +1,1 @@
+/nologo /subsystem:windows ./Debug/*.obj /out:../bin/sd_scintilla.lib

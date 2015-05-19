@@ -1,4 +1,6 @@
 #include "stdafx.h"
+#include "afxwinappex.h"
+#include "afxdialogex.h"
 #include "ReClass2015.h"
 #include "MainFrm.h"
 #include "ChildFrm.h"
@@ -6,11 +8,8 @@
 #include "DialogClasses.h"
 #include "Parser.h"
 
-#include "afxwinappex.h"
-#include "afxdialogex.h"
-
-#include "SDK.h"
-ReclassSDK*	ReclassSDK::m_pReclassSDK;
+//#include "SDK.h"
+//ReclassSDK*	ReclassSDK::m_pReclassSDK;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -51,7 +50,7 @@ CReClass2015App::CReClass2015App()
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
 	SetAppID("ReClass.2015.0.5.0.2");
 
-	#ifndef NDEBUG
+	#ifdef _DEBUG
 	CreateConsole();
 	#endif
 
@@ -95,7 +94,7 @@ BOOL CReClass2015App::InitInstance()
 	}
 
 	AfxEnableControlContainer();
-	SetRegistryKey("ReClass 2015");
+	SetRegistryKey(_T("ReClass 2015"));
 	EnableTaskbarInteraction(FALSE);
 	InitContextMenuManager();
 	InitKeyboardManager();
@@ -136,6 +135,8 @@ BOOL CReClass2015App::InitInstance()
 
 	CMDIFrameWnd* pFrame = new CMainFrame();
 	m_pMainWnd = pFrame;
+	if(!pFrame) 
+		return FALSE;
 	if (!pFrame->LoadFrame(IDR_MAINFRAME))
 		return FALSE;
 
@@ -175,13 +176,17 @@ BOOL CReClass2015App::InitInstance()
 	//FontWidth = 8;
 	//FontHeight = 8;
 
+	Font.CreateFont(16, 8, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH, "Terminal");
 	FontWidth = 8;
-	FontHeight = 16;
-	Font.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Fixedsys");
 	FontHeight = 14;
+
+	//FontWidth = 8;
+	//FontHeight = 16;
+	//Font.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Fixedsys");
+	//FontHeight = 14;
+
 	//SmallFont.CreateFont(12, 8, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Terminal");
 
-	//hProcess = CheckForProcess("winmine.exe");
 	//UpdateMemoryMap();
 	//UpdateExports();
 
@@ -257,18 +262,17 @@ void CReClass2015App::OnButtonReset()
 	Footer = "";
 	Notes = "";
 
-	tdHex="char";
-	tdInt64="__int64";
-	tdInt32="__int32";
-	tdInt16="__int16";
-	tdInt8="__int8";
-	tdDWORD="DWORD";
-	tdWORD="WORD";
-	tdBYTE="unsigned char";
-	tdVec2="Vector2";
-	tdVec3="Vector3";
-	tdQuat="Vector4";
-	tdMatrix="matrix3x4_t";
+	tdHex = "char";
+	tdInt32 = "__int32";
+	tdInt16 = "__int16";
+	tdInt8 = "__int8";
+	tdDWORD = "DWORD";
+	tdWORD = "WORD";
+	tdBYTE = "BYTE";
+	tdVec2 = "D3DVECTOR2";
+	tdVec3 = "D3DVECTOR3";
+	tdQuat = "D3DXQUATERNION";
+	tdMatrix = "D3DMATRIX";
 
 	CurrentFilePath = "";
 }
@@ -327,7 +331,7 @@ void CReClass2015App::OnFileNew()
 	//char name[64];
 	//sprintf(name,"Class%0.8X",GetTickCount());
 
-	#ifndef NDEBUG
+	#ifdef _DEBUG
 	printf("[+] OnFileNew()\n");
 	#endif
 
@@ -489,13 +493,13 @@ class ImportLink
 {
 public:
 	CNodeBase* pNode;
-	CString Name;
-	unsigned int ArraySize; // Added by ICY why is it not loading array sizes?
+	CString Name; 
 };
 
 void CReClass2015App::OnFileImport()
 {
-	//return;
+	return;
+
 	CWaitCursor wait;
 
 	CString sql;
@@ -772,8 +776,8 @@ void CReClass2015App::OnButtonNewClass()
 	CMainFrame* pFrame = STATIC_DOWNCAST(CMainFrame, m_pMainWnd);
 	CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, m_hMDIMenu, m_hMDIAccel);
 
-	#ifndef NDEBUG
-	printf( "[+] OnButtonNewClass()\n");
+	#ifdef _DEBUG
+	printf("[+] OnButtonNewClass()\n");
 	#endif
 
 	//pChild->SetTitle(name);
@@ -781,11 +785,10 @@ void CReClass2015App::OnButtonNewClass()
 	//pFrame->UpdateFrameTitleForDocument(name);
 
 	CNodeClass* pClass = new CNodeClass;
-	pClass->pChildWindow = pChild;
+	//pClass->pChildWindow = pChild;
 	theApp.Classes.push_back(pClass);
 	pChild->m_wndView.m_pClass = pClass;
 
-	// TODO Fix this
 #ifdef _WIN64
 	for ( int i=0; i < 64 / 8; i++ )
 	{
@@ -1014,7 +1017,7 @@ void CReClass2015App::OnFileSave()
 void CReClass2015App::OnFileSaveAs()
 {
 	char szFilters[]= "ReClass (*.reclass)|*.reclass|All Files (*.*)|*.*||";
-	CFileDialog fileDlg (FALSE, "reclass", "",OFN_HIDEREADONLY, szFilters, NULL);
+	CFileDialog fileDlg (FALSE, "reclass", "", OFN_HIDEREADONLY, szFilters, NULL);
 	if(fileDlg.DoModal() != IDOK)
 		return;
 
@@ -1148,27 +1151,26 @@ void CReClass2015App::OnFileOpen()
 				//<Array Name="N12DB" Type="24" Size="64" Comment="" />
 				if (Type == nt_array)
 				{
-					CNodeArray* pArray = (CNodeArray*)pNode;
-					printf("pArray->Total: %i\n", atoi(pClassElem->Attribute("Total")));
-					pArray->Total = atoi(pClassElem->Attribute("Total"));
+					CNodeArray* pArray = (CNodeArray*)pNode;  
+					pArray->Total = atoi(pClassElem->Attribute("Total"));  
 
-					TiXmlElement* pArrayElem;
-					pArrayElem = pClassElem->FirstChildElement();
-					if(pArrayElem)
+					TiXmlElement* pArrayElem; 
+					pArrayElem = pClassElem->FirstChildElement(); 
+					if(pArrayElem) 
 					{
-						CString Name	= pArrayElem->Attribute("Name");
-						CString Comment	= pArrayElem->Attribute("Comment");
-						int ArrayType = -1;
-						pArrayElem->QueryIntAttribute("Type", &ArrayType);
-						int ArraySize = -1;
-						pClassElem->QueryIntAttribute("Size", &ArraySize);
+						CString Name	= pArrayElem->Attribute("Name"); 
+						CString Comment	= pArrayElem->Attribute("Comment"); 
+						int ArrayType = -1; 
+						pArrayElem->QueryIntAttribute("Type", &ArrayType); 
+						int ArraySize = -1; 
+						pClassElem->QueryIntAttribute("Size", &ArraySize); 
 
 						if (ArrayType == nt_class)
 						{
-							ImportLink link;
-							link.Name = Name;
-							link.pNode = pNode;
-							Links.push_back(link);
+							ImportLink link; 
+							link.Name = Name; 
+							link.pNode = pNode; 
+							Links.push_back(link); 
 						}
 						//Handle other type of arrays....
 					}
@@ -1199,7 +1201,7 @@ void CReClass2015App::OnFileOpen()
 	}
 
 
-	//Fix Links... very ghetto this whole this is just fucked
+	//Fix Links... very ghetto this whole thing is just fucked
 	for (UINT i = 0; i < Links.size(); i++)
 	{
 		for (UINT c = 0; c < Classes.size(); c++)
@@ -1234,7 +1236,7 @@ void CReClass2015App::OnButtonGenerate()
 	CDialogEdit dlg;
 	dlg.Title = "Headers";
 
-	CString h,t;
+	CString h, t;
 
 	h += "// Generated using ReClass 2015\r\n\r\n";
 	h += Header + "\r\n";
@@ -1255,10 +1257,13 @@ void CReClass2015App::OnButtonGenerate()
 	for (UINT c = 0; c < Classes.size();c++)
 	{
 		CNodeClass* pClass = Classes[c];
-		CalcOffsets(pClass);//Just in case
+
+		CalcOffsets(pClass);
+		
 		vfun.clear();
 		var.clear();
-		ClassName.Format("class %s",pClass->Name);
+		
+		ClassName.Format("class %s", pClass->Name);
 
 		int fill = 0;
 		int fillStart = 0;
@@ -1268,8 +1273,7 @@ void CReClass2015App::OnButtonGenerate()
 			CNodeBase* pNode = (CNodeBase*)pClass->Nodes[n];
 			NodeType Type = pNode->GetType();
 
-			// TODO: tofix
-			if ( ( Type == nt_hex64 ) ||  ( Type == nt_hex32 ) || ( Type == nt_hex16 ) || ( Type == nt_hex8 ) )
+			if ((Type == nt_hex64) ||  (Type == nt_hex32) || (Type == nt_hex16) || (Type == nt_hex8))
 			{
 				if (fill == 0)
 					fillStart = (int)pNode->offset;
@@ -1277,20 +1281,21 @@ void CReClass2015App::OnButtonGenerate()
 			}
 			else
 			{
-				if (fill>0)
+				if (fill > 0)
 				{
-					t.Format("\t%s _0x%0.4X[%i];\r\n",tdHex,fillStart,fill);
+					t.Format("\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n", tdHex, fillStart, fill, fillStart);
 					var.push_back(t);
 				}
 				fill = 0;
 			}
+
 			if (Type == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
 				for (UINT f=0; f<pVTable->Nodes.size();f++)
 				{
 					CString fn(pVTable->Nodes[f]->Name);
-					if (fn.GetLength()==0) fn.Format("void Function%i()",f);
+					if (fn.GetLength()==0) fn.Format("void Function%i()", f);
 					t.Format("\tvirtual %s; //%s\r\n", fn, pVTable->Nodes[f]->Comment);
 					vfun.push_back(t);
 				}
@@ -1313,44 +1318,44 @@ void CReClass2015App::OnButtonGenerate()
 			}
 			if (Type == nt_int8)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n",tdInt8,pNode->Name,pNode->offset,pNode->Comment);
+				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdInt8, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 
 			if (Type == nt_uint32)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n",tdDWORD,pNode->Name,pNode->offset,pNode->Comment);
+				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdDWORD, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_uint16)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n",tdWORD,pNode->Name,pNode->offset,pNode->Comment);
+				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdWORD, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_uint8)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n",tdBYTE,pNode->Name,pNode->offset,pNode->Comment);
+				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdBYTE, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 
 			if (Type == nt_vec2)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n",tdVec2,pNode->Name,pNode->offset,pNode->Comment);
+				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdVec2, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_vec3)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n",tdVec3,pNode->Name,pNode->offset,pNode->Comment);
+				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdVec3, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_quat)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n",tdQuat,pNode->Name,pNode->offset,pNode->Comment);
+				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdQuat, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_matrix)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n",tdMatrix,pNode->Name,pNode->offset,pNode->Comment);
+				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdMatrix, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 
@@ -1368,7 +1373,7 @@ void CReClass2015App::OnButtonGenerate()
 			if (Type == nt_unicode)
 			{
 				CNodeUnicode* pText = (CNodeUnicode*)pNode;
-				t.Format("\twchar_t %s[%i]; //0x%0.4X %s\r\n", pText->Name, pText->memsize / sizeof( wchar_t ), pText->offset, pText->Comment);
+				t.Format("\twchar_t %s[%i]; //0x%0.4X %s\r\n", pText->Name, pText->memsize / sizeof(wchar_t), pText->offset, pText->Comment);
 				var.push_back(t);
 			}
 
@@ -1428,7 +1433,7 @@ void CReClass2015App::OnButtonGenerate()
 
 		if (fill > 0)
 		{
-			t.Format("%s _0x%0.4X[%i];\r\n", tdHex, fillStart, fill);
+			t.Format("%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n", tdHex, fillStart, fill, fillStart);
 			var.push_back(t);
 		}
 
@@ -1562,7 +1567,6 @@ void CReClass2015App::OnUpdateButtonClean(CCmdUI *pCmdUI)
 {
 	pCmdUI->Enable((theApp.Classes.size() > 0));
 }
-
 
 void CReClass2015App::OnUpdateFileSave(CCmdUI *pCmdUI)
 {

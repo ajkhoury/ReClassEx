@@ -50,7 +50,7 @@ static void ColouriseCssDoc(unsigned int startPos, int length, int initStyle, Wo
 	int lastStateC = -1; // before comment
 	int op = ' '; // last operator
 
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 		if (sc.state == SCE_CSS_COMMENT && sc.Match('*', '/')) {
 			if (lastStateC == -1) {
 				// backtrack to get last state:
@@ -74,7 +74,7 @@ static void ColouriseCssDoc(unsigned int startPos, int length, int initStyle, Wo
 				if (i == 0)
 					lastStateC = SCE_CSS_DEFAULT;
 			}
-			sc.Forward( );
+			sc.Forward();
 			sc.ForwardSetState(lastStateC);
 		}
 
@@ -225,7 +225,7 @@ static void ColouriseCssDoc(unsigned int startPos, int length, int initStyle, Wo
 		if (sc.Match('/', '*')) {
 			lastStateC = sc.state;
 			sc.SetState(SCE_CSS_COMMENT);
-			sc.Forward( );
+			sc.Forward();
 		} else if (sc.state == SCE_CSS_VALUE && (sc.ch == '\"' || sc.ch == '\'')) {
 			sc.SetState((sc.ch == '\"' ? SCE_CSS_DOUBLESTRING : SCE_CSS_SINGLESTRING));
 		} else if (IsCssOperator(static_cast<char>(sc.ch))
@@ -240,7 +240,7 @@ static void ColouriseCssDoc(unsigned int startPos, int length, int initStyle, Wo
 		}
 	}
 
-	sc.Complete( );
+	sc.Complete();
 }
 
 static void FoldCSSDoc(unsigned int startPos, int length, int, WordList *[], Accessor &styler) {

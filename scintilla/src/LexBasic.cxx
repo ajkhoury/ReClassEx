@@ -89,8 +89,8 @@ static void ColouriseBasicDoc(unsigned int startPos, int length, int initStyle,
 
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	// Can't use sc.More( ) here else we miss the last character
-	for (; ; sc.Forward( )) {
+	// Can't use sc.More() here else we miss the last character
+	for (; ; sc.Forward()) {
 		if (sc.state == SCE_B_IDENTIFIER) {
 			if (!IsIdentifier(sc.ch)) {
 				// Labels
@@ -192,10 +192,10 @@ static void ColouriseBasicDoc(unsigned int startPos, int length, int initStyle,
 		if (!IsSpace(sc.ch))
 			isfirst = false;
 
-		if (!sc.More( ))
+		if (!sc.More())
 			break;
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static int CheckBlitzFoldPoint(char const *token, int &level) {

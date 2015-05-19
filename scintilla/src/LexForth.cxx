@@ -49,7 +49,7 @@ char getChar(bool is_bl){
     return ch;
 }
 
-char getCharBL( ){
+char getCharBL(){
     char ch=st->SafeGetCharAt(cur_pos);
     return ch;
 }

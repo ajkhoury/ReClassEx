@@ -57,14 +57,14 @@ static void ColouriseCsoundDoc(unsigned int startPos, int length, int initStyle,
 
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	for (; sc.More( ); sc.Forward( ))
+	for (; sc.More(); sc.Forward())
 	{
 		// Handle line continuation generically.
 		if (sc.ch == '\\') {
 			if (sc.chNext == '\n' || sc.chNext == '\r') {
-				sc.Forward( );
+				sc.Forward();
 				if (sc.ch == '\r' && sc.chNext == '\n') {
-					sc.Forward( );
+					sc.Forward();
 				}
 				continue;
 			}
@@ -140,7 +140,7 @@ static void ColouriseCsoundDoc(unsigned int startPos, int length, int initStyle,
 			}
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static void FoldCsoundInstruments(unsigned int startPos, int length, int /* initStyle */, WordList *[], 

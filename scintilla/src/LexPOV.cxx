@@ -77,7 +77,7 @@ static void ColourisePovDoc(
 
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 		if (sc.atLineEnd) {
 			// Update the line state, so it can be seen by next line
 			currentLine = styler.GetLine(sc.currentPos);
@@ -142,10 +142,10 @@ static void ColourisePovDoc(
 		} else if (sc.state == SCE_POV_COMMENT) {
 			if (sc.Match('/', '*')) {
 				blockCommentLevel++;
-				sc.Forward( );
+				sc.Forward();
 			} else if (sc.Match('*', '/') && blockCommentLevel > 0) {
 				blockCommentLevel--;
-				sc.Forward( );
+				sc.Forward();
 				if (blockCommentLevel == 0) {
 					sc.ForwardSetState(SCE_POV_DEFAULT);
 				}
@@ -160,7 +160,7 @@ static void ColourisePovDoc(
 				if (strchr("abfnrtuv0'\"", sc.chNext)) {
 					// Compound characters are counted as one.
 					// Note: for Unicode chars \u, we shouldn't count the next 4 digits...
-					sc.Forward( );
+					sc.Forward();
 				}
 			} else if (sc.ch == '\"') {
 				sc.ForwardSetState(SCE_POV_DEFAULT);
@@ -177,7 +177,7 @@ static void ColourisePovDoc(
 		} else if (sc.state == SCE_POV_STRINGEOL) {
 			if (sc.ch == '\\') {
 				if (sc.chNext == '\"' || sc.chNext == '\\') {
-					sc.Forward( );
+					sc.Forward();
 				}
 			} else if (sc.ch == '\"') {
 				sc.ForwardSetState(SCE_C_DEFAULT);
@@ -195,7 +195,7 @@ static void ColourisePovDoc(
 			} else if (sc.Match('/', '*')) {
 				blockCommentLevel = 1;
 				sc.SetState(SCE_POV_COMMENT);
-				sc.Forward( );	// Eat the * so it isn't used for the end of the comment
+				sc.Forward();	// Eat the * so it isn't used for the end of the comment
 			} else if (sc.Match('/', '/')) {
 				sc.SetState(SCE_POV_COMMENTLINE);
 			} else if (sc.ch == '\"') {
@@ -205,8 +205,8 @@ static void ColourisePovDoc(
 				sc.SetState(SCE_POV_DIRECTIVE);
 				// Skip whitespace between # and directive word
 				do {
-					sc.Forward( );
-				} while ((sc.ch == ' ' || sc.ch == '\t') && sc.More( ));
+					sc.Forward();
+				} while ((sc.ch == ' ' || sc.ch == '\t') && sc.More());
 				if (sc.atLineEnd) {
 					sc.SetState(SCE_POV_DEFAULT);
 				}
@@ -215,7 +215,7 @@ static void ColourisePovDoc(
 			}
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static void FoldPovDoc(

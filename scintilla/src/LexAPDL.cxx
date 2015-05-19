@@ -53,7 +53,7 @@ static void ColouriseAPDLDoc(unsigned int startPos, int length, int initStyle, W
 	initStyle = SCE_APDL_DEFAULT;
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 		// Determine if the current state should terminate.
 		if (sc.state == SCE_APDL_NUMBER) {
 			if (!(IsADigit(sc.ch) || sc.ch == '.' || (sc.ch == 'e' || sc.ch == 'E') ||
@@ -67,7 +67,7 @@ static void ColouriseAPDLDoc(unsigned int startPos, int length, int initStyle, W
 		} else if (sc.state == SCE_APDL_COMMENTBLOCK) {
 			if (sc.atLineEnd) {
 				if (sc.ch == '\r') {
-				sc.Forward( );
+				sc.Forward();
 				}
 				sc.ForwardSetState(SCE_APDL_DEFAULT);
 			}
@@ -120,7 +120,7 @@ static void ColouriseAPDLDoc(unsigned int startPos, int length, int initStyle, W
 			}
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static const char * const apdlWordListDesc[] = {

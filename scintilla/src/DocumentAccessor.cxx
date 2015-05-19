@@ -21,7 +21,7 @@
 #include "CharClassify.h"
 #include "Document.h"
 
-DocumentAccessor::~DocumentAccessor( ) {
+DocumentAccessor::~DocumentAccessor() {
 }
 
 bool DocumentAccessor::InternalIsLeadByte(char ch) {
@@ -35,7 +35,7 @@ bool DocumentAccessor::InternalIsLeadByte(char ch) {
 
 void DocumentAccessor::Fill(int position) {
 	if (lenDoc == -1)
-		lenDoc = pdoc->Length( );
+		lenDoc = pdoc->Length();
 	startPos = position - slopSize;
 	if (startPos + bufferSize > lenDoc)
 		startPos = lenDoc - bufferSize;
@@ -75,9 +75,9 @@ int DocumentAccessor::LevelAt(int line) {
 	return pdoc->GetLevel(line);
 }
 
-int DocumentAccessor::Length( ) {
+int DocumentAccessor::Length() {
 	if (lenDoc == -1)
-		lenDoc = pdoc->Length( );
+		lenDoc = pdoc->Length();
 	return lenDoc;
 }
 
@@ -108,7 +108,7 @@ void DocumentAccessor::ColourTo(unsigned int pos, int chAttr) {
 		}
 
 		if (validLen + (pos - startSeg + 1) >= bufferSize)
-			Flush( );
+			Flush();
 		if (validLen + (pos - startSeg + 1) >= bufferSize) {
 			// Too big for buffer so send directly
 			pdoc->SetStyleFor(pos - startSeg + 1, static_cast<char>(chAttr));
@@ -117,7 +117,7 @@ void DocumentAccessor::ColourTo(unsigned int pos, int chAttr) {
 				chFlags = 0;
 			chAttr |= chFlags;
 			for (unsigned int i = startSeg; i <= pos; i++) {
-				PLATFORM_ASSERT((startPosStyling + validLen) < Length( ));
+				PLATFORM_ASSERT((startPosStyling + validLen) < Length());
 				styleBuf[validLen++] = static_cast<char>(chAttr);
 			}
 		}
@@ -129,7 +129,7 @@ void DocumentAccessor::SetLevel(int line, int level) {
 	pdoc->SetLevel(line, level);
 }
 
-void DocumentAccessor::Flush( ) {
+void DocumentAccessor::Flush() {
 	startPos = extremePosition;
 	lenDoc = -1;
 	if (validLen > 0) {
@@ -140,7 +140,7 @@ void DocumentAccessor::Flush( ) {
 }
 
 int DocumentAccessor::IndentAmount(int line, int *flags, PFNIsCommentLeader pfnIsCommentLeader) {
-	int end = Length( );
+	int end = Length();
 	int spaceFlags = 0;
 
 	// Determines the indentation level of the current line and also checks for consistent

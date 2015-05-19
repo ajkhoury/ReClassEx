@@ -142,7 +142,7 @@ static void ColouriseBullantDoc(unsigned int startPos, int length, int initStyle
 			}
 		} else if (state == SCE_C_IDENTIFIER) {
 			if (!iswordchar(ch)) {
-				int levelChange = classifyWordBullant(styler.GetStartSegment( ), i - 1, keywords, styler);
+				int levelChange = classifyWordBullant(styler.GetStartSegment(), i - 1, keywords, styler);
 				state = SCE_C_DEFAULT;
 				chNext = styler.SafeGetCharAt(i + 1);
 				if (ch == '#') {

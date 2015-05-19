@@ -63,7 +63,7 @@ static void ColouriseAsmDoc(unsigned int startPos, int length, int initStyle, Wo
 
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	for (; sc.More( ); sc.Forward( ))
+	for (; sc.More(); sc.Forward())
 	{
 
 		// Prevent SCE_ASM_STRINGEOL from leaking back to previous line
@@ -76,9 +76,9 @@ static void ColouriseAsmDoc(unsigned int startPos, int length, int initStyle, Wo
 		// Handle line continuation generically.
 		if (sc.ch == '\\') {
 			if (sc.chNext == '\n' || sc.chNext == '\r') {
-				sc.Forward( );
+				sc.Forward();
 				if (sc.ch == '\r' && sc.chNext == '\n') {
-					sc.Forward( );
+					sc.Forward();
 				}
 				continue;
 			}
@@ -121,7 +121,7 @@ static void ColouriseAsmDoc(unsigned int startPos, int length, int initStyle, Wo
 		} else if (sc.state == SCE_ASM_STRING) {
 			if (sc.ch == '\\') {
 				if (sc.chNext == '\"' || sc.chNext == '\'' || sc.chNext == '\\') {
-					sc.Forward( );
+					sc.Forward();
 				}
 			} else if (sc.ch == '\"') {
 				sc.ForwardSetState(SCE_ASM_DEFAULT);
@@ -132,7 +132,7 @@ static void ColouriseAsmDoc(unsigned int startPos, int length, int initStyle, Wo
 		} else if (sc.state == SCE_ASM_CHARACTER) {
 			if (sc.ch == '\\') {
 				if (sc.chNext == '\"' || sc.chNext == '\'' || sc.chNext == '\\') {
-					sc.Forward( );
+					sc.Forward();
 				}
 			} else if (sc.ch == '\'') {
 				sc.ForwardSetState(SCE_ASM_DEFAULT);
@@ -160,7 +160,7 @@ static void ColouriseAsmDoc(unsigned int startPos, int length, int initStyle, Wo
 		}
 
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static const char * const asmWordListDesc[] = {

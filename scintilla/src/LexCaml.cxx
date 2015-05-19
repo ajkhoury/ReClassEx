@@ -7,7 +7,7 @@
 /*	Release History
 	20050204 Initial release.
 	20050205 Quick compiler standards/"cleanliness" adjustment.
-	20050206 Added cast for IsLeadByte( ).
+	20050206 Added cast for IsLeadByte().
 	20050209 Changes to "external" build support.
 	20050306 Fix for 1st-char-in-doc "corner" case.
 	20050502 Fix for [harmless] one-past-the-end coloring.
@@ -107,7 +107,7 @@ void EXT_LEXER_DECL Fold(unsigned int lexer, unsigned int startPos, int length,
 
 }
 
-int EXT_LEXER_DECL GetLexerCount( )
+int EXT_LEXER_DECL GetLexerCount()
 {
 	return 1;	// just us [Objective] Caml lexers here!
 }
@@ -148,7 +148,7 @@ static void InternalLexOrFold(int foldOrLex, unsigned int startPos, int length,
 	WordList** wl = new WordList* [nWL + 1];// alloc WordList PTRs
 	int i = 0;
 	for (; i < nWL; i++) {
-		wl[i] = new WordList( );	// (works or THROWS bad_alloc EXCEPTION)
+		wl[i] = new WordList();	// (works or THROWS bad_alloc EXCEPTION)
 		wl[i]->Set(words[i]);
 	}
 	wl[i] = 0;
@@ -157,7 +157,7 @@ static void InternalLexOrFold(int foldOrLex, unsigned int startPos, int length,
 		FoldCamlDoc(startPos, length, initStyle, wl, wa);
 	else
 		ColouriseCamlDoc(startPos, length, initStyle, wl, wa);
-	wa.Flush( );
+	wa.Flush();
 	// clean up before leaving
 	for (i = nWL - 1; i >= 0; i--)
 		delete wl[i];
@@ -189,7 +189,7 @@ void ColouriseCamlDoc(
 	const int useMagic = styler.GetPropertyInt("lexer.caml.magic", 0);
 
 	// foreach char in range...
-	while (sc.More( )) {
+	while (sc.More()) {
 		// set up [per-char] state info
 		int state2 = -1;		// (ASSUME no state change)
 		int chColor = sc.currentPos - 1;// (ASSUME standard coloring range)
@@ -209,7 +209,7 @@ void ColouriseCamlDoc(
 			else if (isdigit(sc.ch)) {
 				state2 = SCE_CAML_NUMBER, chBase = 10;
 				if (sc.Match('0') && strchr("bBoOxX", sc.chNext))
-					chBase = baseT[tolower(sc.chNext) - 'a'], sc.Forward( );
+					chBase = baseT[tolower(sc.chNext) - 'a'], sc.Forward();
 			} else if (sc.Match('\''))	/* (char literal?) */
 				state2 = SCE_CAML_CHAR, chLit = 0;
 			else if (sc.Match('\"'))
@@ -217,10 +217,10 @@ void ColouriseCamlDoc(
 			else if (sc.Match('(', '*'))
 				state2 = SCE_CAML_COMMENT,
 					sc.ch = ' ',	// (make SURE "(*)" isn't seen as a closed comment)
-					sc.Forward( );
+					sc.Forward();
 			else if (strchr("!?~"		/* Caml "prefix-symbol" */
 					"=<>@^|&+-*/$%"		/* Caml "infix-symbol" */
-					"( )[]{};,:.#", sc.ch))	/* Caml "bracket" or ;,:.# */
+					"()[]{};,:.#", sc.ch))	/* Caml "bracket" or ;,:.# */
 				state2 = SCE_CAML_OPERATOR;
 			break;
 
@@ -276,7 +276,7 @@ void ColouriseCamlDoc(
 				if (o && strchr(")]};,", sc.ch)) {
 					if ((sc.Match(')') && sc.chPrev == '(')
 						|| (sc.Match(']') && sc.chPrev == '['))
-						// special-case "( )" and "[]" tokens as KEYWORDS
+						// special-case "()" and "[]" tokens as KEYWORDS
 						sc.ChangeState(SCE_CAML_KEYWORD);
 					chColor++;
 				} else
@@ -347,7 +347,7 @@ void ColouriseCamlDoc(
 			if (sc.Match('(', '*'))
 				state2 = sc.state + 1, chToken = sc.currentPos,
 					sc.ch = ' ',	// (make SURE "(*)" isn't seen as a closed comment)
-					sc.Forward( ), nesting++;
+					sc.Forward(), nesting++;
 			// [try to] interpret as [additional] comment char
 			else if (sc.Match(')') && sc.chPrev == '*') {
 				if (nesting)
@@ -367,11 +367,11 @@ void ColouriseCamlDoc(
 			styler.ColourTo(chColor, sc.state), sc.ChangeState(state2);
 		// move to next char UNLESS re-scanning current char
 		if (advance)
-			sc.Forward( );
+			sc.Forward();
 	}
 
 	// do any required terminal char coloring (JIC)
-	sc.Complete( );
+	sc.Complete();
 }
 
 #ifdef BUILD_AS_EXTERNAL_LEXER
@@ -384,7 +384,7 @@ void FoldCamlDoc(
 	Accessor &styler)
 {
 	// below useless evaluation(s) to supress "not used" warnings
-	startPos || length || initStyle || keywordlists[0] || styler.Length( );
+	startPos || length || initStyle || keywordlists[0] || styler.Length();
 }
 
 static const char * const camlWordListDesc[] = {

@@ -251,16 +251,19 @@ void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 						continue;
 					if (firstSelected->Address != HotSpots[i].Address)
 						continue;
+					if (HotSpots[0].object == firstSelected->object) // stop from crashing
+						continue; 
 
 					#if _WIN64
 					__int64 nextAddress = HotSpots[i].Address + firstSelected->object->GetMemorySize();
 					#else
 					int nextAddress = HotSpots[i].Address + firstSelected->object->GetMemorySize();
-					#endif				
+					#endif	
 
 					UINT newIndex = 0;
-					for (int j = 0; HotSpots[i + j].Address != nextAddress; j++)
-						newIndex = i + j + 1;
+ 
+					for (int j = 0; HotSpots[i + j].Address != nextAddress; j++) 
+						newIndex = i + j + 1; 
 
 					HotSpots[newIndex].object->bSelected = true;
 					Selected.push_back(HotSpots[newIndex]);

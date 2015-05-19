@@ -80,14 +80,15 @@ static inline bool IsAOperator(char ch) {
 	if (isascii(ch) && isalnum(ch))
 		return false;
 	if (ch == '+' || ch == '-' || ch == '*' || ch == '/' ||
-	    ch == '&' || ch == '^' || ch == '=' || ch == '<' || ch == '>' ||
-	    ch == '(' || ch == ')' || ch == '[' || ch == ']' || ch == ',' )
+		ch == '&' || ch == '^' || ch == '=' || ch == '<' || ch == '>' ||
+		ch == '(' || ch == ')' || ch == '[' || ch == ']' || ch == ',' || 
+		ch == '?' || ch == ':' )
 		return true;
 	return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// GetSendKey( ) filters the portion before and after a/multiple space(s)
+// GetSendKey() filters the portion before and after a/multiple space(s)
 // and return the first portion to be looked-up in the table
 // also check if the second portion is valid... (up,down.on.off,toggle or a number)
 ///////////////////////////////////////////////////////////////////////////////
@@ -155,7 +156,7 @@ static int GetSendKey(const char *szLine, char *szKey)
 	}
 	return nFlag;  // 1 is bad, 0 is good 
 
-} // GetSendKey( ) 
+} // GetSendKey() 
 
 //
 // Routine to check the last "none comment" character on a line to see if its a continuation
@@ -181,7 +182,7 @@ static bool IsContinuationLine(unsigned int szLine, Accessor &styler)
 		nePos--; // skip to next char
 	} // End While
 	return false;
-} // IsContinuationLine( )
+} // IsContinuationLine()
 
 //
 // syntax highlighting logic
@@ -223,7 +224,7 @@ static void ColouriseAU3Doc(unsigned int startPos,
 	ni=0;
 	ci=0;
 	//$$$
-    for (; sc.More( ); sc.Forward( )) {
+    for (; sc.More(); sc.Forward()) {
 		char s[100];
 		sc.GetCurrentLowered(s, sizeof(s));
 		// **********************************************
@@ -547,7 +548,7 @@ static void ColouriseAU3Doc(unsigned int startPos,
             else if (IsAOperator(static_cast<char>(sc.ch))) {sc.SetState(SCE_AU3_OPERATOR);}
 			else if (sc.atLineEnd) {sc.SetState(SCE_AU3_DEFAULT);}
         }
-    }      //for (; sc.More( ); sc.Forward( ))
+    }      //for (; sc.More(); sc.Forward())
 
 	//*************************************
 	// Colourize the last word correctly 
@@ -629,7 +630,7 @@ static void ColouriseAU3Doc(unsigned int startPos,
 		}
     }
 	//*************************************
-	sc.Complete( );
+	sc.Complete();
 }
 
 //
@@ -651,7 +652,7 @@ static int GetStyleFirstWord(unsigned int szLine, Accessor &styler)
 	} // End While
 	return styler.StyleAt(nsPos);
 
-} // GetStyleFirstWord( )
+} // GetStyleFirstWord()
 
 
 //

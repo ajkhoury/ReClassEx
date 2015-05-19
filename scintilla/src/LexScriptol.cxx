@@ -244,7 +244,7 @@ static void ColouriseSolDoc(unsigned int startPos, int length, int initStyle,
           {
               if (!iswordchar(ch))
               {
-                 ClassifyWordSol(styler.GetStartSegment( ), i - 1, keywords, styler, prevWord);
+                 ClassifyWordSol(styler.GetStartSegment(), i - 1, keywords, styler, prevWord);
                  state = SCE_SCRIPTOL_DEFAULT;
                  if (ch == '`')
                  {
@@ -331,7 +331,7 @@ static void ColouriseSolDoc(unsigned int startPos, int length, int initStyle,
 	}
         if (state == SCE_SCRIPTOL_KEYWORD)
         {
-            ClassifyWordSol(styler.GetStartSegment( ),
+            ClassifyWordSol(styler.GetStartSegment(),
                  lengthDoc-1, keywords, styler, prevWord);
 	}
         else

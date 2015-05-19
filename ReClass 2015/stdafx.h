@@ -1,23 +1,22 @@
 #pragma once
 
-#ifndef _SECURE_ATL
-#define _SECURE_ATL 1
-#endif
+//#ifndef _SECURE_ATL
+//#define _SECURE_ATL 1
+//#endif
 
-#ifndef VC_EXTRALEAN
-#define VC_EXTRALEAN            // Exclude rarely-used stuff from Windows headers
-#endif
-
+#define WIN32_LEAN_AND_MEAN
 #include "targetver.h"
 
+#include <afx.h>
+
 // turns off MFC's hiding of some common and often safely ignored warning messages
-#define _AFX_ALL_WARNINGS
-#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
+//#define _AFX_ALL_WARNINGS
+//#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
 //#define _CRT_SECURE_NO_WARNINGS
+
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions
 #include <afxdisp.h>        // MFC Automation classes
-//#include <afx.h>
 
 #ifndef _AFX_NO_OLE_SUPPORT
 #include <afxdtctl.h>           // MFC support for Internet Explorer 4 Common Controls
@@ -25,6 +24,7 @@
 #ifndef _AFX_NO_AFXCMN_SUPPORT
 #include <afxcmn.h>             // MFC support for Windows Common Controls
 #endif // _AFX_NO_AFXCMN_SUPPORT
+
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 
 #include <Shlwapi.h>
@@ -36,22 +36,40 @@
 
 #define BEA_ENGINE_STATIC
 #define BEA_USE_STDCALL
-#include "..\beaengine\beaengine\BeaEngine.h"
-//#pragma comment( lib, "../beaengine/Win32/Lib/BeaEngine.lib" )
+//#include "..\beaengine\beaengine\BeaEngine.h"
+#include "..\beaengine\headers\BeaEngine.h"
+#ifdef _WIN64
+#pragma comment( lib, "../beaengine/Win64/Lib/BeaEngine64.lib")
+#else
+#pragma comment( lib, "../beaengine/Win32/Lib/BeaEngine.lib")
+#endif
 
 // Include Scintilla parser
 #include "..\scintilla/include/SciLexer.h"
 #include "..\scintilla/include/Scintilla.h"
-//#ifdef _DEBUG
-//#   pragma comment( lib, "../scintilla/bin/sd_scintilla.lib" )
-//#else
-//#   pragma comment( lib, "../scintilla/bin/s_scintilla.lib" )
-//#endif
+
+#ifdef _DEBUG
+
+#ifdef _WIN64
+#pragma comment(lib, "../scintilla/bin/SciLexerd_64.lib")
+#else
+#pragma comment(lib, "../scintilla/bin/SciLexerd.lib")
+#endif
+
+#else
+
+#ifdef _WIN64
+#pragma comment(lib, "../scintilla/bin/SciLexer_64.lib")
+#else
+#pragma comment(lib, "../scintilla/bin/SciLexer.lib")
+#endif
+
+#endif
+
 
 #pragma comment(lib,"Psapi.lib")
 #include <vector>
 
-//using namespace std;
 
 //Globals
 extern HANDLE hProcess;
@@ -200,6 +218,8 @@ enum NodeType
 	nt_pchar
 };
 
+#define HEXTYPE (nt_hex64 | nt_hex32 | nt_hex16 | nt_hex8)
+
 __inline const char* NodeTypeToString(NodeType type)
 {
 	static const char* pszNodeTypes[31] = {
@@ -207,8 +227,8 @@ __inline const char* NodeTypeToString(NodeType type)
 		"nt_instance",
 		"nt_struct",
 		"nt_hidden",
-		"nt_hex64",
 		"nt_hex32",
+		"nt_hex64",
 		"nt_hex16",
 		"nt_hex8",
 		"nt_pointer",
@@ -232,10 +252,8 @@ __inline const char* NodeTypeToString(NodeType type)
 		"nt_vtable",
 		"nt_array",
 		"nt_class",
-		"nt_enum",
 		"nt_pchar"
 	};
-
 	return pszNodeTypes[type];
 }
 
@@ -277,7 +295,11 @@ CString ReadMemoryString( DWORD_PTR address, SIZE_T max = 40 );
 
 #include "Classes.h"
 
-//#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#ifdef _WIN64
+#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x64' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#else
+#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#endif
 
 extern DWORD NodeCreateIndex;
 

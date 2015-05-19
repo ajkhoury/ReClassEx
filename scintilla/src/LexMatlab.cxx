@@ -63,7 +63,7 @@ static void ColouriseMatlabOctaveDoc(
 
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 
 		if (sc.state == SCE_MATLAB_OPERATOR) {
 			if (sc.chPrev == '.') {
@@ -143,7 +143,7 @@ static void ColouriseMatlabOctaveDoc(
 			}
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static void ColouriseMatlabDoc(unsigned int startPos, int length, int initStyle,

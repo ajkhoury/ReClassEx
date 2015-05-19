@@ -21,17 +21,17 @@
 #include "SString.h"
 
 static int GetLotLineState(SString &line) {
-	if (line.length( )) {
+	if (line.length()) {
 		// Most of the time the first non-blank character in line determines that line's type
 		// Now finds the first non-blank character
 		unsigned i; // Declares counter here to make it persistent after the for loop
-		for (i = 0; i < line.length( ); ++i) {
+		for (i = 0; i < line.length(); ++i) {
 			if (!isspace(line[i]))
 				break;
 		}
 
 		// Checks if it was a blank line
-		if (i == line.length( ))
+		if (i == line.length())
 			return SCE_LOT_DEFAULT;
 
 		switch (line[i]) {

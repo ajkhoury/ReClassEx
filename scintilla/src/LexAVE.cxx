@@ -73,7 +73,7 @@ static void ColouriseAveDoc(
 
 	StyleContext sc(startPos, length, initStyle, styler);
 
-	for (; sc.More( ); sc.Forward( )) {
+	for (; sc.More(); sc.Forward()) {
 		if (sc.atLineEnd) {
 			// Update the line state, so it can be seen by next line
 			int currentLine = styler.GetLine(sc.currentPos);
@@ -139,16 +139,16 @@ static void ColouriseAveDoc(
 				sc.SetState(SCE_AVE_STRING);
 			} else if (sc.Match('\'')) {
 				sc.SetState(SCE_AVE_COMMENT);
-				sc.Forward( );
+				sc.Forward();
 			} else if (isAveOperator(static_cast<char>(sc.ch))) {
 				sc.SetState(SCE_AVE_OPERATOR);
 			} else if (sc.Match('#')) {
 				sc.SetState(SCE_AVE_ENUM);
-				sc.Forward( );
+				sc.Forward();
 			}
 		}
 	}
-	sc.Complete( );
+	sc.Complete();
 }
 
 static void FoldAveDoc(unsigned int startPos, int length, int /* initStyle */, WordList *[],
