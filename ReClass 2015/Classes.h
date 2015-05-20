@@ -372,6 +372,7 @@ public:
 			//x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIName.c_str());
 		}
 		x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIString.c_str());
+		return x;
 	#else
 		//SERIOUSLY CHECK THESE POINTERS
 		DWORD_PTR pRTTIObjectLocator = Val - 4;
@@ -450,9 +451,7 @@ public:
 
 			//x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIName.c_str());
 		}
-
 		x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIString.c_str());
-
 		return x;
 	#endif
 	}
