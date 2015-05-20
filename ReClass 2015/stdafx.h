@@ -29,41 +29,52 @@
 #include <Shlwapi.h>
 #include <Psapi.h>
 #include <tlhelp32.h>
+#pragma comment(lib,"Psapi.lib")
 
-#include "..\SQLite\CppSQLite3.h"
-#include "..\tinyxml\tinyxml.h"
+#include "..\\SQLite\\CppSQLite3.h"
+#ifdef _WIN64
+#pragma comment(lib,"..\\SQLite\\SQLite_Static_Library\\Release\\SQLite_Static_Library_64.lib")
+#else
+#pragma comment(lib,"..\\SQLite\\SQLite_Static_Library\\Release\\SQLite_Static_Library.lib")
+#endif
+
+#include "..\\tinyxml\\tinyxml.h"
+#ifdef _WIN64
+#pragma comment(lib,"tinyxml64.lib")
+#else
+#pragma comment(lib,"tinyxml.lib")
+#endif
 
 #define BEA_ENGINE_STATIC
 #define BEA_USE_STDCALL
-#include "..\beaengine\headers\BeaEngine.h"
+#include "..\\beaengine\\headers\\BeaEngine.h"
 #ifdef _WIN64
-#pragma comment( lib, "../beaengine/Win64/Lib/BeaEngine64.lib")
+#pragma comment( lib, "..\\beaengine\\Win64\\Lib\\BeaEngine64.lib")
 #else
-#pragma comment( lib, "../beaengine/Win32/Lib/BeaEngine.lib")
+#pragma comment( lib, "..\\beaengine\\Win32\\Lib\\BeaEngine.lib")
 #endif
 
 // Include Scintilla parser
-#include "..\scintilla/include/SciLexer.h"
-#include "..\scintilla/include/Scintilla.h"
+#include "..\\scintilla\\include\\SciLexer.h"
+#include "..\\scintilla\\include\\Scintilla.h"
 
 #ifdef _DEBUG
 
 #ifdef _WIN64
-#pragma comment(lib, "../scintilla/bin/SciLexerd_64.lib")
+#pragma comment(lib, "..\\scintilla\\bin\\SciLexerd_64.lib")
 #else
-#pragma comment(lib, "../scintilla/bin/SciLexerd.lib")
+#pragma comment(lib, "..\\scintilla\\bin\SciLexerd.lib")
 #endif
 
 #else
 
 #ifdef _WIN64
-#pragma comment(lib, "../scintilla/bin/SciLexer_64.lib")
+#pragma comment(lib, "..\\scintilla\\bin\\SciLexer_64.lib")
 #else
-#pragma comment(lib, "../scintilla/bin/SciLexer.lib")
+#pragma comment(lib, "..\\scintilla\\bin\\SciLexer.lib")
 #endif
 
 #endif
-
 
 #pragma comment(lib,"Psapi.lib")
 #include <vector>
