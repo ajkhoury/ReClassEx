@@ -279,6 +279,20 @@ public:
 	//	return TYPESTRING;
 	//}
 
+	std::string Demangle(const std::string& DecoratedName,DWORD Flags)
+	{
+		//https://msdn.microsoft.com/en-us/library/windows/desktop/ms681400%28v=vs.85%29.aspx
+		typedef DWORD(WINAPI* UnDecorateSymbolName)(PCTSTR DecoratedName, PTSTR  UnDecoratedName,
+			DWORD  UndecoratedLength, DWORD  Flags);
+
+		UnDecorateSymbolName Demangle = (UnDecorateSymbolName)GetProcAddress(LoadLibrary("Dbghelp.dll"), "UnDecorateSymbolName");
+
+		char Demangled[512];
+		if (!Demangle(DecoratedName.c_str(), Demangled, 512, Flags))
+			return DecoratedName; //function failed
+		return std::string(Demangled);
+	}
+
 	int ResolveRTTI(DWORD_PTR Val, int &x, ViewInfo& View, int y)
 	{
 	#ifdef _WIN64
@@ -348,14 +362,14 @@ public:
 			std::string RTTIName;
 			bool FoundEnd = false;
 			char LastChar = ' ';
-			for (int j = 4; j < 45; j++)
+			for (int j = 1; j < 45; j++)
 			{
 				char RTTINameChar; 
 				ReadMemory(TypeDescriptor + 0x10 + j, &RTTINameChar, 1);
 				if (RTTINameChar == '@' && LastChar == '@') //Names seem to be ended with @@
 				{
 					FoundEnd = true;
-					//RTTIName += RTTINameChar;
+					RTTIName += RTTINameChar;
 					break;
 				}
 				RTTIName += RTTINameChar;
@@ -365,11 +379,7 @@ public:
 			if (!FoundEnd)
 				continue;
 
-			RTTIName[RTTIName.size() - 1] = '\0';
-
-			RTTIString += RTTIName.c_str();
-
-			//x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIName.c_str());
+			RTTIString += Demangle(RTTIName,0x1000);
 		}
 		x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIString.c_str());
 		return x;
