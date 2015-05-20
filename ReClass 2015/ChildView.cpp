@@ -261,7 +261,6 @@ void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 					#endif	
 
 					UINT newIndex = 0;
- 
 					for (int j = 0; HotSpots[i + j].Address != nextAddress; j++) 
 						newIndex = i + j + 1; 
 
@@ -434,7 +433,7 @@ void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 						{
 							pClass->Nodes[s]->bSelected = true;
 							HotSpot spot;
-							//ZeroMemory(&spot,sizeof(HotSpot));
+							//ZeroMemory(&spot, sizeof(HotSpot));
 							spot.Address = pClass->offset + pClass->Nodes[s]->offset;
 							spot.object = pClass->Nodes[s];
 							Selected.push_back(spot);
@@ -523,7 +522,8 @@ void CChildView::OnPaint()
 	GetClientRect(&client);
 
 	dc.FillSolidRect(&client,crBackground);
-	if (!m_pClass) return;
+	if (!m_pClass)
+		return;
 
 	dc.SelectObject(&Font);
 
@@ -533,8 +533,9 @@ void CChildView::OnPaint()
 	Memory.SetSize(classSize);
 	ReadMemory(m_pClass->offset,Memory.pMemory,classSize);
 
-	ViewInfo View;
-	//printf( "Setting address: %p\n", m_pClass->offset );
+	//printf("Setting address: %p\n", m_pClass->offset);
+
+	ViewInfo View;	
 	View.Address		= m_pClass->offset;
 	View.pData			= Memory.pMemory;
 	View.Classes		= &theApp.Classes;
@@ -542,7 +543,7 @@ void CChildView::OnPaint()
 	View.dc				= &dc;
 	View.Level			= 0;
 	View.HotSpots		= &HotSpots;
-	View.bMultiSelected = (Selected.size()>1)?true:false;
+	View.bMultiSelected = (Selected.size() >1)?true:false;
 
 	int ypos = m_Scroll.GetScrollPos() * FontHeight;
 	if (m_Scroll.IsWindowVisible()) View.client->right -= SB_WIDTH;
@@ -588,9 +589,9 @@ void CChildView::OnPaint()
 	CChildFrame* pChild = (CChildFrame*)pFrame->GetActiveFrame();
 	if (pChild->m_wndView.m_hWnd == this->m_hWnd)
 	{
-		pChild->SetWindowText(m_pClass->Name);
-		pChild->SetTitle( m_pClass->Name ); 
-		pFrame->UpdateFrameTitleForDocument(m_pClass->Name);
+		pChild->SetWindowText(m_pClass->Name.GetString());
+		pChild->SetTitle(m_pClass->Name.GetString()); 
+		pFrame->UpdateFrameTitleForDocument(m_pClass->Name.GetString());
 
 		//char txt[256];
 		//sprintf (txt,"Total HotSpots: %i",HotSpots.size());
@@ -612,7 +613,7 @@ void CChildView::OnSize(UINT nType, int cx, int cy)
 	CWnd::OnSize(nType, cx, cy);
 	CRect client;
 	GetClientRect(&client);
-	m_Scroll.SetWindowPos(NULL,client.right-SB_WIDTH,0,SB_WIDTH,client.Height(),SWP_NOZORDER);
+	m_Scroll.SetWindowPos(NULL, client.right - SB_WIDTH, 0, SB_WIDTH, client.Height(), SWP_NOZORDER);
 	m_Edit.ShowWindow(SW_HIDE);
 }
 
@@ -707,7 +708,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 							DWORD addy;
 							ReadMemory(HotSpots[i].Address, &addy, 4);
 							char code[512];
-							ReadMemory(addy,code,512);
+							ReadMemory(addy, code, 512);
 							CString d = DisassembleCode(code, code + 100, addy);
 							m_ToolTip.EnableWindow(FALSE);
 							m_ToolTip.SetWindowText(d);
@@ -853,9 +854,9 @@ void CChildView::ReplaceNode(CNodeClass* pClass, UINT idx, CNodeBase* pNewNode)
 	if (sOld != sNew)
 	{
 		if (sNew < sOld)
-			FillNodes( pClass, idx+1, sOld - sNew );
+			FillNodes( pClass, idx + 1, sOld - sNew );
 		else
-			RemoveNodes( pClass, idx+1, sNew - sOld );
+			RemoveNodes( pClass, idx + 1, sNew - sOld );
 	}
 
 	delete pOldNode;
@@ -863,7 +864,7 @@ void CChildView::ReplaceNode(CNodeClass* pClass, UINT idx, CNodeBase* pNewNode)
 	theApp.CalcAllOffsets();
 }
 
-void CChildView::RemoveNodes(CNodeClass* pClass,UINT idx,DWORD Length)
+void CChildView::RemoveNodes(CNodeClass* pClass, UINT idx, DWORD Length)
 {
 	if (!pClass || idx == MAX_NODES) return;
 

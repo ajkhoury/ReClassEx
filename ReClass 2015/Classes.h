@@ -119,14 +119,16 @@ public:
 	{
 		va_list va_alist;
 		static char logbuf[1024];
-		if (fmt==NULL) return x;
+		if (fmt == NULL) 
+			return x;
+
 		va_start (va_alist, fmt);
 		_vsnprintf(logbuf, sizeof(logbuf), fmt, va_alist);
 		va_end (va_alist);
 
 		int width = ( int )strlen( logbuf ) * FontWidth;
 
-		if ( ( y >= -FontHeight ) && ( y + FontHeight <= View.client->bottom+FontHeight ))
+		if ((y >= -FontHeight) && (y + FontHeight <= View.client->bottom+FontHeight))
 		{
 			CRect pos;
 
@@ -137,7 +139,7 @@ public:
 				else
 					pos.SetRect(x, y, x + FontWidth * 2, y + FontHeight);
 
-				AddHotSpot( View, pos, CString(logbuf), HitID, HS_EDIT );
+				AddHotSpot(View, pos, (CString)logbuf, HitID, HS_EDIT);
 			}
 
 			pos.SetRect(x, y, 0, 0);
@@ -277,6 +279,184 @@ public:
 	//	return TYPESTRING;
 	//}
 
+	int ResolveRTTI(DWORD_PTR Val, int &x, ViewInfo& View, int y)
+	{
+	#ifdef _WIN64
+		DWORD_PTR ModuleBase = 0x0;
+		//Find module Val is in, then get module base
+		for (int i = 0; i < MemMapModule.size(); i++)
+		{
+			MemMapInfo MemInfo = MemMapModule[i];
+			if (Val >= MemInfo.Start && Val <= MemInfo.End)
+			{
+				ModuleBase = MemInfo.Start;
+				break;
+			}
+		}
+
+		DWORD_PTR pRTTIObjectLocator= Val - 8; //Val is Ptr to first VFunc, pRTTI is at -0x8
+		if (!IsValidPtr(pRTTIObjectLocator))
+			return x;
+
+		DWORD_PTR RTTIObjectLocator;
+		ReadMemory(pRTTIObjectLocator, &RTTIObjectLocator, sizeof(DWORD_PTR));
+
+		DWORD ClassHierarchyDescriptorOffset;
+		ReadMemory(RTTIObjectLocator + 0x10, &ClassHierarchyDescriptorOffset, sizeof(DWORD));
+
+		//Offsets are from base
+		DWORD_PTR ClassHierarchyDescriptor = ModuleBase + ClassHierarchyDescriptorOffset;
+		if (!IsValidPtr(ClassHierarchyDescriptor) || !ClassHierarchyDescriptorOffset)
+			return x;
+
+		DWORD NumBaseClasses;
+		ReadMemory(ClassHierarchyDescriptor + 0x8, &NumBaseClasses, sizeof(DWORD));
+		if (NumBaseClasses < 0 || NumBaseClasses > 25)
+			NumBaseClasses = 0;
+
+		DWORD BaseClassArrayOffset;
+		ReadMemory(ClassHierarchyDescriptor + 0xC, &BaseClassArrayOffset, sizeof(DWORD));
+
+		DWORD_PTR BaseClassArray = ModuleBase + BaseClassArrayOffset;
+		if (!IsValidPtr(BaseClassArray) || !BaseClassArrayOffset)
+			return x;
+
+		//x = AddText(View, x, y, crOffset, NONE, " RTTI:");
+		std::string RTTIString;
+		for(int i = 0; i < NumBaseClasses; i++)
+		{
+			if (i != 0 && i != NumBaseClasses)
+			{
+				RTTIString += " : ";
+				//x = AddText(View, x, y, crOffset, NONE, " inherits:");
+			}
+
+			DWORD BaseClassDescriptorOffset;
+			ReadMemory(BaseClassArray + (0x4 * i), &BaseClassDescriptorOffset, sizeof(DWORD));
+
+			DWORD_PTR BaseClassDescriptor = ModuleBase + BaseClassDescriptorOffset;
+			if (!IsValidPtr(BaseClassDescriptor) || !BaseClassDescriptorOffset)
+				continue;
+
+			DWORD TypeDescriptorOffset;
+			ReadMemory(BaseClassDescriptor, &TypeDescriptorOffset, sizeof(DWORD));
+
+			DWORD_PTR TypeDescriptor = ModuleBase + TypeDescriptorOffset;
+			if (!IsValidPtr(TypeDescriptor) || !TypeDescriptorOffset)
+				continue;
+
+			std::string RTTIName;
+			bool FoundEnd = false;
+			char LastChar = ' ';
+			for (int j = 4; j < 45; j++)
+			{
+				char RTTINameChar; 
+				ReadMemory(TypeDescriptor + 0x10 + j, &RTTINameChar, 1);
+				if (RTTINameChar == '@' && LastChar == '@') //Names seem to be ended with @@
+				{
+					FoundEnd = true;
+					//RTTIName += RTTINameChar;
+					break;
+				}
+				RTTIName += RTTINameChar;
+				LastChar = RTTINameChar;
+			}
+			//Did we find a valid rtti name or did we just reach end of loop
+			if (!FoundEnd)
+				continue;
+
+			RTTIName[RTTIName.size() - 1] = '\0';
+
+			RTTIString += RTTIName.c_str();
+
+			//x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIName.c_str());
+		}
+		x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIString.c_str());
+	#else
+		//SERIOUSLY CHECK THESE POINTERS
+		DWORD_PTR pRTTIObjectLocator = Val - 4;
+		if (!IsValidPtr(pRTTIObjectLocator))
+			return x;
+
+		DWORD_PTR RTTIObjectLocator;
+		ReadMemory(pRTTIObjectLocator, &RTTIObjectLocator, sizeof(DWORD_PTR));
+
+		DWORD_PTR pClassHierarchyDescriptor = RTTIObjectLocator + 0x10;
+		if (!IsValidPtr(pClassHierarchyDescriptor))
+			return x;
+
+		DWORD_PTR ClassHierarchyDescriptor;
+		ReadMemory(pClassHierarchyDescriptor, &ClassHierarchyDescriptor, sizeof(DWORD_PTR));
+
+		DWORD NumBaseClasses;
+		ReadMemory(ClassHierarchyDescriptor + 0x8, &NumBaseClasses, sizeof(DWORD));
+		if (NumBaseClasses < 0 || NumBaseClasses > 25)
+			NumBaseClasses = 0;
+
+		DWORD_PTR pBaseClassArray = ClassHierarchyDescriptor + 0xC;
+		if (!IsValidPtr(pBaseClassArray))
+			return x;
+
+		DWORD_PTR BaseClassArray;
+		ReadMemory(pBaseClassArray, &BaseClassArray, sizeof(DWORD_PTR));
+
+		//x = AddText(View, x, y, crOffset, NONE, " RTTI: ");
+		std::string RTTIString;
+		for (int i = 0; i < NumBaseClasses; i++)
+		{
+			if (i != 0 && i != NumBaseClasses)
+			{
+				RTTIString += " : ";
+				//x = AddText(View, x, y, crOffset, HS_RTTI, " : ");
+			}
+
+			DWORD_PTR pBaseClassDescriptor = BaseClassArray + (4 * i);
+			if (!IsValidPtr(pBaseClassDescriptor))
+				continue;
+
+			DWORD_PTR BaseClassDescriptor;
+			ReadMemory(pBaseClassDescriptor, &BaseClassDescriptor, sizeof(DWORD_PTR));
+
+			if (!IsValidPtr(BaseClassDescriptor))
+				continue;
+
+			DWORD_PTR TypeDescriptor; //pointer at 0x00 in BaseClassDescriptor
+			ReadMemory(BaseClassDescriptor, &TypeDescriptor, sizeof(DWORD_PTR));
+
+			std::string RTTIName;
+			bool FoundEnd = false;
+			char LastChar = ' ';
+			for (int j = 4; j < 45; j++)
+			{
+				char RTTINameChar;
+				ReadMemory(TypeDescriptor + 0x08 + j, &RTTINameChar, 1);
+				if (RTTINameChar == '@' && LastChar == '@') // Names seem to be ended with @@
+				{
+					FoundEnd = true;
+					//RTTIName += RTTINameChar;
+					break;
+				}
+
+				RTTIName += RTTINameChar;
+				LastChar = RTTINameChar;
+			}
+			//Did we find a valid rtti name or did we just reach end of loop
+			if (!FoundEnd)
+				continue;
+
+			RTTIName[RTTIName.size() - 1] = '\0';
+
+			RTTIString += RTTIName.c_str();
+
+			//x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIName.c_str());
+		}
+
+		x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIString.c_str());
+
+		return x;
+	#endif
+	}
+
 	int AddComment(ViewInfo& View,int x,int y)
 	{
 		x = AddText(View, x, y, crComment, NONE, "//");
@@ -334,7 +514,8 @@ public:
 				{
 					//printf( "<%p> here\n", Val );
 					//if ( Val > 140000000 && Val < 80000000000 )
-						x = AddText(View,x,y,crOffset,NONE,"*->%s ",a);
+					x = AddText(View,x,y,crOffset,NONE,"*->%s ", a);
+					x = ResolveRTTI(Val, x, View, y);
 				}
 
 				if (gbString)
@@ -397,75 +578,7 @@ public:
 				if (gbPointers)
 				{
 					x = AddText(View, x, y, crOffset, NONE, "*->%s ", a); 
-
-					DWORD_PTR pRTTIObjectLocator = Val - sizeof(void*); //RTTI is at First VFunc - sizeof(void*) 
-					if (!IsValidPtr(pRTTIObjectLocator)) 
-						return x; 
-
-					DWORD_PTR RTTIObjectLocator;  
-					ReadMemory(pRTTIObjectLocator, &RTTIObjectLocator, sizeof(DWORD_PTR)); 
-
-					DWORD_PTR pClassHierarchyDescriptor = RTTIObjectLocator + 0x10; 
-					if (!IsValidPtr(pClassHierarchyDescriptor)) 
-						return x; 
-
-					DWORD_PTR ClassHierarchyDescriptor; 
-					ReadMemory(pClassHierarchyDescriptor, &ClassHierarchyDescriptor, sizeof(DWORD_PTR));				 
-
-					DWORD NumBaseClasses; 
-					ReadMemory(ClassHierarchyDescriptor + 0x8, &NumBaseClasses, sizeof(DWORD)); 
-					if (NumBaseClasses < 0 || NumBaseClasses > 25) 
-						NumBaseClasses = 0; 
-
-					DWORD_PTR pBaseClassArray = ClassHierarchyDescriptor + 0x0C;
-					if (!IsValidPtr(pBaseClassArray))
-						return x;
-
-					DWORD_PTR BaseClassArray;
-					ReadMemory(pBaseClassArray, &BaseClassArray, sizeof(DWORD_PTR));
-
-					x = AddText(View, x, y, crOffset, NONE, " RTTI: ");
-					for (int i = 0; i < NumBaseClasses; i++)
-					{
-						if (i != 0 && i != NumBaseClasses)
-							x = AddText(View, x, y, crOffset, NONE, " inherits:");
-
-						DWORD pBaseClassDescriptor = BaseClassArray + (4 * i);
-						if (!IsValidPtr(pBaseClassDescriptor))
-							continue;
-
-						DWORD BaseClassDescriptor;
-						ReadMemory(pBaseClassDescriptor, &BaseClassDescriptor, sizeof(DWORD));
-
-						if (!IsValidPtr(BaseClassDescriptor))
-							continue;
-
-						DWORD TypeDescriptor; //pointer at 0x00 in BaseClassDescriptor
-						ReadMemory(BaseClassDescriptor, &TypeDescriptor, sizeof(DWORD));
-
-						std::string RTTIName;
-						bool FoundEnd = false;
-						char LastChar = ' ';
-						for (int j = 0; j < 45; j++)
-						{
-							char RTTINameChar;
-							ReadMemory(TypeDescriptor + 0x08 + j, &RTTINameChar, 1);
-							if (RTTINameChar == '@' && LastChar == '@') //Names seem to be ended with @@
-							{
-								FoundEnd = true;
-								break;
-							}
-
-							RTTIName += RTTINameChar;
-							LastChar = RTTINameChar;
-						}
-						//Did we find a valid rtti name or did we just reach end of loop
-						if (!FoundEnd)
-							continue;
-
-						x = AddText(View, x, y, crOffset, NONE, "%s", RTTIName.c_str());
-					}
-					
+					x = ResolveRTTI(Val, x, View, y);
 				}
 
 				if (gbString)
@@ -644,7 +757,7 @@ public:
 class CNodeHex64 : public CNodeBase
 {
 public:
-	virtual NodeType GetType(){ return nt_hex64; }
+	virtual NodeType GetType() { return nt_hex64; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -652,14 +765,22 @@ public:
 
 		BYTE v = (BYTE)(strtoul(Spot.Text, NULL, 16) & 0xFF);
 
-		if (Spot.ID == 0) WriteMemory(Spot.Address + 0, &v, 1);
-		if (Spot.ID == 1) WriteMemory(Spot.Address + 1, &v, 1);
-		if (Spot.ID == 2) WriteMemory(Spot.Address + 2, &v, 1);
-		if (Spot.ID == 3) WriteMemory(Spot.Address + 3, &v, 1);
-		if (Spot.ID == 4) WriteMemory(Spot.Address + 4, &v, 1);
-		if (Spot.ID == 5) WriteMemory(Spot.Address + 5, &v, 1);
-		if (Spot.ID == 6) WriteMemory(Spot.Address + 6, &v, 1);
-		if (Spot.ID == 7) WriteMemory(Spot.Address + 7, &v, 1);
+		if (Spot.ID == 0)
+			WriteMemory(Spot.Address + 0, &v, 1);
+		if (Spot.ID == 1) 
+			WriteMemory(Spot.Address + 1, &v, 1);
+		if (Spot.ID == 2) 
+			WriteMemory(Spot.Address + 2, &v, 1);
+		if (Spot.ID == 3) 
+			WriteMemory(Spot.Address + 3, &v, 1);
+		if (Spot.ID == 4) 
+			WriteMemory(Spot.Address + 4, &v, 1);
+		if (Spot.ID == 5) 
+			WriteMemory(Spot.Address + 5, &v, 1);
+		if (Spot.ID == 6) 
+			WriteMemory(Spot.Address + 6, &v, 1);
+		if (Spot.ID == 7) 
+			WriteMemory(Spot.Address + 7, &v, 1);
 	}
 
 	virtual int GetMemorySize( )

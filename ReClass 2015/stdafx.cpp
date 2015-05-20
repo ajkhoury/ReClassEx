@@ -106,7 +106,9 @@ CString ReadMemoryString( DWORD_PTR address, SIZE_T max )
 		buffer[bytesRead] = '\0';
 
 		return buffer;
-	} else {
+	} 
+	else 
+	{
 		//printf( "Failed to read memory, GetLastError( )=%p\n", GetLastError( ) );
 		return "..";
 	}

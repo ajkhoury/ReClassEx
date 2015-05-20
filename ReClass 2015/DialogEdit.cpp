@@ -174,7 +174,7 @@ BOOL CDialogEdit::OnInitDialog()
 void CDialogEdit::OnCancel()
 {
 	// Get text length
-	UINT uSize = SendEditor(SCI_GETLENGTH, 0, 0L);
+	UINT uSize = (UINT)SendEditor(SCI_GETLENGTH, 0, 0L);
 	if (uSize)
 	{
 		char *pBuf = new char[uSize + 1 + 8];
@@ -320,7 +320,7 @@ void CDialogEdit::OnFileEditorsaveas()
 		}
 
 		// Get text length
-		UINT uSize = SendEditor(SCI_GETLENGTH, 0, 0L);
+		UINT uSize = (UINT)SendEditor(SCI_GETLENGTH, 0, 0L);
 		if (!uSize) 
 			return;
 
@@ -343,7 +343,6 @@ void CDialogEdit::OnFileEditorsaveas()
 
 		// Close the file
 		f.Close();
-
 	}
 	catch( ... ) 
 	{	

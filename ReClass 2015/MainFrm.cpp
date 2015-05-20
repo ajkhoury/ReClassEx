@@ -81,6 +81,7 @@ CMainFrame::~CMainFrame()
 	ClearProcMenuItems();
 }
 
+#include <afxtabctrl.h>
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CMDIFrameWndEx::OnCreate(lpCreateStruct) == -1)
@@ -89,30 +90,35 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// set the visual manager and style based on persisted value
 	OnApplicationLook(theApp.m_nAppLook);
 
+	// Create tabs
 	CMDITabInfo mdiTabParams;
-	mdiTabParams.m_style = CMFCTabCtrl::STYLE_FLAT; // other styles available...
-	mdiTabParams.m_bActiveTabCloseButton = TRUE;      // set to FALSE to place close button at right of tab area
-	mdiTabParams.m_bTabIcons = FALSE;    // set to TRUE to enable document icons on MDI taba
-	mdiTabParams.m_bAutoColor = FALSE;    // set to FALSE to disable auto-coloring of MDI tabs
-	mdiTabParams.m_bDocumentMenu = TRUE; // enable the document menu at the right edge of the tab area
+	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D; // other styles available...
+	mdiTabParams.m_tabLocation = CMFCTabCtrl::LOCATION_TOP;
+	mdiTabParams.m_nTabBorderSize = 4;
+	mdiTabParams.m_bActiveTabCloseButton = TRUE;      // set to FALSE to place close button at left of tab area
+	mdiTabParams.m_bTabIcons = TRUE;    // set to TRUE to enable document icons on MDI taba
+	mdiTabParams.m_bAutoColor = TRUE;    // set to FALSE to disable auto-coloring of MDI tabs
+	mdiTabParams.m_bDocumentMenu = TRUE; // enable the document menu at the left edge of the tab area
+	mdiTabParams.m_bFlatFrame = FALSE;
 	EnableMDITabbedGroups(TRUE, mdiTabParams);
+
 
 	m_wndRibbonBar.Create(this);
 	m_wndRibbonBar.LoadFromResource(IDR_RIBBON);
 
 	// enable Visual Studio 2005 style docking window behavior
-	CDockingManager::SetDockingMode(DT_IMMEDIATE);
+	CDockingManager::SetDockingMode(DT_STANDARD);
 	// enable Visual Studio 2005 style docking window auto-hide behavior
-	EnableAutoHidePanes(CBRS_ALIGN_ANY);
+	EnableAutoHidePanes(CBRS_BORDER_3D);
 
 	// create docking windows
 	if (!CreateDockingWindows())
 	{
-		TRACE0("Failed to create docking windows\n");
+		printf("Failed to create docking windows\n");
 		return -1;
 	}
 
-	SetTitle("Reclass 2015");
+	//SetTitle("Reclass 2015");
 
 	// Enable enhanced windows management dialog
 	EnableWindowsDialog(ID_WINDOW_MANAGER, ID_WINDOW_MANAGER, TRUE);
@@ -356,7 +362,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 	}
 	if (nCode == CN_COMMAND)
 	{
-		if (nID >= WM_CLASSMENU && nID < (WM_CLASSMENU + WM_MAXITEMS) )
+		if (nID >= WM_CLASSMENU && nID < (WM_CLASSMENU + WM_MAXITEMS))
 		{
 			UINT idx = nID - WM_CLASSMENU;
 
@@ -364,7 +370,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 			CNodeClass* pClass = theApp.Classes[idx];
 
 			pChild->SetTitle(pClass->Name);
-			pChild->SetWindowTextA(pClass->Name);
+			pChild->SetWindowText(pClass->Name);
 			UpdateFrameTitleForDocument(pClass->Name);
 			pChild->m_wndView.m_pClass = pClass;
 			return TRUE;
@@ -468,22 +474,21 @@ std::string CommonProcesses[] =
 	"nvtray.exe",	"nvxdsync.exe", "lsass.exe",	"jusched.exe",
 	"conhost.exe",  "chrome.exe",	"firefox.exe", 	"winamp.exe",
 	"WinRAR.exe",	"calc.exe",	"taskhostex.exe", "Taskmgr.exe",
-	"plugin-container.exe",
-	"ReClass.exe",	"ReClass_64.exe",
+	"plugin-container.exe", "ReClass.exe",	"ReClass_64.exe",
 	"SettingSyncHost.exe",	"SkyDrive.exe",	"ctfmon.exe",	"RuntimeBroker.exe", // Win8 Processes
 	"BTTray.exe",	"BTStackServer.exe",	"Bluetooth Headset Helper.exe" // Win8 Bluetooth Processes
 };
 
 void CMainFrame::OnButtonSelectprocess()
 {
-	CMFCRibbonButton* pButton = (CMFCRibbonButton*)m_wndRibbonBar.FindByID( ID_BUTTON_SELECTPROCESS );
-	CRect pos = pButton->GetRect( );
-	ClientToScreen( &pos );
+	CMFCRibbonButton* pButton = (CMFCRibbonButton*)m_wndRibbonBar.FindByID(ID_BUTTON_SELECTPROCESS);
+	CRect pos = pButton->GetRect();
+	ClientToScreen(&pos);
 
 	CMenu menu;
-	menu.CreatePopupMenu( );
+	menu.CreatePopupMenu();
 
-	ClearProcMenuItems( );
+	ClearProcMenuItems();
 
 #ifdef _WIN64
 	HANDLE ProcessList = CreateToolhelp32Snapshot( TH32CS_SNAPPROCESS, NULL );
@@ -696,9 +701,9 @@ void CMainFrame::OnCheckTopmost()
 {
 	gbTop = !gbTop;
 	if (gbTop)
-		SetWindowPos(&wndTopMost, 0, 0, 0, 0, SWP_NOSIZE|SWP_NOMOVE);
+		SetWindowPos(&wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	else
-		SetWindowPos(&wndNoTopMost, 0, 0, 0, 0, SWP_NOSIZE|SWP_NOMOVE);
+		SetWindowPos(&wndNoTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 }
 
 void CMainFrame::OnUpdateCheckTopmost(CCmdUI *pCmdUI)
@@ -730,14 +735,14 @@ void CMainFrame::OnButtonLeft()
 {
 	RECT Screen;
 	SystemParametersInfo(SPI_GETWORKAREA, 0, &Screen, 0);
-	SetWindowPos(NULL, 0, 0, Screen.right/2, Screen.bottom, SWP_NOZORDER);
+	SetWindowPos(NULL, 0, 0, Screen.right / 2, Screen.bottom, SWP_NOZORDER);
 }
 
 void CMainFrame::OnButtonRight()
 {
 	RECT Screen;
 	SystemParametersInfo(SPI_GETWORKAREA, 0, &Screen, 0);
-	SetWindowPos(NULL, Screen.right/2, 0, Screen.right/2, Screen.bottom, SWP_NOZORDER);
+	SetWindowPos(NULL, Screen.right/2, 0, Screen.right / 2, Screen.bottom, SWP_NOZORDER);
 }
 
 void CMainFrame::OnCheckFloat()

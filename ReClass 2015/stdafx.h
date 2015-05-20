@@ -10,9 +10,8 @@
 #include <afx.h>
 
 // turns off MFC's hiding of some common and often safely ignored warning messages
-//#define _AFX_ALL_WARNINGS
-//#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
-//#define _CRT_SECURE_NO_WARNINGS
+#define _AFX_ALL_WARNINGS
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
 
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions
@@ -36,7 +35,6 @@
 
 #define BEA_ENGINE_STATIC
 #define BEA_USE_STDCALL
-//#include "..\beaengine\beaengine\BeaEngine.h"
 #include "..\beaengine\headers\BeaEngine.h"
 #ifdef _WIN64
 #pragma comment( lib, "../beaengine/Win64/Lib/BeaEngine64.lib")
@@ -143,6 +141,7 @@ extern CString tdPChar;
 #define HS_CHANGE_A 5
 #define HS_CHANGE_X 6
 #define HS_DELETE 7
+#define HS_RTTI 8
 
 class CNodeBase;
 
