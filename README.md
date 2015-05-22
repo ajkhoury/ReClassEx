@@ -12,3 +12,9 @@ New features include:
 - Hex 64 type
 - Insert 2048 bytes
 - New icons for some types
+- Fixed syntax highlighting for 64 bit when generating code
+- Fixed array sizes when loading .reclass files
+- Added more themes
+- Colorful tabs with sexy border
+- Added RTTI info for pointers
+- UPDATE: Cleaned up RTTI and made the RTTI string editable
