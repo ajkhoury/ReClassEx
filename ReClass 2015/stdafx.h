@@ -200,9 +200,9 @@ enum NodeType
 	nt_int8,
 	nt_float,
 	nt_double,
-	nt_uint32,
-	nt_uint16,
-	nt_uint8,
+	nt_uint32, // dword
+	nt_uint16, // word
+	nt_uint8, // byte
 	nt_text,
 	nt_unicode,
 	nt_function,
@@ -293,12 +293,6 @@ void WriteMemory(DWORD_PTR Address,void* Buffer,DWORD Size);
 CString ReadMemoryString( DWORD_PTR address, SIZE_T max = 40 );
 
 #include "Classes.h"
-
-#ifdef _WIN64
-#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x64' publicKeyToken='6595b64144ccf1df' language='*'\"")
-#else
-#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
-#endif
 
 extern DWORD NodeCreateIndex;
 

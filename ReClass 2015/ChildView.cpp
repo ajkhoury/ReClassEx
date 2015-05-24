@@ -693,7 +693,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 	}
 	else
 	{
-		if (!isDeleting) // Ghetto fix to stop crashing when deleting nodes you're hovered over
+		if (!isDeleting)
 		{
 			BYTE data[16];
 			for (UINT i = 0; i < HotSpots.size(); i++)
@@ -703,6 +703,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 					if (HotSpots[i].Type == HS_SELECT)
 					{
 						CNodeBase* pNode = (CNodeBase*)HotSpots[i].object;
+
 						if (pNode->GetType() == nt_function)
 						{
 							DWORD addy;
@@ -757,7 +758,6 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 							__int8* pi		= (__int8*)data;
 							BYTE* pd	= (BYTE*)data;
 							msg.Format("Int8: %i\r\nBYTE: %u\r\n",*pi,*pd);
-							m_ToolTip.EnableWindow(FALSE);
 							m_ToolTip.SetWindowText(msg);
 							m_ToolTip.SetWindowPos(NULL,point.x+16,point.y+16,200,16*2+6,SWP_NOZORDER);
 							m_ToolTip.ShowWindow(SW_SHOW);

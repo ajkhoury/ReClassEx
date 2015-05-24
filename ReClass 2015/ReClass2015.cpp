@@ -82,7 +82,7 @@ BOOL CReClass2015App::InitInstance()
 {
 	INITCOMMONCONTROLSEX InitCtrls;
 	InitCtrls.dwSize = sizeof(InitCtrls);
-	InitCtrls.dwICC = ICC_WIN95_CLASSES;
+	InitCtrls.dwICC = ICC_STANDARD_CLASSES;
 	InitCommonControlsEx(&InitCtrls);
 
 	CWinAppEx::InitInstance();
@@ -785,7 +785,7 @@ void CReClass2015App::OnButtonNewClass()
 	//pFrame->UpdateFrameTitleForDocument(name);
 
 	CNodeClass* pClass = new CNodeClass;
-	//pClass->pChildWindow = pChild;
+	pClass->idx = theApp.Classes.size();
 	theApp.Classes.push_back(pClass);
 	pChild->m_wndView.m_pClass = pClass;
 

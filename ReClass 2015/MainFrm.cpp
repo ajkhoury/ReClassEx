@@ -650,15 +650,14 @@ void CMainFrame::OnButtonEditclass()
 		CMenu menu;
 		menu.CreatePopupMenu( );
 
-		for ( UINT m = 0; m < theApp.Classes.size( ); m++ )
+		for (UINT m = 0; m < theApp.Classes.size(); m++)
 		{
 			CString MenuItem;
-			MenuItem.Format( "%i - %s", m, theApp.Classes[m]->Name );
-
-			menu.AppendMenu( MF_STRING | MF_ENABLED, WM_CLASSMENU + m, MenuItem );
+			MenuItem.Format("%i - %s", m, theApp.Classes[m]->Name);
+			menu.AppendMenu(MF_STRING | MF_ENABLED, WM_CLASSMENU + m, MenuItem);
 		}
 
-		menu.TrackPopupMenu( TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this );
+		menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this);
 	}
 }
 

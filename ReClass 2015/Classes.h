@@ -2,6 +2,8 @@
 
 #include "Debug.h"
 
+#define TXOFFSET 16
+
 extern DWORD NodeCreateIndex;
 
 template<class T> int NumDigits(T number)
@@ -78,6 +80,7 @@ public:
 		Name.Format("N%0.8X", NodeCreateIndex);
 		NodeCreateIndex++;
 		pParent = NULL;
+		nodeType = nt_base;
 	}
 
 	~CNodeBase() { }
@@ -85,7 +88,10 @@ public:
 	virtual int Draw(ViewInfo& View,int x,int y) = 0;
 	virtual int GetMemorySize() = 0;
 	virtual void Update(HotSpot& Spot) = 0;
-	virtual NodeType GetType() = 0; 
+
+	NodeType GetType() { return nodeType; }
+
+	NodeType nodeType;
 
 	DWORD_PTR offset;
 	CString strOffset;
@@ -279,6 +285,19 @@ public:
 	//	return TYPESTRING;
 	//}
 
+	std::string Demangle(const std::string& DecoratedName,DWORD Flags)
+	{
+		//https://msdn.microsoft.com/en-us/library/windows/desktop/ms681400%28v=vs.85%29.aspx
+		typedef DWORD(WINAPI* UnDecorateSymbolName)(PCTSTR DecoratedName, PTSTR  UnDecoratedName, DWORD UndecoratedLength, DWORD  Flags);
+
+		UnDecorateSymbolName FnDemangle = (UnDecorateSymbolName)GetProcAddress(LoadLibrary("Dbghelp.dll"), "UnDecorateSymbolName");
+
+		char Demangled[512];
+		if (!FnDemangle(DecoratedName.c_str(), Demangled, 512, Flags))
+			return DecoratedName; //function failed
+		return std::string(Demangled);
+	}
+
 	int ResolveRTTI(DWORD_PTR Val, int &x, ViewInfo& View, int y)
 	{
 	#ifdef _WIN64
@@ -348,14 +367,14 @@ public:
 			std::string RTTIName;
 			bool FoundEnd = false;
 			char LastChar = ' ';
-			for (int j = 4; j < 45; j++)
+			for (int j = 1; j < 45; j++)
 			{
 				char RTTINameChar; 
 				ReadMemory(TypeDescriptor + 0x10 + j, &RTTINameChar, 1);
 				if (RTTINameChar == '@' && LastChar == '@') //Names seem to be ended with @@
 				{
 					FoundEnd = true;
-					//RTTIName += RTTINameChar;
+					RTTIName += RTTINameChar;
 					break;
 				}
 				RTTIName += RTTINameChar;
@@ -365,16 +384,18 @@ public:
 			if (!FoundEnd)
 				continue;
 
-			RTTIName[RTTIName.size() - 1] = '\0';
+			//RTTIName[RTTIName.size() - 1] = '\0';
 
-			RTTIString += RTTIName.c_str();
+			//RTTIString += RTTIName.c_str();
+			RTTIString += Demangle(RTTIName, 0x0800);
 
 			//x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIName.c_str());
 		}
 		x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIString.c_str());
 		return x;
+
 	#else
-		//SERIOUSLY CHECK THESE POINTERS
+		
 		DWORD_PTR pRTTIObjectLocator = Val - 4;
 		if (!IsValidPtr(pRTTIObjectLocator))
 			return x;
@@ -427,14 +448,14 @@ public:
 			std::string RTTIName;
 			bool FoundEnd = false;
 			char LastChar = ' ';
-			for (int j = 4; j < 45; j++)
+			for (int j = 1; j < 45; j++)
 			{
 				char RTTINameChar;
 				ReadMemory(TypeDescriptor + 0x08 + j, &RTTINameChar, 1);
 				if (RTTINameChar == '@' && LastChar == '@') // Names seem to be ended with @@
 				{
 					FoundEnd = true;
-					//RTTIName += RTTINameChar;
+					RTTIName += RTTINameChar;
 					break;
 				}
 
@@ -444,10 +465,10 @@ public:
 			//Did we find a valid rtti name or did we just reach end of loop
 			if (!FoundEnd)
 				continue;
-
-			RTTIName[RTTIName.size() - 1] = '\0';
-
-			RTTIString += RTTIName.c_str();
+			// AVC_CSPlayer : AVC_BasePlayer : AVC_BaseCombatCharacter : AVC_BaseFlex : AVC_BaseAnimatingOverlay : AVC_BaseAnimating : AVC_BaseEntity : AVIClientEntity : AVIClientUnknown : AVIHandleEntity : AVIClientRenderable : AVIClientNetworkable : AVIClientThinkable : AVIClientModelRenderable : AVCCustomMaterialOwner : AVCGameEventListener : AVIGameEventListener2 : AVICSPlayerAnimStateHelpers : AVIHasAttributes
+			//RTTIName[RTTIName.size() - 1] = '\0';
+			//RTTIString += RTTIName.c_str();
+			RTTIString += Demangle(RTTIName, 0x1000);
 
 			//x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIName.c_str());
 		}
@@ -512,9 +533,11 @@ public:
 				if (gbPointers)
 				{
 					//printf( "<%p> here\n", Val );
-					//if ( Val > 140000000 && Val < 80000000000 )
-					x = AddText(View,x,y,crOffset,NONE,"*->%s ", a);
-					x = ResolveRTTI(Val, x, View, y);
+					if (Val > 0x140000000 && Val < 0x80000000000)
+					{	
+						x = AddText(View,x,y,crOffset,NONE,"*->%s ", a);
+						x = ResolveRTTI(Val, x, View, y);
+					}
 				}
 
 				if (gbString)
@@ -554,7 +577,7 @@ public:
 			if (gbInt)
 			{
 				#ifdef _WIN64
-				if (f > 140000000 && f < 80000000000) // in 64 bit address range
+				if (f > 0x140000000 && f < 0x80000000000) // in 64 bit address range
 					x = AddText(View, x, y, crValue, NONE, "(0x%I64X %i)", i, i);
 				else
 					x = AddText(View, x, y, crValue, NONE, "(%i)", i);
@@ -576,8 +599,11 @@ public:
 			{
 				if (gbPointers)
 				{
-					x = AddText(View, x, y, crOffset, NONE, "*->%s ", a); 
-					x = ResolveRTTI(Val, x, View, y);
+					if (Val > 0x400000 && Val < 0x100000000)
+					{
+						x = AddText(View, x, y, crOffset, NONE, "*->%s ", a); 
+						x = ResolveRTTI(Val, x, View, y);
+					}
 				}
 
 				if (gbString)
@@ -661,11 +687,12 @@ DWORD_PTR ConvertStrToAddress(CString Address);
 class CNodeClass : public CNodeBase
 {
 public:
-	CNodeClass( )
+	CNodeClass()
 	{
+		nodeType = nt_class;
+		//printf( "[+] Created offset: %p Characters: %d\n", offset, NumDigits( offset ) );
 		#ifdef _WIN64
 		offset = 0x140000000;
-		//printf( "[+] Created offset: %p Characters: %d\n", offset, NumDigits( offset ) );
 		strOffset = "140000000";
 		RequestPosition = -1;
 		#else
@@ -673,13 +700,13 @@ public:
 		strOffset = "400000";
 		RequestPosition = -1;
 		#endif
+		idx = 0;
 	}
 
+	int idx;
 	CString Code;
 	int RequestPosition;
 	CChildFrame* pChildWindow;
-
-	virtual NodeType GetType() { return nt_class; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -695,7 +722,7 @@ public:
 		// TODO figure out if I need this
 		if (Spot.ID == 1)
 			RequestPosition = atoi(Spot.Text); // RequestPosition = ConvertStrToAddress( Spot.Text );
-	};
+	}
 
 	virtual int GetMemorySize()	
 	{
@@ -711,18 +738,12 @@ public:
 
 		AddSelection(View, 0, y, FontHeight);
 		x = AddOpenClose(View, x, y);
-		x = AddIcon(View, x, y, ICON_CLASS, -1, -1);
 
-		UINT idx = 0;
-		for (UINT i = 0; i < View.Classes->size(); i++)
-		{
-			CNodeClass* pClass = View.Classes->at(i);
-			if (pClass == this)
-				idx = i;
-		}
-
+		// Save tx here
 		int tx = x;
-		x = AddText( View, x, y, crOffset, 0, "%s", strOffset ) + FontWidth;
+
+		x = AddIcon(View, x, y, ICON_CLASS, -1, -1);
+		x = AddText(View, x, y, crOffset, 0, "%s", strOffset ) + FontWidth;
 
 		// x += ( NumDigits( offset ) ) * FontWidth;
 		// TODO, figure this out better
@@ -730,14 +751,14 @@ public:
 
 		// printf( "Print %s at %d\n", strOffset, x );
 
-		x = AddText( View, x, y, crIndex, NONE, "(" );
-		x = AddText( View, x, y, crIndex, 1, "%i", idx );
-		x = AddText( View, x, y, crIndex, NONE, ")" );
+		x = AddText(View, x, y, crIndex, NONE, "(");
+		x = AddText(View, x, y, crIndex, 1, "%i", idx);
+		x = AddText(View, x, y, crIndex, NONE, ")");
 
-		x = AddText( View, x, y, crType, NONE, "Class " );
-		x = AddText( View, x, y, crName, 69, Name ) + FontWidth;
-		x = AddText( View, x, y, crValue, NONE, "[%i]", GetMemorySize( ) ) + FontWidth;
-		x = AddComment( View, x, y );
+		x = AddText(View, x, y, crType, NONE, "Class ");
+		x = AddText(View, x, y, crName, 69, Name) + FontWidth;
+		x = AddText(View, x, y, crValue, NONE, "[%i]", GetMemorySize()) + FontWidth;
+		x = AddComment(View, x, y);
 
 		y += FontHeight;
 		if (bOpen[View.Level])
@@ -756,36 +777,16 @@ public:
 class CNodeHex64 : public CNodeBase
 {
 public:
-	virtual NodeType GetType() { return nt_hex64; }
+	CNodeHex64() { nodeType = nt_hex64; }
 
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-
 		BYTE v = (BYTE)(strtoul(Spot.Text, NULL, 16) & 0xFF);
-
-		if (Spot.ID == 0)
-			WriteMemory(Spot.Address + 0, &v, 1);
-		if (Spot.ID == 1) 
-			WriteMemory(Spot.Address + 1, &v, 1);
-		if (Spot.ID == 2) 
-			WriteMemory(Spot.Address + 2, &v, 1);
-		if (Spot.ID == 3) 
-			WriteMemory(Spot.Address + 3, &v, 1);
-		if (Spot.ID == 4) 
-			WriteMemory(Spot.Address + 4, &v, 1);
-		if (Spot.ID == 5) 
-			WriteMemory(Spot.Address + 5, &v, 1);
-		if (Spot.ID == 6) 
-			WriteMemory(Spot.Address + 6, &v, 1);
-		if (Spot.ID == 7) 
-			WriteMemory(Spot.Address + 7, &v, 1);
+		WriteMemory(Spot.Address + Spot.ID, &v, 1);
 	}
 
-	virtual int GetMemorySize( )
-	{
-		return 8;
-	}
+	virtual int GetMemorySize() { return 8; }
 
 	virtual int Draw( ViewInfo& View,int x,int y )
 	{
@@ -798,7 +799,7 @@ public:
 		AddTypeDrop(View,x,y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 32;
+		int tx = x + TXOFFSET + 16;
 		tx = AddAddressOffset(View,tx,y);
 
 		if (gbText)
@@ -826,7 +827,7 @@ public:
 class CNodeHex32 : public CNodeBase
 {
 public:
-	virtual NodeType GetType(){ return nt_hex32; }
+	CNodeHex32() { nodeType = nt_hex32; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -849,7 +850,7 @@ public:
 		AddTypeDrop(View,x,y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 32;
+		int tx = x + TXOFFSET + 16;
 		tx = AddAddressOffset(View,tx,y);
 
 		if (gbText)
@@ -872,14 +873,14 @@ public:
 class CNodeHex16 : public CNodeBase
 {
 public:
-	virtual NodeType GetType() { return nt_hex16; }
+	CNodeHex16() { nodeType = nt_hex16; }
 
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-		BYTE v = ( BYTE )( strtoul(Spot.Text,NULL,16 ) & 0xFF );
-		if (Spot.ID == 0) WriteMemory(Spot.Address,&v,1);
-		if (Spot.ID == 1) WriteMemory(Spot.Address+1,&v,1);
+		BYTE v = (BYTE)(strtoul(Spot.Text, NULL, 16) & 0xFF);
+		if (Spot.ID == 0) WriteMemory(Spot.Address, &v,1);
+		if (Spot.ID == 1) WriteMemory(Spot.Address+1, &v,1);
 	}
 
 	virtual int GetMemorySize() { return 2; }
@@ -893,8 +894,8 @@ public:
 		AddTypeDrop(View,x,y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 32;
-		tx = AddAddressOffset(View,tx,y);
+		int tx = x + TXOFFSET + 16;
+		tx = AddAddressOffset(View, tx, y);
 
 		if (gbText)
 		{
@@ -920,16 +921,17 @@ public:
 class CNodeHex8 : public CNodeBase
 {
 public:
-	virtual NodeType GetType() { return nt_hex8; }
+	CNodeHex8() { nodeType = nt_hex8; }
 
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-		BYTE v = ( BYTE )( strtoul(Spot.Text,NULL,16) & 0xFF );
-		if (Spot.ID == 0) WriteMemory(Spot.Address,&v,1);
+		BYTE v = (BYTE)(strtoul(Spot.Text,NULL,16) & 0xFF);
+		if (Spot.ID == 0)
+			WriteMemory(Spot.Address, &v, 1);
 	}
 
-	virtual int GetMemorySize(){ return 1; }
+	virtual int GetMemorySize() { return 1; }
 
 	virtual int Draw(ViewInfo& View,int x,int y)
 	{
@@ -940,7 +942,7 @@ public:
 		AddTypeDrop(View,x,y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 32;
+		int tx = x + TXOFFSET + 16;
 		tx = AddAddressOffset(View,tx,y);
 
 		if (gbText)
@@ -963,9 +965,10 @@ public:
 class CNodeVTable : public CNodeBase
 {
 public:
+	CNodeVTable() { nodeType = nt_vtable; }
+
 	CMemory Memory;
 
-	virtual NodeType GetType() { return nt_vtable; }
 	virtual void Update(HotSpot& Spot) { StandardUpdate(Spot); }
 	
 	int GetMemorySize()
@@ -1020,11 +1023,13 @@ public:
 class CNodeFunctionPtr : public CNodeBase
 {
 public:
-	CNodeFunctionPtr() { Name = ""; }
+	CNodeFunctionPtr()
+	{ 
+		nodeType = nt_function;
+		Name = ""; 
+	}
 
 	std::vector<CString> Assembly;
-
-	virtual NodeType GetType() { return nt_function; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1080,7 +1085,7 @@ public:
 		AddTypeDrop(View,x,y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_METHOD, -1, -1);
 		int ax = tx;
 		tx = AddAddressOffset(View, tx, y);
@@ -1125,13 +1130,10 @@ public:
 class CNodePtr : public CNodeBase
 {
 public:
+	CNodePtr() { nodeType = nt_pointer; }
+
 	CNodeBase* pNode;
 	CMemory Memory;
-
-	virtual NodeType GetType()
-	{
-		return nt_pointer;
-	};
 
 	virtual void Update(HotSpot& Spot) { StandardUpdate(Spot); }
 
@@ -1195,7 +1197,7 @@ public:
 class CNodeInt64 : public CNodeBase
 {
 public:
-	virtual NodeType GetType(void) { return nt_int64; }
+	CNodeInt64() { nodeType = nt_int64; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1215,7 +1217,7 @@ public:
 		AddTypeDrop(View, x, y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_INTEGER, NONE, NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "Int64 ");
@@ -1231,7 +1233,7 @@ public:
 class CNodeInt32 : public CNodeBase
 {
 public:
-	virtual NodeType GetType() {return nt_int32; }
+	CNodeInt32() { nodeType = nt_int32; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1251,7 +1253,7 @@ public:
 		AddTypeDrop(View, x, y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_INTEGER,NONE,NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "Int32 ");
@@ -1266,7 +1268,7 @@ public:
 class CNodeInt16 : public CNodeBase
 {
 public:
-	virtual NodeType GetType() { return nt_int16; }
+	CNodeInt16() { nodeType = nt_int16; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1275,7 +1277,7 @@ public:
 		if (Spot.ID == 0) WriteMemory(Spot.Address,&v,2);
 	}
 
-	virtual int GetMemorySize(){ return 2; }
+	virtual int GetMemorySize() { return 2; }
 
 	virtual int Draw(ViewInfo& View,int x,int y)
 	{
@@ -1286,7 +1288,7 @@ public:
 		AddTypeDrop(View, x, y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_INTEGER, NONE, NONE);
 		tx = AddAddressOffset(View,tx,y);
 		tx = AddText(View, tx, y, crType, NONE, "Int16 ");
@@ -1301,7 +1303,7 @@ public:
 class CNodeInt8 : public CNodeBase
 {
 public:
-	virtual NodeType GetType() { return nt_int8; }
+	CNodeInt8() { nodeType = nt_int8; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1321,7 +1323,7 @@ public:
 		AddTypeDrop(View, x, y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_INTEGER, NONE, NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "Int8  ");
@@ -1339,20 +1341,19 @@ class CNodeCustom : public CNodeBase
 public:
 	CNodeCustom()
 	{
+		nodeType = nt_custom;
 		Name = "Custom";
 		memsize = 4;
 	}
 
 	DWORD memsize;
 
-	virtual NodeType GetType() { return nt_custom; }
-
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
 		if (Spot.ID == 0)
 			memsize = atoi(Spot.Text);
-	};
+	}
 
 	virtual int GetMemorySize() { return memsize; }
 
@@ -1364,7 +1365,7 @@ public:
 		AddTypeDrop(View,x,y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_CUSTOM, NONE, NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "Custom ");
@@ -1380,7 +1381,7 @@ public:
 class CNodeDWORD : public CNodeBase
 {
 public:
-	virtual NodeType GetType() { return nt_uint32; }
+	CNodeDWORD() { nodeType = nt_uint32; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1401,7 +1402,7 @@ public:
 		AddTypeDrop(View,x,y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_UNSIGNED, NONE, NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "DWORD ");
@@ -1416,14 +1417,14 @@ public:
 class CNodeWORD : public CNodeBase
 {
 public:
-	virtual NodeType GetType( ) { return nt_uint16; }
+	CNodeWORD() { nodeType = nt_uint16; }
 
 	virtual void Update(HotSpot& Spot)
 	{
-		StandardUpdate( Spot);
-		WORD v = atoi( Spot.Text );
+		StandardUpdate(Spot);
+		WORD v = atoi(Spot.Text);
 		if (Spot.ID == 0)
-			WriteMemory( Spot.Address, &v, 2 );
+			WriteMemory(Spot.Address, &v, 2);
 
 	}
 
@@ -1431,14 +1432,16 @@ public:
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
-		if (bHidden) return DrawHidden(View,x,y);
-		WORD* pMemory = (WORD*) &((BYTE*)View.pData)[offset];
-		AddSelection(View,0,y,FontHeight);
-		AddDelete(View,x,y);
-		AddTypeDrop(View,x,y);
+		if (bHidden)
+			return DrawHidden(View,x,y);
+
+		WORD* pMemory = (WORD*)&((BYTE*)View.pData)[offset];
+		AddSelection(View, 0, y, FontHeight);
+		AddDelete(View, x, y);
+		AddTypeDrop(View, x, y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_UNSIGNED, NONE, NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "WORD  ");
@@ -1453,7 +1456,7 @@ public:
 class CNodeBYTE : public CNodeBase
 {
 public:
-	virtual NodeType GetType() { return nt_uint8; }
+	CNodeBYTE() { nodeType = nt_uint8; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1467,15 +1470,15 @@ public:
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
 		if (bHidden) 
-			return DrawHidden(View,x,y);
+			return DrawHidden(View, x, y);
 
-		BYTE* pMemory = (BYTE*) &((BYTE*)View.pData)[offset];
-		AddSelection(View,0,y,FontHeight);
-		AddDelete(View,x,y);
-		AddTypeDrop(View,x,y);
+		BYTE* pMemory = (BYTE*)&((BYTE*)View.pData)[offset];
+		AddSelection(View, 0, y, FontHeight);
+		AddDelete(View, x, y);
+		AddTypeDrop(View, x, y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_UNSIGNED, NONE, NONE );
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "BYTE  ");
@@ -1493,13 +1496,12 @@ class CNodeText : public CNodeBase
 public:
 	CNodeText()
 	{
+		nodeType = nt_text;
 		Name = "Text";
 		memsize = 4;
 	}
 
 	DWORD memsize;
-
-	virtual NodeType GetType() { return nt_text; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1526,7 +1528,7 @@ public:
 		AddTypeDrop(View,x,y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View,tx,y,ICON_TEXT,NONE,NONE);
 		tx = AddAddressOffset(View,tx,y);
 		tx = AddText(View,tx,y,crType,NONE,"Text ");
@@ -1548,10 +1550,10 @@ public:
 class CNodePChar : public CNodeBase
 {
 public:
+	CNodePChar() { nodeType = nt_pchar; }
+
 	CNodeBase* pNode;
 	CMemory Memory;
-
-	virtual NodeType GetType( ) { return nt_pchar; }
 
 	virtual void Update( HotSpot& Spot )
 	{
@@ -1582,7 +1584,7 @@ public:
 		AddTypeDrop(View, x, y);
 		//AddAdd(View, x, y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx,y, ICON_INTEGER, NONE, NONE);
 		tx = AddAddressOffset( View, tx, y );
 		tx = AddText(View, tx, y, crType, NONE, "PCHAR ");
@@ -1623,15 +1625,14 @@ public:
 class CNodeUnicode : public CNodeBase
 {
 public:
-	CNodeUnicode( void )
+	CNodeUnicode()
 	{
+		nodeType = nt_unicode;
 		Name = "Unicode";
 		memsize = 4;
 	}
 
 	DWORD memsize;
-
-	virtual NodeType GetType() { return nt_unicode; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1672,7 +1673,7 @@ public:
 		AddTypeDrop(View,x,y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View,tx,y,ICON_TEXT,NONE,NONE);
 		tx = AddAddressOffset(View,tx,y);
 		tx = AddText(View, tx, y,crType,NONE,"Unicode ");
@@ -1694,7 +1695,7 @@ public:
 class CNodeFloat : public CNodeBase
 {
 public:
-	virtual NodeType GetType() { return nt_float; }
+	CNodeFloat() { nodeType = nt_float; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1715,7 +1716,7 @@ public:
 		AddTypeDrop(View,x,y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_FLOAT, NONE, NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "float ");
@@ -1736,7 +1737,7 @@ public:
 class CNodeDouble : public CNodeBase
 {
 public:
-	virtual NodeType GetType(void) { return nt_double; }
+	CNodeDouble() { nodeType = nt_double; }
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1765,7 +1766,7 @@ public:
 		AddTypeDrop(View,x,y);
 		//AddAdd(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_FLOAT, NONE, NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "double ");
@@ -1782,23 +1783,20 @@ public:
 class CNodeVec2 : public CNodeBase
 {
 public:
-	CNodeVec2::CNodeVec2()
+	CNodeVec2()
 	{
+		nodeType = nt_vec2;
 		for (UINT i = 0; i < bOpen.size(); i++) 
 			bOpen[i] = true;
 	}
-
-	virtual NodeType GetType() { return nt_vec2; }
 
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
 		float v = atof(Spot.Text);
-		if (Spot.ID == 0) 
-			WriteMemory(Spot.Address + 0, &v, 4);
-		if (Spot.ID == 1) 
-			WriteMemory(Spot.Address + 4, &v, 4);
-	};
+		if (Spot.ID >= 0 && Spot.ID < 2) 
+			WriteMemory(Spot.Address + (Spot.ID * 4), &v, 4);
+	}
 
 	virtual int GetMemorySize() { return 4 + 4; }
 
@@ -1812,7 +1810,7 @@ public:
 		AddDelete(View,x,y);
 		AddTypeDrop(View, x, y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_VECTOR,-1,-1);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "Vec2 ");
@@ -1834,22 +1832,20 @@ public:
 class CNodeVec3 : public CNodeBase
 {
 public:
-	CNodeVec3::CNodeVec3()
+	CNodeVec3()
 	{
+		nodeType = nt_vec3;
 		for (UINT i = 0; i < bOpen.size(); i++)
 			bOpen[i] = true;
 	}
-
-	virtual NodeType GetType() { return nt_vec3; }
 
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
 		float v = (float)atof(Spot.Text);
-		if (Spot.ID == 0) WriteMemory(Spot.Address + 0, &v, 4);
-		if (Spot.ID == 1) WriteMemory(Spot.Address + 4, &v, 4);
-		if (Spot.ID == 2) WriteMemory(Spot.Address + 8, &v, 4);
-	};
+		if (Spot.ID >= 0 && Spot.ID < 3) 
+			WriteMemory(Spot.Address + (Spot.ID * 4), &v, 4);
+	}
 
 	virtual int GetMemorySize() { return 12; }
 
@@ -1861,7 +1857,7 @@ public:
 		AddDelete(View,x,y);
 		AddTypeDrop(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View,tx,y,ICON_VECTOR,-1,-1);
 		tx = AddAddressOffset(View,tx,y);
 		tx = AddText(View,tx,y,crType,NONE,"Vec3 ");
@@ -1886,24 +1882,20 @@ public:
 class CNodeQuat : public CNodeBase
 {
 public:
-	virtual NodeType GetType()
+	CNodeQuat()
 	{
-		return nt_quat;
-	};
+		nodeType = nt_quat;
+		for (UINT i = 0; i < bOpen.size(); i++)
+			bOpen[i] = true;
+	}
 
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
 		float v = atof(Spot.Text);
-		if (Spot.ID == 0) 
-			WriteMemory(Spot.Address + 0, &v, 4);
-		if (Spot.ID == 1) 				  	  
-			WriteMemory(Spot.Address + 4, &v, 4);
-		if (Spot.ID == 2) 				  	  
-			WriteMemory(Spot.Address + 8, &v, 4);
-		if (Spot.ID == 3) 					  
-			WriteMemory(Spot.Address + 12,&v, 4);
-	};
+		if (Spot.ID >= 0 && Spot.ID < 4) 
+			WriteMemory(Spot.Address + (Spot.ID * 4), &v, 4);
+	}
 
 	virtual int GetMemorySize() { return 16; }
 
@@ -1917,7 +1909,7 @@ public:
 		AddDelete(View,x,y);
 		AddTypeDrop(View,x,y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View, tx, y, ICON_VECTOR, -1, -1);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "Vec4 ");
@@ -1941,10 +1933,11 @@ public:
 		return y + FontHeight;
 	}
 };
+
 class CNodeMatrix : public CNodeBase
 {
 public:
-	virtual NodeType GetType() { return nt_matrix; };
+	CNodeMatrix() { nodeType = nt_matrix; }
 	
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1952,10 +1945,9 @@ public:
 		if (Spot.ID < 16)
 		{
 			float v = (float)atof(Spot.Text);
-			DWORD o = Spot.ID * 4;
-			WriteMemory(Spot.Address + o, &v, 4);
+			WriteMemory(Spot.Address + (Spot.ID * 4), &v, 4);
 		}
-	};
+	}
 	
 	virtual int GetMemorySize() { return 4*4*4; }
 
@@ -1967,62 +1959,62 @@ public:
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
 
-		int tx = x + 16;
+		int tx = x + TXOFFSET;
 		tx = AddIcon(View,tx,y,ICON_MATRIX,-1,-1);
 		int mx = tx;
-		tx = AddAddressOffset(View,tx,y);
+		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "Matrix ");
 		tx = AddText(View, tx, y, crName, 69, "%s", Name);
-		tx = AddOpenClose(View,tx,y);
+		tx = AddOpenClose(View, tx, y);
 		tx += FontWidth;
-		tx = AddComment(View,tx,y);
+		tx = AddComment(View, tx, y);
 
 		if (bOpen[View.Level])
 		{
 			y += FontHeight;
 			tx = mx;
-			tx = AddText(View, tx, y, crName,NONE,"|");
-			tx = AddText(View, tx, y, crValue,0,"% 14.3f",pMemory[0]);
-			tx = AddText(View, tx, y, crName,NONE,",");
-			tx = AddText(View, tx, y, crValue,1,"% 14.3f",pMemory[1]);
-			tx = AddText(View, tx, y, crName,NONE,",");
-			tx = AddText(View, tx, y, crValue,2,"% 14.3f",pMemory[2]);
-			tx = AddText(View, tx, y, crName,NONE,",");
-			tx = AddText(View, tx, y, crValue,3,"% 14.3f",pMemory[3]);
-			tx = AddText(View, tx, y, crName,NONE,"|");
+			tx = AddText(View, tx, y, crName, NONE, "|");
+			tx = AddText(View, tx, y, crValue,  0, "% 14.3f", pMemory[0]);
+			tx = AddText(View, tx, y, crName, NONE, ",");
+			tx = AddText(View, tx, y, crValue,  1, "% 14.3f", pMemory[1]);
+			tx = AddText(View, tx, y, crName, NONE, ",");
+			tx = AddText(View, tx, y, crValue,  2, "% 14.3f", pMemory[2]);
+			tx = AddText(View, tx, y, crName, NONE, ",");
+			tx = AddText(View, tx, y, crValue,  3, "% 14.3f", pMemory[3]);
+			tx = AddText(View, tx, y, crName, NONE, "|");
 			y += FontHeight;
 			tx = mx;
-			tx = AddText(View,tx,y,crName,NONE,"|");
-			tx = AddText(View,tx,y,crValue,4,"% 14.3f",pMemory[4]);
-			tx = AddText(View,tx,y,crName,NONE,",");
-			tx = AddText(View,tx,y,crValue,5,"% 14.3f",pMemory[5]);
-			tx = AddText(View,tx,y,crName,NONE,",");
-			tx = AddText(View,tx,y,crValue,6,"% 14.3f",pMemory[6]);
-			tx = AddText(View,tx,y,crName,NONE,",");
-			tx = AddText(View,tx,y,crValue,7,"% 14.3f",pMemory[7]);
-			tx = AddText(View,tx,y,crName,NONE,"|");
+			tx = AddText(View, tx, y, crName, NONE, "|");
+			tx = AddText(View, tx, y, crValue,  4, "% 14.3f", pMemory[4]);
+			tx = AddText(View, tx, y, crName, NONE, ",");
+			tx = AddText(View, tx, y, crValue,  5, "% 14.3f", pMemory[5]);
+			tx = AddText(View, tx, y, crName, NONE, ",");
+			tx = AddText(View, tx, y, crValue,  6, "% 14.3f", pMemory[6]);
+			tx = AddText(View, tx, y, crName, NONE, ",");
+			tx = AddText(View, tx, y, crValue,  7, "% 14.3f", pMemory[7]);
+			tx = AddText(View, tx, y, crName, NONE, "|");
 			y += FontHeight;
 			tx = mx;
-			tx = AddText(View,tx,y,crName,NONE,"|");
-			tx = AddText(View,tx,y,crValue,8,"% 14.3f",pMemory[8]);
-			tx = AddText(View,tx,y,crName,NONE,",");
-			tx = AddText(View,tx,y,crValue,9,"% 14.3f",pMemory[9]);
-			tx = AddText(View,tx,y,crName,NONE,",");
-			tx = AddText(View,tx,y,crValue,10,"% 14.3f",pMemory[10]);
-			tx = AddText(View,tx,y,crName,NONE,",");
-			tx = AddText(View,tx,y,crValue,11,"% 14.3f",pMemory[11]);
-			tx = AddText(View,tx,y,crName,NONE,"|");
+			tx = AddText(View, tx, y, crName, NONE, "|");
+			tx = AddText(View, tx, y, crValue,  8, "% 14.3f", pMemory[8]);
+			tx = AddText(View, tx, y, crName, NONE, ",");
+			tx = AddText(View, tx, y, crValue,  9, "% 14.3f", pMemory[9]);
+			tx = AddText(View, tx, y, crName, NONE, ",");
+			tx = AddText(View, tx, y, crValue, 10, "% 14.3f", pMemory[10]);
+			tx = AddText(View, tx, y, crName, NONE, ",");
+			tx = AddText(View, tx, y, crValue, 11, "% 14.3f", pMemory[11]);
+			tx = AddText(View, tx, y, crName, NONE, "|");
 			y += FontHeight;
 			tx = mx;
-			tx = AddText(View,tx,y,crName,NONE,"|");
-			tx = AddText(View,tx,y,crValue,12,"% 14.3f",pMemory[12]);
-			tx = AddText(View,tx,y,crName,NONE,",");
-			tx = AddText(View,tx,y,crValue,13,"% 14.3f",pMemory[13]);
-			tx = AddText(View,tx,y,crName,NONE,",");
-			tx = AddText(View,tx,y,crValue,14,"% 14.3f",pMemory[14]);
-			tx = AddText(View,tx,y,crName,NONE,",");
-			tx = AddText(View,tx,y,crValue,15,"% 14.3f",pMemory[15]);
-			tx = AddText(View,tx,y,crName,NONE,"|");
+			tx = AddText(View, tx, y, crName, NONE, "|");
+			tx = AddText(View, tx, y, crValue, 12, "% 14.3f", pMemory[12]);
+			tx = AddText(View, tx, y, crName, NONE, ",");
+			tx = AddText(View, tx, y, crValue, 13, "% 14.3f", pMemory[13]);
+			tx = AddText(View, tx, y, crName, NONE, ",");
+			tx = AddText(View, tx, y, crValue, 14, "% 14.3f", pMemory[14]);
+			tx = AddText(View, tx, y, crName, NONE, ",");
+			tx = AddText(View, tx, y, crValue, 15, "% 14.3f", pMemory[15]);
+			tx = AddText(View, tx, y, crName, NONE, "|");
 		}
 
 		return y + FontHeight;
@@ -2033,7 +2025,8 @@ class CNodeArray : public CNodeBase
 {
 public:
 	CNodeArray()
-	{
+	{ 
+		nodeType = nt_array;
 		Total = 1;
 		Current = 0;
 	}
@@ -2041,8 +2034,6 @@ public:
 	CNodeBase* pNode;
 	DWORD Total;
 	DWORD Current;
-
-	virtual NodeType GetType() { return nt_array; };
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -2114,7 +2105,6 @@ public:
 		{
 			ViewInfo newView;
 			newView = View;
-			//printf( "33333 set\n" );
 			newView.Address = View.Address + offset + pNode->GetMemorySize() * Current;
 			newView.pData	= (void*)((DWORD_PTR)View.pData + offset + pNode->GetMemorySize( ) * Current) ;
 			y = pNode->Draw(newView,x,y);
@@ -2126,14 +2116,11 @@ public:
 class CNodeClassInstance : public CNodeBase
 {
 public:
+	CNodeClassInstance() { nodeType = nt_instance; }
+
 	CNodeClass* pNode;
 
-	virtual NodeType GetType() { return nt_instance; }
-
-	virtual void Update(HotSpot& Spot)
-	{
-		StandardUpdate(Spot);
-	}
+	virtual void Update(HotSpot& Spot) { StandardUpdate(Spot); }
 
 	virtual int GetMemorySize() { return pNode->GetMemorySize(); }
 
