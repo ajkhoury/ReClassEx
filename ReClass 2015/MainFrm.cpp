@@ -478,17 +478,16 @@ ProcArch GetProcessArch(HANDLE hProcess)
 //I added a couple of other annoying process's
 std::string CommonProcesses[] =
 {
-	"svchost.exe", "conhost.exe", "wininit.exe", "smss.exe",
-	"winint.exe", "wlanext.exe", "spoolsv.exe", "spoolsv.exe",
-	"notepad.exe", "explorer.exe", "itunes.exe", "sqlservr.exe",
-	"nvtray.exe", "nvxdsync.exe", "lsass.exe", "jusched.exe",
-	"conhost.exe", "chrome.exe", "firefox.exe", "winamp.exe",
-	"WinRAR.exe", "calc.exe", "taskhostex.exe", "Taskmgr.exe",
-	"plugin-container.exe", "ReClass.exe", "ReClass_64.exe", "services.exe",
-	"devenv.exe", "flux.exe", "skype.exe", "spotify.exe", "csrss",
-	"spotifyhelper.exe", "vcpkgsrv.exe", "msbuild.exe", "cmd.exe",
-	"SettingSyncHost.exe", "SkyDrive.exe", "ctfmon.exe", "RuntimeBroker.exe",
-	"BTTray.exe", "BTStackServer.exe", "Bluetooth Headset Helper.exe", "winlogon.exe", 
+	"svchost.exe", "conhost.exe", "wininit.exe", "smss.exe","winint.exe", "wlanext.exe", 
+	"spoolsv.exe", "spoolsv.exe","notepad.exe", "explorer.exe", "itunes.exe", 
+	"sqlservr.exe", "nvtray.exe", "nvxdsync.exe", "lsass.exe", "jusched.exe",
+	"conhost.exe", "chrome.exe", "firefox.exe", "winamp.exe", "TrustedInstaller.exe",
+	"WinRAR.exe", "calc.exe", "taskhostex.exe", "Taskmgr.exe", "dwm.exe", "SpotifyWebHelper.exe"
+	"plugin-container.exe", "ReClass.exe", "ReClass_64.exe", "services.exe","devenv.exe", 
+	"flux.exe", "skype.exe", "spotify.exe", "csrss.exe", "taskeng.exe","spotifyhelper.exe", 
+	"vcpkgsrv.exe", "msbuild.exe", "cmd.exe", "taskhost.exe","SettingSyncHost.exe", "SkyDrive.exe", 
+	"ctfmon.exe", "RuntimeBroker.exe","BTTray.exe", "BTStackServer.exe", "Bluetooth Headset Helper.exe", 
+	"winlogon.exe", 
 };
 
 void CMainFrame::OnButtonSelectprocess()
