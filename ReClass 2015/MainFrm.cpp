@@ -434,7 +434,7 @@ enum class ProcArch {
 	ARCH_64
 };
 
-//TODO: Clean this shit up
+//TODO: Clean this shit up. Wont differentiate if process is 64 bit under wow64
 ProcArch GetProcessArch(HANDLE hProcess) 
 {
 	IMAGE_DOS_HEADER mDosHead;
@@ -451,8 +451,7 @@ ProcArch GetProcessArch(HANDLE hProcess)
 		}
 	}
 
-	if (!dwProcessImageBase) 
-		return ProcArch::ARCH_UNKOWN;
+	if (!dwProcessImageBase) return ProcArch::ARCH_UNKOWN;
 
 	PBYTE bProcMem = new BYTE[0x1000]; SIZE_T nRetSize;
 	
