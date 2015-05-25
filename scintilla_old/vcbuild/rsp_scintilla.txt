@@ -1,1 +1,0 @@
-/nologo /subsystem:windows ./Release/*.obj /out:../bin/s_scintilla.lib
