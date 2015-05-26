@@ -1,3 +1,4 @@
+FindWindow
 #include "stdafx.h"
 #include "ReClass2015.h"
 #include "Classes.h"
@@ -146,7 +147,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CHEX);			pColor->SetColor(crHex);
 
 	// update after 5 seconds
-	SetTimer(0xB00B1E5, 5000, NULL);
+	SetTimer(TIMER_NOTIF_ID, 5000, NULL);
 
 	return 0;
 }
@@ -368,11 +369,13 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 
 			CChildFrame* pChild = (CChildFrame*)this->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
 			CNodeClass* pClass = theApp.Classes[idx];
+			pClass->pChildWindow = pChild;
 
 			pChild->SetTitle(pClass->Name);
 			pChild->SetWindowText(pClass->Name);
 			UpdateFrameTitleForDocument(pClass->Name);
 			pChild->m_wndView.m_pClass = pClass;
+			
 			return TRUE;
 		}
 		if (nID >= WM_PROCESSMENU && nID < (WM_PROCESSMENU + WM_MAXITEMS) )
@@ -386,6 +389,10 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 		if (nID >= WM_DELETECLASSMENU && nID < (WM_DELETECLASSMENU + WM_MAXITEMS) )
 		{
 			UINT idx = nID - WM_DELETECLASSMENU;
+
+			if (theApp.Classes[idx]->pChildWindow)
+				theApp.Classes[idx]->pChildWindow->SendMessage(WM_CLOSE, 0, 0);
+
 			theApp.DeleteClass(theApp.Classes[idx]);
 			return TRUE;
 		}
@@ -592,7 +599,6 @@ void CMainFrame::ClearProcMenuItems()
 	ProcMenuItems.clear();
 }
 
-
 void CMainFrame::OnButtonEditclass()
 {
 	if ( gbClassBrowser )
@@ -648,10 +654,9 @@ void CMainFrame::OnUpdateButtonDeleteclass(CCmdUI *pCmdUI)
 	pCmdUI->Enable((theApp.Classes.size() > 0));
 }
 
-
 void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 {
-	if (nIDEvent == 0xB00B1E5)
+	if (nIDEvent == TIMER_NOTIF_ID)
 		UpdateMemoryMap();
 	CMDIFrameWndEx::OnTimer(nIDEvent);
 }

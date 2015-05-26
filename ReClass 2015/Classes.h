@@ -706,7 +706,7 @@ public:
 	int idx;
 	CString Code;
 	int RequestPosition;
-	CChildFrame* pChildWindow;
+	CChildFrame* pChildWindow = nullptr;
 
 	virtual void Update(HotSpot& Spot)
 	{

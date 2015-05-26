@@ -143,6 +143,8 @@ extern CString tdPChar;
 #define HS_DELETE 7
 #define HS_RTTI 8
 
+#define TIMER_NOTIF_ID 0xB00B1E5
+
 class CNodeBase;
 
 class HotSpot

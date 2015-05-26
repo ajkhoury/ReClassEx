@@ -48,13 +48,13 @@ CString tdInt16("__int16");
 CString tdInt8("__int8");
 CString tdDWORD("DWORD");
 CString tdWORD("WORD");
-CString tdBYTE("unsigned char");
+CString tdBYTE("BYTE");
 CString tdFloat("float");
 CString tdDouble("double");
-CString tdVec2("Vector2");
-CString tdVec3("Vector3");
-CString tdQuat("Vector4");
-CString tdMatrix("matrix3x4_t");
+CString tdVec2("D3DXVECTOR2");
+CString tdVec3("D3DXVECTOR3");
+CString tdQuat("D3DXVECTOR4");
+CString tdMatrix("D3DXMATRIX");
 CString tdPChar("char*");
 
 std::vector<HICON> Icons;
