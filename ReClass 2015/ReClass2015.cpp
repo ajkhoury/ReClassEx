@@ -336,6 +336,7 @@ void CReClass2015App::OnFileNew()
 	#endif
 
 	CNodeClass* pClass = new CNodeClass;
+	pClass->pChildWindow = pChild;
 	theApp.Classes.push_back(pClass);
 	pChild->m_wndView.m_pClass = pClass;
 
@@ -786,6 +787,7 @@ void CReClass2015App::OnButtonNewClass()
 
 	CNodeClass* pClass = new CNodeClass;
 	pClass->idx = theApp.Classes.size();
+	pClass->pChildWindow = pChild;
 	theApp.Classes.push_back(pClass);
 	pChild->m_wndView.m_pClass = pClass;
 
@@ -1475,7 +1477,7 @@ void CReClass2015App::DeleteClass(CNodeClass* pClass)
 		CString msg;
 		printf("Class still has a reference in %s.%s\n", pNode->pParent->Name, pNode->Name);
 		msg.Format("Class still has a reference in %s.%s", pNode->pParent->Name, pNode->Name);
-		MessageBox(NULL, msg, "Error", MB_OK);
+		MessageBox(NULL, msg, "Error", MB_OK | MB_ICONERROR);
 		return;
 	}
 	for (UINT i=0; i<Classes.size();i++)

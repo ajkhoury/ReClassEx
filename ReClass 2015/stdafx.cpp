@@ -48,13 +48,13 @@ CString tdInt16("__int16");
 CString tdInt8("__int8");
 CString tdDWORD("DWORD");
 CString tdWORD("WORD");
-CString tdBYTE("unsigned char");
+CString tdBYTE("BYTE");
 CString tdFloat("float");
 CString tdDouble("double");
-CString tdVec2("Vector2");
-CString tdVec3("Vector3");
-CString tdQuat("Vector4");
-CString tdMatrix("matrix3x4_t");
+CString tdVec2("D3DXVECTOR2");
+CString tdVec3("D3DXVECTOR3");
+CString tdQuat("D3DXVECTOR4");
+CString tdMatrix("D3DXMATRIX");
 CString tdPChar("char*");
 
 std::vector<HICON> Icons;
@@ -71,7 +71,7 @@ void ReadMemory( DWORD_PTR Address, void* Buffer, DWORD Size )
 void WriteMemory(DWORD_PTR Address,void* Buffer,DWORD Size)
 {
 	DWORD OldProtect;
-//	VirtualProtectEx  (hProcess,(void*)Address,Size,PAGE_READWRITE,&OldProtect); <- srsly PAGE_READWRITE? O_o
+//	VirtualProtectEx  (hProcess,(void*)Address,Size,PAGE_READWRITE,&OldProtect); <- srsly PAGE_READWRITE? O_o - Why would you need to execute while you just write to the memory
 	VirtualProtectEx  (hProcess,(void*)Address,Size,PAGE_EXECUTE_READWRITE,&OldProtect);
 	WriteProcessMemory(hProcess,(void*)Address,Buffer,Size,NULL);
 	VirtualProtectEx  (hProcess,(void*)Address,Size,OldProtect,NULL);
