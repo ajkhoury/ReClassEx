@@ -1,4 +1,3 @@
-FindWindow
 #include "stdafx.h"
 #include "ReClass2015.h"
 #include "Classes.h"
