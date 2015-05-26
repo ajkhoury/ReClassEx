@@ -71,7 +71,7 @@ void ReadMemory( DWORD_PTR Address, void* Buffer, DWORD Size )
 void WriteMemory(DWORD_PTR Address,void* Buffer,DWORD Size)
 {
 	DWORD OldProtect;
-//	VirtualProtectEx  (hProcess,(void*)Address,Size,PAGE_READWRITE,&OldProtect); <- srsly PAGE_READWRITE? O_o
+//	VirtualProtectEx  (hProcess,(void*)Address,Size,PAGE_READWRITE,&OldProtect); <- srsly PAGE_READWRITE? O_o - Why would you need to execute while you just write to the memory
 	VirtualProtectEx  (hProcess,(void*)Address,Size,PAGE_EXECUTE_READWRITE,&OldProtect);
 	WriteProcessMemory(hProcess,(void*)Address,Buffer,Size,NULL);
 	VirtualProtectEx  (hProcess,(void*)Address,Size,OldProtect,NULL);

@@ -92,11 +92,10 @@ void CDialogClasses::OnOK()
 
 		//printf( "szBuffer %s new %d\n", szBuffer.GetBuffer( ), nItem );
 
-		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
-
 		if (theApp.Classes[nItem]->pChildWindow && theApp.Classes[nItem]->pChildWindow->IsWindowVisible()) {
 			static_cast<CMDIChildWnd*>(theApp.Classes[nItem]->pChildWindow)->MDIActivate();
-		} else {			
+		} else {
+			CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
 			CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
 			pChild->m_wndView.m_pClass = theApp.Classes[nItem];
 			theApp.Classes[nItem]->pChildWindow = pChild;

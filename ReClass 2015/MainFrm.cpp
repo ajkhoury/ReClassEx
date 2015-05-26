@@ -440,34 +440,28 @@ enum class ProcArch {
 	ARCH_64
 };
 
-//TODO: Clean this shit up. Wont differentiate if process is 64 bit under wow64
-ProcArch GetProcessArch(HANDLE hProcess) 
+//TODO: Clean this shit up. trying to differentiate if process is 64 bit under wow64
+ProcArch GetProcessArch(HANDLE hProcess)
 {
 	IMAGE_DOS_HEADER mDosHead;
 	IMAGE_NT_HEADERS32 mNTHeader;
+	static DWORD64 dwProcessImageBase = NULL;
 
-	DWORD_PTR dwProcessImageBase = NULL;
-	DWORD dwModArraySize;
-	HMODULE hProcMods[100] = { 0 };
-	MODULEINFO modInf;
-	
-	if (EnumProcessModules(hProcess, hProcMods, sizeof(hProcMods), &dwModArraySize)) {
-		if (GetModuleInformation(hProcess, hProcMods[0], &modInf, sizeof(MODULEINFO))){
-			dwProcessImageBase = reinterpret_cast<DWORD_PTR>(modInf.lpBaseOfDll); 
-		}
-	}
+	EnumerateLoadedModules64(hProcess, [](const char* szModName, DWORD64 dwModuleBase, DWORD dwModSize, LPVOID lpUserContext)-> BOOL {
+		dwProcessImageBase = dwModuleBase;
+		return FALSE;
+	}, NULL);
 
 	if (!dwProcessImageBase) return ProcArch::ARCH_UNKOWN;
-
 	PBYTE bProcMem = new BYTE[0x1000]; SIZE_T nRetSize;
-	
-	if (ReadProcessMemory(hProcess, reinterpret_cast<LPCVOID>(dwProcessImageBase), bProcMem, 0x1000, &nRetSize)) 
+
+	if (ReadProcessMemory(hProcess, reinterpret_cast<LPCVOID>(dwProcessImageBase), bProcMem, 0x1000, &nRetSize))
 	{
 		memcpy(&mDosHead, bProcMem, sizeof(IMAGE_DOS_HEADER));
 		if (mDosHead.e_magic != IMAGE_DOS_SIGNATURE) return ProcArch::ARCH_UNKOWN;
 		memcpy(&mNTHeader, &bProcMem[mDosHead.e_lfanew], sizeof(IMAGE_NT_HEADERS32));
 		if (mNTHeader.Signature != IMAGE_NT_SIGNATURE) return ProcArch::ARCH_UNKOWN;
-		
+
 		switch (mNTHeader.FileHeader.Machine)
 		{
 		case IMAGE_FILE_MACHINE_AMD64:
@@ -477,6 +471,9 @@ ProcArch GetProcessArch(HANDLE hProcess)
 			return ProcArch::ARCH_32;
 		}
 	}
+
+	if (GetLastError() == ERROR_PARTIAL_COPY)
+		return ProcArch::ARCH_64;
 
 	return ProcArch::ARCH_UNKOWN;
 }
@@ -504,10 +501,10 @@ void CMainFrame::OnButtonSelectprocess()
 
 	CMenu menu;
 	menu.CreatePopupMenu();
-
 	ClearProcMenuItems();
 
-	HANDLE ProcessList = CreateToolhelp32Snapshot( TH32CS_SNAPPROCESS, NULL );
+	HANDLE ProcessList = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+	
 	if (ProcessList != INVALID_HANDLE_VALUE)
 	{
 		PROCESSENTRY32 ProcInfo;
@@ -539,6 +536,7 @@ void CMainFrame::OnButtonSelectprocess()
 			}
 
 			HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, ProcInfo.th32ProcessID);
+			
 			if (hProcess)
 			{
 #ifdef _WIN64
@@ -573,7 +571,7 @@ void CMainFrame::OnButtonSelectprocess()
 					dc.SelectObject(pOldBmp);
 					dc.DeleteDC();
 
-					DWORD MsgID = (DWORD)(WM_PROCESSMENU + ProcMenuItems.size());					
+					DWORD MsgID = (DWORD)(WM_PROCESSMENU + ProcMenuItems.size());
 					menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID, ProcInfo.szExeFile);
 					menu.SetMenuItemBitmaps(MsgID, MF_BYCOMMAND, pBitmap, pBitmap);
 

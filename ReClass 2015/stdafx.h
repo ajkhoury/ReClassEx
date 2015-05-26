@@ -29,6 +29,7 @@
 #include <Shlwapi.h>
 #include <Psapi.h>
 #include <tlhelp32.h>
+#include <Dbghelp.h>
 
 #include "../SQLite/CppSQLite3.h"
 #include "../tinyxml/tinyxml.h"
