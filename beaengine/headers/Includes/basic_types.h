@@ -41,7 +41,7 @@
 	typedef unsigned int           UInt32;
 	typedef signed __int64         Int64;
 	typedef unsigned __int64       UInt64;
-	#if defined(_WIN64)
+	#ifdef _WIN64
 		#define BEA_PTR_IS_64_BIT 1
 		typedef signed __int64     IntPtr;
 		typedef unsigned __int64   UIntPtr;

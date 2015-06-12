@@ -8,32 +8,31 @@ class ReclassSDK
 public:
 	virtual void Test( )
 	{
-		MessageBox( 0, "Plugin Loaded Successfully", "ReclassSDK", 0 );
-	};
+		MessageBox(0, "Plugin Loaded Successfully", "ReclassSDK", 0);
+	}
 
-	virtual void GetCurrentFilePath( PCHAR szPath )
+	virtual void GetCurrentFilePath(PCHAR szPath)
 	{
-		if ( theApp.CurrentFilePath.GetLength( ) > 0 )
-			strcpy( szPath, theApp.CurrentFilePath.GetBuffer( ) );
-	};
+		if ( theApp.CurrentFilePath.GetLength() > 0 )
+			strcpy(szPath, theApp.CurrentFilePath.GetBuffer());
+	}
 
 	virtual size_t GetClassCount()
 	{
 		return theApp.Classes.size();
-	};
+	}
 
-	virtual size_t GetNodeCount( unsigned int classId )
+	virtual size_t GetNodeCount(unsigned int classId)
 	{
-		if ( classId < theApp.Classes.size( ) )
+		if ( classId < theApp.Classes.size())
 		{
-			CNodeBase* pBase = theApp.Classes.at( classId );
-
-			if ( pBase )
-				return pBase->Nodes.size( );
+			CNodeBase* pBase = theApp.Classes.at(classId);
+			if (pBase)
+				return pBase->Nodes.size();
 		}
 
 		return -1;
-	};
+	}
 
 	virtual size_t CreateClass( PCHAR szName )
 	{
@@ -64,16 +63,16 @@ public:
 		//
 	}
 
-	virtual int FindClassByName( PCHAR szName )
+	virtual int FindClassByName(PCHAR szName)
 	{
 		unsigned int id = 0;
 
-		while( ++id < theApp.Classes.size( ) )
-			if( strcmp( theApp.Classes.at( id )->Name, szName ) == 0 )
+		while(++id < theApp.Classes.size())
+			if(strcmp( theApp.Classes.at(id)->Name, szName ) == 0)
 				return id;
 
 		return -1;
-	};
+	}
 
 	virtual bool AddNode( int classId, NodeType type, PCHAR szName )
 	{
@@ -83,7 +82,7 @@ public:
 		{
 			printf( "[!] Cannot find class\n" );
 			return false;
-		};
+		}
 
 		if ( type != nt_vtable && type != nt_pointer )
 		{
@@ -98,7 +97,7 @@ public:
 
 		return false;
 
-	};
+	}
 
 	__int16 major_version;
 	__int16 minor_version;
@@ -111,7 +110,7 @@ public:
 			 m_pReclassSDK = new ReclassSDK( );
 
 		return m_pReclassSDK;
-	};
+	}
 
 private:
 	int FindClassIdByPointer( CNodeBase* pBase )
@@ -123,7 +122,7 @@ private:
 				return id;
 
 		return -1;
-	};
+	}
 
 	CNodeBase* FindPointerByClassId( int Id )
 	{
@@ -131,7 +130,7 @@ private:
 			return theApp.Classes.at( Id );
 
 		return NULL;
-	};
+	}
 };
 
 __inline void LoadPlugin( LPCSTR pszPath )

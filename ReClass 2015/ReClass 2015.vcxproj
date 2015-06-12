@@ -283,11 +283,11 @@
     <None Include="..\Images\text.ico" />
     <None Include="..\Images\unsigned.ico" />
     <None Include="..\Images\vector.ico" />
-    <None Include="ReadMe.txt" />
     <None Include="res\bitmap1.bmp" />
     <None Include="res\bmp00001.bmp" />
     <None Include="res\bmp00002.bmp" />
     <None Include="res\buttons.bmp" />
+    <None Include="res\classicon.bmp" />
     <None Include="res\filelarge.bmp" />
     <None Include="res\filesmall.bmp" />
     <None Include="res\icon1.ico" />

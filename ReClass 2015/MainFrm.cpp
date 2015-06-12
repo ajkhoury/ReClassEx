@@ -428,26 +428,38 @@ void CMainFrame::OnButtonTypedef()
 	dlg.DoModal();
 }
 
-typedef BOOL(WINAPI *LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
+typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 LPFN_ISWOW64PROCESS fnIsWow64Process;
-// TODO fix to is64bit
-BOOL is64bit(HANDLE hProcess)
+BOOL is64bit(HANDLE hProcess, const char* name)
 {
-	fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle(TEXT("kernel32")),"IsWow64Process");
-	if (!fnIsWow64Process)
-		return TRUE;//WTF update, assume 32bit noob
+	BOOL bIsWow64 = FALSE;
 
-	BOOL bIs64BitOS = FALSE;
-	fnIsWow64Process( GetCurrentProcess( ), &bIs64BitOS ); //are we running as a 32bit in a 64bit OS (assume we compiled as a 32bit process)
-	if (bIs64BitOS)
+	//IsWow64Process is not available on all supported versions of Windows.
+	//Use GetModuleHandle to get a handle to the DLL that contains the function
+	//and GetProcAddress to get a pointer to the function if available.
+
+	fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle("kernel32.dll"),"IsWow64Process");
+	if(fnIsWow64Process != NULL)
 	{
-		BOOL bIs32Bit;
-		fnIsWow64Process( hProcess,&bIs32Bit ); //is this 32bit process in a 64bit OS?
-		return bIs32Bit;
+		if (!fnIsWow64Process(hProcess, &bIsWow64))
+		{
+			//handle error
+			return FALSE;
+		}
 	}
 	else
-		return TRUE;// 32bit OS, so it's a 32bit process
+	{
+		printf("fnIsWow64Process is NULL!!\n");
+		return FALSE;
+	}
+
+	#ifdef _DEBUG
+	printf("bIsWow64 for %s is %s!!\n", name, !bIsWow64 ? "true" : "false");
+	#endif
+
+	return !bIsWow64;
 }
+
 BOOL is32Bit(HANDLE hProcess)
 {
 	fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
@@ -500,14 +512,14 @@ void CMainFrame::OnButtonSelectprocess()
 
 		bool bSkip = false;
 
-		while( rp == TRUE )
+		while(rp == TRUE)
 		{
 			// Are we filtering out processes
 			if (gbFilterProcesses)
 			{
 				for (int i = 0; i < sizeof(CommonProcesses) / sizeof(*CommonProcesses) ; i++)
 				{
-					if (strcmp( ProcInfo.szExeFile, CommonProcesses[i].c_str()) == 0 )
+					if (_stricmp( ProcInfo.szExeFile, CommonProcesses[i].c_str()) == 0 )
 					{
 						//printf( "True %s\n", ProcInfo.szExeFile );
 						bSkip = true;
@@ -525,15 +537,15 @@ void CMainFrame::OnButtonSelectprocess()
 			HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, ProcInfo.th32ProcessID);
 			if (hProcess)
 			{
-				if (is64bit( hProcess ))
+				if (is64bit(hProcess, ProcInfo.szExeFile))
 				{
 					char filename[1024];
 					GetModuleFileNameEx(hProcess, NULL, filename, 1024);
 
 					SHFILEINFO    sfi;
-					SHGetFileInfo(filename,FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
+					SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
 
-					CBitmap* pBitmap = new CBitmap;
+					CBitmap* pBitmap = new CBitmap();
 					CProcessMenuInfo Item;
 					Item.ProcessId = ProcInfo.th32ProcessID;
 					Item.pBitmap = pBitmap;
@@ -548,7 +560,8 @@ void CMainFrame::OnButtonSelectprocess()
 					CBitmap* pOldBmp = dc.SelectObject(pBitmap);
 
 					dc.FillSolidRect(0, 0, cx, cy, GetSysColor(COLOR_3DFACE));
-					::DrawIconEx(dc.GetSafeHdc(), 0, 0, sfi.hIcon, cx, cy, 0, NULL,DI_NORMAL);
+					//dc.DrawIcon(0, 0, sfi.hIcon);
+					::DrawIconEx(dc.GetSafeHdc(), 0, 0, sfi.hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
 					dc.SelectObject(pOldBmp);
 					dc.DeleteDC();
@@ -577,7 +590,7 @@ void CMainFrame::OnButtonSelectprocess()
 			HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, ProcInfo.th32ProcessID);
 			if (hProcess)
 			{
-				if (is32Bit(hProcess))
+				if (!is64Bit(hProcess))
 				{
 					char filename[1024];
 					GetModuleFileNameEx(hProcess, NULL, filename, 1024);
@@ -585,7 +598,7 @@ void CMainFrame::OnButtonSelectprocess()
 					SHFILEINFO    sfi;
 					SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
 
-					CBitmap* pBitmap = new CBitmap;
+					CBitmap* pBitmap = new CBitmap();
 					CProcessMenuInfo Item;
 					Item.ProcessId = ProcInfo.th32ProcessID;
 					Item.pBitmap = pBitmap;
@@ -621,6 +634,7 @@ void CMainFrame::OnButtonSelectprocess()
 
 	menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this);
 }
+
 void CMainFrame::ClearProcMenuItems()
 {
 	for (UINT i = 0; i < ProcMenuItems.size(); i++)
@@ -631,24 +645,23 @@ void CMainFrame::ClearProcMenuItems()
 	ProcMenuItems.clear();
 }
 
-
 void CMainFrame::OnButtonEditclass()
 {
-	if ( gbClassBrowser )
+	if (gbClassBrowser)
 	{	
 		CDialogClasses dlg;
-		dlg.DoModal( );
+		dlg.DoModal();
 	} 
 	else 
 	{
 		// TODO: instead of menu popup a window
 		CMFCRibbonBaseElement* pButton = m_wndRibbonBar.FindByID(ID_BUTTON_EDITCLASS);
 
-		CRect pos = pButton->GetRect( );
-		ClientToScreen( &pos );
+		CRect pos = pButton->GetRect();
+		ClientToScreen(&pos);
 
 		CMenu menu;
-		menu.CreatePopupMenu( );
+		menu.CreatePopupMenu();
 
 		for (UINT m = 0; m < theApp.Classes.size(); m++)
 		{
@@ -670,7 +683,7 @@ void CMainFrame::OnButtonDeleteclass()
 
 	CMenu menu;
 	menu.CreatePopupMenu();
-	for ( UINT m = 0; m < theApp.Classes.size(); m++ )
+	for (UINT m = 0; m < theApp.Classes.size(); m++)
 	{
 		menu.AppendMenu(MF_STRING | MF_ENABLED, WM_DELETECLASSMENU + m, theApp.Classes[m]->Name);
 	}
@@ -687,7 +700,6 @@ void CMainFrame::OnUpdateButtonDeleteclass(CCmdUI *pCmdUI)
 	pCmdUI->Enable((theApp.Classes.size() > 0));
 }
 
-
 void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 {
 	if (nIDEvent == 0xB00B1E5)
@@ -695,7 +707,6 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 	CMDIFrameWndEx::OnTimer(nIDEvent);
 }
 
-// TODO toggle this
 void CMainFrame::OnCheckTopmost()
 {
 	gbTop = !gbTop;

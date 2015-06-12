@@ -64,6 +64,8 @@
 
 #endif
 
+#include <CommCtrl.h>
+#pragma comment(lib,"comctl32.lib")
 
 #pragma comment(lib,"Psapi.lib")
 #include <vector>
@@ -142,6 +144,8 @@ extern CString tdPChar;
 #define HS_CHANGE_X 6
 #define HS_DELETE 7
 #define HS_RTTI 8
+#define HS_NAME 69
+#define HS_COMMENT 70
 
 class CNodeBase;
 

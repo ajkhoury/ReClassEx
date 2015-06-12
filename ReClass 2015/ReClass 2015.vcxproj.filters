@@ -15,7 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
     <None Include="res\output_wnd.ico">
       <Filter>Resource Files</Filter>
     </None>
@@ -161,6 +160,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\ReClass2015.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\classicon.bmp">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

@@ -299,7 +299,7 @@ void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 	else if(nChar == VK_DELETE)
 	{
-		isDeleting = true; // Ghetto fix to stop crashing from OnMouseHover
+		//isDeleting = true; // Ghetto fix to stop crashing from OnMouseHover
 		for (UINT i = 0; i < Selected.size(); i++)
 		{
 			CNodeClass* pClass = (CNodeClass*)Selected[i].object->pParent;
@@ -312,7 +312,7 @@ void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			}
 		}
 		Selected.clear();
-		isDeleting = false;
+		//isDeleting = false;
 	}
 
 	CWnd::OnKeyDown(nChar, nRepCnt, nFlags);
@@ -324,15 +324,15 @@ void CChildView::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 	for ( UINT i = 0; i < HotSpots.size();i++ )
 	{
-		if ( HotSpots[i].Rect.PtInRect(point) )
+		if (HotSpots[i].Rect.PtInRect(point))
 		{
 			if (HotSpots[i].Type == HS_EDIT)
 			{
 				// Sets the edit "window" to where to cursor was editing at
-				m_Edit.SetWindowPos(NULL,HotSpots[i].Rect.left,HotSpots[i].Rect.top,HotSpots[i].Rect.Width(),HotSpots[i].Rect.Height(),SWP_NOZORDER);
+				m_Edit.SetWindowPos(NULL, HotSpots[i].Rect.left, HotSpots[i].Rect.top, HotSpots[i].Rect.Width(), HotSpots[i].Rect.Height(), SWP_NOZORDER);
 				m_Edit.spot = HotSpots[i];
 				m_Edit.MinWidth = m_Edit.spot.Rect.Width();
-				m_Edit.SetWindowTextA(HotSpots[i].Text);
+				m_Edit.SetWindowText(HotSpots[i].Text);
 				m_Edit.ShowWindow(SW_NORMAL);
 				m_Edit.SetFocus();
 				//m_Edit.CreateSolidCaret(FontWidth,FontHeight);
@@ -340,27 +340,26 @@ void CChildView::OnLButtonDblClk(UINT nFlags, CPoint point)
 				m_Edit.SetSel(0,1024);
 				return;
 			}
-
-			if ((HotSpots[i].Type == HS_CHANGE_A) || (HotSpots[i].Type == HS_CHANGE_X))
-			{
-				ExchangeTarget = HotSpots[i];
-				CRect pos = ExchangeTarget.Rect;
-				ClientToScreen(&pos);
-
-				CNodeBase* pNode = (CNodeBase*)HotSpots[i].object;
-
-				CMenu menu;
-				menu.CreatePopupMenu();
-				for (UINT m = 0; m < theApp.Classes.size(); m++)
-				{
-					if ((HotSpots[i].Type == HS_CHANGE_X) && (pNode->pParent == theApp.Classes[m]))
-						continue;
-					menu.AppendMenu( MF_STRING | MF_ENABLED, WM_CHANGECLASSMENU + m, theApp.Classes[m]->Name );
-				}
-				menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this);
-			}
 		}
 	}
+}
+
+BOOL TransparentBlt(CImage* pSrcImage, CImage* pDstImage, int xDest, int yDest, int nDestWidth, int nDestHeight)
+{
+	HDC hDstDC = NULL;
+	BOOL bResult;
+
+	if(pSrcImage == NULL || pDstImage == NULL)
+		return FALSE;
+
+	// Obtain a DC to the destination image
+	hDstDC = pDstImage->GetDC();
+	// Perform the blit
+	bResult = pSrcImage->TransparentBlt(hDstDC, xDest, yDest, nDestWidth, nDestHeight);
+	// Release the destination DC
+	pDstImage->ReleaseDC();
+
+	return bResult;
 }
 
 void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
@@ -373,9 +372,13 @@ void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 			CNodeBase* pHitObject = (CNodeBase*)HotSpots[i].object;
 
 			if (HotSpots[i].Type == HS_OPENCLOSE)
+			{
 				pHitObject->bOpen[HotSpots[i].Level] = !pHitObject->bOpen[HotSpots[i].Level];
+			}
 			else if (HotSpots[i].Type == HS_CLICK)  
+			{
 				pHitObject->Update(HotSpots[i]);
+			}
 			else if (HotSpots[i].Type == HS_SELECT)
 			{
 				if (nFlags == MK_LBUTTON)
@@ -452,7 +455,7 @@ void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 			else if (HotSpots[i].Type == HS_DELETE)
 			{
-				isDeleting = true; // Ghetto fix to stop crashing from OnMouseHover
+				//isDeleting = true; // Ghetto fix to stop crashing from OnMouseHover
 				for (UINT i = 0; i < Selected.size(); i++)
 				{
 					CNodeClass* pClass = (CNodeClass*)Selected[i].object->pParent;
@@ -465,7 +468,32 @@ void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 					}
 				}
 				Selected.clear();
-				isDeleting = false;
+				//isDeleting = false;
+			}
+			else if ((HotSpots[i].Type == HS_CHANGE_A) || (HotSpots[i].Type == HS_CHANGE_X))
+			{
+				ExchangeTarget = HotSpots[i];
+				CRect pos = ExchangeTarget.Rect;
+				ClientToScreen(&pos);
+
+				CNodeBase* pNode = HotSpots[i].object;
+
+				CMenu menu;
+				menu.CreatePopupMenu();
+
+				CImage img;
+				img.LoadFromResource(AfxGetResourceHandle(), IDB_CLASSBITMAP);
+				CBitmap bmp;
+				bmp.Attach(img.Detach());
+
+				for (UINT m = 0; m < theApp.Classes.size(); m++)
+				{
+					if ((HotSpots[i].Type == HS_CHANGE_X) && (pNode->pParent == theApp.Classes[m]))
+						continue;
+					menu.AppendMenu(MF_STRING | MF_ENABLED, WM_CHANGECLASSMENU + m, theApp.Classes[m]->Name);
+					menu.SetMenuItemBitmaps(m, MF_BYPOSITION, &bmp, &bmp);		
+				}
+				menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_NOANIMATION, pos.left, pos.bottom, this);
 			}
 			Invalidate();
 		}
@@ -645,34 +673,74 @@ BOOL CChildView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	return CWnd::OnMouseWheel(nFlags, zDelta, pt);
 }
 
-DISASM MyDisasm;
-CString DisassembleCode(char *StartCodeSection, char *EndCodeSection, int Virtual_Address)
+const char* DisassembleCode(char** StartCodeSection, char** EndCodeSection, DWORD_PTR Virtual_Address, int* textHeight)
 {
-	CString d,t;
-	(void) memset (&MyDisasm, 0, sizeof(DISASM));
-	MyDisasm.EIP = (int) StartCodeSection;
-	MyDisasm.VirtualAddr = (long long) Virtual_Address;
+	char szOut[8192] = { '\0' };
+
+	DISASM MyDisasm;
+	memset(&MyDisasm, 0, sizeof(DISASM));
+
+	MyDisasm.EIP = (UIntPtr)StartCodeSection;
+
+	MyDisasm.VirtualAddr = (UInt64)Virtual_Address;
+	#ifdef _WIN64
+	MyDisasm.Archi = 64;
+	#else
 	MyDisasm.Archi = 0;
+	#endif
 	MyDisasm.Options = PrefixedNumeral;
+
+	#ifdef _WIN64
+	int securityCount = 0;
+	#endif
 
 	bool Error = 0;
 	while (!Error)
 	{
-		MyDisasm.SecurityBlock = (int)EndCodeSection - MyDisasm.EIP;
+		#ifdef _WIN64
+		securityCount++;
+		if (securityCount >= 100)
+			break;
+		#endif
+
+		MyDisasm.SecurityBlock = (UInt32)(EndCodeSection - (UIntPtr)MyDisasm.EIP);
 
 		int len = Disasm(&MyDisasm);
-		if (len == OUT_OF_BLOCK) Error = 1;
-		else if (len == UNKNOWN_OPCODE)Error = 1;
-		else 
+		if (len == OUT_OF_BLOCK)
 		{
-			t.Format("%p %s\r\n", MyDisasm.VirtualAddr, &MyDisasm. CompleteInstr);
-			d += t;
+			Error = 1;
+		}
+		else if (len == UNKNOWN_OPCODE)
+		{
+			Error = 1;
+		}
+		else
+		{
+			char szInstruction[96];
+			sprintf_s(szInstruction, "%p  ", MyDisasm.VirtualAddr);
+			strcat_s(szInstruction, MyDisasm.CompleteInstr);
+			strcat_s(szInstruction, "\r\n");
+
+			strcat_s(szOut, szInstruction);
+
 			MyDisasm.EIP = MyDisasm.EIP + len;
 			MyDisasm.VirtualAddr = MyDisasm.VirtualAddr + len;
-			if (MyDisasm.EIP >= (UIntPtr) EndCodeSection)Error = 1;
+			if (MyDisasm.EIP >= (UIntPtr)EndCodeSection)
+				break;
+
+			unsigned char opcode;
+			ReadMemory(MyDisasm.VirtualAddr - 1, &opcode, sizeof(unsigned char));
+			if (opcode == 0xCC) // INT 3 instruction
+				break;
+
+			*textHeight += 16;
 		}
-	};
-	return d;
+	}
+	
+	*textHeight += 4;
+	const char* szRet = &szOut[0];
+
+	return szRet;
 }
 
 bool bTracking = false;
@@ -685,83 +753,94 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 		DWORD size = 0;
 		for (UINT i = 0; i < Selected.size(); i++)
 			size += Selected[i].object->GetMemorySize();
-		msg.Format("%i selected, %i bytes",Selected.size(),size);
+		msg.Format("%i selected, %i bytes", Selected.size(), size);
 		m_ToolTip.EnableWindow(FALSE);
 		m_ToolTip.SetWindowText(msg);
-		m_ToolTip.SetWindowPos(NULL,point.x+16,point.y+16,msg.GetLength()*FontWidth+8,FontHeight+6,SWP_NOZORDER);
+		m_ToolTip.SetWindowPos(NULL,point.x+16, point.y+16, msg.GetLength() * FontWidth + 8,FontHeight+6,SWP_NOZORDER);
 		m_ToolTip.ShowWindow(SW_SHOW);
 	}
 	else
 	{
-		if (!isDeleting)
+		BYTE data[16];
+		for (UINT i = 0; i < HotSpots.size(); i++)
 		{
-			BYTE data[16];
-			for (UINT i = 0; i < HotSpots.size(); i++)
+			if (HotSpots[i].Rect.PtInRect(point))
 			{
-				if (HotSpots[i].Rect.PtInRect(point))
+				if (HotSpots[i].Type == HS_SELECT)
 				{
-					if (HotSpots[i].Type == HS_SELECT)
+					CNodeBase* pNode = (CNodeBase*)HotSpots[i].object;
+
+					if (pNode->GetType() == nt_function)
 					{
-						CNodeBase* pNode = (CNodeBase*)HotSpots[i].object;
+						if (HotSpots[i].object->bOpen[HotSpots[i].Level])
+							continue;
 
-						if (pNode->GetType() == nt_function)
-						{
-							DWORD addy;
-							ReadMemory(HotSpots[i].Address, &addy, 4);
-							char code[512];
-							ReadMemory(addy, code, 512);
-							CString d = DisassembleCode(code, code + 100, addy);
-							m_ToolTip.EnableWindow(FALSE);
-							m_ToolTip.SetWindowText(d);
-							m_ToolTip.SetWindowPos(NULL, point.x + 16, point.y + 16, 400, 350, SWP_NOZORDER);
-							m_ToolTip.ShowWindow(SW_SHOW);
-						}
-						if (pNode->GetType() == nt_hex64)
-						{
-							ReadMemory(HotSpots[i].Address, data, 4);
-							float* pf	= (float*)data;
-							__int64* pi		= (__int64*)data;
-							DWORD_PTR* pd	= (DWORD_PTR*)data;
-							msg.Format("Int64: %i\r\nDWORD64: %u\r\nFloat: %.3f", *pi, *pd, *pf);
+						DWORD_PTR addy = HotSpots[i].Address;
+						ReadMemory(addy, &addy, sizeof(DWORD_PTR));
+						char* code[1024];
+						ReadMemory(addy, code, 1024);
+						int textHeight = 0;
+						const char* d = DisassembleCode(code, code + 1024, addy, &textHeight);
+						
+						//CString d, t;
+						//CNodeFunctionPtr* pObject = (CNodeFunctionPtr*)HotSpots[i].object;
+						//int textHeight = (pObject->Assembly.size() * 16) + 4;
+						//
+						//for (int i = 0; i < pObject->Assembly.size(); i++)
+						//{
+						//	t.Format("%s\r\n", pObject->Assembly[i]);
+						//	d.Append(t);
+						//}
+						m_ToolTip.EnableWindow(FALSE);
+						m_ToolTip.SetWindowText(d);
+						m_ToolTip.SetWindowPos(NULL, point.x + 16, point.y + 16, 400, textHeight, SWP_NOZORDER);
+						m_ToolTip.ShowWindow(SW_SHOW);
+					}
+					if (pNode->GetType() == nt_hex64)
+					{
+						ReadMemory(HotSpots[i].Address, data, sizeof(DWORD_PTR));
+						float* pf	= (float*)data;
+						__int64* pi		= (__int64*)data;
+						DWORD_PTR* pd	= (DWORD_PTR*)data;
+						msg.Format("Int64: %i\r\nDWORD64: %u\r\nFloat: %.3f", *pi, *pd, *pf);
 
-							m_ToolTip.EnableWindow(FALSE);
-							m_ToolTip.SetWindowText(msg);
-							m_ToolTip.SetWindowPos(NULL, point.x+16, point.y+16, 200, 16*3+6, SWP_NOZORDER);
-							m_ToolTip.ShowWindow(SW_SHOW);
-						}
-						else if (pNode->GetType() == nt_hex32)
-						{
-							ReadMemory(HotSpots[i].Address,data,4);
-							float* pf	= (float*)data;
-							int* pi		= (int*)data;
-							DWORD* pd	= (DWORD*)data;
-							msg.Format("Int32: %i\r\nDWORD: %u\r\nFloat: %.3f", *pi, *pd, *pf);
-							m_ToolTip.EnableWindow(FALSE);
-							m_ToolTip.SetWindowText(msg);
-							m_ToolTip.SetWindowPos(NULL, point.x+16, point.y+16, 200, 16*3+6, SWP_NOZORDER);
-							m_ToolTip.ShowWindow(SW_SHOW);
-						}
-						else if (pNode->GetType() == nt_hex16)
-						{
-							ReadMemory(HotSpots[i].Address,data,4);
-							__int16* pi		= (__int16*)data;
-							WORD* pd	= (WORD*)data;
-							msg.Format("Int16: %i\r\nWORD: %u\r\n",*pi,*pd);
-							m_ToolTip.EnableWindow(FALSE);
-							m_ToolTip.SetWindowText(msg);
-							m_ToolTip.SetWindowPos(NULL,point.x+16,point.y+16,200,16*2+6,SWP_NOZORDER);
-							m_ToolTip.ShowWindow(SW_SHOW);
-						}
-						else if (pNode->GetType() == nt_hex8)
-						{
-							ReadMemory(HotSpots[i].Address,data,4);
-							__int8* pi		= (__int8*)data;
-							BYTE* pd	= (BYTE*)data;
-							msg.Format("Int8: %i\r\nBYTE: %u\r\n",*pi,*pd);
-							m_ToolTip.SetWindowText(msg);
-							m_ToolTip.SetWindowPos(NULL,point.x+16,point.y+16,200,16*2+6,SWP_NOZORDER);
-							m_ToolTip.ShowWindow(SW_SHOW);
-						}
+						m_ToolTip.EnableWindow(FALSE);
+						m_ToolTip.SetWindowText(msg);
+						m_ToolTip.SetWindowPos(NULL, point.x+16, point.y+16, 200, 16*3+6, SWP_NOZORDER);
+						m_ToolTip.ShowWindow(SW_SHOW);
+					}
+					else if (pNode->GetType() == nt_hex32)
+					{
+						ReadMemory(HotSpots[i].Address,data,4);
+						float* pf	= (float*)data;
+						int* pi		= (int*)data;
+						DWORD* pd	= (DWORD*)data;
+						msg.Format("Int32: %i\r\nDWORD: %u\r\nFloat: %.3f", *pi, *pd, *pf);
+						m_ToolTip.EnableWindow(FALSE);
+						m_ToolTip.SetWindowText(msg);
+						m_ToolTip.SetWindowPos(NULL, point.x+16, point.y+16, 200, 16*3+6, SWP_NOZORDER);
+						m_ToolTip.ShowWindow(SW_SHOW);
+					}
+					else if (pNode->GetType() == nt_hex16)
+					{
+						ReadMemory(HotSpots[i].Address,data,4);
+						__int16* pi		= (__int16*)data;
+						WORD* pd	= (WORD*)data;
+						msg.Format("Int16: %i\r\nWORD: %u\r\n",*pi,*pd);
+						m_ToolTip.EnableWindow(FALSE);
+						m_ToolTip.SetWindowText(msg);
+						m_ToolTip.SetWindowPos(NULL,point.x+16,point.y+16,200,16*2+6,SWP_NOZORDER);
+						m_ToolTip.ShowWindow(SW_SHOW);
+					}
+					else if (pNode->GetType() == nt_hex8)
+					{
+						ReadMemory(HotSpots[i].Address,data,4);
+						__int8* pi		= (__int8*)data;
+						BYTE* pd	= (BYTE*)data;
+						msg.Format("Int8: %i\r\nBYTE: %u\r\n",*pi,*pd);
+						m_ToolTip.SetWindowText(msg);
+						m_ToolTip.SetWindowPos(NULL,point.x+16,point.y+16,200,16*2+6,SWP_NOZORDER);
+						m_ToolTip.ShowWindow(SW_SHOW);
 					}
 				}
 			}

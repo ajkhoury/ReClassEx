@@ -785,7 +785,7 @@ void CReClass2015App::OnButtonNewClass()
 	//pFrame->UpdateFrameTitleForDocument(name);
 
 	CNodeClass* pClass = new CNodeClass;
-	pClass->idx = theApp.Classes.size();
+	pClass->idx = (int)theApp.Classes.size();
 	theApp.Classes.push_back(pClass);
 	pChild->m_wndView.m_pClass = pClass;
 
