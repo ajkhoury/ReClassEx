@@ -127,7 +127,7 @@ extern CString tdQuat;
 extern CString tdMatrix;
 extern CString tdPChar;
 
-#define WM_MAXITEMS 512
+#define WM_MAXITEMS 1024
 
 #define WM_CLASSMENU WM_USER
 #define WM_PROCESSMENU (WM_USER+WM_MAXITEMS)
