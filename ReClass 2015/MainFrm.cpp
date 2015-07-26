@@ -590,7 +590,7 @@ void CMainFrame::OnButtonSelectprocess()
 			HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, ProcInfo.th32ProcessID);
 			if (hProcess)
 			{
-				if (!is64Bit(hProcess))
+				if (!is64bit(hProcess, ProcInfo.szExeFile))
 				{
 					char filename[1024];
 					GetModuleFileNameEx(hProcess, NULL, filename, 1024);
