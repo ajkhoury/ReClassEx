@@ -144,6 +144,7 @@ extern CString tdPChar;
 #define HS_CHANGE_X 6
 #define HS_DELETE 7
 #define HS_RTTI 8
+#define HS_ADDRESS 68
 #define HS_NAME 69
 #define HS_COMMENT 70
 

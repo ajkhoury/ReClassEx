@@ -180,7 +180,7 @@ public:
 
 			x = AddText( View, x - pad, y, crOffset, NONE, "%0.4X", offset ) + FontWidth;
 			#else
-			x = AddText(View, x, y, crOffset, NONE,	"%0.4X", offset) + FontWidth;
+			x = AddText(View, x, y, crOffset, NONE, "%0.4X", offset) + FontWidth;
 			#endif
 		}
 
@@ -190,9 +190,9 @@ public:
 			// full address
 			// printf( "%p + %p = %p\n", View.Address, offset, View.Address + offset );
 			// %0.9X //"%I64x",
-			x = AddText( View, x, y, crAddress, NONE, "%0.9I64X", View.Address + offset ) + FontWidth;
+			x = AddText( View, x, y, crAddress, HS_ADDRESS, "%0.9I64X", View.Address + offset ) + FontWidth;
 			#else
-			x = AddText( View, x, y, crAddress, NONE, "%0.8X"	, View.Address + offset ) + FontWidth;
+			x = AddText(View, x, y, crAddress, HS_ADDRESS, "%0.8X", View.Address + offset) + FontWidth;
 			#endif
 		}
 
