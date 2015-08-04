@@ -499,175 +499,175 @@ public:
 void CReClass2015App::OnFileImport()
 {
 	return;
-
-	CWaitCursor wait;
-
-	CString sql;
-	CppSQLite3Table table;
-	std::vector<ImportNode> Import;
-	std::vector<ImportLink> Links;
-
-	char szFilters[] = "ReClass (*.rdc)|*.rdc|All Files (*.*)|*.*||";
-	CFileDialog fileDlg (TRUE, "rdc", "",OFN_FILEMUSTEXIST| OFN_HIDEREADONLY, szFilters, NULL);
-	if( fileDlg.DoModal() == IDOK )
-	{
-		CString pathName = fileDlg.GetPathName();
-		try
-		{
-			CppSQLite3DB db;
-			db.open(pathName);
-			table =	db.getTable("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;");
-			DWORD total = table.numRows()-1;
-
-			table =	db.getTable("select * from info;");table.setRow(0);
-			Notes = table.getStringField("notes","<ERROR>");
-			Header = table.getStringField("header","<ERROR>");
-			try{Footer = table.getStringField("footer","<ERROR>");}catch (...){}
-
-			for (UINT i=0; i < total;i++)
-			{
-				sql.Format("select * from class%i;",i);
-				table =	db.getTable(sql);
-
-				table.setRow(0);
-				ImportNode iNode;
-				iNode.Name		= table.getStringField("variable","<ERROR>");
-				iNode.Comment	= table.getStringField("comment","<ERROR>");
-				iNode.type		= (NodeType)table.getIntField("type",0);
-				iNode.length	= table.getIntField("length",0);
-				iNode.ref		= table.getIntField("ref",0);
-				
-				for (int c=1; c < table.numRows();c++)
-				{
-					table.setRow(c);
-					ImportNode sNode;
-					sNode.Name		= table.getStringField("variable","<ERROR>");
-					sNode.Comment	= table.getStringField("comment","<ERROR>");
-					sNode.type		= (NodeType)table.getIntField("type",0);
-					sNode.length	= table.getIntField("length",0);
-					sNode.ref		= table.getIntField("ref",0);
-					iNode.Nodes.push_back(sNode);
-				}
-				Import.push_back(iNode);
-			}
-
-			for (UINT i=0; i < Import.size();i++)
-			{
-				if (Import[i].Name == "VTABLE") continue;
-
-				CNodeClass* pClass = new CNodeClass;
-				pClass->Name = Import[i].Name;
-				pClass->Comment = Import[i].Comment;
-
-				Classes.push_back(pClass);
-
-				//CMainFrame* pFrame = STATIC_DOWNCAST(CMainFrame, m_pMainWnd);
-				//CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, m_hMDIMenu, m_hMDIAccel);
-				//
-				//pFrame->UpdateFrameTitleForDocument(pClass->Name);
-				//pChild->SetTitle(pClass->Name);
-				//pChild->SetWindowTextA(pClass->Name);
-				//pChild->m_wndView.m_pClass = pClass;
-
-				CNodeBase* pNode;
-				for (UINT n=0; n<Import[i].Nodes.size();n++)
-				{
-					NodeType t = Import[i].Nodes[n].type;
-					if ( t == nt_hex64 ) pNode = new CNodeHex64;
-					if ( t == nt_hex32 ) pNode = new CNodeHex32;
-					if ( t == nt_hex16 ) pNode = new CNodeHex16;
-					if ( t == nt_hex8  ) pNode = new CNodeHex8;
-
-					if ( t == nt_int64 ) pNode = new CNodeInt64;
-					if ( t == nt_int32 ) pNode = new CNodeInt32;
-					if ( t == nt_int16 ) pNode = new CNodeInt16;
-					if ( t == nt_int8  ) pNode = new CNodeInt8;
-
-					if ( t == nt_uint32   ) pNode = new CNodeDWORD;
-					if ( t == nt_uint16   ) pNode = new CNodeWORD;
-					if ( t == nt_uint8    ) pNode = new CNodeBYTE;
-					if ( t == nt_pointer  ) pNode = new CNodePtr;
-					if ( t == nt_float    ) pNode = new CNodeFloat;
-					if ( t == nt_double   ) pNode = new CNodeDouble;
-					if ( t == nt_function ) pNode = new CNodeFunctionPtr;
-					if ( t == nt_pointer  )
-					{
-						int r = Import[i].Nodes[n].ref;
-						if (Import[ r ].Name == "VTABLE")
-						{
-							pNode = new CNodeVTable;
-							for (UINT v=0; v<Import[r].Nodes.size();v++)
-							{
-								CNodeFunctionPtr* pFun = new CNodeFunctionPtr;
-								pFun->Name = Import[r].Nodes[v].Name;
-								if (pFun->Name == "void function()") pFun->Name = "";
-								pFun->Comment = Import[r].Nodes[v].Comment;
-								pFun->pParent = pNode;
-								((CNodeVTable*)pNode)->Nodes.push_back(pFun);
-							}
-						}
-						else
-						{
-							pNode = new CNodePtr;
-							ImportLink link;
-							link.pNode = (CNodePtr*)pNode;
-							link.Name = Import[r].Name;
-							Links.push_back(link);
-						}
-					}
-					if (t == nt_text)
-					{
-						pNode = new CNodeText;
-						((CNodeText*)pNode)->memsize = Import[i].Nodes[n].length;
-					}
-					if (t == nt_unicode)
-					{
-						pNode = new CNodeUnicode;
-						((CNodeUnicode*)pNode)->memsize = Import[i].Nodes[n].length;
-					}
-					if (t == nt_custom)
-					{
-						pNode = new CNodeCustom;
-						((CNodeCustom*)pNode)->memsize = Import[i].Nodes[n].length;
-					}
-					if (t == nt_instance)
-					{
-						pNode = new CNodeClassInstance;
-
-						int r = Import[i].Nodes[n].ref;
-						ImportLink link;
-						link.pNode = (CNodeClassInstance*)pNode;
-						link.Name = Import[r].Name;
-						Links.push_back(link);
-					}
-
-					pNode->Name		= Import[i].Nodes[n].Name;
-					pNode->Comment	= Import[i].Nodes[n].Comment;
-					pNode->pParent	= pClass;
-					pClass->Nodes.push_back(pNode);
-				}
-			}
-			//Fix Links... some real ghetto shit here
-			for (UINT i = 0; i < Links.size(); i++)
-			{
-				for (UINT c = 0; c < Classes.size(); c++)
-				{
-					if (Links[i].Name == Classes[c]->Name)
-					{
-						CNodePtr* pPointer = (CNodePtr*)Links[i].pNode;
-						pPointer->pNode = Classes[c];
-					}
-				}
-			}
-
-			CalcAllOffsets();
-		}
-		catch (CppSQLite3Exception& e)
-		{
-			MessageBox(NULL, e.errorMessage() ,"Error",MB_OK);
-		}
-
-	}
+	//CWaitCursor wait;
+	//CString sql;
+	//CppSQLite3Table table;
+	//std::vector<ImportNode> Import;
+	//std::vector<ImportLink> Links;
+	//
+	//char szFilters[] = "ReClass (*.rdc)|*.rdc|All Files (*.*)|*.*||";
+	//CFileDialog fileDlg (TRUE, "rdc", "",OFN_FILEMUSTEXIST| OFN_HIDEREADONLY, szFilters, NULL);
+	//if( fileDlg.DoModal() == IDOK )
+	//{
+	//	CString pathName = fileDlg.GetPathName();
+	//	try
+	//	{
+	//		CppSQLite3DB db;
+	//		db.open(pathName);
+	//		table =	db.getTable("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;");
+	//		DWORD total = table.numRows()-1;
+	//
+	//		table =	db.getTable("select * from info;");table.setRow(0);
+	//		Notes = table.getStringField("notes","<ERROR>");
+	//		Header = table.getStringField("header","<ERROR>");
+	//		try{Footer = table.getStringField("footer","<ERROR>");}catch (...){}
+	//
+	//		for (UINT i=0; i < total;i++)
+	//		{
+	//			sql.Format("select * from class%i;",i);
+	//			table =	db.getTable(sql);
+	//
+	//			table.setRow(0);
+	//			ImportNode iNode;
+	//			iNode.Name		= table.getStringField("variable","<ERROR>");
+	//			iNode.Comment	= table.getStringField("comment","<ERROR>");
+	//			iNode.type		= (NodeType)table.getIntField("type",0);
+	//			iNode.length	= table.getIntField("length",0);
+	//			iNode.ref		= table.getIntField("ref",0);
+	//			
+	//			for (int c=1; c < table.numRows();c++)
+	//			{
+	//				table.setRow(c);
+	//
+	//				ImportNode sNode;
+	//				sNode.Name		= table.getStringField("variable","<ERROR>");
+	//				sNode.Comment	= table.getStringField("comment","<ERROR>");
+	//				sNode.type		= (NodeType)table.getIntField("type",0);
+	//				sNode.length	= table.getIntField("length",0);
+	//				sNode.ref		= table.getIntField("ref",0);
+	//
+	//				iNode.Nodes.push_back(sNode);
+	//			}
+	//			Import.push_back(iNode);
+	//		}
+	//
+	//		for (UINT i=0; i < Import.size();i++)
+	//		{
+	//			if (Import[i].Name == "VTABLE") continue;
+	//
+	//			CNodeClass* pClass = new CNodeClass;
+	//			pClass->Name = Import[i].Name;
+	//			pClass->Comment = Import[i].Comment;
+	//
+	//			Classes.push_back(pClass);
+	//
+	//			//CMainFrame* pFrame = STATIC_DOWNCAST(CMainFrame, m_pMainWnd);
+	//			//CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, m_hMDIMenu, m_hMDIAccel);
+	//			//
+	//			//pFrame->UpdateFrameTitleForDocument(pClass->Name);
+	//			//pChild->SetTitle(pClass->Name);
+	//			//pChild->SetWindowTextA(pClass->Name);
+	//			//pChild->m_wndView.m_pClass = pClass;
+	//
+	//			CNodeBase* pNode;
+	//			for (UINT n=0; n<Import[i].Nodes.size();n++)
+	//			{
+	//				NodeType t = Import[i].Nodes[n].type;
+	//				if ( t == nt_hex64 ) pNode = new CNodeHex64;
+	//				if ( t == nt_hex32 ) pNode = new CNodeHex32;
+	//				if ( t == nt_hex16 ) pNode = new CNodeHex16;
+	//				if ( t == nt_hex8  ) pNode = new CNodeHex8;
+	//
+	//				if ( t == nt_int64 ) pNode = new CNodeInt64;
+	//				if ( t == nt_int32 ) pNode = new CNodeInt32;
+	//				if ( t == nt_int16 ) pNode = new CNodeInt16;
+	//				if ( t == nt_int8  ) pNode = new CNodeInt8;
+	//
+	//				if ( t == nt_uint32   ) pNode = new CNodeDWORD;
+	//				if ( t == nt_uint16   ) pNode = new CNodeWORD;
+	//				if ( t == nt_uint8    ) pNode = new CNodeBYTE;
+	//				if ( t == nt_pointer  ) pNode = new CNodePtr;
+	//				if ( t == nt_float    ) pNode = new CNodeFloat;
+	//				if ( t == nt_double   ) pNode = new CNodeDouble;
+	//				if ( t == nt_function ) pNode = new CNodeFunctionPtr;
+	//				if ( t == nt_pointer  )
+	//				{
+	//					int r = Import[i].Nodes[n].ref;
+	//					if (Import[ r ].Name == "VTABLE")
+	//					{
+	//						pNode = new CNodeVTable;
+	//						for (UINT v=0; v<Import[r].Nodes.size();v++)
+	//						{
+	//							CNodeFunctionPtr* pFun = new CNodeFunctionPtr;
+	//							pFun->Name = Import[r].Nodes[v].Name;
+	//							if (pFun->Name == "void function()") pFun->Name = "";
+	//							pFun->Comment = Import[r].Nodes[v].Comment;
+	//							pFun->pParent = pNode;
+	//							((CNodeVTable*)pNode)->Nodes.push_back(pFun);
+	//						}
+	//					}
+	//					else
+	//					{
+	//						pNode = new CNodePtr;
+	//						ImportLink link;
+	//						link.pNode = (CNodePtr*)pNode;
+	//						link.Name = Import[r].Name;
+	//						Links.push_back(link);
+	//					}
+	//				}
+	//				if (t == nt_text)
+	//				{
+	//					pNode = new CNodeText;
+	//					((CNodeText*)pNode)->memsize = Import[i].Nodes[n].length;
+	//				}
+	//				if (t == nt_unicode)
+	//				{
+	//					pNode = new CNodeUnicode;
+	//					((CNodeUnicode*)pNode)->memsize = Import[i].Nodes[n].length;
+	//				}
+	//				if (t == nt_custom)
+	//				{
+	//					pNode = new CNodeCustom;
+	//					((CNodeCustom*)pNode)->memsize = Import[i].Nodes[n].length;
+	//				}
+	//				if (t == nt_instance)
+	//				{
+	//					pNode = new CNodeClassInstance;
+	//
+	//					int r = Import[i].Nodes[n].ref;
+	//					ImportLink link;
+	//					link.pNode = (CNodeClassInstance*)pNode;
+	//					link.Name = Import[r].Name;
+	//					Links.push_back(link);
+	//				}
+	//
+	//				pNode->Name		= Import[i].Nodes[n].Name;
+	//				pNode->Comment	= Import[i].Nodes[n].Comment;
+	//				pNode->pParent	= pClass;
+	//				pClass->Nodes.push_back(pNode);
+	//			}
+	//		}
+	//		//Fix Links... some real ghetto shit here
+	//		for (UINT i = 0; i < Links.size(); i++)
+	//		{
+	//			for (UINT c = 0; c < Classes.size(); c++)
+	//			{
+	//				if (Links[i].Name == Classes[c]->Name)
+	//				{
+	//					CNodePtr* pPointer = (CNodePtr*)Links[i].pNode;
+	//					pPointer->pNode = Classes[c];
+	//				}
+	//			}
+	//		}
+	//
+	//		CalcAllOffsets();
+	//	}
+	//	catch (CppSQLite3Exception& e)
+	//	{
+	//		MessageBox(NULL, e.errorMessage() ,"Error",MB_OK);
+	//	}
+	//
+	//}
 }
 
 void CReClass2015App::ClearSelection()
@@ -895,13 +895,13 @@ CNodeBase* CReClass2015App::CreateNewNode(NodeType Type)
 void CReClass2015App::SaveXML(char* FileName)
 {
 	TiXmlDocument doc;  
-	TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );  
-	doc.LinkEndChild( decl );  
+	TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "", "");  
+	doc.LinkEndChild(decl);  
 
-	TiXmlElement * root = new TiXmlElement("ReClass");  
-	doc.LinkEndChild( root );  
+	TiXmlElement* root = new TiXmlElement("ReClass");  
+	doc.LinkEndChild(root);  
 
-	TiXmlComment * comment = new TiXmlComment();
+	TiXmlComment* comment = new TiXmlComment();
 	comment->SetValue("ReClass 2015");  
 	root->LinkEndChild(comment);  
 	//---------------------------------------------
@@ -955,23 +955,23 @@ void CReClass2015App::SaveXML(char* FileName)
 				continue;
 
 			TiXmlElement *node = new TiXmlElement("Node");
-			node->SetAttribute("Name", pNode->Name);
+			node->SetAttribute("Name", pNode->Name.GetBuffer());
 			node->SetAttribute("Type", pNode->GetType());
 			node->SetAttribute("Size", pNode->GetMemorySize());
 			node->SetAttribute("bHidden", pNode->bHidden);
-			node->SetAttribute("Comment", pNode->Comment);
+			node->SetAttribute("Comment", pNode->Comment.GetBuffer());
 			classnode->LinkEndChild(node);
 
 			if (pNode->GetType() == nt_array)
 			{
 				CNodeArray* pptr = (CNodeArray*)pNode;
-				node->SetAttribute("Total",pptr->Total);
+				node->SetAttribute("Total", pptr->Total);
 
 				TiXmlElement *item = new TiXmlElement("Array");
-				item->SetAttribute("Name", pptr->pNode->Name);
+				item->SetAttribute("Name", pptr->pNode->Name.GetBuffer());
 				item->SetAttribute("Type", pptr->pNode->GetType());
 				item->SetAttribute("Size", pptr->pNode->GetMemorySize());
-				item->SetAttribute("Comment", pptr->pNode->Comment);
+				item->SetAttribute("Comment", pptr->pNode->Comment.GetBuffer());
 				node->LinkEndChild(item);
 			}			
 			if (pNode->GetType() == nt_pointer)

@@ -438,7 +438,7 @@ BOOL is64bit(HANDLE hProcess, const char* name)
 	//Use GetModuleHandle to get a handle to the DLL that contains the function
 	//and GetProcAddress to get a pointer to the function if available.
 
-	fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle("kernel32.dll"),"IsWow64Process");
+	fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle("kernel32.dll"), "IsWow64Process");
 	if(fnIsWow64Process != NULL)
 	{
 		if (!fnIsWow64Process(hProcess, &bIsWow64))
