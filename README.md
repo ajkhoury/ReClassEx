@@ -17,4 +17,5 @@ New features include:
 - Added more themes
 - Colorful tabs with sexy border
 - Added RTTI info for pointers
-- UPDATE: Cleaned up RTTI and made the RTTI string editable
+- Cleaned up RTTI and made the RTTI string editable
+- Made addresses edittable for copy & pasting
