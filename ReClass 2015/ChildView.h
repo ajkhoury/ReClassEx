@@ -214,5 +214,8 @@ public:
 
 	afx_msg void OnButtonRandom();
 	afx_msg void OnUpdateButtonRandom(CCmdUI *pCmdUI);
+
+	afx_msg void OnButtonSwap();
+	afx_msg void OnUpdateButtonSwap(CCmdUI *pCmdUI);
 };
 

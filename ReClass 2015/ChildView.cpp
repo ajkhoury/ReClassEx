@@ -185,10 +185,12 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_COMMAND(ID_BUTTON_ZERO,					&CChildView::OnButtonZero)
 	ON_COMMAND(ID_BUTTON_ONE,					&CChildView::OnButtonOne)
 	ON_COMMAND(ID_BUTTON_RANDOM,				&CChildView::OnButtonRandom)
+	ON_COMMAND(ID_BUTTON_SWAP,					&CChildView::OnButtonSwap)
 
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_ZERO,		&CChildView::OnUpdateButtonZero)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_ONE,			&CChildView::OnUpdateButtonOne)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_RANDOM,		&CChildView::OnUpdateButtonRandom)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_SWAP,		&CChildView::OnUpdateButtonSwap)
 END_MESSAGE_MAP()
 
 #define SB_WIDTH 14
@@ -1756,7 +1758,30 @@ void CChildView::OnButtonRandom()
 	}
 
 }
+
 void CChildView::OnUpdateButtonRandom(CCmdUI *pCmdUI)
+{
+	StandardTypeUpdate(pCmdUI);
+}
+
+void CChildView::OnButtonSwap()
+{
+	CMemory mem;
+	for (UINT i = 0; i < Selected.size(); i++)
+	{
+		DWORD s = Selected[i].object->GetMemorySize();
+		DWORD_PTR a = Selected[i].Address;
+		mem.SetSize(s);
+
+		ReadMemory(a, mem.pMemory, s);
+
+		std::reverse(mem.pMemory, mem.pMemory + s);
+
+		WriteMemory(a, mem.pMemory, s);
+	}
+}
+
+void CChildView::OnUpdateButtonSwap(CCmdUI *pCmdUI)
 {
 	StandardTypeUpdate(pCmdUI);
 }
