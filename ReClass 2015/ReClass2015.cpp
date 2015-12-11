@@ -48,7 +48,7 @@ CReClass2015App::CReClass2015App()
 {
 	m_bHiColorIcons = TRUE;
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
-	SetAppID("ReClass.2015.0.8.0.1");
+	SetAppID("ReClass.2015.0.9.1.0");
 
 	#ifdef _DEBUG
 	CreateConsole();
