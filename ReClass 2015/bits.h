@@ -1,0 +1,124 @@
+//
+//File:   bits.h
+//Author: dude719
+//
+//Created on March 24, 2015, 1:34 AM
+//
+
+#ifndef BITS_H
+#define	BITS_H
+
+#include <stdio.h>
+#include <limits.h>     /* for CHAR_BIT */
+#include <malloc.h>
+
+#define BITMASK(b) 		(1 << ((b) % CHAR_BIT))
+#define BITSLOT(b) 		((b) / CHAR_BIT)
+#define BITSET(a, b) 	((a)[BITSLOT(b)] |= BITMASK(b))
+#define BITCLEAR(a, b) 	((a)[BITSLOT(b)] &= ~BITMASK(b))
+#define BITTEST(a, b) 	((a)[BITSLOT(b)] & BITMASK(b))
+#define BITNSLOTS(nb) 	((nb + CHAR_BIT - 1) / CHAR_BIT)
+
+#define SET_BIT(a, bit_number) ((a) |= 1 << (bit_number))
+#define RESET_BIT(a, bit_number) ((a) &= ~(1 << (bit_number)))
+#define FLIP_BIT(a, bit_number) ((a) ^= 1 << (bit_number))
+#define GET_BIT_VALUE(a, bit_number) (((a) & (1 << (bit_number))) >> bit_number)
+
+template<typename T>
+class BitArray
+{
+public:
+	BitArray()
+	{
+		value = 0x0F;
+		size = sizeof(T)* CHAR_BIT;
+		bits = malloc(size);
+	}
+
+	BitArray(T num)
+	{
+		value = num;
+		size = sizeof(T)* CHAR_BIT;
+		bits = malloc(size);
+	}
+
+	char* GetBitsString()
+	{
+		for (int i = size; i >= 0; i--)
+		{
+			unsigned char bit = GetBit(i);
+			bits[size - i] = bit + 0x30;
+			//printf("%d", bit);
+		}
+
+		bits[size] = '\0';
+
+		return bits;
+	}
+
+	char* GetBitsReverseString()
+	{
+		for (int i = 0; i < size; i++)
+		{
+			unsigned char bit = GetBit(i);
+			bits[i] = bit + 0x30;
+			//printf("%d", bit);
+		}
+
+		bits[size] = '\0';
+
+		return bits;
+	}
+
+	void PrintBit(int index)
+	{
+		printf("\nbits[%d] = %d", index, GetBit(index));
+	}
+
+	unsigned char GetBit(int index)
+	{
+		return (value & (1 << index)) != 0;
+	}
+
+	unsigned int RotateRight(int numOfShifts, int numOfBits)
+	{
+		unsigned lsbs = value & ((1 << numOfShifts) - 1);
+		return (value >> numOfShifts) | (lsbs << (numOfBits - numOfShifts));
+	}
+
+	int GetValue()
+	{
+		return value;
+	}
+
+	void SetValue(T val)
+	{
+		value = val;
+	}
+
+	void SetValue(char* bits)
+	{
+		unsigned char result = 0;
+		for (int i = 0; i < CHAR_BIT; ++i)
+			result |= (bits[i] == '1') << (7 - i);
+		value = (T)result;
+	}
+
+private:
+	T value;
+	size_t size;
+	void* bits;
+};
+
+
+//int main(void) 
+//{
+//	BitArray bits(0xDCAB);
+//	printf("Before rotation: 0x%X\nAfter rotation: 0x%X\n", bits.GetValue(), bits.RotateRight(8, 16));
+//	printf("Bits: ");
+//	bits.PrintBits();
+//	
+//	return 0;
+//}
+
+#endif	/* BITS_H */
