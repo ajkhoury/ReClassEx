@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Debug.h"
+#include "bits.h"
 
 #define TXOFFSET 16
 
@@ -955,6 +956,53 @@ public:
 			asc += ' ';
 			asc += ' ';
 			tx = AddText(View,tx,y,crChar,NONE,"%s",asc);
+		}
+
+		tx = AddText(View, tx, y, crHex, 0, "%0.2X", pMemory[0]) + FontWidth;
+		tx = AddComment(View,tx,y);
+
+		return y += FontHeight;
+	}
+};
+
+class CNodeBits : public CNodeBase
+{
+public:
+	CNodeBits() { nodeType = nt_bits; }
+
+	virtual void Update(HotSpot& Spot)
+	{
+		StandardUpdate(Spot);
+		BYTE v = (BYTE)(strtoul(Spot.Text,NULL,16) & 0xFF);
+		if (Spot.ID == 0)
+			WriteMemory(Spot.Address, &v, 1);
+	}
+
+	virtual int GetMemorySize() { return 1; }
+
+	virtual int Draw(ViewInfo& View, int x, int y)
+	{
+		if (bHidden) 
+			return DrawHidden(View, x, y);
+
+		BYTE* pMemory = (BYTE*) &((BYTE*)View.pData)[offset];
+		AddSelection(View,0,y,FontHeight);
+		AddDelete(View,x,y);
+		AddTypeDrop(View,x,y);
+		//AddAdd(View,x,y);
+
+		int tx = x + TXOFFSET + 16;
+		tx = AddAddressOffset(View,tx,y);
+
+		if (gbText)
+		{
+			BitArray<unsigned char> bits;
+			bits.SetValue(pMemory[0]);
+
+			CString asc = bits.GetBitsString();
+
+			asc += ' ';
+			tx = AddText(View, tx, y, crChar, NONE, "%s", asc);
 		}
 
 		tx = AddText(View, tx, y, crHex, 0, "%0.2X", pMemory[0]) + FontWidth;

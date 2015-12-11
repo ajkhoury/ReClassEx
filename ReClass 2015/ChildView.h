@@ -135,6 +135,9 @@ public:
 	afx_msg void OnTypeHex8();
 	afx_msg void OnUpdateTypeHex8(CCmdUI *pCmdUI);
 
+	afx_msg void OnTypeBits();
+	afx_msg void OnUpdateTypeBits(CCmdUI *pCmdUI);
+
 	afx_msg void OnTypeInt64();
 	afx_msg void OnUpdateTypeInt64(CCmdUI *pCmdUI);
 

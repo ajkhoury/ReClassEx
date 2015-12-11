@@ -311,6 +311,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SQLite\CppSQLite3.h" />
+    <ClInclude Include="bits.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="Classes.h" />

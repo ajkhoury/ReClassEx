@@ -111,6 +111,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_COMMAND(ID_TYPE_INT8,					&CChildView::OnTypeInt8)
 	ON_COMMAND(ID_TYPE_HEX16,					&CChildView::OnTypeHex16)
 	ON_COMMAND(ID_TYPE_HEX8,					&CChildView::OnTypeHex8)
+	ON_COMMAND(ID_TYPE_BITS,					&CChildView::OnTypeBits)
 	ON_COMMAND(ID_TYPE_DWORD,					&CChildView::OnTypeDword)
 	ON_COMMAND(ID_TYPE_WORD,					&CChildView::OnTypeWord)
 	ON_COMMAND(ID_TYPE_BYTE,					&CChildView::OnTypeByte)
@@ -153,6 +154,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_HEX32,			&CChildView::OnUpdateTypeHex32)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_HEX16,			&CChildView::OnUpdateTypeHex16)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_HEX8,			&CChildView::OnUpdateTypeHex8)
+	ON_UPDATE_COMMAND_UI(ID_TYPE_BITS,			&CChildView::OnUpdateTypeBits)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_INT64,			&CChildView::OnUpdateTypeInt64)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_INT32,			&CChildView::OnUpdateTypeInt32)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_INT16,			&CChildView::OnUpdateTypeInt16)
@@ -1379,6 +1381,16 @@ void CChildView::OnTypeHex8()
 }
 
 void CChildView::OnUpdateTypeHex8(CCmdUI *pCmdUI)
+{
+	StandardTypeUpdate(pCmdUI);
+}
+
+void CChildView::OnTypeBits()
+{
+	ReplaceSelectedWithType(nt_bits);
+}
+
+void CChildView::OnUpdateTypeBits(CCmdUI *pCmdUI)
 {
 	StandardTypeUpdate(pCmdUI);
 }

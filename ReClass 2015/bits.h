@@ -30,42 +30,49 @@ class BitArray
 public:
 	BitArray()
 	{
-		value = 0x0F;
-		size = sizeof(T)* CHAR_BIT;
-		bits = malloc(size);
+		value = 0xFF;
+		length = sizeof(T) * CHAR_BIT;
+		size = length + 1;
+		bits = (char*)malloc(size);
 	}
 
 	BitArray(T num)
 	{
 		value = num;
-		size = sizeof(T)* CHAR_BIT;
-		bits = malloc(size);
+		length = sizeof(T) * CHAR_BIT;
+		size = length + 1;
+		bits = (char*)malloc(size);
+	}
+
+	~BitArray()
+	{
+		delete[] bits;
 	}
 
 	char* GetBitsString()
 	{
-		for (int i = size; i >= 0; i--)
+		for (int i = length - 1; i >= 0; i--)
 		{
 			unsigned char bit = GetBit(i);
-			bits[size - i] = bit + 0x30;
+			bits[(length - 1) - i] = bit + 0x30;
 			//printf("%d", bit);
 		}
 
-		bits[size] = '\0';
+		bits[size - 1] = '\0';
 
 		return bits;
 	}
 
 	char* GetBitsReverseString()
-	{
-		for (int i = 0; i < size; i++)
+	{ 
+		for (int i = 0; i < length; i++)
 		{
 			unsigned char bit = GetBit(i);
 			bits[i] = bit + 0x30;
 			//printf("%d", bit);
 		}
 
-		bits[size] = '\0';
+		bits[size - 1] = '\0';
 
 		return bits;
 	}
@@ -107,7 +114,8 @@ public:
 private:
 	T value;
 	size_t size;
-	void* bits;
+	int length;
+	char* bits;
 };
 
 

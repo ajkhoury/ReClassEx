@@ -219,14 +219,15 @@ enum NodeType
 	nt_vtable,
 	nt_array,
 	nt_class,
-	nt_pchar
+	nt_pchar,
+	nt_bits
 };
 
-#define HEXTYPE (nt_hex64 | nt_hex32 | nt_hex16 | nt_hex8)
+#define HEXTYPE (nt_hex64 | nt_hex32 | nt_hex16 | nt_hex8 | nt_bits)
 
 __inline const char* NodeTypeToString(NodeType type)
 {
-	static const char* pszNodeTypes[31] = {
+	static const char* pszNodeTypes[] = {
 		"nt_base",
 		"nt_instance",
 		"nt_struct",
@@ -256,7 +257,8 @@ __inline const char* NodeTypeToString(NodeType type)
 		"nt_vtable",
 		"nt_array",
 		"nt_class",
-		"nt_pchar"
+		"nt_pchar",
+		"nt_bits"
 	};
 	return pszNodeTypes[type];
 }

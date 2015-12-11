@@ -21,6 +21,7 @@ COLORREF crComment		= RGB(0,200,0);
 COLORREF crVTable		= RGB(0,255,0);
 COLORREF crFunction		= RGB(255,0,255);
 COLORREF crChar			= RGB(0,0,255);
+COLORREF crBits			= RGB(0,0,255);
 COLORREF crCustom		= RGB(64,128,64);
 COLORREF crHex			= RGB(0,0,0);
 

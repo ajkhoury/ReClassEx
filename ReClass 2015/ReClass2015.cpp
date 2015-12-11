@@ -860,6 +860,8 @@ CNodeBase* CReClass2015App::CreateNewNode(NodeType Type)
 	if (Type == nt_hex16) return new CNodeHex16;
 	if (Type == nt_hex8) return new CNodeHex8;
 
+	if (Type == nt_bits) return new CNodeBits;
+
 	if (Type == nt_int64) return new CNodeInt64;
 	if (Type == nt_int32) return new CNodeInt32;
 	if (Type == nt_int16) return new CNodeInt16;
