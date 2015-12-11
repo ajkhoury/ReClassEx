@@ -19,3 +19,5 @@ New features include:
 - Added RTTI info for pointers
 - Cleaned up RTTI and made the RTTI string editable
 - Made addresses edittable for copy & pasting
+- Added memory swap option to switch endianness: thanks buddyfavors
+- Added Bits type for a bit view instead of text
