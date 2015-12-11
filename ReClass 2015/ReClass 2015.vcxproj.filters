@@ -165,6 +165,9 @@
     <None Include="res\classicon.bmp">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\Images\reclass.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

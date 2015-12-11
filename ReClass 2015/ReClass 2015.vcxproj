@@ -277,6 +277,7 @@
     <None Include="..\Images\matrix.ico" />
     <None Include="..\Images\open.ico" />
     <None Include="..\Images\pointer.ico" />
+    <None Include="..\Images\reclass.png" />
     <None Include="..\Images\right.ico" />
     <None Include="..\Images\signed.ico" />
     <None Include="..\Images\speles_random_ico.ico" />
