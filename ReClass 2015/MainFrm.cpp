@@ -428,16 +428,18 @@ void CMainFrame::OnButtonTypedef()
 	dlg.DoModal();
 }
 
+// Annoying processes to filter out that you probably won't be looking in the memory of
 static const char* CommonProcesses[] = 
 {
-	"svchost.exe",	"conhost.exe",	"wininit.exe",	"smss.exe",
-	"winint.exe",	"wlanext.exe",	"spoolsv.exe",	"spoolsv.exe",
-	"notepad.exe",	"explorer.exe",	"sqlservr.exe", "nvtray.exe",	
-	"nvxdsync.exe", "lsass.exe",	"jusched.exe", "conhost.exe",	
-	"winamp.exe", 	"calc.exe",	"taskhostex.exe", "Taskmgr.exe",
-	"plugin-container.exe", "ReClass.exe",	"ReClass_64.exe",
-	"SettingSyncHost.exe",	"SkyDrive.exe",	"ctfmon.exe",	"RuntimeBroker.exe", // Win8 Processes
-	"BTTray.exe",	"BTStackServer.exe",	"Bluetooth Headset Helper.exe" // Win8 Bluetooth Processes
+	"svchost.exe", "conhost.exe", "wininit.exe", "smss.exe", "StikyNot.exe", "dwm.exe",
+	"winint.exe", "wlanext.exe", "spoolsv.exe", "spoolsv.exe", "ApplicationFrameHost.exe",
+	"notepad.exe", "explorer.exe", "sqlservr.exe", "sqlwriter.exe", "nvtray.exe", "SearchIndexer.exe",
+	"nvxdsync.exe", "lsass.exe", "jusched.exe", "conhost.exe", "ShellExperienceHost.exe",
+	"winamp.exe", "calc.exe", "win32calc.exe", "taskhostex.exe", "Taskmgr.exe", "WUDFHost.exe",
+	"plugin-container.exe", "SearchProtocolHost.exe", "SearchFilterHost.exe", "fontdrvhost.exe",
+	"ReClass.exe", "ReClass_64.exe", "SearchUI.exe", "DataExchangeHost.exe", "WmiPrvSe.exe",
+	"SettingSyncHost.exe", "SkyDrive.exe", "ctfmon.exe", "RuntimeBroker.exe", "SystemSettingsBroker.exe",
+	"BTTray.exe", "BTStackServer.exe", "Bluetooth Headset Helper.exe", "taskhostw.exe"
 };
 
 void CMainFrame::OnButtonSelectprocess()
