@@ -431,7 +431,7 @@ void CMainFrame::OnButtonTypedef()
 // Annoying processes to filter out that you probably won't be looking in the memory of
 static const char* CommonProcesses[] = 
 {
-	"svchost.exe", "conhost.exe", "wininit.exe", "smss.exe", "StikyNot.exe", "dwm.exe",
+	"svchost.exe", "conhost.exe", "wininit.exe", "smss.exe", "StikyNot.exe", "dwm.exe", "winlogon.exe",
 	"winint.exe", "wlanext.exe", "spoolsv.exe", "spoolsv.exe", "ApplicationFrameHost.exe",
 	"notepad.exe", "explorer.exe", "sqlservr.exe", "sqlwriter.exe", "nvtray.exe", "SearchIndexer.exe",
 	"nvxdsync.exe", "lsass.exe", "jusched.exe", "conhost.exe", "ShellExperienceHost.exe",
@@ -553,6 +553,8 @@ void CMainFrame::OnButtonSelectprocess()
 
 							ProcMenuItems.push_back(Item);
 						}
+
+						CloseHandle(hProcess);
 					}
 				}
 
