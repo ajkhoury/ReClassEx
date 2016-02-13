@@ -314,19 +314,28 @@ public:
 			}
 		}
 
-		DWORD_PTR pRTTIObjectLocator= Val - 8; //Val is Ptr to first VFunc, pRTTI is at -0x8
+		DWORD_PTR pRTTIObjectLocator = Val - 8; //Val is Ptr to first VFunc, pRTTI is at -0x8
 		if (!IsValidPtr(pRTTIObjectLocator))
 			return x;
 
 		DWORD_PTR RTTIObjectLocator;
 		ReadMemory(pRTTIObjectLocator, &RTTIObjectLocator, sizeof(DWORD_PTR));
 
-		DWORD ClassHierarchyDescriptorOffset;
-		ReadMemory(RTTIObjectLocator + 0x10, &ClassHierarchyDescriptorOffset, sizeof(DWORD));
+		DWORD dwTypeDescriptorOffset;
+		ReadMemory(RTTIObjectLocator + 0x0C, &dwTypeDescriptorOffset, sizeof(DWORD));
+		DWORD_PTR TypeDescriptor = ModuleBase + dwTypeDescriptorOffset;
+
+		DWORD dwObjectBaseOffset;
+		ReadMemory(RTTIObjectLocator + 0x14, &dwObjectBaseOffset, sizeof(DWORD));
+		DWORD_PTR ObjectBase = ModuleBase + dwObjectBaseOffset;
+
+
+		DWORD dwClassHierarchyDescriptorOffset;
+		ReadMemory(RTTIObjectLocator + 0x10, &dwClassHierarchyDescriptorOffset, sizeof(DWORD));
 
 		//Offsets are from base
-		DWORD_PTR ClassHierarchyDescriptor = ModuleBase + ClassHierarchyDescriptorOffset;
-		if (!IsValidPtr(ClassHierarchyDescriptor) || !ClassHierarchyDescriptorOffset)
+		DWORD_PTR ClassHierarchyDescriptor = ModuleBase + dwClassHierarchyDescriptorOffset;
+		if (!IsValidPtr(ClassHierarchyDescriptor) || !dwClassHierarchyDescriptorOffset)
 			return x;
 
 		DWORD NumBaseClasses;
@@ -520,7 +529,7 @@ public:
 
 			if (gbInt)
 			{
-				if ( f > 140000000 && f < 80000000000 )
+				if (f > 0x6FFFFFFF && f < 0x7FFFFFFFFFFF)
 					x = AddText( View, x, y, crValue, NONE, "(0x%I64X %i)", i, i);
 				else
 					x = AddText( View, x, y, crValue, NONE, "(%i)", i );
@@ -534,7 +543,7 @@ public:
 				if (gbPointers)
 				{
 					//printf( "<%p> here\n", Val );
-					if (Val > 0x70000000 && Val < 0x80000000000)
+					if (Val > 0x6FFFFFFF && Val < 0x7FFFFFFFFFFF)
 					{	
 						x = AddText(View,x,y,crOffset,NONE,"*->%s ", a);
 						x = ResolveRTTI(Val, x, View, y);
@@ -578,7 +587,7 @@ public:
 			if (gbInt)
 			{
 				#ifdef _WIN64
-				if (f > 0x140000000 && f < 0x80000000000) // in 64 bit address range
+				if (f > 0x140000000 && f < 0x7FFFFFFFFFFF) // in 64 bit address range
 					x = AddText(View, x, y, crValue, NONE, "(0x%I64X %i)", i, i);
 				else
 					x = AddText(View, x, y, crValue, NONE, "(%i)", i);
@@ -999,7 +1008,7 @@ public:
 			BitArray<unsigned char> bits;
 			bits.SetValue(pMemory[0]);
 
-			CString asc = bits.GetBitsString();
+			CString asc = bits.GetBitsReverseString();
 
 			asc += ' ';
 			tx = AddText(View, tx, y, crChar, NONE, "%s", asc);

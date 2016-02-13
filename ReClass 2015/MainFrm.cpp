@@ -428,64 +428,13 @@ void CMainFrame::OnButtonTypedef()
 	dlg.DoModal();
 }
 
-typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
-LPFN_ISWOW64PROCESS fnIsWow64Process;
-BOOL is64bit(HANDLE hProcess, const char* name)
-{
-	BOOL bIsWow64 = FALSE;
-
-	//IsWow64Process is not available on all supported versions of Windows.
-	//Use GetModuleHandle to get a handle to the DLL that contains the function
-	//and GetProcAddress to get a pointer to the function if available.
-
-	fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle("kernel32.dll"), "IsWow64Process");
-	if(fnIsWow64Process != NULL)
-	{
-		if (!fnIsWow64Process(hProcess, &bIsWow64))
-		{
-			//handle error
-			return FALSE;
-		}
-	}
-	else
-	{
-		printf("fnIsWow64Process is NULL!!\n");
-		return FALSE;
-	}
-
-	#ifdef _DEBUG
-	printf("bIsWow64 for %s is %s!!\n", name, !bIsWow64 ? "true" : "false");
-	#endif
-
-	return !bIsWow64;
-}
-
-BOOL is32Bit(HANDLE hProcess)
-{
-	fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
-	if (!fnIsWow64Process)
-		return TRUE; // WTF update, assume 32bit noob
-
-	BOOL bIs64BitOS = FALSE;
-	fnIsWow64Process(GetCurrentProcess(), &bIs64BitOS);//are we running as a 32bit in a 64bit OS (assume we compiled as a 32bit process)
-	if (bIs64BitOS)
-	{
-		BOOL bIs32Bit;
-		fnIsWow64Process(hProcess, &bIs32Bit);//is this 32bit process in a 64bit OS?
-		return bIs32Bit;
-	}
-	else
-		return TRUE;// 32bit OS, so it's a 32bit process
-}
-
-std::string CommonProcesses[] = 
+static const char* CommonProcesses[] = 
 {
 	"svchost.exe",	"conhost.exe",	"wininit.exe",	"smss.exe",
 	"winint.exe",	"wlanext.exe",	"spoolsv.exe",	"spoolsv.exe",
-	"notepad.exe",	"explorer.exe", "itunes.exe",	"sqlservr.exe",
-	"nvtray.exe",	"nvxdsync.exe", "lsass.exe",	"jusched.exe",
-	"conhost.exe",  "chrome.exe",	"firefox.exe", 	"winamp.exe",
-	"WinRAR.exe",	"calc.exe",	"taskhostex.exe", "Taskmgr.exe",
+	"notepad.exe",	"explorer.exe",	"sqlservr.exe", "nvtray.exe",	
+	"nvxdsync.exe", "lsass.exe",	"jusched.exe", "conhost.exe",	
+	"winamp.exe", 	"calc.exe",	"taskhostex.exe", "Taskmgr.exe",
 	"plugin-container.exe", "ReClass.exe",	"ReClass_64.exe",
 	"SettingSyncHost.exe",	"SkyDrive.exe",	"ctfmon.exe",	"RuntimeBroker.exe", // Win8 Processes
 	"BTTray.exe",	"BTStackServer.exe",	"Bluetooth Headset Helper.exe" // Win8 Bluetooth Processes
@@ -502,137 +451,119 @@ void CMainFrame::OnButtonSelectprocess()
 
 	ClearProcMenuItems();
 
-#ifdef _WIN64
-	HANDLE ProcessList = CreateToolhelp32Snapshot( TH32CS_SNAPPROCESS, NULL );
-	if (ProcessList != INVALID_HANDLE_VALUE)
+	static HMODULE hNtdll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
+	static tNTQSI fnQSI = (tNTQSI)Utils::GetProcAddress(hNtdll, "NtQuerySystemInformation");
+
+	void* pBuffer = NULL;
+	ULONG cbBuffer = 131072;
+	HANDLE hHeap = GetProcessHeap();
+	NTSTATUS Status = STATUS_INFO_LENGTH_MISMATCH;
+	bool bHasEnumeratedProcesses = false;
+
+	while (!bHasEnumeratedProcesses)
 	{
-		PROCESSENTRY32 ProcInfo;
-		ProcInfo.dwSize	= sizeof( PROCESSENTRY32 );
-		BOOL rp = Process32First( ProcessList, &ProcInfo );
+		pBuffer = HeapAlloc(hHeap, HEAP_ZERO_MEMORY, cbBuffer);
+		if (pBuffer == NULL)
+			return;
 
-		bool bSkip = false;
-
-		while(rp == TRUE)
+		Status = fnQSI(SystemProcessInformation, pBuffer, cbBuffer, &cbBuffer);
+		if (Status == STATUS_INFO_LENGTH_MISMATCH)
 		{
-			// Are we filtering out processes
-			if (gbFilterProcesses)
-			{
-				for (int i = 0; i < sizeof(CommonProcesses) / sizeof(*CommonProcesses) ; i++)
+			HeapFree(hHeap, NULL, pBuffer);
+			cbBuffer *= 2;
+		}
+		else if (!NT_SUCCESS(Status))
+		{
+			HeapFree(hHeap, NULL, pBuffer);
+			return;
+		}
+		else
+		{
+			bHasEnumeratedProcesses = true;
+			PSYSTEM_PROCESSES infoP = (PSYSTEM_PROCESSES)pBuffer;
+			while (infoP)
+			{	
+				if (infoP->ProcessName.Length)
 				{
-					if (_stricmp( ProcInfo.szExeFile, CommonProcesses[i].c_str()) == 0 )
+					char pName[256];
+					memset(pName, 0, sizeof(pName));
+					WideCharToMultiByte(0, 0, infoP->ProcessName.Buffer, infoP->ProcessName.Length, pName, 256, NULL, NULL);				
+					// Are we filtering out processes
+					if (gbFilterProcesses)
 					{
-						//printf( "True %s\n", ProcInfo.szExeFile );
-						bSkip = true;
+						bool skip = false;
+						for (int i = 0; i < sizeof(CommonProcesses) / sizeof(*CommonProcesses); i++) {
+							if (_stricmp(pName, CommonProcesses[i]) == 0) {
+								skip = true;
+								break;
+							}
+						}
+						if (skip)
+						{
+							if (!infoP->NextEntryDelta)
+								break;
+							infoP = (PSYSTEM_PROCESSES)((unsigned char*)infoP + infoP->NextEntryDelta);
+							continue;
+						}
+					}				
+
+					HANDLE hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, infoP->ProcessId);
+					if (hProcess)
+					{
+						#ifdef _WIN64
+						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX64) {
+						#else
+						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX86) {
+						#endif
+							char filename[1024];
+							GetModuleFileNameEx(hProcess, NULL, filename, 1024);
+
+							SHFILEINFO    sfi;
+							SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
+
+							CBitmap* pBitmap = new CBitmap();
+							CProcessMenuInfo Item;
+							Item.ProcessId = infoP->ProcessId;
+							Item.pBitmap = pBitmap;
+
+							CClientDC clDC(this);
+							CDC dc;
+							dc.CreateCompatibleDC(&clDC);
+
+							int cx = 16;
+							int cy = 16;
+							pBitmap->CreateCompatibleBitmap(&clDC, cx, cy);
+							CBitmap* pOldBmp = dc.SelectObject(pBitmap);
+
+							dc.FillSolidRect(0, 0, cx, cy, GetSysColor(COLOR_3DFACE));
+							DrawIconEx(dc.GetSafeHdc(), 0, 0, sfi.hIcon, cx, cy, 0, NULL, DI_NORMAL);
+
+							dc.SelectObject(pOldBmp);
+							dc.DeleteDC();
+
+							DWORD MsgID = (DWORD)(WM_PROCESSMENU + ProcMenuItems.size());
+
+							CString proccessString;
+							proccessString.Format("%s (%i)", pName, infoP->ProcessId);
+
+							menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID, proccessString.GetBuffer());
+							menu.SetMenuItemBitmaps(MsgID, MF_BYCOMMAND, pBitmap, pBitmap);
+
+							ProcMenuItems.push_back(Item);
+						}
 					}
 				}
+
+				if (!infoP->NextEntryDelta)
+					break;
+				infoP = (PSYSTEM_PROCESSES)((unsigned char*)infoP + infoP->NextEntryDelta);
 			}
-
-			if (bSkip)
-			{
-				bSkip = false;
-				rp = Process32Next(ProcessList,&ProcInfo);
-				continue;
-			}
-
-			HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, ProcInfo.th32ProcessID);
-			if (hProcess)
-			{
-				if (is64bit(hProcess, ProcInfo.szExeFile))
-				{
-					char filename[1024];
-					GetModuleFileNameEx(hProcess, NULL, filename, 1024);
-
-					SHFILEINFO    sfi;
-					SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
-
-					CBitmap* pBitmap = new CBitmap();
-					CProcessMenuInfo Item;
-					Item.ProcessId = ProcInfo.th32ProcessID;
-					Item.pBitmap = pBitmap;
-
-					CClientDC clDC(this);
-					CDC dc;
-					dc.CreateCompatibleDC(&clDC);
-
-					int cx = 16;
-					int cy = 16;
-					pBitmap->CreateCompatibleBitmap(&clDC, cx, cy);
-					CBitmap* pOldBmp = dc.SelectObject(pBitmap);
-
-					dc.FillSolidRect(0, 0, cx, cy, GetSysColor(COLOR_3DFACE));
-					//dc.DrawIcon(0, 0, sfi.hIcon);
-					::DrawIconEx(dc.GetSafeHdc(), 0, 0, sfi.hIcon, cx, cy, 0, NULL, DI_NORMAL);
-
-					dc.SelectObject(pOldBmp);
-					dc.DeleteDC();
-
-					DWORD MsgID = (DWORD)(WM_PROCESSMENU + ProcMenuItems.size());
-					menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID, ProcInfo.szExeFile );
-					menu.SetMenuItemBitmaps(MsgID, MF_BYCOMMAND, pBitmap, pBitmap);
-
-					ProcMenuItems.push_back(Item); 
-				}
-				CloseHandle(hProcess);
-			}
-			rp = Process32Next(ProcessList,&ProcInfo);
 		}
-		CloseHandle(ProcessList);
 	}
-#else
-	HANDLE ProcessList = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
-	if (ProcessList != INVALID_HANDLE_VALUE) 
-	{
-		PROCESSENTRY32 ProcInfo;
-		ProcInfo.dwSize	= sizeof( PROCESSENTRY32 );
-		BOOL rp = Process32First(ProcessList, &ProcInfo);
-		while( rp == TRUE )
-		{			 
-			HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, ProcInfo.th32ProcessID);
-			if (hProcess)
-			{
-				if (!is64bit(hProcess, ProcInfo.szExeFile))
-				{
-					char filename[1024];
-					GetModuleFileNameEx(hProcess, NULL, filename, 1024);
-
-					SHFILEINFO    sfi;
-					SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
-
-					CBitmap* pBitmap = new CBitmap();
-					CProcessMenuInfo Item;
-					Item.ProcessId = ProcInfo.th32ProcessID;
-					Item.pBitmap = pBitmap;
-
-					CClientDC clDC(this);
-					CDC dc;
-					dc.CreateCompatibleDC(&clDC);
-
-					int cx = 16;
-					int cy = 16;
-					pBitmap->CreateCompatibleBitmap(&clDC, cx, cy);
-					CBitmap* pOldBmp = dc.SelectObject(pBitmap);
-
-					dc.FillSolidRect(0, 0, cx, cy, GetSysColor(COLOR_3DFACE));
-					::DrawIconEx(dc.GetSafeHdc(), 0, 0, sfi.hIcon, cx, cy, 0, NULL, DI_NORMAL);
-
-					dc.SelectObject(pOldBmp);
-					dc.DeleteDC();
-
-					DWORD MsgID = WM_PROCESSMENU + ProcMenuItems.size();
-					menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID , ProcInfo.szExeFile);
-					menu.SetMenuItemBitmaps(MsgID, MF_BYCOMMAND, pBitmap, pBitmap);
-
-					ProcMenuItems.push_back(Item);
-				}
-				CloseHandle(hProcess);
-			}
-			rp = Process32Next(ProcessList, &ProcInfo);
-		}
-		CloseHandle(ProcessList);
-	}
-#endif
 
 	menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this);
+	
+	return;
 }
 
 void CMainFrame::ClearProcMenuItems()

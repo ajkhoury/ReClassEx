@@ -51,28 +51,11 @@ CReClass2015App::CReClass2015App()
 	SetAppID("ReClass.2015.0.9.1.0");
 
 	#ifdef _DEBUG
-	CreateConsole();
+	Utils::CreateConsole();
 	#endif
 
 	FontWidth = 12;
 	FontHeight = 12;
-}
-
-void getDebugPriv()
-{
-	HANDLE hToken; LUID sedebugnameValue; TOKEN_PRIVILEGES tkp;
-	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken))
-		return;
-	if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &sedebugnameValue))
-	{
-		CloseHandle(hToken);
-		return;
-	}
-	tkp.PrivilegeCount = 1;
-	tkp.Privileges[0].Luid = sedebugnameValue;
-	tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-	AdjustTokenPrivileges( hToken, FALSE, &tkp, sizeof tkp, NULL, NULL );
-	CloseHandle( hToken );
 }
 
 extern bool Scintilla_RegisterClasses(void *hInstance);
@@ -200,7 +183,7 @@ BOOL CReClass2015App::InitInstance()
 	pFrame->ShowWindow(m_nCmdShow);
 	pFrame->UpdateWindow();
 
-	getDebugPriv();
+	Utils::SetDebugPrivilege(TRUE);
 
 	return TRUE;
 }

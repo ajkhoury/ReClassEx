@@ -1250,7 +1250,7 @@ void CChildView::OnUpdateInsertInsert2048(CCmdUI *pCmdUI)
 void MakeBasicClass(CNodeClass* pClass)
 {
 #ifdef _WIN64
-	for (int i = 0; i < 64/8; i++)
+	for (int i = 0; i < 1/*64/8*/; i++)
 	{
 		CNodeHex64* pNode = new CNodeHex64();
 		pNode->pParent = pClass;

@@ -5,7 +5,6 @@
 
 #include <fcntl.h>
 #include <stdio.h>
-#include <io.h>
 #include <time.h>
 #include <stdlib.h>
 #include <string>
@@ -92,20 +91,6 @@ void EndianSwap( T* pObj )
 	unsigned char* pMem = reinterpret_cast<unsigned char*>( pObj );
 	std::reverse( pMem, pMem + sizeof( T ) );
 }
-
-static void CreateConsole()
-{
-	int hConHandle = 0;   
-	HANDLE lStdHandle = 0;  
-	FILE *fp = 0;
-	AllocConsole( );
-	lStdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-	hConHandle = _open_osfhandle(PtrToUlong( lStdHandle ), _O_TEXT);
-	fp = _fdopen(hConHandle, "w");
-	*stdout = *fp;
-	setvbuf(stdout, NULL, _IONBF, 0);
-}
-
 
 static bool IsValidPtr(DWORD_PTR Ptr)
 {

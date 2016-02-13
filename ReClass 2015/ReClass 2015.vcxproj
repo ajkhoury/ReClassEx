@@ -91,12 +91,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <EmbedManifest>false</EmbedManifest>
-    <GenerateManifest>true</GenerateManifest>
     <OutDir>..\BIN\</OutDir>
     <TargetName>$(ProjectName)_64</TargetName>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules />
     <CodeAnalysisRuleAssemblies />
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -190,7 +190,6 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_AMD64_;_M_AMD64;_X86AMD64_;_WIN64;_M_X64;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
-      <OpenMPSupport>false</OpenMPSupport>
       <StringPooling>true</StringPooling>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -321,12 +320,14 @@
     <ClInclude Include="DialogEdit.h" />
     <ClInclude Include="DialogTypes.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="nt_ddk.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="ReClass2015.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SDK.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\SQLite\CppSQLite3.cpp" />

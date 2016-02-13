@@ -30,46 +30,43 @@
 #include <Psapi.h>
 #include <tlhelp32.h>
 
-#include "..\SQLite\CppSQLite3.h"
-#include "..\tinyxml\tinyxml.h"
+#include "..\\SQLite\\CppSQLite3.h"
+#include "..\\tinyxml\\tinyxml.h"
 
 #define BEA_ENGINE_STATIC
 #define BEA_USE_STDCALL
-#include "..\beaengine\headers\BeaEngine.h"
+#include "..\\beaengine\\headers\\BeaEngine.h"
 #ifdef _WIN64
-#pragma comment( lib, "../beaengine/Win64/Lib/BeaEngine64.lib")
+#pragma comment( lib, "..\\beaengine\\Win64\\Lib\\BeaEngine64.lib")
 #else
-#pragma comment( lib, "../beaengine/Win32/Lib/BeaEngine.lib")
+#pragma comment( lib, "..\\beaengine\\Win32\\Lib\\BeaEngine.lib")
 #endif
 
 // Include Scintilla parser
-#include "..\scintilla/include/SciLexer.h"
-#include "..\scintilla/include/Scintilla.h"
+#include "..\\scintilla\\include\\SciLexer.h"
+#include "..\\scintilla\\include\\Scintilla.h"
 
 #ifdef _DEBUG
-
 #ifdef _WIN64
-#pragma comment(lib, "../scintilla/bin/SciLexerd_64.lib")
+#pragma comment(lib, "..\\scintilla\\bin\\SciLexerd_64.lib")
 #else
-#pragma comment(lib, "../scintilla/bin/SciLexerd.lib")
+#pragma comment(lib, "..\\scintilla\\bin\\SciLexerd.lib")
 #endif
-
 #else
-
 #ifdef _WIN64
-#pragma comment(lib, "../scintilla/bin/SciLexer_64.lib")
+#pragma comment(lib, "..\\scintilla\\bin\\SciLexer_64.lib")
 #else
-#pragma comment(lib, "../scintilla/bin/SciLexer.lib")
+#pragma comment(lib, "..\\scintilla\\bin\\SciLexer.lib")
 #endif
-
 #endif
 
 #include <CommCtrl.h>
-#pragma comment(lib,"comctl32.lib")
-
-#pragma comment(lib,"Psapi.lib")
 #include <vector>
 
+#pragma comment(lib, "comctl32.lib")
+#pragma comment(lib, "Psapi.lib")
+
+#include "Utils.h"
 
 //Globals
 extern HANDLE hProcess;
