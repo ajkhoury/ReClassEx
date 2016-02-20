@@ -16,7 +16,7 @@
 #endif
 
 // The one and only CReClass2015App object
-CReClass2015App theApp;
+CReClass2015App theApp; 
 
 // CReClass2015App
 BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx)
