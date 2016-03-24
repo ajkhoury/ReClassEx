@@ -7,56 +7,49 @@
 
 extern DWORD NodeCreateIndex;
 
-template<class T> int NumDigits(T number)
-{
-	int digits = 0;
-	// remove this if '-' counts as a digit
-	if ( number < 0 )
-		digits = 1; 
-	while (number)
-	{
-		number /= 0x16;
-		digits++;
-	}
-	return digits;
-}
-
-class CMemory
-{
-public:
-	CMemory()
-	{
-		MemorySize = 0;
-		pMemory = NULL;
-	}
-	~CMemory()
-	{
-		if (pMemory) 
-			delete pMemory;
-	}
-
-	DWORD MemorySize;
-	BYTE* pMemory;
-
-	void SetSize(DWORD Size)
-	{
-		if ((!pMemory) || (Size != MemorySize))
-		{
-			if (pMemory) delete pMemory;
-			pMemory = new BYTE[Size];
-			MemorySize = Size;
-		}
-	}
-};
-
+// forward declarations
+class CMemory;
+class CNodeBase;
+class CNodeIcon;
 class CNodeClass;
+class CNodeHex64;
+class CNodeHex32; 
+class CNodeHex16;
+class CNodeHex8;
+class CNodeBits;
+class CNodeVTable;
+class CNodeFunctionPtr;
+class CNodePtr;
+class CNodeInt64;
+class CNodeInt32;
+class CNodeInt8;
+class CNodeDWORD;
+class CNodeWORD;
+class CNodeBYTE;
+class CNodeText;
+class CNodeCharPtr;
+class CNodeUnicode;
+class CNodeFloat;
+class CNodeDouble;
+class CNodeVec2;
+class CNodeVec3;
+class CNodeQuat;
+class CNodeMatrix;
+class CNodeArray;
+class CNodeClassInstance;
+class CNodeCustom;
+
+#include "ChildFrm.h"
+
+size_t ConvertStrToAddress(CString Address);
+
 struct ViewInfo
 {
 	CDC* dc;
 	CRect* client;
 	std::vector<HotSpot>* HotSpots;
 	std::vector<CNodeClass*>* Classes;
-	DWORD_PTR Address;
+	size_t Address;
 	void* pData;
 	UINT Level;
 	bool bMultiSelected;
@@ -94,7 +87,7 @@ public:
 
 	NodeType nodeType;
 
-	DWORD_PTR offset;
+	size_t offset;
 	CString strOffset;
 
 	CString Name;
@@ -158,7 +151,7 @@ public:
 		return x + width;
 	}
 
-	int AddAddressOffset( ViewInfo& View, int x, int y )
+	int AddAddressOffset(ViewInfo& View, int x, int y)
 	{
 		if (gbOffset)
 		{
@@ -167,19 +160,15 @@ public:
 			// just the left side 0000
 			// TODO: fix the ghetto rig FontWidth * x
 			// where x = characters over 8
-
 			x += FontWidth; // we need this either way
 
-			unsigned int numdigits = NumDigits( View.Address );
-			int pad = 1;
+			int numdigits = Utils::NumDigits(View.Address);
+			if (numdigits < 8 && numdigits > 4)
+				x -= ((8 - numdigits) * FontWidth);
+			if (numdigits > 8)
+				x += ((numdigits - 8) * FontWidth);
 
-			if ( numdigits < 8 && numdigits > 4 )
-				x -= ( ( 8 - numdigits ) * FontWidth );
-
-			if ( numdigits > 8 )
-				x += ( ( numdigits - 8 ) * FontWidth );
-
-			x = AddText( View, x - pad, y, crOffset, NONE, "%0.4X", offset ) + FontWidth;
+			x = AddText(View, x - 1, y, crOffset, NONE, "%0.4X", offset) + FontWidth;
 			#else
 			x = AddText(View, x, y, crOffset, NONE, "%0.4X", offset) + FontWidth;
 			#endif
@@ -290,11 +279,10 @@ public:
 	{
 		//https://msdn.microsoft.com/en-us/library/windows/desktop/ms681400%28v=vs.85%29.aspx
 		typedef DWORD(WINAPI* UnDecorateSymbolName)(PCTSTR DecoratedName, PTSTR  UnDecoratedName, DWORD UndecoratedLength, DWORD  Flags);
+		static UnDecorateSymbolName fnDemangle = (UnDecorateSymbolName)Utils::GetProcAddress(LoadLibrary("Dbghelp.dll"), "UnDecorateSymbolName");
 
-		UnDecorateSymbolName FnDemangle = (UnDecorateSymbolName)GetProcAddress(LoadLibrary("Dbghelp.dll"), "UnDecorateSymbolName");
-
-		char Demangled[512];
-		if (!FnDemangle(DecoratedName.c_str(), Demangled, 512, Flags))
+		char Demangled[256];
+		if (fnDemangle(DecoratedName.c_str(), Demangled, 256, Flags) == 0)
 			return DecoratedName; //function failed
 		return std::string(Demangled);
 	}
@@ -403,34 +391,32 @@ public:
 		}
 		x = AddText(View, x, y, crOffset, HS_RTTI, RTTIString.c_str());
 		return x;
-
-	#else
-		
-		DWORD_PTR pRTTIObjectLocator = Val - 4;
+	#else	
+		size_t pRTTIObjectLocator = Val - 4;
 		if (!IsValidPtr(pRTTIObjectLocator))
 			return x;
 
-		DWORD_PTR RTTIObjectLocator;
-		ReadMemory(pRTTIObjectLocator, &RTTIObjectLocator, sizeof(DWORD_PTR));
+		size_t RTTIObjectLocator;
+		ReadMemory(pRTTIObjectLocator, &RTTIObjectLocator, sizeof(size_t));
 
-		DWORD_PTR pClassHierarchyDescriptor = RTTIObjectLocator + 0x10;
+		size_t pClassHierarchyDescriptor = RTTIObjectLocator + 0x10;
 		if (!IsValidPtr(pClassHierarchyDescriptor))
 			return x;
 
-		DWORD_PTR ClassHierarchyDescriptor;
-		ReadMemory(pClassHierarchyDescriptor, &ClassHierarchyDescriptor, sizeof(DWORD_PTR));
+		size_t ClassHierarchyDescriptor;
+		ReadMemory(pClassHierarchyDescriptor, &ClassHierarchyDescriptor, sizeof(size_t));
 
-		DWORD NumBaseClasses;
-		ReadMemory(ClassHierarchyDescriptor + 0x8, &NumBaseClasses, sizeof(DWORD));
+		int NumBaseClasses;
+		ReadMemory(ClassHierarchyDescriptor + 0x8, &NumBaseClasses, sizeof(int));
 		if (NumBaseClasses < 0 || NumBaseClasses > 25)
 			NumBaseClasses = 0;
 
-		DWORD_PTR pBaseClassArray = ClassHierarchyDescriptor + 0xC;
+		size_t pBaseClassArray = ClassHierarchyDescriptor + 0xC;
 		if (!IsValidPtr(pBaseClassArray))
 			return x;
 
-		DWORD_PTR BaseClassArray;
-		ReadMemory(pBaseClassArray, &BaseClassArray, sizeof(DWORD_PTR));
+		size_t BaseClassArray;
+		ReadMemory(pBaseClassArray, &BaseClassArray, sizeof(size_t));
 
 		//x = AddText(View, x, y, crOffset, NONE, " RTTI: ");
 		std::string RTTIString;
@@ -442,18 +428,18 @@ public:
 				//x = AddText(View, x, y, crOffset, HS_RTTI, " : ");
 			}
 
-			DWORD_PTR pBaseClassDescriptor = BaseClassArray + (4 * i);
+			size_t pBaseClassDescriptor = BaseClassArray + (4 * i);
 			if (!IsValidPtr(pBaseClassDescriptor))
 				continue;
 
-			DWORD_PTR BaseClassDescriptor;
-			ReadMemory(pBaseClassDescriptor, &BaseClassDescriptor, sizeof(DWORD_PTR));
+			size_t BaseClassDescriptor;
+			ReadMemory(pBaseClassDescriptor, &BaseClassDescriptor, sizeof(size_t));
 
 			if (!IsValidPtr(BaseClassDescriptor))
 				continue;
 
-			DWORD_PTR TypeDescriptor; //pointer at 0x00 in BaseClassDescriptor
-			ReadMemory(BaseClassDescriptor, &TypeDescriptor, sizeof(DWORD_PTR));
+			size_t TypeDescriptor; //pointer at 0x00 in BaseClassDescriptor
+			ReadMemory(BaseClassDescriptor, &TypeDescriptor, sizeof(size_t));
 
 			std::string RTTIName;
 			bool FoundEnd = false;
@@ -536,7 +522,7 @@ public:
 			}
 
 			// *** this is probably broken, let's fix it after
-			DWORD_PTR Val = *((DWORD_PTR*) &((BYTE*)View.pData)[offset]);
+			size_t Val = *((size_t*) &((BYTE*)View.pData)[offset]);
 			CString a(GetAddressName(Val,false));
 			if (a.GetLength() > 0)
 			{
@@ -597,11 +583,7 @@ public:
 			}
 
 			// *** this is probably broken, let's fix it after
-			#ifdef _WIN64
-			DWORD_PTR Val = *((DWORD_PTR*) &((BYTE*)View.pData)[offset]);
-			#else
-			DWORD Val = *((DWORD*) &((BYTE*)View.pData)[offset]);
-			#endif
+			size_t Val = *((size_t*) &((BYTE*)View.pData)[offset]);
 
 			CString a(GetAddressName(Val, false));
 
@@ -665,9 +647,8 @@ public:
 	CStringW GetStringFromMemoryW(wchar_t* pMemory, int Length)
 	{
 		CStringW asc;
-		for (int i=0; i < Length;i += sizeof( wchar_t ) )
-		{
-			asc += iswprint( pMemory[i] ) > 0 ? pMemory[i] : L'.';
+		for (int i = 0; i < Length; i += sizeof(wchar_t)) {
+			asc += iswprint(pMemory[i]) > 0 ? pMemory[i] : L'.';
 		}
 		return asc;
 	}
@@ -693,9 +674,6 @@ public:
 	}
 };
 
-#include "ChildFrm.h"
-
-DWORD_PTR ConvertStrToAddress(CString Address);
 class CNodeClass : public CNodeBase
 {
 public:
@@ -703,15 +681,15 @@ public:
 	{
 		nodeType = nt_class;
 		//printf( "[+] Created offset: %p Characters: %d\n", offset, NumDigits( offset ) );
+		offset = GetBase();
+		char szOffset[128];
 		#ifdef _WIN64
-		offset = 0x140000000;
-		strOffset = "140000000";
-		RequestPosition = -1;
+		_ui64toa_s(offset, szOffset, 128, 16);
 		#else
-		offset = 0x400000;
-		strOffset = "400000";
-		RequestPosition = -1;
+		_ultoa_s(offset, szOffset, 128, 16);
 		#endif
+		strOffset = szOffset;
+		RequestPosition = -1;
 		idx = 0;
 	}
 
@@ -855,7 +833,9 @@ public:
 
 	virtual int Draw(ViewInfo& View,int x,int y)
 	{
-		if (bHidden) return DrawHidden(View,x,y);
+		if (bHidden) 
+			return DrawHidden(View,x,y);
+
 		BYTE* pMemory = (BYTE*) &((BYTE*)View.pData)[offset];
 		AddSelection(View,0,y,FontHeight);
 		AddDelete(View,x,y);
@@ -938,37 +918,37 @@ public:
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-		BYTE v = (BYTE)(strtoul(Spot.Text,NULL,16) & 0xFF);
+		BYTE v = (BYTE)(strtoul(Spot.Text, NULL, 16) & 0xFF);
 		if (Spot.ID == 0)
 			WriteMemory(Spot.Address, &v, 1);
 	}
 
 	virtual int GetMemorySize() { return 1; }
 
-	virtual int Draw(ViewInfo& View,int x,int y)
+	virtual int Draw(ViewInfo& View, int x, int y)
 	{
-		if (bHidden) return DrawHidden(View,x,y);
-		BYTE* pMemory = (BYTE*) &((BYTE*)View.pData)[offset];
-		AddSelection(View,0,y,FontHeight);
-		AddDelete(View,x,y);
-		AddTypeDrop(View,x,y);
+		if (bHidden) return DrawHidden(View, x, y);
+		BYTE* pMemory = (BYTE*)&((BYTE*)View.pData)[offset];
+		AddSelection(View, 0, y, FontHeight);
+		AddDelete(View, x, y);
+		AddTypeDrop(View, x, y);
 		//AddAdd(View,x,y);
 
 		int tx = x + TXOFFSET + 16;
-		tx = AddAddressOffset(View,tx,y);
+		tx = AddAddressOffset(View, tx, y);
 
 		if (gbText)
 		{
-			CString asc = GetStringFromMemory((char*)&pMemory[0],1) + "    ";
+			CString asc = GetStringFromMemory((char*)&pMemory[0], 1) + "    ";
 			asc += ' ';
 			asc += ' ';
 			asc += ' ';
 			asc += ' ';
-			tx = AddText(View,tx,y,crChar,NONE,"%s",asc);
+			tx = AddText(View, tx, y, crChar, NONE, "%s", asc);
 		}
 
 		tx = AddText(View, tx, y, crHex, 0, "%0.2X", pMemory[0]) + FontWidth;
-		tx = AddComment(View,tx,y);
+		tx = AddComment(View, tx, y);
 
 		return y += FontHeight;
 	}
@@ -1155,7 +1135,7 @@ public:
 				else 
 				{
 					char szInstruction[96];
-					sprintf_s(szInstruction, "%p  ", MyDisasm.VirtualAddr);
+					sprintf_s(szInstruction, "%p  ", (PVOID)MyDisasm.VirtualAddr);
 					strcat_s(szInstruction, MyDisasm.CompleteInstr);
 					Assembly.push_back(szInstruction);
 
@@ -1265,15 +1245,11 @@ public:
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
-		if (bHidden) return DrawHidden(View,x,y);
+		if (bHidden) 
+			return DrawHidden(View,x,y);
 
-		#ifdef _WIN64
-		DWORD_PTR* pMemory = (DWORD_PTR*)&((BYTE*)View.pData)[offset];
-		#else
-		DWORD* pMemory = (DWORD*)&((BYTE*)View.pData)[offset];
-		#endif
+		size_t* pMemory = (size_t*)&((BYTE*)View.pData)[offset];
 		
-
 		//printf( "read ptr: %p\n", View.pData );
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
@@ -1417,6 +1393,7 @@ public:
 		return y += FontHeight;
 	}
 };
+
 class CNodeInt8 : public CNodeBase
 {
 public:
@@ -1449,48 +1426,6 @@ public:
 		tx = AddText(View, tx, y, crValue, HS_EDIT, "%i", pMemory[0]) + FontWidth;
 		tx = AddComment(View, tx, y);
 
-		return y += FontHeight;
-	}
-};
-
-class CNodeCustom : public CNodeBase
-{
-public:
-	CNodeCustom()
-	{
-		nodeType = nt_custom;
-		Name = "Custom";
-		memsize = 4;
-	}
-
-	DWORD memsize;
-
-	virtual void Update(HotSpot& Spot)
-	{
-		StandardUpdate(Spot);
-		if (Spot.ID == 0)
-			memsize = atoi(Spot.Text);
-	}
-
-	virtual int GetMemorySize() { return memsize; }
-
-	virtual int Draw(ViewInfo& View,int x,int y)
-	{
-		if (bHidden) return DrawHidden(View,x,y);
-		AddSelection(View,0,y,FontHeight);
-		AddDelete(View,x,y);
-		AddTypeDrop(View,x,y);
-		//AddAdd(View,x,y);
-
-		int tx = x + TXOFFSET;
-		tx = AddIcon(View, tx, y, ICON_CUSTOM, NONE, NONE);
-		tx = AddAddressOffset(View, tx, y);
-		tx = AddText(View, tx, y, crType, NONE, "Custom ");
-		tx = AddText(View, tx, y, crIndex, NONE, "[");
-		tx = AddText(View, tx, y, crIndex, HS_EDIT, "%i", memsize);
-		tx = AddText(View, tx, y, crIndex, NONE, "] ");
-		tx = AddText(View, tx, y, crName, HS_NAME, "%s", Name) + FontWidth;
-		tx = AddComment(View, tx, y);
 		return y += FontHeight;
 	}
 };
@@ -1531,6 +1466,7 @@ public:
 		return y += FontHeight;
 	}
 };
+
 class CNodeWORD : public CNodeBase
 {
 public:
@@ -1570,6 +1506,7 @@ public:
 		return y += FontHeight;
 	}
 };
+
 class CNodeBYTE : public CNodeBase
 {
 public:
@@ -1664,37 +1601,33 @@ public:
 	}
 };
 
-class CNodePChar : public CNodeBase
+class CNodeCharPtr : public CNodeBase
 {
 public:
-	CNodePChar() { nodeType = nt_pchar; }
+	CNodeCharPtr() { nodeType = nt_pchar; }
 
 	CNodeBase* pNode;
 	CMemory Memory;
 
-	virtual void Update( HotSpot& Spot )
+	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
 		__int64 v = _atoi64(Spot.Text);
-		if (Spot.ID == 0) 
-			WriteMemory( Spot.Address, &v, 8 );
+		if (Spot.ID == 0)
+			WriteMemory(Spot.Address, &v, 8);
 	}
 
 	virtual int GetMemorySize()
 	{
-		#ifdef _WIN64
-		return 8;
-		#else
-		return 4;
-		#endif
+		return sizeof(size_t);
 	}
 
-	virtual int Draw( ViewInfo& View, int x, int y )
+	virtual int Draw(ViewInfo& View, int x, int y)
 	{
-		if (bHidden) 
-			return DrawHidden(View,x,y);
+		if (bHidden)
+			return DrawHidden(View, x, y);
 
-		unsigned __int64* pMemory = (unsigned __int64*) &((BYTE*)View.pData)[offset];
+		unsigned __int64* pMemory = (unsigned __int64*)&((BYTE*)View.pData)[offset];
 
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
@@ -1702,7 +1635,7 @@ public:
 		//AddAdd(View, x, y);
 
 		int tx = x + TXOFFSET;
-		tx = AddIcon(View, tx,y, ICON_INTEGER, NONE, NONE);
+		tx = AddIcon(View, tx, y, ICON_INTEGER, NONE, NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, "PCHAR ");
 		tx = AddText(View, tx, y, crName, HS_NAME, "%s", Name);
@@ -1730,11 +1663,15 @@ public:
 			DWORD_PTR dw = pMemory[0];
 			CString sc = ReadMemoryString(dw, 20);
 			tx = AddText(View, tx, y, crChar, 1, sc.GetBuffer());
-		} 
-		else 
+		}
+		else
+		{
 			asc = "";
+		}
 
-		tx = AddText( View, tx, y, crChar, NONE, "' " ) + FontWidth;
+		tx = AddText(View, tx, y, crChar, NONE, "' ") + FontWidth;
+
+		tx = AddComment(View, tx, y);
 		return y += FontHeight;
 	}
 };
@@ -1746,7 +1683,7 @@ public:
 	{
 		nodeType = nt_unicode;
 		Name = "Unicode";
-		memsize = 4;
+		memsize = sizeof(size_t);
 	}
 
 	DWORD memsize;
@@ -1754,7 +1691,7 @@ public:
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-		if (Spot.ID == 0) 
+		if (Spot.ID == 0)
 			memsize = atoi(Spot.Text);
 
 		if (Spot.ID == 1)
@@ -1764,20 +1701,20 @@ public:
 			if (Length > memsize)
 				Length = memsize;
 
-			wchar_t* pwszConverted = new wchar_t[ Length + 1 ];
+			wchar_t* pwszConverted = new wchar_t[Length + 1];
 
 			const char* pszSource = Spot.Text.GetBuffer();
 
-			for ( DWORD i = 0; i <= Length; i++ )
+			for (UINT i = 0; i <= Length; i++)
 				pwszConverted[i] = pszSource[i];
 
-			WriteMemory(Spot.Address, pwszConverted, Length * sizeof( wchar_t ));
+			WriteMemory(Spot.Address, pwszConverted, Length * sizeof(wchar_t));
 
 			delete pwszConverted;
 		}
 	};
 
-	virtual int GetMemorySize( void ) { return memsize; }
+	virtual int GetMemorySize(void) { return memsize; }
 
 	virtual int Draw(ViewInfo& View,int x,int y)
 	{
@@ -1796,10 +1733,10 @@ public:
 		tx = AddText(View, tx, y,crType, NONE, "Unicode ");
 		tx = AddText(View, tx, y,crName, HS_NAME, "%s", Name);
 		tx = AddText(View, tx, y,crIndex, NONE, "[");
-		tx = AddText(View, tx, y,crIndex, HS_EDIT, "%i", memsize/sizeof(wchar_t));
+		tx = AddText(View, tx, y,crIndex, HS_EDIT, "%i", memsize / sizeof(wchar_t));
 		tx = AddText(View, tx, y,crIndex, NONE, "]");
 
-		CStringW asc = GetStringFromMemoryW(&pMemory[0],memsize);
+		CStringW asc = GetStringFromMemoryW(&pMemory[0], memsize);
 		tx = AddText(View, tx, y,crChar, NONE, " = '");
 		tx = AddText(View, tx, y,crChar, 1, "%S", asc);
 		tx = AddText(View, tx, y,crChar, NONE, "' ") + FontWidth;
@@ -1858,29 +1795,26 @@ public:
 
 	virtual void Update(HotSpot& Spot)
 	{
-		StandardUpdate( Spot );
-		double v = atof( Spot.Text );
-		if (Spot.ID == 0) 
-			WriteMemory( Spot.Address, &v, 8 );
+		StandardUpdate(Spot);
+		double v = atof(Spot.Text);
+		if (Spot.ID == 0)
+			WriteMemory(Spot.Address, &v, 8);
 	}
 
 	virtual int GetMemorySize( void )
 	{
-		#ifdef _WIN64
+		// doubles are always 64 bits ffs
 		return 8;
-		#else
-		return 4;
-		#endif
 	}
 
-	virtual int Draw(ViewInfo& View,int x,int y)
+	virtual int Draw(ViewInfo& View, int x, int y)
 	{
-		if (bHidden) 
-			return DrawHidden(View,x,y);
-		double* pMemory = (double*) &((BYTE*)View.pData)[offset];
-		AddSelection(View,0,y,FontHeight);
-		AddDelete(View,x,y);
-		AddTypeDrop(View,x,y);
+		if (bHidden)
+			return DrawHidden(View, x, y);
+		double* pMemory = (double*)&((BYTE*)View.pData)[offset];
+		AddSelection(View, 0, y, FontHeight);
+		AddDelete(View, x, y);
+		AddTypeDrop(View, x, y);
 		//AddAdd(View,x,y);
 
 		int tx = x + TXOFFSET;
@@ -1890,7 +1824,7 @@ public:
 		tx = AddText(View, tx, y, crName, HS_NAME, "%s", Name);
 		tx = AddText(View, tx, y, crName, NONE, " = ");
 		//tx = AddText(View, tx, y, crValue, 0, "%.4lg", pMemory[0]) + FontWidth;
-		tx = AddText(View, tx, y, crValue, HS_EDIT, "%3.4lg", pMemory[0]) + FontWidth;
+		tx = AddText(View, tx, y, crValue, HS_EDIT, "%.4g", pMemory[0]) + FontWidth;
 		tx = AddComment(View, tx, y);
 
 		return y += FontHeight;
@@ -2281,3 +2215,46 @@ public:
 		return y;
 	}
 };
+
+class CNodeCustom : public CNodeBase
+{
+public:
+	CNodeCustom()
+	{
+		nodeType = nt_custom;
+		Name = "Custom";
+		memsize = 4;
+	}
+
+	DWORD memsize;
+
+	virtual void Update(HotSpot& Spot)
+	{
+		StandardUpdate(Spot);
+		if (Spot.ID == 0)
+			memsize = atoi(Spot.Text);
+	}
+
+	virtual int GetMemorySize() { return memsize; }
+
+	virtual int Draw(ViewInfo& View, int x, int y)
+	{
+		if (bHidden) return DrawHidden(View, x, y);
+		AddSelection(View, 0, y, FontHeight);
+		AddDelete(View, x, y);
+		AddTypeDrop(View, x, y);
+		//AddAdd(View,x,y);
+
+		int tx = x + TXOFFSET;
+		tx = AddIcon(View, tx, y, ICON_CUSTOM, NONE, NONE);
+		tx = AddAddressOffset(View, tx, y);
+		tx = AddText(View, tx, y, crType, NONE, "Custom ");
+		tx = AddText(View, tx, y, crIndex, NONE, "[");
+		tx = AddText(View, tx, y, crIndex, HS_EDIT, "%i", memsize);
+		tx = AddText(View, tx, y, crIndex, NONE, "] ");
+		tx = AddText(View, tx, y, crName, HS_NAME, "%s", Name) + FontWidth;
+		tx = AddComment(View, tx, y);
+		return y += FontHeight;
+	}
+};
+

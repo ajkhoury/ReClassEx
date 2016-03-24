@@ -6,9 +6,6 @@
 #include "DialogClasses.h"
 #include "MainFrm.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
 
 // CMainFrame
 IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWndEx)
@@ -530,13 +527,12 @@ void CMainFrame::OnButtonSelectprocess()
 					hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, (DWORD)infoP->UniqueProcessId);
 					if (hProcess)
 					{
-						char filename[1024];
-
 						#ifdef _WIN64
 						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX64) {
 						#else
 						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX86) {
 						#endif
+							char filename[1024];
 							GetModuleFileNameEx(hProcess, NULL, filename, 1024);
 
 							SHFILEINFO    sfi;
@@ -551,13 +547,12 @@ void CMainFrame::OnButtonSelectprocess()
 							CDC dc;
 							dc.CreateCompatibleDC(&clDC);
 
-							int cx = 16;
-							int cy = 16;
-							pBitmap->CreateCompatibleBitmap(&clDC, cx, cy);
+							int size = 16;
+							pBitmap->CreateCompatibleBitmap(&clDC, size, size);
 							CBitmap* pOldBmp = dc.SelectObject(pBitmap);
 
-							dc.FillSolidRect(0, 0, cx, cy, GetSysColor(COLOR_3DFACE));
-							DrawIconEx(dc.GetSafeHdc(), 0, 0, sfi.hIcon, cx, cy, 0, NULL, DI_NORMAL);
+							dc.FillSolidRect(0, 0, size, size, GetSysColor(COLOR_3DFACE));
+							DrawIconEx(dc.GetSafeHdc(), 0, 0, sfi.hIcon, size, size, 0, NULL, DI_NORMAL);
 
 							dc.SelectObject(pOldBmp);
 							dc.DeleteDC();

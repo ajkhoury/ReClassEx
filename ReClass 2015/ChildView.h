@@ -2,6 +2,8 @@
 
 #define MAX_NODES 32768
 
+class CMemory;
+
 class myCEdit : public CEdit
 {
 public:
@@ -11,9 +13,9 @@ public:
 
 	virtual BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
 
-	DECLARE_MESSAGE_MAP( )
+	DECLARE_MESSAGE_MAP()
 	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
-	afx_msg void OnEnChange( );
+	afx_msg void OnEnChange();
 	afx_msg HBRUSH CtlColor(CDC* /*pDC*/, UINT /*nCtlColor*/);
 };
 
@@ -29,7 +31,7 @@ public:
 // CChildView window
 class CChildView : public CWnd
 {
-// Construction
+	// Construction
 public:
 	CChildView();
 	virtual ~CChildView();
@@ -49,21 +51,21 @@ public:
 
 	bool isDeleting;
 
-// Overrides
+	// Overrides
 protected:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 
-// Implementation
+	// Implementation
 public:
 	UINT		FindNodeIndex(CNodeBase* pNode);
 	CNodeBase*	FindNodeFromIndex(CNodeBase* currentlySelectedNode, UINT index);
 
-	void		ReplaceNode(CNodeClass* pClass,UINT idx,CNodeBase* pNewNode);
-	void		RemoveNodes(CNodeClass* pClass,UINT idx,DWORD Length);
-	void		FillNodes(CNodeClass* pClass,UINT idx,DWORD Length);
-	void		ResizeNode(CNodeClass* pClass,UINT idx,DWORD before,DWORD After);
-	void		AddBytes(CNodeClass* pClass,DWORD Length);
-	void		InsertBytes(CNodeClass* pClass,UINT idx,DWORD Length);
+	void		ReplaceNode(CNodeClass* pClass, UINT idx, CNodeBase* pNewNode);
+	void		RemoveNodes(CNodeClass* pClass, UINT idx, DWORD Length);
+	void		FillNodes(CNodeClass* pClass, UINT idx, DWORD Length);
+	void		ResizeNode(CNodeClass* pClass, UINT idx, DWORD before, DWORD After);
+	void		AddBytes(CNodeClass* pClass, DWORD Length);
+	void		InsertBytes(CNodeClass* pClass, UINT idx, DWORD Length);
 
 	void		ReplaceSelectedWithType(NodeType Type);
 
@@ -73,7 +75,7 @@ public:
 public:
 	virtual BOOL OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo);
 	//virtual BOOL PreTranslateMessage(MSG* pMsg);
-	
+
 	DECLARE_MESSAGE_MAP()
 
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

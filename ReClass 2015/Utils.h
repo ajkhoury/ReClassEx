@@ -19,6 +19,22 @@ namespace Utils
 		return (val % alignment == 0) ? val : (val / alignment + 1) * alignment;
 	}
 
+	template<class T> 
+	__forceinline int NumDigits(T number)
+	{
+		int digits = 0;
+		// remove this if '-' counts as a digit
+		if (number < 0)
+			digits = 1;
+		while (number)
+		{
+			number /= 0x16;
+			digits++;
+		}
+		return digits;
+	}
+
+
 	static BOOL IsElevated()
 	{
 		BOOL fRet = false;

@@ -11,10 +11,6 @@
 //#include "SDK.h"
 //ReclassSDK*	ReclassSDK::m_pReclassSDK;
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
 // The one and only CReClass2015App object
 CReClass2015App theApp; 
 
@@ -358,28 +354,28 @@ void CReClass2015App::OnFileNew()
 		pVTable->Nodes.push_back(pNode);
 	}
 
-	pClass->Nodes.push_back( new CNodeHex64 );
-	pClass->Nodes.push_back( new CNodeHex32 );
-	pClass->Nodes.push_back( new CNodeHex16 );
-	pClass->Nodes.push_back( new CNodeHex8 );
-	pClass->Nodes.push_back( new CNodeInt64 );
-	pClass->Nodes.push_back( new CNodeInt32 );
-	pClass->Nodes.push_back( new CNodeInt64 );
-	pClass->Nodes.push_back( new CNodeInt16 );
-	pClass->Nodes.push_back( new CNodeInt8 );
-	pClass->Nodes.push_back( new CNodeDWORD );
-	pClass->Nodes.push_back( new CNodeWORD );
-	pClass->Nodes.push_back( new CNodeBYTE );
-	pClass->Nodes.push_back( new CNodeText );
-	pClass->Nodes.push_back( new CNodeUnicode );
-	pClass->Nodes.push_back( new CNodeFloat );
-	pClass->Nodes.push_back( new CNodeDouble );
-	pClass->Nodes.push_back( new CNodeCustom );
-	pClass->Nodes.push_back( new CNodeVec2 );
-	pClass->Nodes.push_back( new CNodeVec3 );
-	pClass->Nodes.push_back( new CNodeQuat );
-	pClass->Nodes.push_back( new CNodeMatrix );
-	pClass->Nodes.push_back( new CNodePChar );
+	pClass->Nodes.push_back(new CNodeHex64);
+	pClass->Nodes.push_back(new CNodeHex32);
+	pClass->Nodes.push_back(new CNodeHex16);
+	pClass->Nodes.push_back(new CNodeHex8);
+	pClass->Nodes.push_back(new CNodeInt64);
+	pClass->Nodes.push_back(new CNodeInt32);
+	pClass->Nodes.push_back(new CNodeInt64);
+	pClass->Nodes.push_back(new CNodeInt16);
+	pClass->Nodes.push_back(new CNodeInt8);
+	pClass->Nodes.push_back(new CNodeDWORD);
+	pClass->Nodes.push_back(new CNodeWORD);
+	pClass->Nodes.push_back(new CNodeBYTE);
+	pClass->Nodes.push_back(new CNodeText);
+	pClass->Nodes.push_back(new CNodeUnicode);
+	pClass->Nodes.push_back(new CNodeFloat);
+	pClass->Nodes.push_back(new CNodeDouble);
+	pClass->Nodes.push_back(new CNodeCustom);
+	pClass->Nodes.push_back(new CNodeVec2);
+	pClass->Nodes.push_back(new CNodeVec3);
+	pClass->Nodes.push_back(new CNodeQuat);
+	pClass->Nodes.push_back(new CNodeMatrix);
+	pClass->Nodes.push_back(new CNodeCharPtr);
 
 	//for (int i=0; i < 2; i++)
 	{
@@ -759,34 +755,29 @@ void CReClass2015App::OnButtonNewClass()
 	CMainFrame* pFrame = STATIC_DOWNCAST(CMainFrame, m_pMainWnd);
 	CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, m_hMDIMenu, m_hMDIAccel);
 
-	#ifdef _DEBUG
-	printf("[+] OnButtonNewClass()\n");
-	#endif
-
 	//pChild->SetTitle(name);
 	//pChild->SetWindowTextA(name);
 	//pFrame->UpdateFrameTitleForDocument(name);
-
 	CNodeClass* pClass = new CNodeClass;
 	pClass->idx = (int)theApp.Classes.size();
 	theApp.Classes.push_back(pClass);
 	pChild->m_wndView.m_pClass = pClass;
 
-#ifdef _WIN64
+	#ifdef _WIN64
 	for ( int i=0; i < 64 / 8; i++ )
 	{
 		CNodeHex64* pNode = new CNodeHex64;
 		pNode->pParent = pClass;
 		pClass->Nodes.push_back( pNode );
 	}
-#else
+	#else
 	for ( int i = 0; i < 64 / 4; i++ )
 	{
 		CNodeHex32* pNode = new CNodeHex32;
 		pNode->pParent = pClass;
 		pClass->Nodes.push_back(pNode);
 	}
-#endif
+	#endif
 
 	CalcOffsets(pClass);
 }
@@ -864,7 +855,7 @@ CNodeBase* CReClass2015App::CreateNewNode(NodeType Type)
 
 	if (Type == nt_custom) return new CNodeCustom;
 	if (Type == nt_text) return new CNodeText;
-	if (Type == nt_pchar) return new CNodePChar;
+	if (Type == nt_pchar) return new CNodeCharPtr;
 	if (Type == nt_unicode) return new CNodeUnicode;
 
 	if (Type == nt_vtable) return new CNodeVTable;
@@ -907,7 +898,7 @@ void CReClass2015App::SaveXML(char* FileName)
 	settings->SetAttribute("tdVec3", tdVec3);
 	settings->SetAttribute("tdQuat", tdQuat);
 	settings->SetAttribute("tdMatrix", tdMatrix);
-	settings->SetAttribute("tdPChar", tdPChar);
+	settings->SetAttribute("tdCharPtr", tdPChar);
 	root->LinkEndChild(settings);
 
 	settings = new TiXmlElement("Header");
@@ -1458,8 +1449,8 @@ void CReClass2015App::DeleteClass(CNodeClass* pClass)
 	if (pNode)
 	{
 		CString msg;
-		printf("Class still has a reference in %s.%s\n", pNode->pParent->Name, pNode->Name);
-		msg.Format("Class still has a reference in %s.%s", pNode->pParent->Name, pNode->Name);
+		printf("Class still has a reference in %s.%s\n", pNode->pParent->Name.GetString(), pNode->Name.GetString());
+		msg.Format("Class still has a reference in %s.%s", pNode->pParent->Name.GetString(), pNode->Name.GetString());
 		MessageBox(NULL, msg, "Error", MB_OK);
 		return;
 	}

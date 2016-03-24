@@ -13,9 +13,9 @@
 #define _AFX_ALL_WARNINGS
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
 
-#include <afxwin.h>         // MFC core and standard components
-#include <afxext.h>         // MFC extensions
-#include <afxdisp.h>        // MFC Automation classes
+#include <afxwin.h>				// MFC core and standard components
+#include <afxext.h>				// MFC extensions
+#include <afxdisp.h>			// MFC Automation classes
 
 #ifndef _AFX_NO_OLE_SUPPORT
 #include <afxdtctl.h>           // MFC support for Internet Explorer 4 Common Controls
@@ -26,16 +26,12 @@
 
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 
+#include <vector>
 #include <Shlwapi.h>
-
 #include <Psapi.h>
 #pragma comment(lib, "Psapi.lib")
-
 #include <CommCtrl.h>
 #pragma comment(lib, "comctl32.lib")
-
-#include <vector>
-
 
 // Include BeaEngine disassembler 
 #define BEA_ENGINE_STATIC
@@ -54,9 +50,63 @@
 
 #include "Utils.h"
 
-//Globals
+class CMemory
+{
+public:
+	CMemory()
+	{
+		MemorySize = 0;
+		pMemory = NULL;
+	}
+	~CMemory()
+	{
+		if (pMemory)
+			delete pMemory;
+	}
+
+	void SetSize(ULONG Size)
+	{
+		if ((!pMemory) || (Size != MemorySize))
+		{
+			if (pMemory)
+				delete pMemory;
+			pMemory = new BYTE[Size];
+			MemorySize = Size;
+		}
+	}
+
+	ULONG MemorySize;
+	PBYTE pMemory;
+};
+
+struct MemMapInfo
+{
+	size_t Start;
+	size_t End;
+	CString Name;
+	//bool IsModule;
+};
+
+struct AddressName
+{
+	CString Name;
+	size_t Address;
+};
+
+// Max export entries allowed
+#define MAX_EXPORTS 16384
+
+// Globals
 extern HANDLE g_hProcess;
 extern DWORD ProcessID;
+extern size_t ProcessBaseAddress;
+
+extern std::vector<MemMapInfo> MemMap;
+extern std::vector<MemMapInfo> MemMapCode;
+extern std::vector<MemMapInfo> MemMapData;
+extern std::vector<MemMapInfo> MemMapModule;
+extern std::vector<AddressName> Exports;
+extern std::vector<AddressName> CustomNames;
 
 extern COLORREF crBackground;
 extern COLORREF crSelect;
@@ -138,7 +188,7 @@ class HotSpot
 public:
 	CRect Rect;
 	CString Text;
-	DWORD_PTR Address;
+	size_t Address;
 	int ID;
 	int Type;
 	UINT Level;
@@ -206,7 +256,7 @@ enum NodeType
 	nt_bits
 };
 
-#define HEXTYPE (nt_hex64 | nt_hex32 | nt_hex16 | nt_hex8 | nt_bits)
+#define ISHEXTYPE(type) (type == nt_hex64 || type == nt_hex32 || type == nt_hex16 || type == nt_hex8 || type == nt_bits)
 
 __inline const char* NodeTypeToString(NodeType type)
 {
@@ -246,46 +296,23 @@ __inline const char* NodeTypeToString(NodeType type)
 	return pszNodeTypes[type];
 }
 
-struct MemMapInfo
-{
-	DWORD_PTR Start;
-	DWORD_PTR End;
-	CString Name;
-	//bool IsModule;
-};
-
-struct AddressName
-{
-	CString Name;
-	DWORD_PTR Address;
-};
-
-extern std::vector<MemMapInfo> MemMap;
-extern std::vector<MemMapInfo> MemMapCode;
-extern std::vector<MemMapInfo> MemMapData;
-extern std::vector<MemMapInfo> MemMapModule;
-extern std::vector<AddressName> Exports;
-extern std::vector<AddressName> CustomNames;
-
-// Max export entries allowed
-#define MAX_EXPORTS 16384
-
 bool PauseResumeThreadList(bool bResumeThread);
 
 bool UpdateMemoryMap();
 bool UpdateExports();
 
-bool IsCode(DWORD_PTR Address);
-bool IsData(DWORD_PTR Address);
-bool IsMemory(DWORD_PTR Address);
-bool IsModule(DWORD_PTR Address);
+size_t GetBase();
+bool IsCode(size_t Address);
+bool IsData(size_t Address);
+bool IsMemory(size_t Address);
+bool IsModule(size_t Address);
 
-CString GetAddressName(DWORD_PTR Address,bool bHEX);
-CString GetModuleName(DWORD_PTR Address);
+CString GetAddressName(size_t Address,bool bHEX);
+CString GetModuleName(size_t Address);
 
-void ReadMemory(DWORD_PTR Address,void* Buffer,DWORD Size);
-void WriteMemory(DWORD_PTR Address,void* Buffer,DWORD Size);
-CString ReadMemoryString( DWORD_PTR address, SIZE_T max = 40 );
+void ReadMemory(size_t Address,void* Buffer,DWORD Size);
+void WriteMemory(size_t Address,void* Buffer,DWORD Size);
+CString ReadMemoryString(size_t address, SIZE_T max = 40);
 
 #include "Classes.h"
 
@@ -293,5 +320,5 @@ extern DWORD NodeCreateIndex;
 
 __int64 StrToNum(const TCHAR *udata, int udatalen, int base);
 int SplitString(const CString& input, const CString& delimiter, CStringArray& results);
-DWORD_PTR ConvertStrToAddress(CString Address);
+size_t ConvertStrToAddress(CString Address);
 

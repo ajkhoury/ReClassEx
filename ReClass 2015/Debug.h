@@ -37,18 +37,17 @@ PCHAR GetFilePath(PCHAR append)
 	return NULL;
 }
 
-DWORD WINAPI lpThreadWait( LPVOID lpParam )
+DWORD __stdcall WaitThread( LPVOID lpParam )
 {
 	while((GetAsyncKeyState( VK_SPACE ) & 1 ) == 0)
 		Sleep( 100 );
-
 	return 0;
 }
 
 void Pause()
 {
 	printf("\n\nPress the space bar to continue...\n");
-	WaitForSingleObject( CreateThread( 0, 0, lpThreadWait, 0, 0, 0 ), INFINITE );
+	WaitForSingleObject( CreateThread( 0, 0, WaitThread, 0, 0, 0 ), INFINITE );
 }
 
 std::wstring widestring( const std::string &text )
