@@ -1402,16 +1402,8 @@ static void *winDlOpen(sqlite3_vfs *pVfs, const char *zFilename){
   free(zConverted);
   return (void*)h;
 }
-static void winDlError(sqlite3_vfs *pVfs, int nBuf, char *zBufOut){
-  FormatMessage(
-    FORMAT_MESSAGE_FROM_SYSTEM,
-    NULL,
-    GetLastError(),
-    0,
-    zBufOut,
-    nBuf-1,
-    0
-  );
+static void winDlError(sqlite3_vfs *pVfs, int nBuf, TCHAR* zBufOut){
+  FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), 0, zBufOut, nBuf-1, 0);
 }
 void *winDlSym(sqlite3_vfs *pVfs, void *pHandle, const char *zSymbol){
 #if OS_WINCE
@@ -1521,10 +1513,10 @@ sqlite3_vfs *sqlite3OsDefaultVfs(void){
     1,                 /* iVersion */
     sizeof(winFile),   /* szOsFile */
     MAX_PATH,          /* mxPathname */
-    0,                 /* pNext */
+    (sqlite3_vfs*)0,   /* pNext */
     "win32",           /* zName */
     0,                 /* pAppData */
-  
+
     winOpen,           /* xOpen */
     winDelete,         /* xDelete */
     winAccess,         /* xAccess */

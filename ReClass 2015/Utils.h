@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <io.h>
-#include"nt_ddk.h"
+#include "nt_ddk.h"
 
 namespace Utils
 {
@@ -98,7 +98,7 @@ namespace Utils
 	{
 		void* dwModuleHandle = 0;
 
-		_TEB* teb = (_TEB*)NtCurrentTeb();
+		struct _TEB* teb = (struct _TEB*)NtCurrentTeb();
 		_PEB* peb = (_PEB*)teb->ProcessEnvironmentBlock;
 		PPEB_LDR_DATA ldrData = peb->Ldr;
 		PLDR_DATA_ENTRY cursor = (PLDR_DATA_ENTRY)ldrData->InInitializationOrderModuleList.Flink;
@@ -288,11 +288,11 @@ namespace Utils
 			nNtStatus = fnRtlGetNativeSystemInformation((SYSTEM_INFORMATION_CLASS)SystemProcessorInformation, &sProcInfo, sizeof(sProcInfo), NULL);
 			if (nNtStatus == STATUS_NOT_IMPLEMENTED)
 			{
-				tNTQSI fnQuerySystemInformation = (tNTQSI)Utils::GetProcAddress(Utils::GetLocalModuleHandle("ntdll.dll"), "NtQuerySystemInformation");
+				tNtQuerySystemInformation fnQuerySystemInformation = (tNtQuerySystemInformation)Utils::GetProcAddress(Utils::GetLocalModuleHandle("ntdll.dll"), "NtQuerySystemInformation");
 				nNtStatus = fnQuerySystemInformation((SYSTEM_INFORMATION_CLASS)SystemProcessorInformation, &sProcInfo, sizeof(sProcInfo), NULL);
 			}
 			if (NT_SUCCESS(nNtStatus))
-				_InterlockedExchange(&nProcessorArchitecture, (LONG)(sProcInfo.ProcessorArchitecture));
+				InterlockedExchange(&nProcessorArchitecture, (LONG)(sProcInfo.ProcessorArchitecture));
 		}
 		return nProcessorArchitecture;
 	}
@@ -324,7 +324,7 @@ namespace Utils
 			NTSTATUS nNtStatus;
 	
 			static HMODULE hNtDll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
-			static tNTQIP fnNTQIP = (tNTQIP)Utils::GetProcAddress(hNtDll, "NtQueryInformationProcess");
+			static tNtQueryInformationProcess fnNTQIP = (tNtQueryInformationProcess)Utils::GetProcAddress(hNtDll, "NtQueryInformationProcess");
 
 			nNtStatus = fnNTQIP(hProcess, ProcessWow64Information, &nWow64, sizeof(nWow64), NULL);
 			if (NT_SUCCESS(nNtStatus))

@@ -14,16 +14,7 @@
 void sleep(unsigned int mseconds)
 {
 	clock_t goal = mseconds + clock(); 
-	while (goal > clock());
-}
-
-bool DataCompare( BYTE* pData, BYTE* bMask, char * szMask )
-{
-	for(; *szMask; ++szMask, ++pData, ++bMask)
-		if(*szMask == 'x' && *pData != *bMask)
-			return FALSE;
-
-	return (*szMask == NULL);
+	while (goal > clock()) { }
 }
 
 PCHAR GetFilePath(PCHAR append)
@@ -49,9 +40,7 @@ PCHAR GetFilePath(PCHAR append)
 DWORD WINAPI lpThreadWait( LPVOID lpParam )
 {
 	while((GetAsyncKeyState( VK_SPACE ) & 1 ) == 0)
-	{
 		Sleep( 100 );
-	}
 
 	return 0;
 }
@@ -66,7 +55,7 @@ std::wstring widestring( const std::string &text )
 {
 	std::wstring result;
 	result.resize( text.length() );
-	mbstowcs( &result[0], &text[0], text.length() );
+	mbstowcs( &result[0], &text[0], text.length() ); 
 	return result;
 }
 

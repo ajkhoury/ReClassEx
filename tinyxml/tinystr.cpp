@@ -50,7 +50,6 @@ void TiXmlString::reserve (size_type cap)
 	}
 }
 
-
 TiXmlString& TiXmlString::assign(const char* str, size_type len)
 {
 	size_type cap = capacity();
@@ -69,7 +68,6 @@ TiXmlString& TiXmlString::assign(const char* str, size_type len)
 	return *this;
 }
 
-
 TiXmlString& TiXmlString::append(const char* str, size_type len)
 {
 	size_type newsize = length() + len;
@@ -81,7 +79,6 @@ TiXmlString& TiXmlString::append(const char* str, size_type len)
 	set_size(newsize);
 	return *this;
 }
-
 
 TiXmlString operator + (const TiXmlString & a, const TiXmlString & b)
 {

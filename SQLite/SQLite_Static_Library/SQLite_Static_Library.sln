@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual Studio 2014
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SQLite_Static_Library", "SQLite_Static_Library.vcxproj", "{BD7E9D10-81ED-461A-A7D8-73AD46E3AB02}"
 EndProject
 Global

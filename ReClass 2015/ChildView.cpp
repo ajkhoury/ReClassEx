@@ -677,7 +677,8 @@ BOOL CChildView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	return CWnd::OnMouseWheel(nFlags, zDelta, pt);
 }
 
-const char* DisassembleCode(char** StartCodeSection, char** EndCodeSection, DWORD_PTR Virtual_Address, int* textHeight)
+// CString object causes crashes here sometimes for some unknown reason. Using STL std::string in lieu of CString.
+std::string DisassembleCode(unsigned char** StartCodeSection, unsigned char** EndCodeSection, DWORD_PTR Virtual_Address, int* textHeight)
 {
 	char szOut[8192] = { '\0' };
 
@@ -721,7 +722,7 @@ const char* DisassembleCode(char** StartCodeSection, char** EndCodeSection, DWOR
 		else
 		{
 			char szInstruction[96];
-			sprintf_s(szInstruction, "%p  ", MyDisasm.VirtualAddr);
+			sprintf_s(szInstruction, "%p  ", (void*)MyDisasm.VirtualAddr);
 			strcat_s(szInstruction, MyDisasm.CompleteInstr);
 			strcat_s(szInstruction, "\r\n");
 
@@ -743,8 +744,7 @@ const char* DisassembleCode(char** StartCodeSection, char** EndCodeSection, DWOR
 	
 	*textHeight += 4;
 	const char* szRet = &szOut[0];
-
-	return szRet;
+	return std::string(szRet);
 }
 
 bool bTracking = false;
@@ -779,13 +779,18 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 						if (HotSpots[i].object->bOpen[HotSpots[i].Level])
 							continue;
 
-						DWORD_PTR addy = HotSpots[i].Address;
-						ReadMemory(addy, &addy, sizeof(DWORD_PTR));
-						char* code[1024];
-						ReadMemory(addy, code, 1024);
+						DWORD_PTR addr = HotSpots[i].Address;
+						ReadMemory(addr, &addr, sizeof(DWORD_PTR));
+
+						unsigned char* code = (unsigned char*)malloc(1024);
+						ReadMemory(addr, code, 1024);
+
 						int textHeight = 0;
-						const char* d = DisassembleCode(code, code + 1024, addy, &textHeight);
+						// CString object causes crashes here sometimes for an unknown reason (too lazy to figure out why). Using STL std::string in lieu of CString.
+						std::string d = DisassembleCode(&code, (unsigned char**)((&code) + 1024), addr, &textHeight);
 						
+						delete[] code;
+
 						//CString d, t;
 						//CNodeFunctionPtr* pObject = (CNodeFunctionPtr*)HotSpots[i].object;
 						//int textHeight = (pObject->Assembly.size() * 16) + 4;
@@ -796,7 +801,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 						//	d.Append(t);
 						//}
 						m_ToolTip.EnableWindow(FALSE);
-						m_ToolTip.SetWindowText(d);
+						m_ToolTip.SetWindowText(d.c_str());
 						m_ToolTip.SetWindowPos(NULL, point.x + 16, point.y + 16, 400, textHeight, SWP_NOZORDER);
 						m_ToolTip.ShowWindow(SW_SHOW);
 					}
@@ -839,8 +844,8 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 					else if (pNode->GetType() == nt_hex8)
 					{
 						ReadMemory(HotSpots[i].Address,data,4);
-						__int8* pi		= (__int8*)data;
-						BYTE* pd	= (BYTE*)data;
+						__int8* pi = (__int8*)data;
+						BYTE* pd = (BYTE*)data;
 						msg.Format("Int8: %i\r\nBYTE: %u\r\n",*pi,*pd);
 						m_ToolTip.SetWindowText(msg);
 						m_ToolTip.SetWindowPos(NULL,point.x+16,point.y+16,200,16*2+6,SWP_NOZORDER);

@@ -267,7 +267,7 @@ void CReClass2015App::OnButtonPause()
 
 void CReClass2015App::OnUpdateButtonPause(CCmdUI *pCmdUI)
 {
-	pCmdUI->Enable((hProcess != NULL));
+	pCmdUI->Enable(g_hProcess != NULL);
 }
 
 void CReClass2015App::OnButtonResume()
@@ -277,18 +277,18 @@ void CReClass2015App::OnButtonResume()
 
 void CReClass2015App::OnUpdateButtonResume(CCmdUI *pCmdUI)
 {
-	pCmdUI->Enable((hProcess != NULL));
+	pCmdUI->Enable(g_hProcess != NULL);
 }
 
 void CReClass2015App::OnButtonKill()
 {
-	TerminateProcess(hProcess, 0);
-	hProcess = NULL;
+	TerminateProcess(g_hProcess, 0);
+	g_hProcess = NULL;
 }
 
 void CReClass2015App::OnUpdateButtonKill(CCmdUI* pCmdUI)
 {
-	pCmdUI->Enable((hProcess != NULL));
+	pCmdUI->Enable(g_hProcess != NULL);
 }
 
 void CReClass2015App::CalcOffsets(CNodeClass* pClass)
@@ -477,8 +477,8 @@ class ImportLink
 public:
 	CNodeBase* pNode;
 	CString Name; 
-};
-
+}; 
+ 
 void CReClass2015App::OnFileImport()
 {
 	return;

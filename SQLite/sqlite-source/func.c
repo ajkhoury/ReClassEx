@@ -924,7 +924,7 @@ static void trimFunc(
       }
     }
     if( zCharSet ){
-      sqlite3_free(azChar);
+      sqlite3_free((void*)azChar);
     }
   }
   sqlite3_result_text(context, (char*)zIn, nIn, SQLITE_TRANSIENT);

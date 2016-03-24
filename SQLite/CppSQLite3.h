@@ -52,6 +52,7 @@ public:
 
     CppSQLite3Exception(const CppSQLite3Exception&  e);
 
+
     virtual ~CppSQLite3Exception();
 
     const int errorCode() { return mnErrCode; }

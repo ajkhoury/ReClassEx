@@ -27,49 +27,35 @@
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 
 #include <Shlwapi.h>
+
 #include <Psapi.h>
-#include <tlhelp32.h>
+#pragma comment(lib, "Psapi.lib")
 
-#include "..\\SQLite\\CppSQLite3.h"
-#include "..\\tinyxml\\tinyxml.h"
+#include <CommCtrl.h>
+#pragma comment(lib, "comctl32.lib")
 
+#include <vector>
+
+
+// Include BeaEngine disassembler 
 #define BEA_ENGINE_STATIC
 #define BEA_USE_STDCALL
-#include "..\\beaengine\\headers\\BeaEngine.h"
-#ifdef _WIN64
-#pragma comment( lib, "..\\beaengine\\Win64\\Lib\\BeaEngine64.lib")
-#else
-#pragma comment( lib, "..\\beaengine\\Win32\\Lib\\BeaEngine.lib")
-#endif
+#include "..\\beaengine\\beaengine\\headers\\BeaEngine.h"
 
 // Include Scintilla parser
 #include "..\\scintilla\\include\\SciLexer.h"
 #include "..\\scintilla\\include\\Scintilla.h"
 
-#ifdef _DEBUG
-#ifdef _WIN64
-#pragma comment(lib, "..\\scintilla\\bin\\SciLexerd_64.lib")
-#else
-#pragma comment(lib, "..\\scintilla\\bin\\SciLexerd.lib")
-#endif
-#else
-#ifdef _WIN64
-#pragma comment(lib, "..\\scintilla\\bin\\SciLexer_64.lib")
-#else
-#pragma comment(lib, "..\\scintilla\\bin\\SciLexer.lib")
-#endif
-#endif
+// Include TinyXml parser
+#include "..\\tinyxml\\tinyxml.h"
 
-#include <CommCtrl.h>
-#include <vector>
-
-#pragma comment(lib, "comctl32.lib")
-#pragma comment(lib, "Psapi.lib")
+// Include TinyXml parser
+#include "..\\SQLite\\CppSQLite3.h"
 
 #include "Utils.h"
 
 //Globals
-extern HANDLE hProcess;
+extern HANDLE g_hProcess;
 extern DWORD ProcessID;
 
 extern COLORREF crBackground;
@@ -267,11 +253,13 @@ struct MemMapInfo
 	CString Name;
 	//bool IsModule;
 };
+
 struct AddressName
 {
 	CString Name;
 	DWORD_PTR Address;
 };
+
 extern std::vector<MemMapInfo> MemMap;
 extern std::vector<MemMapInfo> MemMapCode;
 extern std::vector<MemMapInfo> MemMapData;
@@ -279,10 +267,13 @@ extern std::vector<MemMapInfo> MemMapModule;
 extern std::vector<AddressName> Exports;
 extern std::vector<AddressName> CustomNames;
 
-void PauseResumeThreadList(bool bResumeThread);
+// Max export entries allowed
+#define MAX_EXPORTS 16384
 
-void UpdateMemoryMap();
-void UpdateExports();
+bool PauseResumeThreadList(bool bResumeThread);
+
+bool UpdateMemoryMap();
+bool UpdateExports();
 
 bool IsCode(DWORD_PTR Address);
 bool IsData(DWORD_PTR Address);

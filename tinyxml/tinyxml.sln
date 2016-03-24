@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual Studio 2015
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyXmlTest", "tinyXmlTest.vcxproj", "{7E86EFF8-8489-F658-4E7F-2EDE188125B9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1A259137-C8FE-C00E-7FAE-FC265FE639A0} = {1A259137-C8FE-C00E-7FAE-FC265FE639A0}

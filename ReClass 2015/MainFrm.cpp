@@ -379,7 +379,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 		{
 			UINT idx = nID - WM_PROCESSMENU;
 			ProcessID = ProcMenuItems[idx].ProcessId;
-			hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, ProcessID);
+			g_hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, ProcessID);
 			UpdateMemoryMap();
 			return TRUE;
 		}
@@ -444,7 +444,18 @@ static const char* CommonProcesses[] =
 
 void CMainFrame::OnButtonSelectprocess()
 {
-	CMFCRibbonButton* pButton = (CMFCRibbonButton*)m_wndRibbonBar.FindByID(ID_BUTTON_SELECTPROCESS);
+	HANDLE hProcess = 0;
+	void* pBuffer = NULL;
+	ULONG cbBuffer = 131072;
+	HANDLE hHeap = NULL;
+	NTSTATUS Status = STATUS_INFO_LENGTH_MISMATCH;
+	bool bHasEnumeratedProcesses = false;
+	PSYSTEM_PROCESS_INFORMATION infoP = NULL;
+
+	CMFCRibbonButton* pButton = NULL;
+	
+	pButton = (CMFCRibbonButton*)m_wndRibbonBar.FindByID(ID_BUTTON_SELECTPROCESS);
+
 	CRect pos = pButton->GetRect();
 	ClientToScreen(&pos);
 
@@ -454,13 +465,10 @@ void CMainFrame::OnButtonSelectprocess()
 	ClearProcMenuItems();
 
 	static HMODULE hNtdll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
-	static tNTQSI fnQSI = (tNTQSI)Utils::GetProcAddress(hNtdll, "NtQuerySystemInformation");
+	static tNtQuerySystemInformation fnQSI = (tNtQuerySystemInformation)Utils::GetProcAddress(hNtdll, "NtQuerySystemInformation");
 
-	void* pBuffer = NULL;
-	ULONG cbBuffer = 131072;
-	HANDLE hHeap = GetProcessHeap();
-	NTSTATUS Status = STATUS_INFO_LENGTH_MISMATCH;
-	bool bHasEnumeratedProcesses = false;
+	hHeap = GetProcessHeap();
+	Status = STATUS_INFO_LENGTH_MISMATCH;
 
 	while (!bHasEnumeratedProcesses)
 	{
@@ -482,14 +490,14 @@ void CMainFrame::OnButtonSelectprocess()
 		else
 		{
 			bHasEnumeratedProcesses = true;
-			PSYSTEM_PROCESSES infoP = (PSYSTEM_PROCESSES)pBuffer;
+			infoP = (PSYSTEM_PROCESS_INFORMATION)pBuffer;
 			while (infoP)
 			{	
-				if (infoP->ProcessName.Length)
+				if (infoP->ImageName.Length)
 				{
 					char pName[256];
 					memset(pName, 0, sizeof(pName));
-					WideCharToMultiByte(0, 0, infoP->ProcessName.Buffer, infoP->ProcessName.Length, pName, 256, NULL, NULL);				
+					WideCharToMultiByte(0, 0, infoP->ImageName.Buffer, infoP->ImageName.Length, pName, 256, NULL, NULL);
 					// Are we filtering out processes
 					if (gbFilterProcesses)
 					{
@@ -502,22 +510,33 @@ void CMainFrame::OnButtonSelectprocess()
 						}
 						if (skip)
 						{
-							if (!infoP->NextEntryDelta)
+							if (!infoP->NextEntryOffset)
 								break;
-							infoP = (PSYSTEM_PROCESSES)((unsigned char*)infoP + infoP->NextEntryDelta);
+							infoP = (PSYSTEM_PROCESS_INFORMATION)((unsigned char*)infoP + infoP->NextEntryOffset);
 							continue;
 						}
 					}				
 
-					HANDLE hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, infoP->ProcessId);
+					// process ID 4 is the Kernel
+					//if (infoP->ProcessId == 4)
+					//{
+					//	hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, infoP->ProcessId);
+					//	printf("pid %i: %d\n", infoP->ProcessId, hProcess);
+					//}
+					//else
+					//{
+					//	hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, (DWORD)infoP->UniqueProcessId);
+					//}
+					hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, (DWORD)infoP->UniqueProcessId);
 					if (hProcess)
 					{
+						char filename[1024];
+
 						#ifdef _WIN64
 						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX64) {
 						#else
 						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX86) {
 						#endif
-							char filename[1024];
 							GetModuleFileNameEx(hProcess, NULL, filename, 1024);
 
 							SHFILEINFO    sfi;
@@ -525,7 +544,7 @@ void CMainFrame::OnButtonSelectprocess()
 
 							CBitmap* pBitmap = new CBitmap();
 							CProcessMenuInfo Item;
-							Item.ProcessId = infoP->ProcessId;
+							Item.ProcessId = (DWORD)infoP->UniqueProcessId;
 							Item.pBitmap = pBitmap;
 
 							CClientDC clDC(this);
@@ -546,7 +565,7 @@ void CMainFrame::OnButtonSelectprocess()
 							DWORD MsgID = (DWORD)(WM_PROCESSMENU + ProcMenuItems.size());
 
 							CString proccessString;
-							proccessString.Format("%s (%i)", pName, infoP->ProcessId);
+							proccessString.Format("%s (%i)", pName, (DWORD)infoP->UniqueProcessId);
 
 							menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID, proccessString.GetBuffer());
 							menu.SetMenuItemBitmaps(MsgID, MF_BYCOMMAND, pBitmap, pBitmap);
@@ -558,9 +577,9 @@ void CMainFrame::OnButtonSelectprocess()
 					}
 				}
 
-				if (!infoP->NextEntryDelta)
+				if (!infoP->NextEntryOffset)
 					break;
-				infoP = (PSYSTEM_PROCESSES)((unsigned char*)infoP + infoP->NextEntryDelta);
+				infoP = (PSYSTEM_PROCESS_INFORMATION)((unsigned char*)infoP + infoP->NextEntryOffset);
 			}
 		}
 	}
