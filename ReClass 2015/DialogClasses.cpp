@@ -46,7 +46,7 @@ void CDialogClasses::BuildList()
 		CString name = theApp.Classes[i]->Name;
 		if (m_Filter.GetLength() != 0 && name.MakeUpper().Find(m_Filter.MakeUpper()) == -1)
 			continue;
-		AddData(m_ClassViewList, i, 0, name);
+		AddData(i, 0, name);
 	}
 }
 
@@ -104,7 +104,7 @@ void CDialogClasses::OnOK()
 	CDialogEx::OnOK();
 }
 
-void CDialogClasses::AddData(CListCtrl& ctrl, int row, int col, const TCHAR* str)
+void CDialogClasses::AddData(int row, int col, const TCHAR* str)
 {
 	LVITEM lv;
 	ZeroMemory(&lv, sizeof(LVITEM));
@@ -116,12 +116,12 @@ void CDialogClasses::AddData(CListCtrl& ctrl, int row, int col, const TCHAR* str
 	{
 		lv.mask = LVIF_IMAGE | LVIF_TEXT;
 		lv.iImage = 0;
-		ctrl.InsertItem(&lv);
+		m_ClassViewList.InsertItem(&lv);
 	}
 	else
 	{
 		lv.mask = LVIF_TEXT;
-		ctrl.SetItem(&lv);
+		m_ClassViewList.SetItem(&lv);
 	}
 }
 

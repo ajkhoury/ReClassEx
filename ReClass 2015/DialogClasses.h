@@ -24,7 +24,7 @@ public:
 
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
-	virtual void AddData(CListCtrl& ctrl, int row, int col, const TCHAR* str);
+	virtual void AddData(int row, int col, const TCHAR* str);
 	virtual void BuildList();
 
 	afx_msg void OnEnChangeClassname();
