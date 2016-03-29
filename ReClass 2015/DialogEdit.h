@@ -18,7 +18,7 @@ public:
 	}
 
 	// Sets a Scintilla style
-	void SetAStyle(int style, COLORREF fore, COLORREF back = RGB(255, 255, 255), int size = -1, const char *face = 0)
+	void SetAStyle(int style, COLORREF fore, COLORREF back = RGB(255, 255, 255), int size = -1, const TCHAR* face = 0)
 	{	
 		SendEditor(SCI_STYLESETFORE, style, fore);
 		//SendEditor(SCI_STYLESETBACK, style, back);

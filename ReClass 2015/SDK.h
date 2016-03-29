@@ -8,13 +8,13 @@ class ReclassSDK
 public:
 	virtual void Test()
 	{
-		MessageBox(0, "Plugin Loaded Successfully", "ReclassSDK", 0);
+		MessageBox(0, _T("Plugin Loaded Successfully"), _T("ReclassSDK"), 0);
 	}
 
-	virtual void GetCurrentFilePath(PCHAR szPath)
+	virtual void GetCurrentFilePath(LPTSTR szPath)
 	{
 		if (theApp.CurrentFilePath.GetLength() > 0)
-			strcpy(szPath, theApp.CurrentFilePath.GetBuffer());
+			_tcscpy(szPath, theApp.CurrentFilePath.GetBuffer());
 	}
 
 	virtual size_t GetClassCount()
@@ -34,7 +34,7 @@ public:
 		return -1;
 	}
 
-	virtual size_t CreateClass(PCHAR szName)
+	virtual size_t CreateClass(LPTSTR szName)
 	{
 		// Try to find class
 		int id = FindClassByName(szName);
@@ -63,22 +63,23 @@ public:
 		//
 	}
 
-	virtual int FindClassByName(PCHAR szName)
+	virtual int FindClassByName(LPTSTR szName)
 	{
 		unsigned int id = 0;
 		while (++id < theApp.Classes.size())
-			if (strcmp(theApp.Classes.at(id)->Name, szName) == 0)
+		{
+			if (_tcscmp(theApp.Classes.at(id)->Name, szName) == 0)
 				return id;
+		}
 		return -1;
 	}
 
 	virtual bool AddNode(int classId, NodeType type, PCHAR szName)
 	{
 		CNodeBase* pBase = FindPointerByClassId(classId);
-
 		if (!pBase)
 		{
-			printf("[!] Cannot find class\n");
+			_tprintf(_T("[!] Cannot find class\n"));
 			return false;
 		}
 
@@ -131,7 +132,7 @@ private:
 	}
 };
 
-__inline void LoadPlugin(LPCSTR pszPath)
+__inline void LoadPlugin(LPTSTR pszPath)
 {
 	printf("Reclass SDK: %IX\n", (size_t)ReclassSDK::GetInstance());
 
@@ -153,8 +154,8 @@ __inline void LoadPlugin(LPCSTR pszPath)
 	if (pInit)
 	{
 		typedef void(__cdecl* tInit)(ReclassSDK* pReclassSDK);
-		tInit oInit = (tInit)pInit;
-		oInit(ReclassSDK::GetInstance());
+		tInit Init = (tInit)pInit;
+		Init(ReclassSDK::GetInstance());
 	}
 }
 

@@ -17,26 +17,6 @@ void sleep(unsigned int mseconds)
 	while (goal > clock()) { }
 }
 
-PCHAR GetFilePath(PCHAR append)
-{
-	const int MAXPATH = 256;
-	static char szFile[MAXPATH] = { };
-	//static const char* const szFile[_MAX_PATH];
-
-	GetModuleFileName( GetModuleHandle( NULL ), szFile, MAXPATH ); 
-	for( int i = 0; i < ( int )strlen( szFile ); i++ )
-	{
-		if( szFile[strlen(szFile) - i ] == '\\')
-		{
-			szFile[(strlen(szFile) -  i) + 1] = '\0';
-			strcat_s(szFile, append);
-			return szFile;
-		}
-	}
-
-	return NULL;
-}
-
 DWORD __stdcall WaitThread( LPVOID lpParam )
 {
 	while((GetAsyncKeyState( VK_SPACE ) & 1 ) == 0)

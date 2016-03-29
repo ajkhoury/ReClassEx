@@ -34,6 +34,22 @@ namespace Utils
 		return digits;
 	}
 
+	wchar_t* GetFilePath(wchar_t* append)
+	{
+		static wchar_t szFile[MAX_PATH] = {};
+		GetModuleFileName(GetModuleHandle(0), szFile, MAX_PATH);
+		for (int i = 0; i < (int)wcslen(szFile); i++)
+		{
+			if (szFile[wcslen(szFile) - i] == L'\\')
+			{
+				szFile[(wcslen(szFile) - i) + 1] = L'\0';
+				wcscat_s(szFile, append);
+				return szFile;
+			}
+		}
+
+		return NULL;
+	}
 
 	static BOOL IsElevated()
 	{
@@ -151,24 +167,21 @@ namespace Utils
 		void *address = NULL;
 		DWORD i;
 
-		/* is ordinal? */
-		if (((ULONG_PTR)proc_name >> 16) == 0)
+		if (((ULONG_PTR)proc_name >> 16) == 0) // Ordinal
 		{
 			WORD ordinal = LOWORD(proc_name);
 			ULONG_PTR ord_base = exp_dir->Base;
-			/* is valid ordinal? */
 			if (ordinal < ord_base || ordinal > ord_base + exp_dir->NumberOfFunctions)
 				return NULL;
 
-			/* taking ordinal base into consideration */
 			address = (void*)((size_t)modb + func_table[ordinal - ord_base]);
 		}
 		else
 		{
-			/* import by name */
+			// import by name 
 			for (i = 0; i < exp_dir->NumberOfNames; i++)
 			{
-				/* name table pointers are rvas */
+				// name table pointers are rvas
 				char* procEntryName = (char*)((size_t)modb + name_table[i]);
 				if (_stricmp(proc_name, procEntryName) == 0)
 				{
@@ -177,7 +190,6 @@ namespace Utils
 				}
 			}
 		}
-		/* is forwarded? */
 		if ((char *)address >= (char*)exp_dir && (char*)address < (char*)exp_dir + exp_entry->Size)
 		{
 			HMODULE frwd_module = 0;
@@ -194,13 +206,12 @@ namespace Utils
 			strcpy_s(dllName, dll_name);
 			strcat_s(dllName, strlen(dll_name) + 4 + 1, ".dll");
 
-			/* is already loaded? */
 			frwd_module = (HMODULE)Utils::GetLocalModuleHandle(dllName);
 			if (!frwd_module)
 				frwd_module = LoadLibraryA(dllName);
 			if (!frwd_module)
 			{
-				MessageBox(0, "GetProcAddress failed to load module using GetModuleHandle and LoadLibrary!", "Reclass 2015", MB_ICONERROR);
+				//MessageBox(0, _T("GetProcAddress failed to load module using GetModuleHandle and LoadLibrary!"), _T("Reclass 2015"), MB_ICONERROR);
 				return NULL;
 			}
 

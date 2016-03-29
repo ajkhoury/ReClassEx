@@ -26,7 +26,6 @@ void CDialogClasses::DoDataExchange( CDataExchange* pDX )
 	DDX_Control(pDX, IDC_CLASSNAME, m_Edit);
 }
 
-
 BEGIN_MESSAGE_MAP(CDialogClasses, CDialogEx)
 	ON_EN_CHANGE( IDC_CLASSNAME, &CDialogClasses::OnEnChangeClassname )
 END_MESSAGE_MAP()
@@ -44,8 +43,7 @@ void CDialogClasses::BuildList()
 		CString name = theApp.Classes[i]->Name;
 		if (m_Filter.GetLength() != 0 && name.MakeUpper().Find(m_Filter.MakeUpper()) == -1 )
 			continue;
-
-		AddData(m_ClassView, i, 0, theApp.Classes[i]->Name.GetBuffer());
+		AddData(m_ClassView, i, 0, name);
 	}
 }
 
@@ -61,14 +59,14 @@ BOOL CDialogClasses::OnInitDialog( )
 	return TRUE;
 }
 
-__inline int FindClassByName(const char* szName)
+__inline int FindClassByName(const TCHAR* szName)
 {
 	for (int id = 0; id < theApp.Classes.size(); id++)
 	{
 		CNodeClass* pNodeClass = theApp.Classes[id];
 		if (!pNodeClass)
 			continue;
-		if(stricmp(pNodeClass->Name, szName) == 0)
+		if(_tcsicmp(pNodeClass->Name, szName) == 0)
 			return id;
 	}
 	return -1;
@@ -97,20 +95,20 @@ void CDialogClasses::OnOK()
 
 		// This will get overwritten for each class that is opened
 		pChild->SetTitle(theApp.Classes[nItem]->Name);
-		pChild->SetWindowTextA(theApp.Classes[nItem]->Name);
+		pChild->SetWindowText(theApp.Classes[nItem]->Name);
 		pFrame->UpdateFrameTitleForDocument(theApp.Classes[nItem]->Name);
 	}
 
 	CDialogEx::OnOK();
 }
 
-void CDialogClasses::AddData(CListCtrl& ctrl, int row, int col, const char* str)
+void CDialogClasses::AddData(CListCtrl& ctrl, int row, int col, const TCHAR* str)
 {
 	LVITEM lv;
 
 	lv.iItem	= row;
 	lv.iSubItem = col;
-	lv.pszText	= (LPSTR)str;
+	lv.pszText	= (LPTSTR)str;
 	
 	if( col == 0 )
 	{
@@ -127,7 +125,7 @@ void CDialogClasses::AddData(CListCtrl& ctrl, int row, int col, const char* str)
 
 void CDialogClasses::OnEnChangeClassname()
 {
-	m_Edit.GetWindowTextA(m_Filter);
+	m_Edit.GetWindowText(m_Filter);
 	m_ClassView.DeleteAllItems();
 	BuildList();
 }

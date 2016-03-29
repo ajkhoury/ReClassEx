@@ -68,19 +68,18 @@ public:
 		for (int i = 0; i < length; i++)
 		{
 			unsigned char bit = GetBit(i);
-			bits[i] = bit + 0x30;
+			bits[i] = bit + 48; // Get ascii representation of bit
 			//printf("%d", bit);
 		}
 
 		bits[size - 1] = '\0';
-
 		return bits;
 	}
 
-	void PrintBit(int index)
-	{
-		printf("\nbits[%d] = %d", index, GetBit(index));
-	}
+	//void PrintBit(int index)
+	//{
+	//	printf("\nbits[%d] = %d", index, GetBit(index));
+	//}
 
 	unsigned char GetBit(int index)
 	{

@@ -12,7 +12,7 @@
 //ReclassSDK*	ReclassSDK::m_pReclassSDK;
 
 // The one and only CReClass2015App object
-CReClass2015App theApp; 
+CReClass2015App theApp;
 
 // CReClass2015App
 BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx)
@@ -44,11 +44,11 @@ CReClass2015App::CReClass2015App()
 {
 	m_bHiColorIcons = TRUE;
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
-	SetAppID("ReClass.2015.0.9.1.0");
+	SetAppID(_T("ReClass.2015.1.0.0.0"));
 
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	Utils::CreateConsole();
-	#endif
+#endif
 
 	FontWidth = 12;
 	FontHeight = 12;
@@ -83,30 +83,30 @@ BOOL CReClass2015App::InitInstance()
 	ttParams.m_bVislManagerTheme = TRUE;
 	theApp.GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL, RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
 
-	crBackground		= GetProfileInt("Colors", "crBackground", crBackground);
-	crSelect			= GetProfileInt("Colors", "crSelect", crSelect);
-	crHidden			= GetProfileInt("Colors", "crHidden", crHidden);
-	crOffset			= GetProfileInt("Colors", "crOffset", crOffset);
-	crAddress			= GetProfileInt("Colors", "crAddress", crAddress);
-	crType				= GetProfileInt("Colors", "crType", crType);
-	crName				= GetProfileInt("Colors", "crName", crName);
-	crIndex				= GetProfileInt("Colors", "crIndex", crIndex);
-	crValue				= GetProfileInt("Colors", "crValue", crValue);
-	crComment			= GetProfileInt("Colors", "crComment", crComment);	  
-	crVTable			= GetProfileInt("Colors", "crVTable", crVTable);
-	crFunction			= GetProfileInt("Colors", "crFunction", crFunction);
-	crChar				= GetProfileInt("Colors", "crChar", crChar);
-	crCustom			= GetProfileInt("Colors", "crCustom", crCustom);
-	crHex				= GetProfileInt("Colors", "crHex", crHex);
-	gbOffset			= GetProfileInt("Display", "gbOffset", gbOffset) > 0 ? true : false;
-	gbAddress			= GetProfileInt("Display", "gbAddress", gbAddress) > 0 ? true : false;
-	gbText				= GetProfileInt("Display", "gbText", gbText) > 0 ? true : false;
-	gbFloat				= GetProfileInt("Display", "gbFloat", gbFloat) > 0 ? true : false;
-	gbInt				= GetProfileInt("Display", "gbInt", gbInt) > 0 ? true : false;
-	gbString			= GetProfileInt("Display", "gbString", gbString) > 0 ? true : false;
-	gbPointers			= GetProfileInt("Display", "gbPointers", gbPointers) > 0 ? true : false;
-	gbClassBrowser		= GetProfileInt("Display", "gbClassBrowser", gbClassBrowser) > 0 ? true : false;
-	gbFilterProcesses	= GetProfileInt("Display", "gbFilterProcesses", gbFilterProcesses) > 0 ? true : false;
+	crBackground = GetProfileInt(_T("Colors"), _T("crBackground"), crBackground);
+	crSelect = GetProfileInt(_T("Colors"), _T("crSelect"), crSelect);
+	crHidden = GetProfileInt(_T("Colors"), _T("crHidden"), crHidden);
+	crOffset = GetProfileInt(_T("Colors"), _T("crOffset"), crOffset);
+	crAddress = GetProfileInt(_T("Colors"), _T("crAddress"), crAddress);
+	crType = GetProfileInt(_T("Colors"), _T("crType"), crType);
+	crName = GetProfileInt(_T("Colors"), _T("crName"), crName);
+	crIndex = GetProfileInt(_T("Colors"), _T("crIndex"), crIndex);
+	crValue = GetProfileInt(_T("Colors"), _T("crValue"), crValue);
+	crComment = GetProfileInt(_T("Colors"), _T("crComment"), crComment);
+	crVTable = GetProfileInt(_T("Colors"), _T("crVTable"), crVTable);
+	crFunction = GetProfileInt(_T("Colors"), _T("crFunction"), crFunction);
+	crChar = GetProfileInt(_T("Colors"), _T("crChar"), crChar);
+	crCustom = GetProfileInt(_T("Colors"), _T("crCustom"), crCustom);
+	crHex = GetProfileInt(_T("Colors"), _T("crHex"), crHex);
+	gbOffset = GetProfileInt(_T("Display"), _T("gbOffset"), gbOffset) > 0 ? true : false;
+	gbAddress = GetProfileInt(_T("Display"), _T("gbAddress"), gbAddress) > 0 ? true : false;
+	gbText = GetProfileInt(_T("Display"), _T("gbText"), gbText) > 0 ? true : false;
+	gbFloat = GetProfileInt(_T("Display"), _T("gbFloat"), gbFloat) > 0 ? true : false;
+	gbInt = GetProfileInt(_T("Display"), _T("gbInt"), gbInt) > 0 ? true : false;
+	gbString = GetProfileInt(_T("Display"), _T("gbString"), gbString) > 0 ? true : false;
+	gbPointers = GetProfileInt(_T("Display"), _T("gbPointers"), gbPointers) > 0 ? true : false;
+	gbClassBrowser = GetProfileInt(_T("Display"), _T("gbClassBrowser"), gbClassBrowser) > 0 ? true : false;
+	gbFilterProcesses = GetProfileInt(_T("Display"), _T("gbFilterProcesses"), gbFilterProcesses) > 0 ? true : false;
 
 
 	// make toggle
@@ -114,13 +114,13 @@ BOOL CReClass2015App::InitInstance()
 
 	CMDIFrameWnd* pFrame = new CMainFrame();
 	m_pMainWnd = pFrame;
-	if(!pFrame) 
+	if (!pFrame)
 		return FALSE;
 	if (!pFrame->LoadFrame(IDR_MAINFRAME))
 		return FALSE;
 
 	HINSTANCE hInst = AfxGetResourceHandle();
-	m_hMDIMenu  = ::LoadMenu(hInst, MAKEINTRESOURCE(IDR_ReClass2015TYPE));
+	m_hMDIMenu = ::LoadMenu(hInst, MAKEINTRESOURCE(IDR_ReClass2015TYPE));
 	m_hMDIAccel = ::LoadAccelerators(hInst, MAKEINTRESOURCE(IDR_ReClass2015TYPE));
 
 	HICON icon;
@@ -155,7 +155,7 @@ BOOL CReClass2015App::InitInstance()
 	//FontWidth = 8;
 	//FontHeight = 8;
 
-	Font.CreateFont(16, 8, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH, "Terminal");
+	Font.CreateFont(16, 8, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T("Terminal"));
 	FontWidth = 8;
 	FontHeight = 14;
 
@@ -171,8 +171,8 @@ BOOL CReClass2015App::InitInstance()
 
 	// Initialize the editor
 	if (!Scintilla_RegisterClasses(AfxGetApp()->m_hInstance))
-	{	
-		AfxMessageBox("Scintilla failed to initiailze");
+	{
+		AfxMessageBox(_T("Scintilla failed to initiailze"));
 		return FALSE;
 	}
 
@@ -186,7 +186,7 @@ BOOL CReClass2015App::InitInstance()
 
 int CReClass2015App::ExitInstance()
 {
-	if (m_hMDIMenu != NULL)	
+	if (m_hMDIMenu != NULL)
 		FreeResource(m_hMDIMenu);
 	if (m_hMDIAccel != NULL)
 		FreeResource(m_hMDIAccel);
@@ -196,31 +196,31 @@ int CReClass2015App::ExitInstance()
 	// Release Scintilla
 	Scintilla_ReleaseResources();
 
-	WriteProfileInt("Colors", "crBackground", crBackground);
-	WriteProfileInt("Colors", "crSelect", crSelect);
-	WriteProfileInt("Colors", "crHidden", crHidden);
-	WriteProfileInt("Colors", "crOffset", crOffset);
-	WriteProfileInt("Colors", "crAddress", crAddress);
-	WriteProfileInt("Colors", "crType", crType);
-	WriteProfileInt("Colors", "crName", crName);
-	WriteProfileInt("Colors", "crIndex", crIndex);
-	WriteProfileInt("Colors", "crValue", crValue);
-	WriteProfileInt("Colors", "crComment", crComment);
-	WriteProfileInt("Colors", "crVTable", crVTable);
-	WriteProfileInt("Colors", "crFunction", crFunction);
-	WriteProfileInt("Colors", "crChar", crChar);
-	WriteProfileInt("Colors", "crCustom", crCustom);
-	WriteProfileInt("Colors", "crHex", crHex);
-	WriteProfileInt("Display", "gbOffset", gbOffset);
-	WriteProfileInt("Display", "gbAddress", gbAddress);
-	WriteProfileInt("Display", "gbText", gbText);
-	WriteProfileInt("Display", "gbFloat", gbFloat);
-	WriteProfileInt("Display", "gbInt", gbInt);
-	WriteProfileInt("Display", "gbString", gbString);
-	WriteProfileInt("Display", "gbPointers", gbPointers);
-	WriteProfileInt("Display", "gbTop", gbTop);
-	WriteProfileInt("Display", "gbClassBrowser", gbClassBrowser);
-	WriteProfileInt("Display", "gbFilterProcesses", gbFilterProcesses);
+	WriteProfileInt(_T("Colors"), _T("crBackground"), crBackground);
+	WriteProfileInt(_T("Colors"), _T("crSelect"), crSelect);
+	WriteProfileInt(_T("Colors"), _T("crHidden"), crHidden);
+	WriteProfileInt(_T("Colors"), _T("crOffset"), crOffset);
+	WriteProfileInt(_T("Colors"), _T("crAddress"), crAddress);
+	WriteProfileInt(_T("Colors"), _T("crType"), crType);
+	WriteProfileInt(_T("Colors"), _T("crName"), crName);
+	WriteProfileInt(_T("Colors"), _T("crIndex"), crIndex);
+	WriteProfileInt(_T("Colors"), _T("crValue"), crValue);
+	WriteProfileInt(_T("Colors"), _T("crComment"), crComment);
+	WriteProfileInt(_T("Colors"), _T("crVTable"), crVTable);
+	WriteProfileInt(_T("Colors"), _T("crFunction"), crFunction);
+	WriteProfileInt(_T("Colors"), _T("crChar"), crChar);
+	WriteProfileInt(_T("Colors"), _T("crCustom"), crCustom);
+	WriteProfileInt(_T("Colors"), _T("crHex"), crHex);
+	WriteProfileInt(_T("Display"), _T("gbOffset"), gbOffset);
+	WriteProfileInt(_T("Display"), _T("gbAddress"), gbAddress);
+	WriteProfileInt(_T("Display"), _T("gbText"), gbText);
+	WriteProfileInt(_T("Display"), _T("gbFloat"), gbFloat);
+	WriteProfileInt(_T("Display"), _T("gbInt"), gbInt);
+	WriteProfileInt(_T("Display"), _T("gbString"), gbString);
+	WriteProfileInt(_T("Display"), _T("gbPointers"), gbPointers);
+	WriteProfileInt(_T("Display"), _T("gbTop"), gbTop);
+	WriteProfileInt(_T("Display"), _T("gbClassBrowser"), gbClassBrowser);
+	WriteProfileInt(_T("Display"), _T("gbFilterProcesses"), gbFilterProcesses);
 
 	return CWinAppEx::ExitInstance();
 }
@@ -230,28 +230,28 @@ void CReClass2015App::OnButtonReset()
 	CMDIFrameWnd* pFrame = (CMDIFrameWnd*)AfxGetApp()->m_pMainWnd;
 
 	CMDIChildWnd* wnd = pFrame->MDIGetActive();
-	while(wnd)
+	while (wnd)
 	{
-		wnd->SendMessage(WM_CLOSE,0,0);
+		wnd->SendMessage(WM_CLOSE, 0, 0);
 		wnd = pFrame->MDIGetActive();
 	}
 
 	Classes.clear();
-	Header = "";
-	Footer = "";
-	Notes = "";
+	Header = _T("");
+	Footer = _T("");
+	Notes = _T("");
 
-	tdHex = "char";
-	tdInt32 = "__int32";
-	tdInt16 = "__int16";
-	tdInt8 = "__int8";
-	tdDWORD = "DWORD";
-	tdWORD = "WORD";
-	tdBYTE = "BYTE";
-	tdVec2 = "D3DVECTOR2";
-	tdVec3 = "D3DVECTOR3";
-	tdQuat = "D3DXQUATERNION";
-	tdMatrix = "D3DMATRIX";
+	tdHex = _T("char");
+	tdInt32 = _T("__int32");
+	tdInt16 = _T("__int16");
+	tdInt8 = _T("__int8");
+	tdDWORD = _T("DWORD");
+	tdWORD = _T("WORD");
+	tdBYTE = _T("BYTE");
+	tdVec2 = _T("D3DVECTOR2");
+	tdVec3 = _T("D3DVECTOR3");
+	tdQuat = _T("D3DXQUATERNION");
+	tdMatrix = _T("D3DMATRIX");
 
 	CurrentFilePath = "";
 }
@@ -290,7 +290,7 @@ void CReClass2015App::OnUpdateButtonKill(CCmdUI* pCmdUI)
 void CReClass2015App::CalcOffsets(CNodeClass* pClass)
 {
 	DWORD offset = 0;
-	for  (UINT i = 0; i < pClass->Nodes.size(); i++)
+	for (UINT i = 0; i < pClass->Nodes.size(); i++)
 	{
 		pClass->Nodes[i]->offset = offset;
 		offset += pClass->Nodes[i]->GetMemorySize();
@@ -302,17 +302,13 @@ void CReClass2015App::CalcAllOffsets()
 		CalcOffsets(Classes[i]);
 }
 
-void CReClass2015App::OnFileNew() 
+void CReClass2015App::OnFileNew()
 {
 	CMainFrame* pFrame = STATIC_DOWNCAST(CMainFrame, m_pMainWnd);
 	CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, m_hMDIMenu, m_hMDIAccel);
 
 	//char name[64];
 	//sprintf(name,"Class%0.8X",GetTickCount());
-
-	#ifdef _DEBUG
-	printf("[+] OnFileNew()\n");
-	#endif
 
 	CNodeClass* pClass = new CNodeClass;
 	theApp.Classes.push_back(pClass);
@@ -323,21 +319,16 @@ void CReClass2015App::OnFileNew()
 	//pCust->pParent = pClass;
 	//pClass->Nodes.push_back(pCust);
 
-	#ifdef _WIN64
-	for (int i = 0; i < 64/8; i++)
+	for (int i = 0; i < 64 / sizeof(size_t); i++)
 	{
+#ifdef _WIN64
 		CNodeHex64* pNode = new CNodeHex64;
-		pNode->pParent = pClass;
-		pClass->Nodes.push_back(pNode);
-	}
-	#else
-	for (int i = 0; i < 64/4; i++)
-	{
+#else
 		CNodeHex32* pNode = new CNodeHex32;
+#endif
 		pNode->pParent = pClass;
 		pClass->Nodes.push_back(pNode);
 	}
-	#endif
 
 	CalcOffsets(pClass);
 	return;
@@ -347,7 +338,7 @@ void CReClass2015App::OnFileNew()
 
 	CNodeVTable* pVTable = new CNodeVTable;
 	pClass->Nodes.push_back(pVTable);
-	for (int i=0; i < 5; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		CNodeFunctionPtr* pNode = new CNodeFunctionPtr;
 		pNode->offset = i * pNode->GetMemorySize();
@@ -388,23 +379,23 @@ void CReClass2015App::OnFileNew()
 	}
 	//for (int i=0; i < 2; i++)
 	{
-		// I don't know what the fuck this does ???
+		// 
 		CNodeArray* pNode = new CNodeArray;
-		#ifdef _WIN64
+#ifdef _WIN64
 		CNodeHex64* pNode2 = new CNodeHex64;
-		#else
+#else
 		CNodeHex32* pNode2 = new CNodeHex32;
-		#endif
+#endif
 		pNode->pNode = pNode2;
 		pClass->Nodes.push_back(pNode);
 	}
 
-	//Calc Offsets...
+	// Calc Offsets
 	DWORD offset = 0;
-	for  (UINT i = 0; i < pClass->Nodes.size(); i++ )
+	for (UINT i = 0; i < pClass->Nodes.size(); i++)
 	{
 		pClass->Nodes[i]->offset = offset;
-		offset += pClass->Nodes[i]->GetMemorySize( );
+		offset += pClass->Nodes[i]->GetMemorySize();
 	}
 
 	//CNodeClassPtr* pClass2 = new CNodeClassPtr;
@@ -427,7 +418,7 @@ public:
 	CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD) { }
 	enum { IDD = IDD_ABOUTBOX }; // Dialog Data
 protected: // DDX/DDV support
-	virtual void CAboutDlg::DoDataExchange(CDataExchange* pDX) { CDialogEx::DoDataExchange(pDX); } 
+	virtual void CAboutDlg::DoDataExchange(CDataExchange* pDX) { CDialogEx::DoDataExchange(pDX); }
 	DECLARE_MESSAGE_MAP() // Implementation
 };
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
@@ -472,9 +463,10 @@ class ImportLink
 {
 public:
 	CNodeBase* pNode;
-	CString Name; 
-}; 
- 
+	CString Name;
+};
+
+// TODO: Fix this
 void CReClass2015App::OnFileImport()
 {
 	return;
@@ -485,7 +477,7 @@ void CReClass2015App::OnFileImport()
 	//std::vector<ImportLink> Links;
 	//
 	//char szFilters[] = "ReClass (*.rdc)|*.rdc|All Files (*.*)|*.*||";
-	//CFileDialog fileDlg (TRUE, "rdc", "",OFN_FILEMUSTEXIST| OFN_HIDEREADONLY, szFilters, NULL);
+	//CFileDialog fileDlg(TRUE, "rdc", "",OFN_FILEMUSTEXIST| OFN_HIDEREADONLY, szFilters, NULL);
 	//if( fileDlg.DoModal() == IDOK )
 	//{
 	//	CString pathName = fileDlg.GetPathName();
@@ -654,55 +646,54 @@ void CReClass2015App::ClearSelection()
 	for (UINT i = 0; i < Classes.size(); i++)
 	{
 		Classes[i]->bSelected = false;
-		for (UINT n=0; n < Classes[i]->Nodes.size(); n++)
+		for (UINT n = 0; n < Classes[i]->Nodes.size(); n++)
 		{
 			CNodeBase* pNode = Classes[i]->Nodes[n];
 			pNode->bSelected = false;
-			
-			NodeType t = pNode->GetType();
-			if (t == nt_vtable)
+
+			NodeType nt = pNode->GetType();
+			if (nt == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
-				for (UINT f=0; f < pVTable->Nodes.size(); f++)
+				for (UINT f = 0; f < pVTable->Nodes.size(); f++)
 					pVTable->Nodes[f]->bSelected = false;
 			}
-			if (t == nt_array)
+			if (nt == nt_array)
 			{
 				CNodeArray* pArray = (CNodeArray*)pNode;
 				pArray->bSelected = false;
 			}
-			if (t == nt_pointer)
+			if (nt == nt_pointer)
 			{
 				CNodePtr* pPtr = (CNodePtr*)pNode;
 				pPtr->bSelected = false;
 			}
-
 		}
 	}
 }
 
 void CReClass2015App::ClearHidden()
 {
-	for (UINT i=0; i < Classes.size(); i++)
+	for (UINT i = 0; i < Classes.size(); i++)
 	{
 		Classes[i]->bHidden = false;
-		for (UINT n=0; n < Classes[i]->Nodes.size(); n++)
+		for (UINT n = 0; n < Classes[i]->Nodes.size(); n++)
 		{
 			CNodeBase* pNode = Classes[i]->Nodes[n];
 			pNode->bHidden = false;
 
-			NodeType t = pNode->GetType();
-			if (t == nt_vtable)
+			NodeType nt = pNode->GetType();
+			if (nt == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
-				for (UINT f=0; f < pVTable->Nodes.size(); f++) pVTable->Nodes[f]->bHidden = false;
+				for (UINT f = 0; f < pVTable->Nodes.size(); f++) pVTable->Nodes[f]->bHidden = false;
 			}
-			if (t == nt_array)
+			if (nt == nt_array)
 			{
 				CNodeArray* pArray = (CNodeArray*)pNode;
 				pArray->bHidden = false;
 			}
-			if (t == nt_pointer)
+			if (nt == nt_pointer)
 			{
 				CNodePtr* pPtr = (CNodePtr*)pNode;
 				pPtr->bHidden = false;
@@ -713,34 +704,35 @@ void CReClass2015App::ClearHidden()
 
 bool CReClass2015App::IsNodeValid(CNodeBase* pCheckNode)
 {
-	for (UINT i=0; i < Classes.size(); i++)
+	for (UINT i = 0; i < Classes.size(); i++)
 	{
-		for (UINT n=0; n < Classes[i]->Nodes.size(); n++)
+		for (UINT n = 0; n < Classes[i]->Nodes.size(); n++)
 		{
 			CNodeBase* pNode = Classes[i]->Nodes[n];
-			if (pNode == pCheckNode) return true;
+			if (pNode == pCheckNode) 
+				return true;
 
-			NodeType t = pNode->GetType();
-			if (t == nt_vtable)
+			NodeType nt = pNode->GetType();
+			if (nt == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
-				for (UINT f=0; f < pVTable->Nodes.size(); f++)
+				for (UINT f = 0; f < pVTable->Nodes.size(); f++)
 				{
-					if (pVTable->Nodes[f] == pCheckNode) 
+					if (pVTable->Nodes[f] == pCheckNode)
 						return true;
 
 				}
 			}
-			if (t == nt_array)
+			if (nt == nt_array)
 			{
 				CNodeArray* pArray = (CNodeArray*)pNode;
-				if (pArray->pNode == pCheckNode) 
+				if (pArray->pNode == pCheckNode)
 					return true;
 			}
-			if (t == nt_pointer)
+			if (nt == nt_pointer)
 			{
 				CNodePtr* pPtr = (CNodePtr*)pNode;
-				if (pPtr->pNode == pCheckNode) 
+				if (pPtr->pNode == pCheckNode)
 					return true;
 			}
 		}
@@ -763,21 +755,16 @@ void CReClass2015App::OnButtonNewClass()
 	theApp.Classes.push_back(pClass);
 	pChild->m_wndView.m_pClass = pClass;
 
-	#ifdef _WIN64
-	for ( int i=0; i < 64 / 8; i++ )
+	for (int i = 0; i < 64 / sizeof(size_t); i++)
 	{
+#ifdef _WIN64
 		CNodeHex64* pNode = new CNodeHex64;
-		pNode->pParent = pClass;
-		pClass->Nodes.push_back( pNode );
-	}
-	#else
-	for ( int i = 0; i < 64 / 4; i++ )
-	{
+#else
 		CNodeHex32* pNode = new CNodeHex32;
+#endif
 		pNode->pParent = pClass;
 		pClass->Nodes.push_back(pNode);
 	}
-	#endif
 
 	CalcOffsets(pClass);
 }
@@ -786,7 +773,7 @@ void CReClass2015App::OnButtonNewClass()
 void CReClass2015App::OnButtonNotes()
 {
 	CDialogEdit dlg;
-	dlg.Title = "Notes";
+	dlg.Title = _T("Notes");
 	dlg.Text = Notes;
 	dlg.DoModal();
 	Notes = dlg.Text;
@@ -810,7 +797,7 @@ void CReClass2015App::OnButtonParser()
 void CReClass2015App::OnButtonHeader()
 {
 	CDialogEdit dlg;
-	dlg.Title = "Header";
+	dlg.Title = _T("Header");
 	dlg.Text = Header;
 	dlg.DoModal();
 	Header = dlg.Text;
@@ -819,7 +806,7 @@ void CReClass2015App::OnButtonHeader()
 void CReClass2015App::OnButtonFooter()
 {
 	CDialogEdit dlg;
-	dlg.Title = "Footer";
+	dlg.Title = _T("Footer");
 	dlg.Text = Footer;
 	dlg.DoModal();
 	Footer = dlg.Text;
@@ -868,61 +855,65 @@ CNodeBase* CReClass2015App::CreateNewNode(NodeType Type)
 	return NULL;
 }
 
-void CReClass2015App::SaveXML(char* FileName)
+void CReClass2015App::SaveXML(TCHAR* FileName)
 {
-	TiXmlDocument doc;  
-	TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "", "");  
-	doc.LinkEndChild(decl);  
+	TiXMLDocument doc;
 
-	TiXmlElement* root = new TiXmlElement("ReClass");  
-	doc.LinkEndChild(root);  
+	XMLDeclaration* decl = doc.NewDeclaration(/*"xml version = \"1.0\" encoding=\"UTF-8\""*/);
+	doc.LinkEndChild(decl);
 
-	TiXmlComment* comment = new TiXmlComment();
-	comment->SetValue("ReClass 2015");  
-	root->LinkEndChild(comment);  
+	XMLElement* root = doc.NewElement("ReClass");
+	doc.LinkEndChild(root);
+
+	XMLComment* comment = doc.NewComment("Reclass 2015");
+	root->LinkEndChild(comment);
 	//---------------------------------------------
-
-	TiXmlElement* settings;
-	settings = new TiXmlElement("TypeDef");
-	settings->SetAttribute("tdHex", tdHex);
-	settings->SetAttribute("tdInt64", tdInt64);
-	settings->SetAttribute("tdInt32", tdInt32);
-	settings->SetAttribute("tdInt16", tdInt16);
-	settings->SetAttribute("tdInt8", tdInt8);
-	settings->SetAttribute("tdDWORD", tdDWORD);
-	settings->SetAttribute("tdWORD", tdWORD);
-	settings->SetAttribute("tdBYTE", tdBYTE);
-	settings->SetAttribute("tdFloat", tdFloat);
-	settings->SetAttribute("tdDouble", tdDouble);
-	settings->SetAttribute("tdVec2", tdVec2);
-	settings->SetAttribute("tdVec3", tdVec3);
-	settings->SetAttribute("tdQuat", tdQuat);
-	settings->SetAttribute("tdMatrix", tdMatrix);
-	settings->SetAttribute("tdCharPtr", tdPChar);
+	XMLElement* settings = doc.NewElement("TypeDef");
+	settings->SetAttribute("tdHex", CW2A(tdHex));
+	settings->SetAttribute("tdInt64", CW2A(tdInt64));
+	settings->SetAttribute("tdInt32", CW2A(tdInt32));
+	settings->SetAttribute("tdInt16", CW2A(tdInt16));
+	settings->SetAttribute("tdInt8", CW2A(tdInt8));
+	settings->SetAttribute("tdDWORD", CW2A(tdDWORD));
+	settings->SetAttribute("tdWORD", CW2A(tdWORD));
+	settings->SetAttribute("tdBYTE", CW2A(tdBYTE));
+	settings->SetAttribute("tdFloat", CW2A(tdFloat));
+	settings->SetAttribute("tdDouble", CW2A(tdDouble));
+	settings->SetAttribute("tdVec2", CW2A(tdVec2));
+	settings->SetAttribute("tdVec3", CW2A(tdVec3));
+	settings->SetAttribute("tdQuat", CW2A(tdQuat));
+	settings->SetAttribute("tdMatrix", CW2A(tdMatrix));
+	settings->SetAttribute("tdPChar", CW2A(tdPChar));
 	root->LinkEndChild(settings);
 
-	settings = new TiXmlElement("Header");
-	settings->SetAttribute("Text", Header);
+	settings = doc.NewElement("Header");
+	settings->SetAttribute("Text", CW2A(Header));
 	root->LinkEndChild(settings);
-	settings = new TiXmlElement("Footer");
-	settings->SetAttribute("Text", Footer);
+
+	settings = doc.NewElement("Footer");
+	settings->SetAttribute("Text", CW2A(Footer));
 	root->LinkEndChild(settings);
-	settings = new TiXmlElement("Notes");
-	settings->SetAttribute("Text", Notes);
+
+	settings = doc.NewElement("Notes");
+	settings->SetAttribute("Text", CW2A(Notes));
 	root->LinkEndChild(settings);
 
 	for (UINT i = 0; i < Classes.size(); i++)
 	{
 		CNodeClass* pClass = Classes[i];
+		CStringA strClassName = CW2A(pClass->Name);
+		CStringA strClassComment = CW2A(pClass->Comment);
+		CStringA strClassOffset = CW2A(pClass->strOffset);
+		CStringA strClassCode = CW2A(pClass->Code);
 
-		TiXmlElement* classnode = new TiXmlElement("Class");
-		classnode->SetAttribute("Name", pClass->Name);
-		classnode->SetAttribute("Type", pClass->GetType());
-		classnode->SetAttribute("Comment", pClass->Comment);
-		classnode->SetAttribute("Offset", (int)pClass->offset);
-		classnode->SetAttribute("strOffset", pClass->strOffset);
-		classnode->SetAttribute("Code", pClass->Code);
-		root->LinkEndChild(classnode);
+		XMLElement* classNode = doc.NewElement("Class");
+		classNode->SetAttribute("Name", strClassName);
+		classNode->SetAttribute("Type", pClass->GetType());
+		classNode->SetAttribute("Comment", strClassComment);
+		classNode->SetAttribute("Offset", (int)pClass->offset);
+		classNode->SetAttribute("strOffset", strClassOffset);
+		classNode->SetAttribute("Code", strClassCode);
+		root->LinkEndChild(classNode);
 
 		for (UINT n = 0; n < pClass->Nodes.size(); n++)
 		{
@@ -930,35 +921,44 @@ void CReClass2015App::SaveXML(char* FileName)
 			if (!pNode)
 				continue;
 
-			TiXmlElement *node = new TiXmlElement("Node");
-			node->SetAttribute("Name", pNode->Name.GetBuffer());
+			CStringA strNodeName = CW2A(pNode->Name);
+			CStringA strNodeComment = CW2A(pNode->Comment);
+
+			XMLElement* node = doc.NewElement("Node");
+			node->SetAttribute("Name", strNodeName);
 			node->SetAttribute("Type", pNode->GetType());
 			node->SetAttribute("Size", pNode->GetMemorySize());
 			node->SetAttribute("bHidden", pNode->bHidden);
-			node->SetAttribute("Comment", pNode->Comment.GetBuffer());
-			classnode->LinkEndChild(node);
+			node->SetAttribute("Comment", strNodeComment);
+
+			classNode->LinkEndChild(node);
 
 			if (pNode->GetType() == nt_array)
 			{
 				CNodeArray* pptr = (CNodeArray*)pNode;
-				node->SetAttribute("Total", pptr->Total);
+				node->SetAttribute("Total", (UINT)pptr->Total);
 
-				TiXmlElement *item = new TiXmlElement("Array");
-				item->SetAttribute("Name", pptr->pNode->Name.GetBuffer());
+				CStringA strArrayNodeName = CW2A(pptr->pNode->Name);
+				CStringA strArrayNodeComment = CW2A(pptr->pNode->Comment);
+
+				XMLElement *item = doc.NewElement("Array");
+				item->SetAttribute("Name", strArrayNodeName);
 				item->SetAttribute("Type", pptr->pNode->GetType());
 				item->SetAttribute("Size", pptr->pNode->GetMemorySize());
-				item->SetAttribute("Comment", pptr->pNode->Comment.GetBuffer());
+				item->SetAttribute("Comment", strArrayNodeComment);
 				node->LinkEndChild(item);
-			}			
+			}
 			if (pNode->GetType() == nt_pointer)
 			{
 				CNodePtr* pptr = (CNodePtr*)pNode;
-				node->SetAttribute("Pointer", pptr->pNode->Name);
+				CStringA strPtrNodeName = CW2A(pptr->pNode->Name);
+				node->SetAttribute("Pointer", strPtrNodeName);
 			}
 			if (pNode->GetType() == nt_instance)
 			{
 				CNodeClassInstance* pptr = (CNodeClassInstance*)pNode;
-				node->SetAttribute("Instance",pptr->pNode->Name);
+				CStringA strInstanceNodeName = CW2A(pptr->pNode->Name);
+				node->SetAttribute("Instance", strInstanceNodeName);
 			}
 			if (pNode->GetType() == nt_vtable)
 			{
@@ -966,15 +966,19 @@ void CReClass2015App::SaveXML(char* FileName)
 				for (UINT f = 0; f < pVTable->Nodes.size(); f++)
 				{
 					CNodeFunctionPtr* pNodefun = (CNodeFunctionPtr*)pVTable->Nodes[f];
-					TiXmlElement *fun = new TiXmlElement("Function");
-					fun->SetAttribute("Name", pNodefun->Name);
-					fun->SetAttribute("Comment", pNodefun->Comment);
+					CStringA strFunctionNodeName = CW2A(pNodefun->Name);
+					CStringA strFunctionNodeComment = CW2A(pNodefun->Comment);
+
+					XMLElement *fun = doc.NewElement("Function");			
+					fun->SetAttribute("Name", strFunctionNodeName);
+					fun->SetAttribute("Comment", strFunctionNodeComment);
 					fun->SetAttribute("bHidden", pNodefun->bHidden);
 					node->LinkEndChild(fun);
 					for (UINT as = 0; as < pNodefun->Assembly.size(); as++)
 					{
-						TiXmlElement *pCode = new TiXmlElement("Code");
-						pCode->SetAttribute("Assembly", pNodefun->Assembly[as]);
+						XMLElement *pCode = doc.NewElement("Code");
+						CStringA strFunctionNodeAssembler = CW2A(pNodefun->Assembly[as]);
+						pCode->SetAttribute("Assembly", strFunctionNodeAssembler);
 						fun->LinkEndChild(pCode);
 					}
 				}
@@ -982,7 +986,17 @@ void CReClass2015App::SaveXML(char* FileName)
 		}
 	}
 
-	doc.SaveFile(FileName);
+
+#ifdef UNICODE
+	// Convert path to mbs in unicode mode
+	char szFilename[MAX_PATH] = { 0 };
+	size_t converted = 0;
+	wcstombs_s(&converted, szFilename, FileName, MAX_PATH);
+#else
+	char* szFilename = FileName.GetBuffer();
+#endif
+
+	doc.SaveFile(szFilename);
 }
 
 void CReClass2015App::OnFileSave()
@@ -992,9 +1006,9 @@ void CReClass2015App::OnFileSave()
 
 void CReClass2015App::OnFileSaveAs()
 {
-	char szFilters[]= "ReClass (*.reclass)|*.reclass|All Files (*.*)|*.*||";
-	CFileDialog fileDlg (FALSE, "reclass", "", OFN_HIDEREADONLY, szFilters, NULL);
-	if(fileDlg.DoModal() != IDOK)
+	TCHAR Filters[] = _T("ReClass (*.reclass)|*.reclass|All Files (*.*)|*.*||");
+	CFileDialog fileDlg(FALSE, _T("reclass"), _T(""), OFN_HIDEREADONLY, Filters, NULL);
+	if (fileDlg.DoModal() != IDOK)
 		return;
 
 	CString pathName = fileDlg.GetPathName();
@@ -1004,119 +1018,130 @@ void CReClass2015App::OnFileSaveAs()
 
 void CReClass2015App::OnFileOpen()
 {
-	char szFilters[]= "ReClass (*.reclass)|*.reclass|All Files (*.*)|*.*||";
-	CFileDialog fileDlg (TRUE, "reclass", "", OFN_FILEMUSTEXIST| OFN_HIDEREADONLY, szFilters, NULL);
-	if(fileDlg.DoModal() != IDOK) 
+	TCHAR Filters[] = _T("ReClass (*.reclass)|*.reclass|All Files (*.*)|*.*||");
+	CFileDialog fileDlg(TRUE, _T("reclass"), _T(""), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, Filters, NULL);
+	if (fileDlg.DoModal() != IDOK)
 		return;
 
 	CString pathName = fileDlg.GetPathName();
 
 	OnButtonReset();
 
-	TiXmlDocument doc(pathName);
-	if (!doc.LoadFile()) 
+	TiXMLDocument doc;
+
+#ifdef UNICODE
+	// Convert path to mbs in unicode mode
+	char szFilename[MAX_PATH] = { 0 };
+	size_t converted = 0;
+	wcstombs_s(&converted, szFilename, pathName, MAX_PATH);
+#else
+	char* szFilename = pathName.GetBuffer();
+#endif
+
+	XMLError ret = doc.LoadFile(szFilename);
+	if (ret != XML_NO_ERROR)
 		return;
 
 	CurrentFilePath = pathName;
 
-	TiXmlHandle hDoc(&doc);
-	TiXmlHandle hRoot(0);
-	TiXmlElement* pElem;
+	XMLHandle hDoc(&doc);
+	XMLHandle hRoot(0);
+	XMLElement* pElem;
 	std::vector<ImportLink> Links;
 
-	pElem = hDoc.FirstChildElement().Element();
-	if (!pElem) return;
-	const char* v = pElem->Value();
-	if (stricmp(v, "ReClass") != 0) 
-		return; //Not a Reclass file...
-	hRoot = TiXmlHandle(pElem);
+	pElem = hDoc.FirstChildElement().ToElement();
+	if (!pElem)
+		return;
 
-	pElem = hRoot.FirstChild( "TypeDef" ).Element();
+	const char* v = pElem->Value();
+	if (_stricmp(v, "ReClass") != 0) // the root element value is 'ReClass'
+		return; // Not a Reclass file
+
+	hRoot = XMLHandle(pElem);
+
+	pElem = hRoot.FirstChildElement("TypeDef").ToElement();
 	if (pElem)
 	{
-		tdHex	 = pElem->Attribute("tdHex");
-		tdInt64  = pElem->Attribute("tdInt64");
-		tdInt32	 = pElem->Attribute("tdInt32");
-		tdInt16	 = pElem->Attribute("tdInt16");
-		tdInt8	 = pElem->Attribute("tdInt8");
-		tdDWORD	 = pElem->Attribute("tdDWORD");
-		tdWORD	 = pElem->Attribute("tdWORD");
-		tdBYTE	 = pElem->Attribute("tdBYTE");
-		tdVec2	 = pElem->Attribute("tdVec2");
-		tdVec3	 = pElem->Attribute("tdVec3");
-		tdQuat	 = pElem->Attribute("tdQuat");
-		tdMatrix = pElem->Attribute("tdMatrix");
-		//todo: insert pchar
+		tdHex	 = CA2W(pElem->Attribute("tdHex"));
+		tdInt64  = CA2W(pElem->Attribute("tdInt64"));
+		tdInt32  = CA2W(pElem->Attribute("tdInt32"));
+		tdInt16  = CA2W(pElem->Attribute("tdInt16"));
+		tdInt8	 = CA2W(pElem->Attribute("tdInt8"));
+		tdDWORD  = CA2W(pElem->Attribute("tdDWORD"));
+		tdWORD	 = CA2W(pElem->Attribute("tdWORD"));
+		tdBYTE	 = CA2W(pElem->Attribute("tdBYTE"));
+		tdVec2	 = CA2W(pElem->Attribute("tdVec2"));
+		tdVec3	 = CA2W(pElem->Attribute("tdVec3"));
+		tdQuat	 = CA2W(pElem->Attribute("tdQuat"));
+		tdMatrix = CA2W(pElem->Attribute("tdMatrix"));
+		tdPChar  = CA2W(pElem->Attribute("tdPChar"));
 	}
 
-	pElem = hRoot.FirstChild( "Header" ).Element();
+	pElem = hRoot.FirstChildElement("Header").ToElement();
 	if (pElem)
 		Header = pElem->Attribute("Text");
 
-	pElem = hRoot.FirstChild( "Footer" ).Element();
+	pElem = hRoot.FirstChildElement("Footer").ToElement();
 	if (pElem)
 		Footer = pElem->Attribute("Text");
 
-	pElem = hRoot.FirstChild( "Notes" ).Element();
+	pElem = hRoot.FirstChildElement("Notes").ToElement();
 	if (pElem)
 		Notes = pElem->Attribute("Text");
 
-	pElem = hRoot.FirstChild( "Class" ).Element();
-	while(pElem)
+	pElem = hRoot.FirstChildElement("Class").ToElement();
+	while (pElem)
 	{
-		CNodeClass* pClass	= new CNodeClass;
-		pClass->Name		= pElem->Attribute("Name");
-		pClass->Comment		= pElem->Attribute("Comment");
-		pClass->Code		= pElem->Attribute("Code");
-		pClass->offset		= atoi(pElem->Attribute("Offset"));
-		pClass->strOffset	= pElem->Attribute("strOffset");
+		CNodeClass* pClass = new CNodeClass;
+		pClass->Name = CA2W(pElem->Attribute("Name"));
+		pClass->Comment = CA2W(pElem->Attribute("Comment"));
+		pClass->Code = CA2W(pElem->Attribute("Code"));
+		pClass->offset = atoi(pElem->Attribute("Offset"));
+		pClass->strOffset = CA2W(pElem->Attribute("strOffset"));
 
 		if (pClass->strOffset == "")
-			pClass->strOffset = pElem->Attribute("Offset");
-		
-		TiXmlElement* pClassElem;
-		pClassElem = pElem->FirstChildElement( );
-		
-		while( pClassElem )
+			pClass->strOffset = CA2W(pElem->Attribute("Offset"));
+
+		XMLElement* pClassElem = pElem->FirstChildElement();
+		while (pClassElem)
 		{
-			int Type = -1;
+			int Type = nt_none;
 			pClassElem->QueryIntAttribute("Type", &Type);
 
-			if (Type != -1)
+			if (Type != nt_none)
 			{
-				int Size=-1;
+				int Size = -1;
 				CNodeBase* pNode = CreateNewNode((NodeType)Type);
-				pNode->Name = pClassElem->Attribute("Name");
-				pNode->Comment = pClassElem->Attribute("Comment");
+				pNode->Name = CA2W(pClassElem->Attribute("Name"));
+				pNode->Comment = CA2W(pClassElem->Attribute("Comment"));
 				pNode->bHidden = atoi(pClassElem->Attribute("bHidden")) > 0 ? true : false;
 				pClassElem->QueryIntAttribute("Size", &Size);
 				pNode->pParent = pClass;
 				pClass->Nodes.push_back(pNode);
-		
-				if (Type == nt_custom)	
+
+				if (Type == nt_custom)
 					((CNodeCustom*)pNode)->memsize = Size;
-				if (Type == nt_text)	
+				if (Type == nt_text)
 					((CNodeText*)pNode)->memsize = Size;
-				if (Type == nt_unicode) 
+				if (Type == nt_unicode)
 					((CNodeText*)pNode)->memsize = Size;
 				if (Type == nt_vtable)
 				{
-					TiXmlElement* pVTableElem;
-					pVTableElem = pClassElem->FirstChildElement();
-					while(pVTableElem)
+					XMLElement* pVTableElem = pClassElem->FirstChildElement();
+					while (pVTableElem)
 					{
 						CNodeFunctionPtr* pFun = new CNodeFunctionPtr;
-						pFun->Name		= pVTableElem->Attribute("Name");
-						pFun->Comment	= pVTableElem->Attribute("Comment");
-						pFun->bHidden	= atoi(pVTableElem->Attribute("bHidden")) > 0 ? true : false;
+						pFun->Name = CA2W(pVTableElem->Attribute("Name"));
+						pFun->Comment = CA2W(pVTableElem->Attribute("Comment"));
+						pFun->bHidden = atoi(pVTableElem->Attribute("bHidden")) > 0 ? true : false;
 						pFun->pParent = pNode;
 						((CNodeVTable*)pNode)->Nodes.push_back(pFun);
 
-						TiXmlElement* pCode = pVTableElem->FirstChildElement();
-						while(pCode)
+						XMLElement* pCode = pVTableElem->FirstChildElement();
+						while (pCode)
 						{
 							CString d;
-							d = pCode->Attribute("Assembly");
+							d = CA2W(pCode->Attribute("Assembly"));
 							pFun->Assembly.push_back(d);
 							pCode = pCode->NextSiblingElement();
 						}
@@ -1127,26 +1152,25 @@ void CReClass2015App::OnFileOpen()
 				//<Array Name="N12DB" Type="24" Size="64" Comment="" />
 				if (Type == nt_array)
 				{
-					CNodeArray* pArray = (CNodeArray*)pNode;  
-					pArray->Total = atoi(pClassElem->Attribute("Total"));  
+					CNodeArray* pArray = (CNodeArray*)pNode;
+					pArray->Total = atoi(pClassElem->Attribute("Total"));
 
-					TiXmlElement* pArrayElem; 
-					pArrayElem = pClassElem->FirstChildElement(); 
-					if(pArrayElem) 
+					XMLElement* pArrayElem = pClassElem->FirstChildElement();
+					if (pArrayElem)
 					{
-						CString Name	= pArrayElem->Attribute("Name"); 
-						CString Comment	= pArrayElem->Attribute("Comment"); 
-						int ArrayType = -1; 
-						pArrayElem->QueryIntAttribute("Type", &ArrayType); 
-						int ArraySize = -1; 
-						pClassElem->QueryIntAttribute("Size", &ArraySize); 
+						CString Name = CA2W(pArrayElem->Attribute("Name"));
+						CString Comment = CA2W(pArrayElem->Attribute("Comment"));
+						int ArrayType = -1;
+						pArrayElem->QueryIntAttribute("Type", &ArrayType);
+						int ArraySize = -1;
+						pClassElem->QueryIntAttribute("Size", &ArraySize);
 
 						if (ArrayType == nt_class)
 						{
-							ImportLink link; 
-							link.Name = Name; 
-							link.pNode = pNode; 
-							Links.push_back(link); 
+							ImportLink link;
+							link.Name = Name;
+							link.pNode = pNode;
+							Links.push_back(link);
 						}
 						//Handle other type of arrays....
 					}
@@ -1155,20 +1179,20 @@ void CReClass2015App::OnFileOpen()
 				if (Type == nt_pointer)
 				{
 					ImportLink link;
-					link.Name = pClassElem->Attribute("Pointer");
+					link.Name = CA2W(pClassElem->Attribute("Pointer"));
 					link.pNode = pNode;
 					Links.push_back(link);
 				}
 				if (Type == nt_instance)
 				{
 					ImportLink link;
-					link.Name = pClassElem->Attribute("Instance");
+					link.Name = CA2W(pClassElem->Attribute("Instance"));
 					link.pNode = pNode;
 					Links.push_back(link);
-				}	
+				}
 			}
 
-			pClassElem = pClassElem->NextSiblingElement( );
+			pClassElem = pClassElem->NextSiblingElement();
 		}
 
 
@@ -1210,46 +1234,46 @@ void CReClass2015App::OnFileOpen()
 void CReClass2015App::OnButtonGenerate()
 {
 	CDialogEdit dlg;
-	dlg.Title = "Headers";
+	dlg.Title = _T("Headers");
 
 	CString h, t;
 
-	h += "// Generated using ReClass 2015\r\n\r\n";
-	h += Header + "\r\n";
+	h += _T("// Generated using ReClass 2015\r\n\r\n");
+	h += Header + _T("\r\n\r\n");
 
 	for (UINT c = 0; c < Classes.size(); c++)
 	{
-		t.Format("class %s;\r\n", Classes[c]->Name);
+		t.Format(_T("class %s;\r\n"), Classes[c]->Name);
 		h += t;
 	}
 
-	h += "\r\n";
-	 
+	h += _T("\r\n");
+
 	std::vector<CString> vfun;
 	std::vector<CString> var;
 
 	CString ClassName;
 
-	for (UINT c = 0; c < Classes.size();c++)
+	for (UINT c = 0; c < Classes.size(); c++)
 	{
 		CNodeClass* pClass = Classes[c];
 
 		CalcOffsets(pClass);
-		
+
 		vfun.clear();
 		var.clear();
-		
-		ClassName.Format("class %s", pClass->Name);
+
+		ClassName.Format(_T("class %s"), pClass->Name);
 
 		int fill = 0;
 		int fillStart = 0;
 
-		for (UINT n = 0; n < pClass->Nodes.size( ); n++)
+		for (UINT n = 0; n < pClass->Nodes.size(); n++)
 		{
 			CNodeBase* pNode = (CNodeBase*)pClass->Nodes[n];
 			NodeType Type = pNode->GetType();
 
-			if ((Type == nt_hex64) ||  (Type == nt_hex32) || (Type == nt_hex16) || (Type == nt_hex8))
+			if ((Type == nt_hex64) || (Type == nt_hex32) || (Type == nt_hex16) || (Type == nt_hex8))
 			{
 				if (fill == 0)
 					fillStart = (int)pNode->offset;
@@ -1259,7 +1283,7 @@ void CReClass2015App::OnButtonGenerate()
 			{
 				if (fill > 0)
 				{
-					t.Format("\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n", tdHex, fillStart, fill, fillStart);
+					t.Format(_T("\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n"), tdHex, fillStart, fill, fillStart);
 					var.push_back(t);
 				}
 				fill = 0;
@@ -1268,118 +1292,119 @@ void CReClass2015App::OnButtonGenerate()
 			if (Type == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
-				for (UINT f=0; f<pVTable->Nodes.size();f++)
+				for (UINT f = 0; f < pVTable->Nodes.size(); f++)
 				{
 					CString fn(pVTable->Nodes[f]->Name);
-					if (fn.GetLength()==0) fn.Format("void Function%i()", f);
-					t.Format("\tvirtual %s; //%s\r\n", fn, pVTable->Nodes[f]->Comment);
+					if (fn.GetLength() == 0)
+						fn.Format(_T("void Function%i()"), f);
+					t.Format(_T("\tvirtual %s; //%s\r\n"), fn, pVTable->Nodes[f]->Comment);
 					vfun.push_back(t);
 				}
 			}
 
 			if (Type == nt_int64)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdInt64, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt64, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_int32)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdInt32, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt32, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_int16)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdInt16, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt16, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_int8)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdInt8, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt8, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 
 			if (Type == nt_uint32)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdDWORD, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdDWORD, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_uint16)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdWORD, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdWORD, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_uint8)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdBYTE, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdBYTE, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 
 			if (Type == nt_vec2)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdVec2, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdVec2, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_vec3)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdVec3, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdVec3, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_quat)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdQuat, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdQuat, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_matrix)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdMatrix, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdMatrix, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 
 			if (Type == nt_pchar)
 			{
-				t.Format("\t%s %s; //0x%0.4X %s\r\n", tdPChar, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdPChar, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_text)
 			{
 				CNodeText* pText = (CNodeText*)pNode;
-				t.Format("\tchar %s[%i]; //0x%0.4X %s\r\n", pText->Name, pText->memsize, pText->offset, pText->Comment);
+				t.Format(_T("\tchar %s[%i]; //0x%0.4X %s\r\n"), pText->Name, pText->memsize, pText->offset, pText->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_unicode)
 			{
 				CNodeUnicode* pText = (CNodeUnicode*)pNode;
-				t.Format("\twchar_t %s[%i]; //0x%0.4X %s\r\n", pText->Name, pText->memsize / sizeof(wchar_t), pText->offset, pText->Comment);
+				t.Format(_T("\twchar_t %s[%i]; //0x%0.4X %s\r\n"), pText->Name, pText->memsize / sizeof(wchar_t), pText->offset, pText->Comment);
 				var.push_back(t);
 			}
 
 			if (Type == nt_float)
 			{
-				t.Format("\tfloat %s; //0x%0.4X %s\r\n", pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\tfloat %s; //0x%0.4X %s\r\n"), pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 			if (Type == nt_double)
 			{
-				t.Format("\tdouble %s; //0x%0.4X %s\r\n", pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\tdouble %s; //0x%0.4X %s\r\n"), pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 
 			if (Type == nt_custom)
 			{
-				t.Format("\t%s; //0x%0.4X %s\r\n", pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s; //0x%0.4X %s\r\n"), pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 
 			if (Type == nt_function)
 			{
-				t.Format("\t%s; //0x%0.4X %s\r\n", pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s; //0x%0.4X %s\r\n"), pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
 
 			if (Type == nt_pointer)
 			{
 				CNodePtr* pPointer = (CNodePtr*)pNode;
-				t.Format("\t%s* %s; //0x%0.4X %s\r\n", pPointer->pNode->Name ,pPointer->Name, pPointer->offset, pPointer->Comment);
+				t.Format(_T("\t%s* %s; //0x%0.4X %s\r\n"), pPointer->pNode->Name, pPointer->Name, pPointer->offset, pPointer->Comment);
 				var.push_back(t);
 			}
 
@@ -1388,12 +1413,12 @@ void CReClass2015App::OnButtonGenerate()
 				CNodeClassInstance* pCls = (CNodeClassInstance*)pNode;
 				if (pCls->offset == 0)
 				{
-					t.Format(" : public %s", pCls->pNode->Name); // Inheritance
+					t.Format(_T(" : public %s"), pCls->pNode->Name); // Inheritance
 					ClassName += t;
 				}
 				else
 				{
-					t.Format("\t%s %s; //0x%0.4X %s\r\n", pCls->pNode->Name, pCls->Name, pCls->offset, pCls->Comment);
+					t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), pCls->pNode->Name, pCls->Name, pCls->offset, pCls->Comment);
 					var.push_back(t);
 				}
 			}
@@ -1401,7 +1426,7 @@ void CReClass2015App::OnButtonGenerate()
 			if (Type == nt_array)
 			{
 				CNodeArray* pArray = (CNodeArray*)pNode;
-				t.Format("\t%s %s[%i]; //0x%0.4X %s\r\n", pArray->pNode->Name, pArray->Name, pArray->Total, pArray->offset, pArray->Comment);
+				t.Format(_T("\t%s %s[%i]; //0x%0.4X %s\r\n"), pArray->pNode->Name, pArray->Name, pArray->Total, pArray->offset, pArray->Comment);
 				var.push_back(t);
 			}
 
@@ -1409,35 +1434,35 @@ void CReClass2015App::OnButtonGenerate()
 
 		if (fill > 0)
 		{
-			t.Format("%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n", tdHex, fillStart, fill, fillStart);
+			t.Format(_T("%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n"), tdHex, fillStart, fill, fillStart);
 			var.push_back(t);
 		}
 
-		t.Format("%s\r\n{\r\npublic:\r\n", ClassName);
+		t.Format(_T("%s\r\n{\r\npublic:\r\n"), ClassName);
 		h += t;
 
-		for (UINT i = 0; i < vfun.size(); i++) 
+		for (UINT i = 0; i < vfun.size(); i++)
 			h += vfun[i];
-		if (vfun.size() > 0) 
-			h += "\r\n";
+		if (vfun.size() > 0)
+			h += _T("\r\n");
 
-		for (UINT i = 0; i < var.size() ;i++)	
+		for (UINT i = 0; i < var.size(); i++)
 			h += var[i];
-		if (var.size() > 0) 
-			h += "\r\n";
+		if (var.size() > 0)
+			h += _T("\r\n");
 
 		if (pClass->Code.GetLength() > 0)
 		{
 			h += pClass->Code;
-			h += "\r\n";
+			h += _T("\r\n");
 		}
 
-		t.Format("};//Size=0x%0.4X\r\n",pClass->GetMemorySize());
+		t.Format(_T("};//Size=0x%0.4X\r\n"), pClass->GetMemorySize());
 		h += t;
-		h += "\r\n";
+		h += _T("\r\n");
 	}
 
-	h += Footer + "\r\n";
+	h += Footer + _T("\r\n");
 
 	dlg.Text = h;
 	dlg.DoModal();
@@ -1449,22 +1474,22 @@ void CReClass2015App::DeleteClass(CNodeClass* pClass)
 	if (pNode)
 	{
 		CString msg;
-		printf("Class still has a reference in %s.%s\n", pNode->pParent->Name.GetString(), pNode->Name.GetString());
-		msg.Format("Class still has a reference in %s.%s", pNode->pParent->Name.GetString(), pNode->Name.GetString());
-		MessageBox(NULL, msg, "Error", MB_OK);
+		_tprintf(_T("Class still has a reference in %s.%s\n"), pNode->pParent->Name.GetString(), pNode->Name.GetString());
+		msg.Format(_T("Class still has a reference in %s.%s"), pNode->pParent->Name.GetString(), pNode->Name.GetString());
+		MessageBox(NULL, msg, _T("Error"), MB_OK);
 		return;
 	}
-	for (UINT i=0; i<Classes.size();i++)
+	for (UINT i = 0; i < Classes.size(); i++)
 	{
 		if (Classes[i] == pClass)
 		{
-			Classes.erase(Classes.begin()+i);
+			Classes.erase(Classes.begin() + i);
 			return;
 		}
 	}
 }
 
-CNodeBase* CReClass2015App::isNodeRef( CNodeBase* pTestNode )
+CNodeBase* CReClass2015App::isNodeRef(CNodeBase* pTestNode)
 {
 	for (UINT c = 0; c < Classes.size(); c++)
 	{
@@ -1478,36 +1503,40 @@ CNodeBase* CReClass2015App::isNodeRef( CNodeBase* pTestNode )
 			if (pNode->GetType() == nt_instance)
 			{
 				CNodeClassInstance* pInstance = (CNodeClassInstance*)pNode;
-				if (pInstance->pNode == pTestNode) return pInstance;
+				if (pInstance->pNode == pTestNode)
+					return pInstance;
 			}
 			if (pNode->GetType() == nt_pointer)
 			{
 				CNodePtr* pInstance = (CNodePtr*)pNode;
-				if (pInstance->pNode == pTestNode) return pInstance;
+				if (pInstance->pNode == pTestNode)
+					return pInstance;
 			}
 			if (pNode->GetType() == nt_array)
 			{
 				CNodeArray* pInstance = (CNodeArray*)pNode;
-				if (pInstance->pNode == pTestNode) return pInstance;
+				if (pInstance->pNode == pTestNode)
+					return pInstance;
 			}
 		}
 	}
 	return NULL;
 }
+
 void CReClass2015App::OnButtonClean()
 {
 	CMDIFrameWnd* pFrame = (CMDIFrameWnd*)AfxGetApp()->m_pMainWnd;
 	CMDIChildWnd* wnd = pFrame->MDIGetActive();
-	while(wnd)
+	while (wnd)
 	{
-		wnd->SendMessage(WM_CLOSE,0,0);
+		wnd->SendMessage(WM_CLOSE, 0, 0);
 		wnd = pFrame->MDIGetActive();
 	}
 
 	std::vector<CNodeClass*> toCheck;
 	for (UINT i = 0; i < Classes.size(); i++)
 	{
-		if (isNodeRef(Classes[i]) == NULL) 
+		if (isNodeRef(Classes[i]) == NULL)
 			toCheck.push_back(Classes[i]);
 	}
 
@@ -1521,13 +1550,13 @@ void CReClass2015App::OnButtonClean()
 			CNodeBase* pNode = pClass->Nodes[n];
 			NodeType Type = pNode->GetType();
 
-			if (Type == nt_hex64 || Type == nt_hex32 || Type == nt_hex16 || Type == nt_hex8) 
+			if (Type == nt_hex64 || Type == nt_hex32 || Type == nt_hex16 || Type == nt_hex8)
 				continue;
 
 			bCanDelete = false;
 			break;
 		}
-		if (bCanDelete) 
+		if (bCanDelete)
 		{
 			count++;
 			DeleteClass(pClass);
@@ -1535,9 +1564,8 @@ void CReClass2015App::OnButtonClean()
 	}
 
 	CString msg;
-	// TODO: fix annoying behind reclass popup
-	msg.Format("Unused Classes removed: %i", count);
-	MessageBox(NULL, msg, "Cleaner", MB_OK);
+	msg.Format(_T("Unused Classes removed: %i"), count);
+	MessageBox(NULL, msg, _T("Cleaner"), MB_OK);
 }
 void CReClass2015App::OnUpdateButtonClean(CCmdUI *pCmdUI)
 {

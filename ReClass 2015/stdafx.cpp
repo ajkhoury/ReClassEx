@@ -51,21 +51,21 @@ bool gbTop = true;
 bool gbClassBrowser = true;
 bool gbFilterProcesses = false;
 
-CString tdHex("char");
-CString tdInt64("__int64");
-CString tdInt32("__int32");
-CString tdInt16("__int16");
-CString tdInt8("__int8");
-CString tdDWORD("DWORD");
-CString tdWORD("WORD");
-CString tdBYTE("unsigned char");
-CString tdFloat("float");
-CString tdDouble("double");
-CString tdVec2("Vector2");
-CString tdVec3("Vector3");
-CString tdQuat("Vector4");
-CString tdMatrix("matrix3x4_t");
-CString tdPChar("char*");
+CString tdHex(_T("char"));
+CString tdInt64(_T("__int64"));
+CString tdInt32(_T("__int32"));
+CString tdInt16(_T("__int16"));
+CString tdInt8(_T("__int8"));
+CString tdDWORD(_T("DWORD"));
+CString tdWORD(_T("WORD"));
+CString tdBYTE(_T("unsigned char"));
+CString tdFloat(_T("float"));
+CString tdDouble(_T("double"));
+CString tdVec2(_T("Vector2"));
+CString tdVec3(_T("Vector3"));
+CString tdQuat(_T("Vector4"));
+CString tdMatrix(_T("matrix3x4_t"));
+CString tdPChar(_T("char*"));
 
 std::vector<HICON> Icons;
 
@@ -74,7 +74,7 @@ void ReadMemory(size_t Address, void* Buffer, DWORD Size)
 	if (ReadProcessMemory(g_hProcess, (void*)Address, Buffer, Size, NULL) == 0)
 	{
 		#ifdef _DEBUG
-		printf("[ReadMemory]: Failed to read memory @ %IX GetLastError() = %d\n", Address, GetLastError());
+		_tprintf(_T("[ReadMemory]: Failed to read memory @ %IX GetLastError() = %d\n"), Address, GetLastError());
 		#endif
 		ZeroMemory(Buffer, Size);
 	}
@@ -267,9 +267,9 @@ CString GetAddressName(size_t Address, bool bHEX)
 		if (Address == CustomNames[i].Address)
 		{
 			#ifdef _WIN64
-			txt.Format("%s.%I64X", CustomNames[i].Name, Address);
+			txt.Format(_T("%s.%I64X"), CustomNames[i].Name, Address);
 			#else
-			txt.Format("%s.%X", CustomNames[i].Name, Address);
+			txt.Format(_T("%s.%X"), CustomNames[i].Name, Address);
 			#endif
 			return txt;
 		}
@@ -279,9 +279,9 @@ CString GetAddressName(size_t Address, bool bHEX)
 		if (Address == Exports[i].Address)
 		{
 			#ifdef _WIN64
-			txt.Format("%s.%I64X", Exports[i].Name, Address);
+			txt.Format(_T("%s.%I64X"), Exports[i].Name, Address);
 			#else
-			txt.Format("%s.%X", Exports[i].Name, Address);
+			txt.Format(_T("%s.%X"), Exports[i].Name, Address);
 			#endif
 			return txt;
 		}
@@ -291,9 +291,9 @@ CString GetAddressName(size_t Address, bool bHEX)
 		if (Address >= MemMapCode[i].Start && Address <= MemMapCode[i].End)
 		{
 			#ifdef _WIN64
-			txt.Format("<CODE>%s.%I64X", MemMapCode[i].Name, Address);
+			txt.Format(_T("<CODE>%s.%I64X"), MemMapCode[i].Name, Address);
 			#else
-			txt.Format("<CODE>%s.%X", MemMapCode[i].Name, Address);
+			txt.Format(_T("<CODE>%s.%X"), MemMapCode[i].Name, Address);
 			#endif
 			return txt;
 		}
@@ -303,9 +303,9 @@ CString GetAddressName(size_t Address, bool bHEX)
 		if (Address >= MemMapData[i].Start && Address <= MemMapData[i].End)
 		{
 			#ifdef _WIN64
-			txt.Format("<DATA>%s.%I64X", MemMapData[i].Name, Address);
+			txt.Format(_T("<DATA>%s.%I64X"), MemMapData[i].Name, Address);
 			#else
-			txt.Format("<DATA>%s.%X", MemMapData[i].Name, Address);
+			txt.Format(_T("<DATA>%s.%X"), MemMapData[i].Name, Address);
 			#endif
 			return txt;
 		}
@@ -315,9 +315,9 @@ CString GetAddressName(size_t Address, bool bHEX)
 		if (Address >= MemMapModule[i].Start && Address <= MemMapModule[i].End)
 		{
 			#ifdef _WIN64
-			txt.Format("%s.%I64X", MemMapModule[i].Name, Address);
+			txt.Format(_T("%s.%I64X"), MemMapModule[i].Name, Address);
 			#else
-			txt.Format("%s.%X", MemMapModule[i].Name, Address);
+			txt.Format(_T("%s.%X"), MemMapModule[i].Name, Address);
 			#endif
 			return txt;
 		}
@@ -327,9 +327,9 @@ CString GetAddressName(size_t Address, bool bHEX)
 		if (Address >= MemMap[i].Start && Address <= MemMap[i].End)
 		{
 			#ifdef _WIN64
-			txt.Format("%I64X", Address);
+			txt.Format(_T("%I64X"), Address);
 			#else
-			txt.Format("%X", Address);
+			txt.Format(_T("%X"), Address);
 			#endif
 			return txt;
 		}
@@ -338,9 +338,9 @@ CString GetAddressName(size_t Address, bool bHEX)
 	if (bHEX)
 	{
 		#ifdef _WIN64
-		txt.Format("%I64X", Address);
+		txt.Format(_T("%I64X"), Address);
 		#else
-		txt.Format("%X", Address);
+		txt.Format(_T("%X"), Address);
 		#endif
 	}
 
@@ -354,7 +354,7 @@ CString GetModuleName(size_t Address)
 		if (Address >= MemMapModule[i].Start && Address <= MemMapModule[i].End)
 			return MemMapModule[i].Name;
 	}
-	return "<unknown>";
+	return _T("<unknown>");
 }
 
 bool IsProcHandleValid(HANDLE hProc)
@@ -379,7 +379,7 @@ bool UpdateMemoryMap(void)
 	if (g_hProcess == NULL)
 	{
 		#ifdef _DEBUG
-		printf("[UpdateMemoryMap]: Process handle NULL!\n");
+		wprintf(_T("[UpdateMemoryMap]: Process handle NULL!\n"));
 		#endif
 		return 0;
 	}
@@ -387,7 +387,7 @@ bool UpdateMemoryMap(void)
 	{
 		g_hProcess = NULL;
 		#ifdef _DEBUG
-		printf("[UpdateMemoryMap]: Process handle invalid!\n");
+		wprintf(_T("[UpdateMemoryMap]: Process handle invalid!\n"));
 		#endif
 		return 0;
 	}
@@ -439,7 +439,7 @@ bool UpdateMemoryMap(void)
 		if (!ProcessInfo)
 		{
 			#ifdef _DEBUG
-			printf("[UpdateMemoryMap]: Couldn't allocate heap buffer!\n");
+			wprintf(_T("[UpdateMemoryMap]: Couldn't allocate heap buffer!\n"));
 			#endif
 			return 0;
 		}
@@ -508,25 +508,21 @@ bool UpdateMemoryMap(void)
 				unsigned char* ModuleBase = (unsigned char*)lstEntry.DllBase;
 				DWORD ModuleSize = lstEntry.SizeOfImage;
 				wchar_t wcsFullDllName[MAX_PATH] = { 0 };
-				char szModule[MAX_PATH] = { 0 };
-				char szModuleFilename[MAX_PATH] = { 0 };
+				wchar_t* wcsModule = 0;
 				if (lstEntry.FullDllName.Length > 0)
 				{
 					dwBytesRead = 0;
 					if (ReadProcessMemory(g_hProcess, (LPCVOID)lstEntry.FullDllName.Buffer, &wcsFullDllName, lstEntry.FullDllName.Length, &dwBytesRead))
 					{
-						wchar_t* pathEnd = 0;
-						pathEnd = wcsrchr(wcsFullDllName, L'\\');
-						if (!pathEnd)
-							pathEnd = wcsrchr(wcsFullDllName, L'/');
-						pathEnd++;
-						wcstombs(szModule, pathEnd, MAX_PATH);
+						wcsModule = wcsrchr(wcsFullDllName, L'\\');
+						if (!wcsModule)
+							wcsModule = wcsrchr(wcsFullDllName, L'/');
+						wcsModule++;
 
-						char filename[MAX_PATH];
+						wchar_t filename[MAX_PATH];
 						GetModuleFileNameEx(g_hProcess, NULL, filename, MAX_PATH);
-						wcstombs(szModuleFilename, wcsFullDllName, MAX_PATH);
 
-						if (strcmp(filename, szModuleFilename) == 0) 
+						if (wcscmp(filename, wcsFullDllName) == 0)
 						{
 							ProcessBaseAddress = (size_t)ModuleBase;
 						}
@@ -536,7 +532,7 @@ bool UpdateMemoryMap(void)
 				MemMapInfo Mem;
 				Mem.Start = (DWORD_PTR)ModuleBase;
 				Mem.End = Mem.Start + ModuleSize;
-				Mem.Name = szModule;
+				Mem.Name = wcsModule;
 				MemMapModule.push_back(Mem);
 
 				// module code
@@ -552,19 +548,19 @@ bool UpdateMemoryMap(void)
 				{
 					CString txt;
 					MemMapInfo Mem;
-					txt.Format("%.8s", sections[i].Name); txt.MakeLower();
+					txt.Format(_T("%.8s"), sections[i].Name); txt.MakeLower();
 					if (txt == ".text" || txt == "code")
 					{
 						Mem.Start = (size_t)ModuleBase + sections[i].VirtualAddress;
 						Mem.End = Mem.Start + sections[i].Misc.VirtualSize;
-						Mem.Name = szModule;
+						Mem.Name = wcsModule;
 						MemMapCode.push_back(Mem);
 					}
 					if (txt == ".data" || txt == "data" || txt == ".rdata" || txt == ".idata")
 					{
 						Mem.Start = (size_t)ModuleBase + sections[i].VirtualAddress;
 						Mem.End = Mem.Start + sections[i].Misc.VirtualSize;
-						Mem.Name = szModule;
+						Mem.Name = wcsModule;
 						MemMapData.push_back(Mem);
 					}
 				}
@@ -624,7 +620,7 @@ bool UpdateExports()
 		if (!ProcessInfo)
 		{
 			#ifdef _DEBUG
-			printf("Couldn't allocate heap buffer!\n");
+			wprintf(L"Couldn't allocate heap buffer!\n");
 			#endif
 			return 0;
 		}
@@ -639,7 +635,7 @@ bool UpdateExports()
 		if (!ProcessInfo->PebBaseAddress)
 		{
 			#ifdef _DEBUG
-			printf("[UpdateExports]: PEB is null! Aborting UpdateExports.\n");
+			wprintf(L"[UpdateExports]: PEB is null! Aborting UpdateExports.\n");
 			#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
@@ -651,7 +647,7 @@ bool UpdateExports()
 		if (ReadProcessMemory(g_hProcess, ProcessInfo->PebBaseAddress, &Peb, sizeof(PEB), &dwBytesRead) == 0)
 		{
 			#ifdef _DEBUG
-			printf("[UpdateExports]: Failed to read PEB! Aborting UpdateExports.\n");
+			wprintf(L"[UpdateExports]: Failed to read PEB! Aborting UpdateExports.\n");
 			#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
@@ -663,7 +659,7 @@ bool UpdateExports()
 		if (ReadProcessMemory(g_hProcess, Peb.Ldr, &LdrData, sizeof(LdrData), &dwBytesRead) == 0)
 		{
 			#ifdef _DEBUG
-			printf("[UpdateExports]: Failed to read PEB Ldr Data! Aborting UpdateExports.\n");
+			wprintf(L"[UpdateExports]: Failed to read PEB Ldr Data! Aborting UpdateExports.\n");
 			#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
@@ -679,7 +675,7 @@ bool UpdateExports()
 			if (!ReadProcessMemory(g_hProcess, (void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
 			{
 				#ifdef _DEBUG
-				printf("[UpdateExports]: Could not read list entry from LDR list. Error = %X\n", GetLastError());
+				wprintf(L"[UpdateExports]: Could not read list entry from LDR list. Error = %X\n", GetLastError());
 				#endif
 				if (ProcessInfo)
 					HeapFree(hHeap, 0, ProcessInfo);
@@ -692,13 +688,13 @@ bool UpdateExports()
 			{						
 				unsigned char* ModuleHandle = (unsigned char*)lstEntry.DllBase;
 				wchar_t wcsDllName[MAX_PATH] = { 0 };
-				char szModule[MAX_PATH] = { 0 };
+				wchar_t ModuleName[MAX_PATH] = { 0 };
 				if (lstEntry.BaseDllName.Length > 0)
 				{		
 					dwBytesRead = 0;
 					if (ReadProcessMemory(g_hProcess, (LPCVOID)lstEntry.BaseDllName.Buffer, &wcsDllName, lstEntry.BaseDllName.Length, &dwBytesRead))
 					{
-						wcstombs(szModule, wcsDllName, MAX_PATH);
+						wcscpy_s(ModuleName, wcsDllName);
 					}
 				}			
 
@@ -729,7 +725,7 @@ bool UpdateExports()
 						DWORD_PTR Address = (DWORD_PTR)ModuleHandle + aAddresses[aOrds[i]];
 
 						AddressName Entry;
-						Entry.Name.Format("%s.%s", szModule, ExportName);
+						Entry.Name.Format(_T("%ls.%hs"), ModuleName, ExportName);
 						Entry.Address = Address;
 						// Add export entry to array
 						Exports.push_back(Entry);
@@ -743,7 +739,7 @@ bool UpdateExports()
 	else
 	{
 		#ifdef _DEBUG
-		printf("[UpdateExports]: NtQueryInformationProcess failed! Aborting UpdateExports.\n");
+		wprintf(L"[UpdateExports]: NtQueryInformationProcess failed! Aborting UpdateExports.\n");
 		#endif
 		if (ProcessInfo)
 			HeapFree(hHeap, 0, ProcessInfo);
@@ -797,7 +793,8 @@ int SplitString(const CString& input, const CString& delimiter, CStringArray& re
 
 	newPos = input.Find(delimiter, 0);
 
-	if (newPos < 0) { return 0; }
+	if (newPos < 0)
+		return 0;
 
 	int numFound = 0;
 
@@ -822,8 +819,7 @@ int SplitString(const CString& input, const CString& delimiter, CStringArray& re
 				if (i == positions.GetSize())
 					s = input.Mid(offset);
 				else if (i > 0)
-					s = input.Mid(positions[i - 1] + sizeS2,
-						positions[i] - positions[i - 1] - sizeS2);
+					s = input.Mid(positions[i - 1] + sizeS2, positions[i] - positions[i - 1] - sizeS2);
 			}
 		}
 		if (s.GetLength() > 0)
@@ -834,16 +830,16 @@ int SplitString(const CString& input, const CString& delimiter, CStringArray& re
 
 size_t ConvertStrToAddress(CString Address)
 {
-	CStringArray chuncks;
+	CStringArray chunks;
 
-	if (SplitString(Address, "+", chuncks) == 0)
-		chuncks.Add(Address);
+	if (SplitString(Address, "+", chunks) == 0)
+		chunks.Add(Address);
 
 	size_t Final = 0;
 
-	for (UINT i = 0; i < (UINT)chuncks.GetCount(); i++)
+	for (UINT i = 0; i < (UINT)chunks.GetCount(); i++)
 	{
-		CString a = chuncks[i];
+		CString a = chunks[i];
 		a.MakeLower();
 		a.Trim();
 
@@ -890,7 +886,7 @@ size_t ConvertStrToAddress(CString Address)
 			//printf( "here2\n" );
 			if (ReadProcessMemory(g_hProcess, (PVOID)Final, &Final, sizeof(Final), NULL) == 0)
 			{
-				printf("[ConvertStrToAddress]: Failed to read memory (stdafx.cpp) GetLastError() = %d\n", GetLastError());
+				wprintf(L"[ConvertStrToAddress]: Failed to read memory (stdafx.cpp) GetLastError() = %d\n", GetLastError());
 			}
 		}
 	}

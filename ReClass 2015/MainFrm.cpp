@@ -324,7 +324,7 @@ void CMainFrame::OnApplicationLook(UINT id)
 	}
 
 	RedrawWindow(NULL, NULL, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);
-	theApp.WriteInt("ApplicationLook", theApp.m_nAppLook);
+	theApp.WriteInt(_T("ApplicationLook"), theApp.m_nAppLook);
 }
 
 void CMainFrame::OnUpdateApplicationLook(CCmdUI* pCmdUI)
@@ -532,7 +532,7 @@ void CMainFrame::OnButtonSelectprocess()
 						#else
 						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX86) {
 						#endif
-							char filename[1024];
+							TCHAR filename[1024];
 							GetModuleFileNameEx(hProcess, NULL, filename, 1024);
 
 							SHFILEINFO    sfi;
@@ -560,7 +560,7 @@ void CMainFrame::OnButtonSelectprocess()
 							DWORD MsgID = (DWORD)(WM_PROCESSMENU + ProcMenuItems.size());
 
 							CString proccessString;
-							proccessString.Format("%s (%i)", pName, (DWORD)infoP->UniqueProcessId);
+							proccessString.Format(_T("%hs (%i)"), pName, (DWORD)infoP->UniqueProcessId);
 
 							menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID, proccessString.GetBuffer());
 							menu.SetMenuItemBitmaps(MsgID, MF_BYCOMMAND, pBitmap, pBitmap);
@@ -615,7 +615,7 @@ void CMainFrame::OnButtonEditclass()
 		for (UINT m = 0; m < theApp.Classes.size(); m++)
 		{
 			CString MenuItem;
-			MenuItem.Format("%i - %s", m, theApp.Classes[m]->Name);
+			MenuItem.Format(_T("%i - %s"), m, theApp.Classes[m]->Name);
 			menu.AppendMenu(MF_STRING | MF_ENABLED, WM_CLASSMENU + m, MenuItem);
 		}
 

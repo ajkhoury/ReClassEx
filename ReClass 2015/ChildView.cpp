@@ -454,7 +454,7 @@ void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 				GetClientRect(&client);
 				ClientToScreen(&client);
 				CMenu menu;
-				menu.LoadMenuA(MAKEINTRESOURCE(IDR_MENU_QUICKMODIFY));
+				menu.LoadMenu(MAKEINTRESOURCE(IDR_MENU_QUICKMODIFY));
 				menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, client.left + HotSpots[i].Rect.left, client.top + HotSpots[i].Rect.bottom, this);
 			}
 			else if (HotSpots[i].Type == HS_DELETE)
@@ -530,7 +530,7 @@ void CChildView::OnRButtonDown(UINT nFlags, CPoint point)
 					ClientToScreen(&client);
 
 					CMenu menu;
-					menu.LoadMenuA(MAKEINTRESOURCE(IDR_MENU_QUICKMODIFY));
+					menu.LoadMenu(MAKEINTRESOURCE(IDR_MENU_QUICKMODIFY));
 					menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, client.left + HotSpots[i].Rect.left + point.x, client.top + point.y, this);
 				}
 			}
@@ -677,8 +677,13 @@ BOOL CChildView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	return CWnd::OnMouseWheel(nFlags, zDelta, pt);
 }
 
+#ifndef UNICODE  
+typedef std::string stdstring;
+#else
+typedef std::wstring stdstring;
+#endif
 // CString object causes crashes here sometimes for some unknown reason. Using STL std::string in lieu of CString.
-std::string DisassembleCode(unsigned char** StartCodeSection, unsigned char** EndCodeSection, DWORD_PTR Virtual_Address, int* textHeight)
+stdstring DisassembleCode(unsigned char** StartCodeSection, unsigned char** EndCodeSection, size_t Virtual_Address, int* textHeight)
 {
 	char szOut[8192] = { '\0' };
 
@@ -743,8 +748,16 @@ std::string DisassembleCode(unsigned char** StartCodeSection, unsigned char** En
 	}
 	
 	*textHeight += 4;
-	const char* szRet = &szOut[0];
-	return std::string(szRet);
+
+	#ifdef UNICODE
+	wchar_t Ret[8192];
+	size_t converted = 0;
+	mbstowcs_s(&converted, Ret, &szOut[0], 8192);
+	#else
+	char* Ret = &szOut[0];
+	#endif
+
+	return stdstring(Ret);
 }
 
 bool bTracking = false;
@@ -757,10 +770,10 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 		DWORD size = 0;
 		for (UINT i = 0; i < Selected.size(); i++)
 			size += Selected[i].object->GetMemorySize();
-		msg.Format("%i selected, %i bytes", Selected.size(), size);
+		msg.Format(_T("%i selected, %i bytes"), Selected.size(), size);
 		m_ToolTip.EnableWindow(FALSE);
 		m_ToolTip.SetWindowText(msg);
-		m_ToolTip.SetWindowPos(NULL,point.x+16, point.y+16, msg.GetLength() * FontWidth + 8,FontHeight+6,SWP_NOZORDER);
+		m_ToolTip.SetWindowPos(NULL, point.x + 16, point.y + 16, msg.GetLength() * FontWidth + 8, FontHeight + 6, SWP_NOZORDER);
 		m_ToolTip.ShowWindow(SW_SHOW);
 	}
 	else
@@ -787,8 +800,8 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 
 						int textHeight = 0;
 						// CString object causes crashes here sometimes for an unknown reason (too lazy to figure out why). Using STL std::string in lieu of CString.
-						std::string d = DisassembleCode(&code, (unsigned char**)((&code) + 1024), addr, &textHeight);
-						
+						stdstring d = DisassembleCode(&code, (unsigned char**)((&code) + 1024), addr, &textHeight);
+
 						delete[] code;
 
 						//CString d, t;
@@ -808,47 +821,47 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 					if (pNode->GetType() == nt_hex64)
 					{
 						ReadMemory(HotSpots[i].Address, data, sizeof(DWORD_PTR));
-						float* pf	= (float*)data;
-						__int64* pi		= (__int64*)data;
-						DWORD_PTR* pd	= (DWORD_PTR*)data;
-						msg.Format("Int64: %i\r\nDWORD64: %u\r\nFloat: %.3f", *pi, *pd, *pf);
+						float* pf = (float*)data;
+						__int64* pi = (__int64*)data;
+						size_t* pd = (size_t*)data;
+						msg.Format(_T("Int64: %i\r\nDWORD64: %u\r\nFloat: %.3f"), *pi, *pd, *pf);
 
 						m_ToolTip.EnableWindow(FALSE);
 						m_ToolTip.SetWindowText(msg);
-						m_ToolTip.SetWindowPos(NULL, point.x+16, point.y+16, 200, 16*3+6, SWP_NOZORDER);
+						m_ToolTip.SetWindowPos(NULL, point.x + 16, point.y + 16, 200, 16 * 3 + 6, SWP_NOZORDER);
 						m_ToolTip.ShowWindow(SW_SHOW);
 					}
 					else if (pNode->GetType() == nt_hex32)
 					{
-						ReadMemory(HotSpots[i].Address,data,4);
-						float* pf	= (float*)data;
-						int* pi		= (int*)data;
-						DWORD* pd	= (DWORD*)data;
-						msg.Format("Int32: %i\r\nDWORD: %u\r\nFloat: %.3f", *pi, *pd, *pf);
+						ReadMemory(HotSpots[i].Address, data, 4);
+						float* pf = (float*)data;
+						int* pi = (int*)data;
+						DWORD* pd = (DWORD*)data;
+						msg.Format(_T("Int32: %i\r\nDWORD: %u\r\nFloat: %.3f"), *pi, *pd, *pf);
 						m_ToolTip.EnableWindow(FALSE);
 						m_ToolTip.SetWindowText(msg);
-						m_ToolTip.SetWindowPos(NULL, point.x+16, point.y+16, 200, 16*3+6, SWP_NOZORDER);
+						m_ToolTip.SetWindowPos(NULL, point.x + 16, point.y + 16, 200, 16 * 3 + 6, SWP_NOZORDER);
 						m_ToolTip.ShowWindow(SW_SHOW);
 					}
 					else if (pNode->GetType() == nt_hex16)
 					{
-						ReadMemory(HotSpots[i].Address,data,4);
-						__int16* pi		= (__int16*)data;
-						WORD* pd	= (WORD*)data;
-						msg.Format("Int16: %i\r\nWORD: %u\r\n",*pi,*pd);
+						ReadMemory(HotSpots[i].Address, data, 4);
+						__int16* pi = (__int16*)data;
+						WORD* pd = (WORD*)data;
+						msg.Format(_T("Int16: %i\r\nWORD: %u\r\n"), *pi, *pd);
 						m_ToolTip.EnableWindow(FALSE);
 						m_ToolTip.SetWindowText(msg);
-						m_ToolTip.SetWindowPos(NULL,point.x+16,point.y+16,200,16*2+6,SWP_NOZORDER);
+						m_ToolTip.SetWindowPos(NULL, point.x + 16, point.y + 16, 200, 16 * 2 + 6, SWP_NOZORDER);
 						m_ToolTip.ShowWindow(SW_SHOW);
 					}
 					else if (pNode->GetType() == nt_hex8)
 					{
-						ReadMemory(HotSpots[i].Address,data,4);
+						ReadMemory(HotSpots[i].Address, data, 4);
 						__int8* pi = (__int8*)data;
 						BYTE* pd = (BYTE*)data;
-						msg.Format("Int8: %i\r\nBYTE: %u\r\n",*pi,*pd);
+						msg.Format(_T("Int8: %i\r\nBYTE: %u\r\n"), *pi, *pd);
 						m_ToolTip.SetWindowText(msg);
-						m_ToolTip.SetWindowPos(NULL,point.x+16,point.y+16,200,16*2+6,SWP_NOZORDER);
+						m_ToolTip.SetWindowPos(NULL, point.x + 16, point.y + 16, 200, 16 * 2 + 6, SWP_NOZORDER);
 						m_ToolTip.ShowWindow(SW_SHOW);
 					}
 				}
@@ -1666,7 +1679,7 @@ void CChildView::OnUpdateModifyHide(CCmdUI *pCmdUI)
 void CChildView::OnButtonEditcode()
 {
 	CDialogEdit dlg;
-	dlg.Title.Format("Code for %s", m_pClass->Name);
+	dlg.Title.Format(_T("Code for %s"), m_pClass->Name);
 	dlg.Text = m_pClass->Code;
 	dlg.DoModal();
 	m_pClass->Code = dlg.Text;

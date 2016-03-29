@@ -106,13 +106,13 @@ void CDialogEdit::InitialiseEditor()
 		return;
 
 	// Create editor window
-	m_hwndEditor = CreateWindowEx(0, "Scintilla", "", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_CLIPCHILDREN,
+	m_hwndEditor = CreateWindowEx(0, _T("Scintilla"), _T(""), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_CLIPCHILDREN,
 		0, 0, 500, 400, GetSafeHwnd(), NULL /*(HMENU)GuiID*/, AfxGetApp()->m_hInstance, NULL);	
 
-	// Did we get the editor window?
+	// Did we get the editor window
 	if (!::IsWindow(m_hwndEditor))
 	{	
-		TRACE( "Unable to create editor window\n" );
+		_tprintf(_T("Unable to create editor window\n"));
 		return;
 	}
 
@@ -129,7 +129,7 @@ void CDialogEdit::InitialiseEditor()
 	SendEditor(SCI_SETKEYWORDS, 0, (LPARAM)g_cppKeyWords);
 
 	// Set up the global default style. These attributes are used wherever no explicit choices are made.
-	SetAStyle(STYLE_DEFAULT, black, white, 10, "Courier New");
+	SetAStyle(STYLE_DEFAULT, black, white, 10, _T("Courier New"));
 
 	// Set caret foreground color
 	//SendEditor(SCI_SETCARETFORE, RGB(255, 255, 255));
@@ -162,10 +162,22 @@ BOOL CDialogEdit::OnInitDialog()
 	SetWindowText(Title);
 	// Create the Scintilla editor	
 	InitialiseEditor();
-	SendEditor(SCI_SETTEXT, 0, (WPARAM)Text.GetBuffer());
+	int length = Text.GetLength();
+	char* pText = (char*)malloc(length + 1);
+
+#ifdef UNICODE
+	size_t converted = 0;
+	wcstombs_s(&converted, pText, length + 1, Text.GetBuffer(), length + 1);
+#else
+	strcpy_s(pText, length, Text.GetBuffer());
+#endif
+
+	SendEditor(SCI_SETTEXT, 0, (WPARAM)pText);
 	ShowWindow(SW_NORMAL);
 	SizeEditor();
 	SendEditor(SCI_SETSEL, 0, 0);
+
+	delete[] pText; // free memory
 
 	return FALSE;  // return TRUE unless you set the focus to a control
 }
@@ -209,20 +221,19 @@ void CDialogEdit::OnSize(UINT nType, int cx, int cy)
 
 void CDialogEdit::OnFileEditoropen()
 {
-	char fname[MAX_PATH + 1024] = "";
+	TCHAR fname[MAX_PATH + 1024] = _T("");
 
 	// Open file structure
 	OPENFILENAME ofn;
 	ZeroMemory((LPVOID)&ofn, sizeof(OPENFILENAME));
-
 	// Fill in open file structure
 	ofn.lStructSize = sizeof( OPENFILENAME );
-	ofn.lpstrFilter	= "All Files (*.*)\x0*.*\x0\x0";
-	ofn.lpstrTitle	= "Open Source File";
+	ofn.lpstrFilter	= _T("All Files (*.*)\x0*.*\x0\x0");
+	ofn.lpstrTitle	= _T("Open Source File");
 	ofn.Flags		= OFN_HIDEREADONLY | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 	ofn.lpstrFile	= fname;
 	ofn.nMaxFile	= sizeof(fname);
-	ofn.lpstrDefExt	= "";
+	ofn.lpstrDefExt	= _T("");
 	ofn.hwndOwner	= GetSafeHwnd();
 
 	// Get user file
@@ -235,7 +246,7 @@ void CDialogEdit::OnFileEditoropen()
 	// Ensure it exists
 	if (0xFFFFFFFF == ::GetFileAttributes(fname))
 	{
-		ShowError( "File does not exist" );
+		ShowError(_T("File does not exist"));
 		return;
 	}
 
@@ -245,7 +256,7 @@ void CDialogEdit::OnFileEditoropen()
 		CFile f;
 		if (!f.Open(fname, CFile::modeRead | CFile::shareDenyNone))
 		{
-			ShowError("Error opening file"); 
+			ShowError(_T("Error opening file"));
 			return;
 		}
 
@@ -253,20 +264,20 @@ void CDialogEdit::OnFileEditoropen()
 		UINT uSize = (UINT)(f.GetLength() & 0xFFFFFFFF);
 		if (!uSize) 
 		{
-			ShowError("File of zero length");
+			ShowError(_T("File of zero length"));
 			return;
 		}
 
 		// Allocate memory
-		char *pBuf = new char[uSize + 1];
+		unsigned char* pBuf = new unsigned char[uSize + 1];
 		if (!pBuf) 
 		{
-			ShowError("Memory allocation error");
+			ShowError(_T("Memory allocation error"));
 			return;
 		}
 
 		// Read the data
-		if (f.Read(pBuf, (UINT)uSize))
+		if (f.Read((void*)pBuf, (UINT)uSize))
 		{	
 			// NULL terminate
 			pBuf[uSize] = '\0';
@@ -282,14 +293,14 @@ void CDialogEdit::OnFileEditoropen()
 	}
 	catch(...) 
 	{	
-		ShowError( "Assertion while reading file" );
+		ShowError(_T("Assertion while reading file"));
 	}
 }
 
 
 void CDialogEdit::OnFileEditorsaveas()
 {
-	char fname[MAX_PATH + 1024] = "";
+	TCHAR fname[MAX_PATH + 1024] = _T("");
 
 	// Open file structure
 	OPENFILENAME ofn;
@@ -297,12 +308,12 @@ void CDialogEdit::OnFileEditorsaveas()
 
 	// Fill in open file structure
 	ofn.lStructSize = sizeof( OPENFILENAME );
-	ofn.lpstrFilter	= "All Files (*.*)\x0*.*\x0\x0";
-	ofn.lpstrTitle	= "Open Source File";
+	ofn.lpstrFilter	= _T("All Files (*.*)\x0*.*\x0\x0");
+	ofn.lpstrTitle	= _T("Open Source File");
 	ofn.Flags		= OFN_HIDEREADONLY | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 	ofn.lpstrFile	= fname;
 	ofn.nMaxFile	= sizeof( fname );
-	ofn.lpstrDefExt	= "";
+	ofn.lpstrDefExt	= _T("");
 	ofn.hwndOwner	= GetSafeHwnd();
 
 	// Get user file
@@ -315,7 +326,7 @@ void CDialogEdit::OnFileEditorsaveas()
 		CFile f;
 		if (!f.Open(fname, CFile::modeCreate | CFile::shareExclusive | CFile::modeWrite ))
 		{
-			ShowError("Error creating file");
+			ShowError(_T("Error creating file"));
 			return;
 		}
 
@@ -328,7 +339,7 @@ void CDialogEdit::OnFileEditorsaveas()
 		char *pBuf = new char[uSize + 1 + 8];
 		if (!pBuf) 
 		{	
-			ShowError("Memory allocation error"); 
+			ShowError(_T("Memory allocation error"));
 			return;
 		}
 
@@ -346,11 +357,11 @@ void CDialogEdit::OnFileEditorsaveas()
 	}
 	catch( ... ) 
 	{	
-		ShowError( "Assertion while reading file" );
+		ShowError(_T("Assertion while reading file"));
 	}
 }
 
 void CDialogEdit::ShowError(LPCTSTR pError)
 {
-	MessageBox(pError, "Error", MB_OK | MB_ICONEXCLAMATION);
+	MessageBox(pError, _T("Error"), MB_OK | MB_ICONEXCLAMATION);
 }

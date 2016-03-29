@@ -34,7 +34,7 @@ public:
 	void ClearSelection();
 	void ClearHidden();
 
-	void SaveXML(char* FileName);
+	void SaveXML(TCHAR* FileName);
 
 // Implementation
 	HMENU  m_hMDIMenu;

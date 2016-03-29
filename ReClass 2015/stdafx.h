@@ -1,8 +1,7 @@
 #pragma once
 
-//#ifndef _SECURE_ATL
-//#define _SECURE_ATL 1
-//#endif
+// Disable warnings for type casting from HANDLE to DWORD and vice versa
+#pragma warning(disable : 4312 4311 4302) 
 
 #define WIN32_LEAN_AND_MEAN
 #include "targetver.h"
@@ -43,41 +42,18 @@
 #include "..\\scintilla\\include\\Scintilla.h"
 
 // Include TinyXml parser
-#include "..\\tinyxml\\tinyxml.h"
+//#include "tinyxml2_unicode.h"
+#include "tinyxml2.h"
+using namespace tinyxml2;
 
 // Include TinyXml parser
 #include "..\\SQLite\\CppSQLite3.h"
 
+// Utilities
 #include "Utils.h"
 
-class CMemory
-{
-public:
-	CMemory()
-	{
-		MemorySize = 0;
-		pMemory = NULL;
-	}
-	~CMemory()
-	{
-		if (pMemory)
-			delete pMemory;
-	}
-
-	void SetSize(ULONG Size)
-	{
-		if ((!pMemory) || (Size != MemorySize))
-		{
-			if (pMemory)
-				delete pMemory;
-			pMemory = new BYTE[Size];
-			MemorySize = Size;
-		}
-	}
-
-	ULONG MemorySize;
-	PBYTE pMemory;
-};
+// Classes
+#include "CMemory.h"
 
 struct MemMapInfo
 {
@@ -168,6 +144,7 @@ extern CString tdPChar;
 #define WM_DELETECLASSMENU (WM_USER+384)
 
 #define	NONE -1
+#define	HS_NONE -1
 #define HS_EDIT 0
 #define HS_OPENCLOSE 1
 #define HS_SELECT 2
@@ -223,6 +200,7 @@ extern std::vector<HICON> Icons;
 
 enum NodeType
 {
+	nt_none = -1,
 	nt_base,
 	nt_instance,
 	nt_struct,
