@@ -18,16 +18,15 @@ CDialogClasses::~CDialogClasses()
 {
 }
 
-void CDialogClasses::DoDataExchange( CDataExchange* pDX )
+void CDialogClasses::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-
-	DDX_Control(pDX, IDC_CLASSLIST, m_ClassView);
+	DDX_Control(pDX, IDC_CLASSLIST, m_ClassViewList);
 	DDX_Control(pDX, IDC_CLASSNAME, m_Edit);
 }
 
 BEGIN_MESSAGE_MAP(CDialogClasses, CDialogEx)
-	ON_EN_CHANGE( IDC_CLASSNAME, &CDialogClasses::OnEnChangeClassname )
+	ON_EN_CHANGE(IDC_CLASSNAME, &CDialogClasses::OnEnChangeClassname)
 END_MESSAGE_MAP()
 
 
@@ -35,25 +34,29 @@ void CDialogClasses::BuildList()
 {
 	CDialogEx::OnInitDialog();
 
+	RECT listRect;
+	m_ClassViewList.GetWindowRect(&listRect);
+	m_ClassViewList.InsertColumn(0, _T("Class"), LVCFMT_CENTER, listRect.right - listRect.left - 4);
+	
 	m_ImageList.Add(m_hClassIcon);
-	ListView_SetImageList(m_ClassView.GetSafeHwnd(), m_ImageList.GetSafeHandle(), LVSIL_SMALL);
+	ListView_SetImageList(m_ClassViewList.GetSafeHwnd(), m_ImageList.GetSafeHandle(), LVSIL_SMALL);
 
-	for (UINT i = 0; i < theApp.Classes.size( ); i++)
+	for (UINT i = 0; i < theApp.Classes.size(); i++)
 	{
 		CString name = theApp.Classes[i]->Name;
-		if (m_Filter.GetLength() != 0 && name.MakeUpper().Find(m_Filter.MakeUpper()) == -1 )
+		if (m_Filter.GetLength() != 0 && name.MakeUpper().Find(m_Filter.MakeUpper()) == -1)
 			continue;
-		AddData(m_ClassView, i, 0, name);
+		AddData(m_ClassViewList, i, 0, name);
 	}
 }
 
-BOOL CDialogClasses::OnInitDialog( )
+BOOL CDialogClasses::OnInitDialog()
 {
 	m_ImageList.Create(GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), ILC_COLOR32, 1, 1);
 	m_ImageList.SetBkColor(RGB(255, 255, 255));
 	m_hClassIcon = LoadIcon(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_ICON_CLASS));
 	m_ImageList.Add(m_hClassIcon);
-	
+
 	BuildList();
 
 	return TRUE;
@@ -66,7 +69,7 @@ __inline int FindClassByName(const TCHAR* szName)
 		CNodeClass* pNodeClass = theApp.Classes[id];
 		if (!pNodeClass)
 			continue;
-		if(_tcsicmp(pNodeClass->Name, szName) == 0)
+		if (_tcsicmp(pNodeClass->Name, szName) == 0)
 			return id;
 	}
 	return -1;
@@ -74,22 +77,21 @@ __inline int FindClassByName(const TCHAR* szName)
 
 void CDialogClasses::OnOK()
 {
-	unsigned numselected = m_ClassView.GetSelectedCount();
-	POSITION pos = m_ClassView.GetFirstSelectedItemPosition();
+	unsigned numselected = m_ClassViewList.GetSelectedCount();
+	POSITION pos = m_ClassViewList.GetFirstSelectedItemPosition();
 	while (pos)
 	{
-		int nItem = m_ClassView.GetNextSelectedItem(pos);
+		int nItem = m_ClassViewList.GetNextSelectedItem(pos);
+		CString szBuffer = m_ClassViewList.GetItemText(nItem, 0);
 
-		// FUUUUCK pushign this out last second shutup
-		CString szBuffer = m_ClassView.GetItemText(nItem, 0);
-	
-		printf("nitem %d\n", nItem);
+		#ifdef _DEBUG
+		_tprintf(_T("nitem %d\n"), nItem);
+		#endif
 
 		nItem = FindClassByName(szBuffer.GetBuffer());
 
 		//printf( "szBuffer %s new %d\n", szBuffer.GetBuffer( ), nItem );
-
-		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp( )->m_pMainWnd);
+		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
 		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
 		pChild->m_wndView.m_pClass = theApp.Classes[nItem];
 
@@ -105,27 +107,27 @@ void CDialogClasses::OnOK()
 void CDialogClasses::AddData(CListCtrl& ctrl, int row, int col, const TCHAR* str)
 {
 	LVITEM lv;
-
-	lv.iItem	= row;
+	ZeroMemory(&lv, sizeof(LVITEM));
+	lv.iItem = row;
 	lv.iSubItem = col;
-	lv.pszText	= (LPTSTR)str;
-	
-	if( col == 0 )
+	lv.pszText = (LPTSTR)str;
+
+	if (col == 0)
 	{
-		lv.mask   = LVIF_IMAGE | LVIF_TEXT;
+		lv.mask = LVIF_IMAGE | LVIF_TEXT;
 		lv.iImage = 0;
-		ctrl.InsertItem( &lv );
-	} 
-	else 
+		ctrl.InsertItem(&lv);
+	}
+	else
 	{
-		lv.mask   = LVIF_TEXT;
-		ctrl.SetItem( &lv );  
+		lv.mask = LVIF_TEXT;
+		ctrl.SetItem(&lv);
 	}
 }
 
 void CDialogClasses::OnEnChangeClassname()
 {
 	m_Edit.GetWindowText(m_Filter);
-	m_ClassView.DeleteAllItems();
+	m_ClassViewList.DeleteAllItems();
 	BuildList();
 }

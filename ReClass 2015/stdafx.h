@@ -28,9 +28,7 @@
 #include <vector>
 #include <Shlwapi.h>
 #include <Psapi.h>
-#pragma comment(lib, "Psapi.lib")
 #include <CommCtrl.h>
-#pragma comment(lib, "comctl32.lib")
 
 // Include BeaEngine disassembler 
 #define BEA_ENGINE_STATIC
@@ -38,6 +36,7 @@
 #include "..\\beaengine\\beaengine\\headers\\BeaEngine.h"
 
 // Include Scintilla parser
+#define PLAT_WIN 1
 #include "..\\scintilla\\include\\SciLexer.h"
 #include "..\\scintilla\\include\\Scintilla.h"
 
@@ -46,7 +45,7 @@
 #include "tinyxml2.h"
 using namespace tinyxml2;
 
-// Include TinyXml parser
+// Include SQL parser
 #include "..\\SQLite\\CppSQLite3.h"
 
 // Utilities
@@ -54,6 +53,7 @@ using namespace tinyxml2;
 
 // Classes
 #include "CMemory.h"
+
 
 struct MemMapInfo
 {

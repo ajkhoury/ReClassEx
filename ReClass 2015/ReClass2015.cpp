@@ -6,6 +6,7 @@
 #include "ChildFrm.h"
 #include "DialogEdit.h"
 #include "DialogClasses.h"
+#include "DialogAbout.h"
 #include "Parser.h"
 
 //#include "SDK.h"
@@ -46,16 +47,13 @@ CReClass2015App::CReClass2015App()
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
 	SetAppID(_T("ReClass.2015.1.0.0.0"));
 
-#ifdef _DEBUG
+	#ifdef _DEBUG
 	Utils::CreateConsole();
-#endif
+	#endif
 
 	FontWidth = 12;
 	FontHeight = 12;
 }
-
-extern bool Scintilla_RegisterClasses(void *hInstance);
-extern bool Scintilla_ReleaseResources();
 
 BOOL CReClass2015App::InitInstance()
 {
@@ -411,19 +409,6 @@ void CReClass2015App::OnFileNew()
 
 }
 
-// CAboutDlg dialog used for App About
-class CAboutDlg : public CDialogEx
-{
-public:
-	CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD) { }
-	enum { IDD = IDD_ABOUTBOX }; // Dialog Data
-protected: // DDX/DDV support
-	virtual void CAboutDlg::DoDataExchange(CDataExchange* pDX) { CDialogEx::DoDataExchange(pDX); }
-	DECLARE_MESSAGE_MAP() // Implementation
-};
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
-END_MESSAGE_MAP()
-
 // App command to run the dialog
 void CReClass2015App::OnAppAbout()
 {
@@ -463,7 +448,7 @@ class ImportLink
 {
 public:
 	CNodeBase* pNode;
-	CString Name;
+	CString Name; 
 };
 
 // TODO: Fix this
@@ -618,7 +603,7 @@ void CReClass2015App::OnFileImport()
 	//				pClass->Nodes.push_back(pNode);
 	//			}
 	//		}
-	//		//Fix Links... some real ghetto shit here
+	//		//Fix Links... some real ghetto code here
 	//		for (UINT i = 0; i < Links.size(); i++)
 	//		{
 	//			for (UINT c = 0; c < Classes.size(); c++)

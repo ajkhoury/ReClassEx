@@ -236,6 +236,9 @@
     <ClInclude Include="tinyxml2.h">
       <Filter>Header Files\XML</Filter>
     </ClInclude>
+    <ClInclude Include="DialogAbout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
