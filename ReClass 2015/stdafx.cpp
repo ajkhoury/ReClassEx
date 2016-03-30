@@ -267,7 +267,7 @@ CString GetAddressName(size_t Address, bool bHEX)
 		if (Address == CustomNames[i].Address)
 		{
 			#ifdef _WIN64
-			txt.Format(_T("%s.%I64X"), CustomNames[i].Name, Address);
+			txt.Format(_T("%ls.%I64X"), CustomNames[i].Name, Address);
 			#else
 			txt.Format(_T("%s.%X"), CustomNames[i].Name, Address);
 			#endif
@@ -279,7 +279,7 @@ CString GetAddressName(size_t Address, bool bHEX)
 		if (Address == Exports[i].Address)
 		{
 			#ifdef _WIN64
-			txt.Format(_T("%s.%I64X"), Exports[i].Name, Address);
+			txt.Format(_T("%ls.%I64X"), Exports[i].Name, Address);
 			#else
 			txt.Format(_T("%s.%X"), Exports[i].Name, Address);
 			#endif
@@ -315,7 +315,7 @@ CString GetAddressName(size_t Address, bool bHEX)
 		if (Address >= MemMapModule[i].Start && Address <= MemMapModule[i].End)
 		{
 			#ifdef _WIN64
-			txt.Format(_T("%s.%I64X"), MemMapModule[i].Name, Address);
+			txt.Format(_T("%ls.%I64X"), MemMapModule[i].Name, Address);
 			#else
 			txt.Format(_T("%s.%X"), MemMapModule[i].Name, Address);
 			#endif

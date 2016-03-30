@@ -573,16 +573,16 @@ public:
 			}
 
 			// *** this is probably broken, let's fix it after
-			size_t Val = *((size_t*) &((BYTE*)View.pData)[offset]);
-			CString a(GetAddressName(Val,false));
+			size_t Val = *((size_t*)&((BYTE*)View.pData)[offset]);
+			CString a(GetAddressName(Val, false));
 			if (a.GetLength() > 0)
 			{
 				if (gbPointers)
 				{
 					//printf( "<%p> here\n", Val );
 					if (Val > 0x6FFFFFFF && Val < 0x7FFFFFFFFFFF)
-					{	
-						x = AddText(View, x, y, crOffset, NONE, _T("*->%hs "), a);
+					{
+						x = AddText(View, x, y, crOffset, NONE, _T("*->%s "), a);
 						x = ResolveRTTI(Val, x, View, y);
 					}
 				}
@@ -610,41 +610,39 @@ public:
 
 		if (GetType() == nt_hex32)
 		{
-			float f = *((float*) &((BYTE*)View.pData)[offset]);
-			int i = *((int*) &((BYTE*)View.pData)[offset]);
+			float f = *((float*)&((BYTE*)View.pData)[offset]);
+			int i = *((int*)&((BYTE*)View.pData)[offset]);
 
 			if (gbFloat)
 			{
-				if ( f > -99999.0 && f < 99999.0 )
-					x = AddText( View, x, y, crValue, NONE, _T("(%0.3f)"), f );
+				if (f > -99999.0 && f < 99999.0)
+					x = AddText(View, x, y, crValue, NONE, _T("(%0.3f)"), f);
 				else
-					x = AddText( View, x, y, crValue, NONE, _T("(%0.3f)"), 0.0f );
+					x = AddText(View, x, y, crValue, NONE, _T("(%0.3f)"), 0.0f);
 			}
 
 			if (gbInt)
 			{
-				#ifdef _WIN64
+#ifdef _WIN64
 				if (f > 0x140000000 && f < 0x7FFFFFFFFFFF) // in 64 bit address range
 					x = AddText(View, x, y, crValue, NONE, _T("(0x%I64X %i)"), i, i);
 				else
 					x = AddText(View, x, y, crValue, NONE, _T("(%i)"), i);
-				#else
+#else
 				x = AddText(View, x, y, crValue, NONE, _T("(%i)"), i);
-				#endif
+#endif
 			}
 
 			// *** this is probably broken, let's fix it after
-			size_t Val = *((size_t*) &((BYTE*)View.pData)[offset]);
-
+			size_t Val = *((size_t*)&((BYTE*)View.pData)[offset]);
 			CString a(GetAddressName(Val, false));
-
 			if (a.GetLength() > 0)
 			{
 				if (gbPointers)
 				{
 					if (Val > 0x400000 && Val < 0x100000000)
 					{
-						x = AddText(View, x, y, crOffset, NONE, _T("*->%hs "), a); 
+						x = AddText(View, x, y, crOffset, NONE, _T("*->%s "), a);
 						x = ResolveRTTI(Val, x, View, y);
 					}
 				}
@@ -655,7 +653,7 @@ public:
 					char txt[32];
 					ReadMemory(Val, txt, 32); // TODO: find out why and how, and why it looks wrong
 
-					for ( int i = 0; i < 4; i++ )
+					for (int i = 0; i < 4; i++)
 					{
 						if (!isprint((BYTE)txt[i]))
 							bAddStr = false;

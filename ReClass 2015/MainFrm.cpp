@@ -560,7 +560,7 @@ void CMainFrame::OnButtonSelectprocess()
 							DWORD MsgID = (DWORD)(WM_PROCESSMENU + ProcMenuItems.size());
 
 							CString proccessString;
-							proccessString.Format(_T("%hs (%i)"), pName, (DWORD)infoP->UniqueProcessId);
+							proccessString.Format(_T("%hs (%i)"), pName, (DWORD)infoP->UniqueProcessId); 
 
 							menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID, proccessString.GetBuffer());
 							menu.SetMenuItemBitmaps(MsgID, MF_BYCOMMAND, pBitmap, pBitmap);
