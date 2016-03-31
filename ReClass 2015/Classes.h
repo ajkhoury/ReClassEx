@@ -101,7 +101,7 @@ public:
 	std::vector<bool> bOpen;
 
 	// Incorrect view.address
-	void AddHotSpot(ViewInfo& View, CRect& Spot, CString& Text, int ID, int Type)
+	void AddHotSpot(ViewInfo& View, CRect& Spot, CString Text, int ID, int Type)
 	{
 		if (Spot.top > View.client->bottom || Spot.bottom < 0) return;
 
@@ -140,7 +140,7 @@ public:
 				else
 					pos.SetRect(x, y, x + FontWidth * 2, y + FontHeight);
 
-				AddHotSpot(View, pos, (CString)logbuf, HitID, HS_EDIT);
+				AddHotSpot(View, pos, logbuf, HitID, HS_EDIT);
 			}
 
 			pos.SetRect(x, y, 0, 0);
@@ -180,8 +180,8 @@ public:
 				else
 					pos.SetRect(x, y, x + FontWidth * 2, y + FontHeight);
 
-				AddHotSpot(View, pos, (CString)logbuf, HitID, HS_EDIT);
-			}
+				AddHotSpot(View, pos, logbuf, HitID, HS_EDIT);
+			} 
 
 			pos.SetRect(x, y, 0, 0);
 			View.dc->SetTextColor(color);
@@ -316,28 +316,6 @@ public:
 	//	return TYPESTRING;
 	//}
 
-	std::string Demangle(const std::string& DecoratedName, DWORD Flags)
-	{
-		// https://msdn.microsoft.com/en-us/library/windows/desktop/ms681400%28v=vs.85%29.aspx
-		typedef DWORD(WINAPI* tUnDecorateSymbolName)(PCTSTR DecoratedName, PTSTR  UnDecoratedName, ULONG UndecoratedLength, ULONG Flags);
-		static tUnDecorateSymbolName DemangleSymbolName = (tUnDecorateSymbolName)Utils::GetProcAddress(LoadLibrary(_T("Dbghelp.dll")), "UnDecorateSymbolName");
-
-		wchar_t wcDemangled[MAX_PATH] = { 0 };
-		char szDemangled[MAX_PATH] = { 0 };
-		wchar_t wcDecorated[MAX_PATH] = { 0 };
-
-		size_t numOfConverted = 0;
-		mbstowcs_s(&numOfConverted, wcDecorated, DecoratedName.c_str(), MAX_PATH);
-
-		if (DemangleSymbolName(wcDecorated, wcDemangled, MAX_PATH, Flags) == 0)
-			return DecoratedName; //function failed
-
-		numOfConverted = 0;
-		wcstombs_s(&numOfConverted, szDemangled, wcDemangled, MAX_PATH);
-
-		return std::string(szDemangled);
-	}
-
 	int ResolveRTTI(size_t Val, int &x, ViewInfo& View, int y)
 	{
 #ifdef _WIN64
@@ -390,12 +368,12 @@ public:
 			return x;
 
 		//x = AddText(View, x, y, crOffset, NONE, " RTTI:");
-		std::string RTTIString;
+		CString RTTIString;
 		for (unsigned int i = 0; i < NumBaseClasses; i++)
 		{
 			if (i != 0 && i != NumBaseClasses)
 			{
-				RTTIString += " : ";
+				RTTIString += _T(" : ");
 				//x = AddText(View, x, y, crOffset, NONE, " inherits:");
 			}
 
@@ -413,7 +391,7 @@ public:
 			if (!IsValidPtr(TypeDescriptor) || !TypeDescriptorOffset)
 				continue;
 
-			std::string RTTIName;
+			CString RTTIName;
 			bool FoundEnd = false;
 			char LastChar = ' ';
 			for (int j = 1; j < 45; j++)
@@ -433,15 +411,15 @@ public:
 			if (!FoundEnd)
 				continue;
 
-			//RTTIName[RTTIName.size() - 1] = '\0';
-
-			//RTTIString += RTTIName.c_str();
-			RTTIString += Demangle(RTTIName, 0x0800);
-
+			TCHAR Demangled[MAX_PATH];
+			if (_UnDecorateSymbolName(RTTIName, Demangled, MAX_PATH, UNDNAME_NAME_ONLY) == 0)
+				RTTIString += RTTIName;
+			else
+				RTTIString += Demangled;
 			//x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIName.c_str());
 		}
-		x = AddText(View, x, y, crOffset, HS_RTTI, RTTIString.c_str());
-		return x;
+		x = AddText(View, x, y, crOffset, HS_RTTI, RTTIString);
+		return x; 
 #else	
 		size_t pRTTIObjectLocator = Val - 4;
 		if (!IsValidPtr(pRTTIObjectLocator))
@@ -470,7 +448,7 @@ public:
 		ReadMemory(pBaseClassArray, &BaseClassArray, sizeof(size_t));
 
 		//x = AddText(View, x, y, crOffset, NONE, " RTTI: ");
-		std::string RTTIString;
+		CString RTTIString;
 		for (int i = 0; i < NumBaseClasses; i++)
 		{
 			if (i != 0 && i != NumBaseClasses)
@@ -492,7 +470,7 @@ public:
 			size_t TypeDescriptor; //pointer at 0x00 in BaseClassDescriptor
 			ReadMemory(BaseClassDescriptor, &TypeDescriptor, sizeof(size_t));
 
-			std::string RTTIName;
+			CString RTTIName;
 			bool FoundEnd = false;
 			char LastChar = ' ';
 			for (int j = 1; j < 45; j++)
@@ -512,15 +490,16 @@ public:
 			//Did we find a valid rtti name or did we just reach end of loop
 			if (!FoundEnd)
 				continue;
-			// AVC_CSPlayer : AVC_BasePlayer : AVC_BaseCombatCharacter : AVC_BaseFlex : AVC_BaseAnimatingOverlay : AVC_BaseAnimating : AVC_BaseEntity : AVIClientEntity : AVIClientUnknown : AVIHandleEntity : AVIClientRenderable : AVIClientNetworkable : AVIClientThinkable : AVIClientModelRenderable : AVCCustomMaterialOwner : AVCGameEventListener : AVIGameEventListener2 : AVICSPlayerAnimStateHelpers : AVIHasAttributes
-			//RTTIName[RTTIName.size() - 1] = '\0';
-			//RTTIString += RTTIName.c_str();
-			RTTIString += Demangle(RTTIName, 0x1000);
 
+			TCHAR Demangled[MAX_PATH];
+			if (_UnDecorateSymbolName(RTTIName, Demangled, MAX_PATH, UNDNAME_NAME_ONLY) == 0)
+				RTTIString += RTTIName;
+			else
+				RTTIString += Demangled;
 			//x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIName.c_str());
 		}
 
-		x = AddText(View, x, y, crOffset, HS_RTTI, RTTIString.c_str());
+		x = AddText(View, x, y, crOffset, HS_RTTI, RTTIString);
 		return x;
 #endif
 	}

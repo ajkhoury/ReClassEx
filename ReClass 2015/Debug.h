@@ -8,6 +8,14 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string>
+// For demangling rtti names
+#include <DbgHelp.h>
+#pragma comment(lib, "Dbghelp.lib")
+#ifdef UNICODE
+#define _UnDecorateSymbolName UnDecorateSymbolNameW
+#else
+#define _UnDecorateSymbolName UnDecorateSymbolName
+#endif
 
 #define VALID(x) (x != NULL && HIWORD(x))
 

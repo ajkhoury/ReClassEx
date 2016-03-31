@@ -404,5 +404,4 @@ namespace Utils
 
 		return hRemoteThread;
 	}
-
 };
