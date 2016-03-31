@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Owner\Documents\Visual Studio 2013\Projects\Reclass\Reclass64-master\beaengine\build_2015\CMakeFiles\94eca9190292087aeac67b53696ee2e8\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{29D52704-F769-35D1-B610-D54B1F19951D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

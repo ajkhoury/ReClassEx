@@ -265,7 +265,7 @@ CString GetAddressName(size_t Address, bool bHEX)
 		if (Address == CustomNames[i].Address)
 		{
 			#ifdef _WIN64
-			txt.Format(_T("%ls.%I64X"), CustomNames[i].Name, Address);
+			txt.Format(_T("%s.%I64X"), CustomNames[i].Name, Address);
 			#else
 			txt.Format(_T("%s.%X"), CustomNames[i].Name, Address);
 			#endif
@@ -277,7 +277,7 @@ CString GetAddressName(size_t Address, bool bHEX)
 		if (Address == Exports[i].Address)
 		{
 			#ifdef _WIN64
-			txt.Format(_T("%ls.%I64X"), Exports[i].Name, Address);
+			txt.Format(_T("%s.%I64X"), Exports[i].Name, Address);
 			#else
 			txt.Format(_T("%s.%X"), Exports[i].Name, Address);
 			#endif
@@ -313,7 +313,7 @@ CString GetAddressName(size_t Address, bool bHEX)
 		if (Address >= MemMapModule[i].Start && Address <= MemMapModule[i].End)
 		{
 			#ifdef _WIN64
-			txt.Format(_T("%ls.%I64X"), MemMapModule[i].Name, Address);
+			txt.Format(_T("%s.%I64X"), MemMapModule[i].Name, Address);
 			#else
 			txt.Format(_T("%s.%X"), MemMapModule[i].Name, Address);
 			#endif
@@ -411,7 +411,7 @@ bool UpdateMemoryMap(void)
 	{
 		if (VirtualQueryEx(g_hProcess, (LPCVOID)pMemory, &MemInfo, sizeof(MEMORY_BASIC_INFORMATION)) != 0)
 		{
-			if (MemInfo.State == MEM_COMMIT /*&& MBI.Type == MEM_PRIVATE*/)
+			if (MemInfo.State == MEM_COMMIT /*&& MemInfo.Type == MEM_PRIVATE*/)
 			{
 				MemMapInfo Mem;
 				Mem.Start = (size_t)pMemory;
@@ -427,7 +427,7 @@ bool UpdateMemoryMap(void)
 	}
 
 	static HMODULE hNtDll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
-	static tNtQueryInformationProcess fnNTQIP = (tNtQueryInformationProcess)Utils::GetProcAddress(hNtDll, "NtQueryInformationProcess");
+	static tNtQueryInformationProcess NtQueryInformationProcess = (tNtQueryInformationProcess)Utils::GetProcAddress(hNtDll, "NtQueryInformationProcess");
 
 	PPROCESS_BASIC_INFORMATION ProcessInfo = NULL;
 	PEB Peb;
@@ -439,7 +439,7 @@ bool UpdateMemoryMap(void)
 	ProcessInfo = (PPROCESS_BASIC_INFORMATION)HeapAlloc(hHeap, HEAP_ZERO_MEMORY | HEAP_GENERATE_EXCEPTIONS, dwSize);
 
 	ULONG dwSizeNeeded = 0;
-	NTSTATUS status = fnNTQIP(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSize, &dwSizeNeeded);
+	NTSTATUS status = NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSize, &dwSizeNeeded);
 	if (status >= 0 && dwSize < dwSizeNeeded)
 	{
 		if (ProcessInfo)
@@ -454,7 +454,7 @@ bool UpdateMemoryMap(void)
 			return 0;
 		}
 
-		status = fnNTQIP(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSizeNeeded, &dwSizeNeeded);
+		status = NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSizeNeeded, &dwSizeNeeded);
 	}
 
 	// Did we successfully get basic info on process
@@ -582,7 +582,7 @@ bool UpdateMemoryMap(void)
 	else
 	{
 		#ifdef _DEBUG
-		printf("[UpdateExports]: NtQueryInformationProcess failed! Aborting UpdateExports.\n");
+		printf("[UpdateExports]: NtQueryInformationProcess failed! Aborting...\n");
 		#endif
 		if (ProcessInfo)
 			HeapFree(hHeap, 0, ProcessInfo);
@@ -608,7 +608,7 @@ bool UpdateExports()
 	//	return;
 
 	static HMODULE hNtDll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
-	static tNtQueryInformationProcess fnNTQIP = (tNtQueryInformationProcess)Utils::GetProcAddress(hNtDll, "NtQueryInformationProcess");
+	static tNtQueryInformationProcess NtQueryInformationProcess = (tNtQueryInformationProcess)Utils::GetProcAddress(hNtDll, "NtQueryInformationProcess");
 
 	PPROCESS_BASIC_INFORMATION ProcessInfo = NULL;
 	PEB Peb;
@@ -620,7 +620,7 @@ bool UpdateExports()
 	ProcessInfo = (PPROCESS_BASIC_INFORMATION)HeapAlloc(hHeap, HEAP_ZERO_MEMORY | HEAP_GENERATE_EXCEPTIONS, dwSize);
 
 	ULONG dwSizeNeeded = 0;
-	NTSTATUS status = fnNTQIP(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSize, &dwSizeNeeded);
+	NTSTATUS status = NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSize, &dwSizeNeeded);
 	if (status >= 0 && dwSize < dwSizeNeeded)
 	{
 		if (ProcessInfo)
@@ -635,7 +635,7 @@ bool UpdateExports()
 			return 0;
 		}
 
-		status = fnNTQIP(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSizeNeeded, &dwSizeNeeded);
+		status = NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSizeNeeded, &dwSizeNeeded);
 	}
 
 	// Did we successfully get basic info on process
@@ -717,9 +717,9 @@ bool UpdateExports()
 				{
 					IMAGE_EXPORT_DIRECTORY ExpDir;
 					ReadProcessMemory(g_hProcess, (LPCVOID)(ModuleHandle + NtHdr.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress), &ExpDir, sizeof(ExpDir), NULL);
-					PVOID pName		= (void*)(ModuleHandle + ExpDir.AddressOfNames);
-					PVOID pOrd		= (void*)(ModuleHandle + ExpDir.AddressOfNameOrdinals);
-					PVOID pAddress	= (void*)(ModuleHandle + ExpDir.AddressOfFunctions);
+					PVOID pName		= (PVOID)(ModuleHandle + ExpDir.AddressOfNames);
+					PVOID pOrd		= (PVOID)(ModuleHandle + ExpDir.AddressOfNameOrdinals);
+					PVOID pAddress	= (PVOID)(ModuleHandle + ExpDir.AddressOfFunctions);
 
 					ULONG aNames[MAX_EXPORTS];
 					WORD aOrds[MAX_EXPORTS];
@@ -915,7 +915,7 @@ size_t ConvertStrToAddress(CString Address)
 		}
 		else
 		{
-			curadd = (__int64)StrToNum(a.GetBuffer(), a.GetLength(), 16);
+			curadd = (size_t)_tcstoui64(a.GetBuffer(), NULL, 16);//StrToNum(a.GetBuffer(), a.GetLength(), 16);
 			//printf( "Final [%p] %d\n", curadd, a.GetLength( ) );
 		}
 
@@ -926,7 +926,7 @@ size_t ConvertStrToAddress(CString Address)
 			//printf( "here2\n" );
 			if (ReadProcessMemory(g_hProcess, (PVOID)Final, &Final, sizeof(Final), NULL) == 0)
 			{
-				wprintf(L"[ConvertStrToAddress]: Failed to read memory (stdafx.cpp) GetLastError() = %d\n", GetLastError());
+				_tprintf(_T("[ConvertStrToAddress]: Failed to read memory (stdafx.cpp) GetLastError() = %d\n"), GetLastError());
 			}
 		}
 	}

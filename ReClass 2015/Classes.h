@@ -84,6 +84,7 @@ public:
 	virtual void Update(HotSpot& Spot) = 0;
 
 	NodeType GetType() { return nodeType; }
+	size_t GetOffset() { return offset; }
 
 	NodeType nodeType;
 
@@ -232,10 +233,11 @@ public:
 	{
 		if ((y > View.client->bottom) || (y + Height < 0))
 			return;
+
 		if (bSelected)
 			View.dc->FillSolidRect(0, y, View.client->right, Height, crSelect);
-		CRect pos;
-		pos.SetRect(0, y, 1024, y + Height);
+
+		CRect pos(0, y, 1024, y + Height);
 		AddHotSpot(View, pos, CString(), 0, HS_SELECT);
 	}
 
@@ -247,8 +249,7 @@ public:
 		DrawIconEx(View.dc->m_hDC, x, y, Icons[idx], 16, 16, 0, NULL, DI_NORMAL);
 		if (ID != -1)
 		{
-			CRect pos;
-			pos.SetRect(x, y, x + 16, y + 16);
+			CRect pos(x, y, x + 16, y + 16);
 			AddHotSpot(View, pos, CString(), ID, Type);
 		}
 		return x + 16;
@@ -284,6 +285,7 @@ public:
 			return;
 		if ((y > View.client->bottom) || (y + 16 < 0))
 			return;
+
 		if (bSelected)
 			AddIcon(View, 0, y, ICON_DROPARROW, 0, HS_DROP);
 	}
@@ -336,10 +338,10 @@ public:
 		return std::string(szDemangled);
 	}
 
-	int ResolveRTTI(DWORD_PTR Val, int &x, ViewInfo& View, int y)
+	int ResolveRTTI(size_t Val, int &x, ViewInfo& View, int y)
 	{
 #ifdef _WIN64
-		DWORD_PTR ModuleBase = 0x0;
+		size_t ModuleBase = 0x0;
 		//Find module Val is in, then get module base
 		for (int i = 0; i < MemMapModule.size(); i++)
 		{
@@ -351,27 +353,27 @@ public:
 			}
 		}
 
-		DWORD_PTR pRTTIObjectLocator = Val - 8; //Val is Ptr to first VFunc, pRTTI is at -0x8
+		size_t pRTTIObjectLocator = Val - 8; //Val is Ptr to first VFunc, pRTTI is at -0x8
 		if (!IsValidPtr(pRTTIObjectLocator))
 			return x;
 
-		DWORD_PTR RTTIObjectLocator;
+		size_t RTTIObjectLocator;
 		ReadMemory(pRTTIObjectLocator, &RTTIObjectLocator, sizeof(DWORD_PTR));
 
 		DWORD dwTypeDescriptorOffset;
 		ReadMemory(RTTIObjectLocator + 0x0C, &dwTypeDescriptorOffset, sizeof(DWORD));
-		DWORD_PTR TypeDescriptor = ModuleBase + dwTypeDescriptorOffset;
+		size_t TypeDescriptor = ModuleBase + dwTypeDescriptorOffset;
 
 		DWORD dwObjectBaseOffset;
 		ReadMemory(RTTIObjectLocator + 0x14, &dwObjectBaseOffset, sizeof(DWORD));
-		DWORD_PTR ObjectBase = ModuleBase + dwObjectBaseOffset;
+		size_t ObjectBase = ModuleBase + dwObjectBaseOffset;
 
 
 		DWORD dwClassHierarchyDescriptorOffset;
 		ReadMemory(RTTIObjectLocator + 0x10, &dwClassHierarchyDescriptorOffset, sizeof(DWORD));
 
 		//Offsets are from base
-		DWORD_PTR ClassHierarchyDescriptor = ModuleBase + dwClassHierarchyDescriptorOffset;
+		size_t ClassHierarchyDescriptor = ModuleBase + dwClassHierarchyDescriptorOffset;
 		if (!IsValidPtr(ClassHierarchyDescriptor) || !dwClassHierarchyDescriptorOffset)
 			return x;
 
@@ -383,7 +385,7 @@ public:
 		DWORD BaseClassArrayOffset;
 		ReadMemory(ClassHierarchyDescriptor + 0xC, &BaseClassArrayOffset, sizeof(DWORD));
 
-		DWORD_PTR BaseClassArray = ModuleBase + BaseClassArrayOffset;
+		size_t BaseClassArray = ModuleBase + BaseClassArrayOffset;
 		if (!IsValidPtr(BaseClassArray) || !BaseClassArrayOffset)
 			return x;
 
@@ -400,14 +402,14 @@ public:
 			DWORD BaseClassDescriptorOffset;
 			ReadMemory(BaseClassArray + (0x4 * i), &BaseClassDescriptorOffset, sizeof(DWORD));
 
-			DWORD_PTR BaseClassDescriptor = ModuleBase + BaseClassDescriptorOffset;
+			size_t BaseClassDescriptor = ModuleBase + BaseClassDescriptorOffset;
 			if (!IsValidPtr(BaseClassDescriptor) || !BaseClassDescriptorOffset)
 				continue;
 
 			DWORD TypeDescriptorOffset;
 			ReadMemory(BaseClassDescriptor, &TypeDescriptorOffset, sizeof(DWORD));
 
-			DWORD_PTR TypeDescriptor = ModuleBase + TypeDescriptorOffset;
+			size_t TypeDescriptor = ModuleBase + TypeDescriptorOffset;
 			if (!IsValidPtr(TypeDescriptor) || !TypeDescriptorOffset)
 				continue;
 
@@ -525,8 +527,8 @@ public:
 
 	int AddComment(ViewInfo& View, int x, int y)
 	{
-		x = AddText(View, x, y, crComment, NONE, _T("//"));
-		x = AddText(View, x, y, crComment, HS_COMMENT, _T(" %s"), Comment);
+		x = AddText(View, x, y, crComment, NONE, _T("// "));
+		x = AddText(View, x, y, crComment, HS_COMMENT, _T("%s"), Comment);
 
 		// Added
 		//if (GetType() == nt_int64)
@@ -601,7 +603,7 @@ public:
 
 					if (bAddStr)
 					{
-						txt[63] = '\0';
+						txt[64] = '\0';
 						x = AddText(View, x, y, crChar, NONE, _T("'%hs'"), txt);
 					}
 				}
@@ -651,8 +653,8 @@ public:
 				if (gbString)
 				{
 					bool bAddStr = true;
-					char txt[32];
-					ReadMemory(Val, txt, 32); // TODO: find out why and how, and why it looks wrong
+					char txt[64];
+					ReadMemory(Val, txt, 64); // TODO: find out why and how, and why it looks wrong
 
 					for (int i = 0; i < 4; i++)
 					{

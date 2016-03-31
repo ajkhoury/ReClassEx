@@ -1,0 +1,5 @@
+.idea
+headers/libBeaEngine.so
+**.pyc
+lib
+build

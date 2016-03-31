@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Owner\Documents\Visual Studio 2013\Projects\Reclass\Reclass64-master\beaengine\beaengine\src\BeaEngine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Owner\Documents\Visual Studio 2013\Projects\Reclass\Reclass64-master\beaengine\beaengine\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{008586FD-B0C8-3FAB-A9C9-0A3D97567B71}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
