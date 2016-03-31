@@ -42,6 +42,8 @@ int FontHeight;
 bool gbAddress = true;
 bool gbOffset = true;
 bool gbText = true;
+bool gbRTTI = true;
+
 bool gbFloat = true;
 bool gbInt = true;
 bool gbString = true;
@@ -210,10 +212,6 @@ size_t GetBase()
 {
 	if (MemMap.size() > 1)
 		return ProcessBaseAddress;
-	//for (UINT i=0; i < MemMap.size();i++) {
-	//	if ( Address >= MemMap[i].Start && Address <= MemMap[i].End )
-	//		return true;
-	//}
 	#ifdef _WIN64
 	return 0x140000000;
 	#else
@@ -355,6 +353,18 @@ CString GetModuleName(size_t Address)
 			return MemMapModule[i].Name;
 	}
 	return _T("<unknown>");
+}
+
+size_t GetAddressFromName(CString moduleName)
+{
+	size_t moduleAddress = 0;
+	for (unsigned int i = 0; i < MemMapModule.size(); i++) {
+		if (MemMapModule[i].Name == moduleName) {
+			moduleAddress = MemMapModule[i].Start;
+			break;
+		}
+	}
+	return moduleAddress;
 }
 
 bool IsProcHandleValid(HANDLE hProc)
@@ -519,12 +529,12 @@ bool UpdateMemoryMap(void)
 							wcsModule = wcsrchr(wcsFullDllName, L'/');
 						wcsModule++;
 
-						wchar_t filename[MAX_PATH];
-						GetModuleFileNameEx(g_hProcess, NULL, filename, MAX_PATH);
-
-						if (wcscmp(filename, wcsFullDllName) == 0)
+						if (ProcessBaseAddress == NULL)
 						{
-							ProcessBaseAddress = (size_t)ModuleBase;
+							wchar_t filename[MAX_PATH];
+							GetModuleFileNameEx(g_hProcess, NULL, filename, MAX_PATH);
+							if (_wcsicmp(filename, wcsFullDllName) == 0)
+								ProcessBaseAddress = (size_t)ModuleBase;
 						}
 					} 
 				}
@@ -830,8 +840,27 @@ int SplitString(const CString& input, const CString& delimiter, CStringArray& re
 
 size_t ConvertStrToAddress(CString Address)
 {
-	CStringArray chunks;
+	//int foundIdx = -1;
+	//if ((foundIdx = Spot.Text.FindOneOf(_T("+-"))) != -1)
+	//{
+	//	CString moduleName = Spot.Text.Left(foundIdx);
+	//	foundIdx = Spot.Text.GetLength() - foundIdx;
+	//	CString remainder = Spot.Text.Right(foundIdx);
+	//	foundIdx = 0;
+	//	while (1)
+	//	{
+	//		if (isspace(remainder[foundIdx]) || remainder[foundIdx] == _T('+'))
+	//			foundIdx++;
+	//		else
+	//			break;
+	//	}
+	//	CString offsetString = remainder.GetBuffer() + foundIdx;
+	//
+	//	//offset = strtoul(Spot.Text,NULL,16);
+	//
+	//}
 
+	CStringArray chunks;
 	if (SplitString(Address, "+", chunks) == 0)
 		chunks.Add(Address);
 
@@ -846,12 +875,23 @@ size_t ConvertStrToAddress(CString Address)
 		bool bPointer = false;
 		bool bMod = false;
 
+		if (a.Find(_T(".exe")) != -1)
+		{
+			bMod = true;
+			//a = a.Mid(a.Find(_T(".exe")) + 4);
+		}
+		else if (a.Find(_T(".dll")) != -1)
+		{
+			bMod = true;
+			//a = a.Mid(a.Find(_T(".dll")) + 4);
+		}
+
 		if (a[0] == '*')
 		{
 			bPointer = true;
 			a = a.Mid(1);
 		}
-		if (a[0] == '&')
+		else if (a[0] == '&')
 		{
 			bMod = true;
 			a = a.Mid(1);

@@ -110,6 +110,8 @@ extern int FontHeight;
 extern bool gbAddress;
 extern bool gbOffset;
 extern bool gbText;
+extern bool gbRTTI;
+
 extern bool gbFloat;
 extern bool gbInt;
 extern bool gbString;
@@ -287,6 +289,7 @@ bool IsModule(size_t Address);
 
 CString GetAddressName(size_t Address,bool bHEX);
 CString GetModuleName(size_t Address);
+size_t  GetAddressFromName(CString moduleName);
 
 void ReadMemory(size_t Address,void* Buffer,DWORD Size);
 void WriteMemory(size_t Address,void* Buffer,DWORD Size);

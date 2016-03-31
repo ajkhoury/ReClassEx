@@ -39,6 +39,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_BUTTON_TYPEDEF, &CMainFrame::OnButtonTypedef)
 	ON_COMMAND(ID_CHECK_CBTEXT, &CMainFrame::OnCheckCbtext)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_CBTEXT, &CMainFrame::OnUpdateCheckCbtext)
+	ON_COMMAND(ID_CHECK_CBRTTI, &CMainFrame::OnCheckCbrtti)
+	ON_UPDATE_COMMAND_UI(ID_CHECK_CBRTTI, &CMainFrame::OnUpdateCheckCbrtti)
 	//ON_COMMAND(ID_BUTTON_SELECT, &CMainFrame::OnButtonSelect)
 	ON_COMMAND(ID_BUTTON_SELECTPROCESS, &CMainFrame::OnButtonSelectprocess)
 	ON_COMMAND(ID_BUTTON_EDITCLASS, &CMainFrame::OnButtonEditclass)
@@ -48,10 +50,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_TIMER()
 	ON_COMMAND(ID_CHECK_TOPMOST, &CMainFrame::OnCheckTopmost)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_TOPMOST, &CMainFrame::OnUpdateCheckTopmost)
-
 	ON_COMMAND(ID_CHECK_FILTERPROCESSES, &CMainFrame::OnCheckFilterProcesses)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_FILTERPROCESSES, &CMainFrame::OnUpdateCheckFilterProcesses)
-
 	ON_COMMAND(ID_CHECK_CLASSBROWSER, &CMainFrame::OnCheckClassBrowser)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_CLASSBROWSER, &CMainFrame::OnUpdateCheckClassBrowser)
 	ON_COMMAND(ID_BUTTON_LEFT, &CMainFrame::OnButtonLeft)
@@ -418,6 +418,21 @@ void CMainFrame::OnUpdateCheckCbtext(CCmdUI *pCmdUI)
 	pCmdUI->SetCheck(gbText);
 }
 
+void CMainFrame::OnCheckCbrtti()
+{
+	gbRTTI = !gbRTTI;
+}
+void CMainFrame::OnUpdateCheckCbrtti(CCmdUI *pCmdUI)
+{
+	if (!gbPointers)
+		pCmdUI->Enable(FALSE);
+	else
+	{
+		pCmdUI->Enable(TRUE);
+		pCmdUI->SetCheck(gbRTTI);
+	}
+}
+
 #include "DialogTypes.h"
 void CMainFrame::OnButtonTypedef()
 {
@@ -514,24 +529,15 @@ void CMainFrame::OnButtonSelectprocess()
 						}
 					}				
 
-					// process ID 4 is the Kernel
-					//if (infoP->ProcessId == 4)
-					//{
-					//	hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, infoP->ProcessId);
-					//	printf("pid %i: %d\n", infoP->ProcessId, hProcess);
-					//}
-					//else
-					//{
-					//	hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, (DWORD)infoP->UniqueProcessId);
-					//}
 					hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, (DWORD)infoP->UniqueProcessId);
 					if (hProcess)
 					{
 						#ifdef _WIN64
-						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX64) {
+						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX64)
 						#else
-						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX86) {
+						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX86)
 						#endif
+						{
 							TCHAR filename[1024];
 							GetModuleFileNameEx(hProcess, NULL, filename, 1024);
 

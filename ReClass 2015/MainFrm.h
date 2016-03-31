@@ -87,6 +87,8 @@ public:
 	afx_msg void OnButtonTypedef();
 	afx_msg void OnCheckCbtext();
 	afx_msg void OnUpdateCheckCbtext(CCmdUI *pCmdUI);
+	afx_msg void OnCheckCbrtti();
+	afx_msg void OnUpdateCheckCbrtti(CCmdUI *pCmdUI);
 	//afx_msg void OnButtonSelect();
 	afx_msg void OnButtonSelectprocess();
 	void ClearProcMenuItems();
