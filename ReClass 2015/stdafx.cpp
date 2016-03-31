@@ -762,6 +762,7 @@ bool UpdateExports()
 	return 1;
 }
 
+// Unused. Currently using _tcstoui64 as it is a lot faster.
 __int64 StrToNum(const TCHAR *udata, int udatalen, int base)
 {
 	long index;

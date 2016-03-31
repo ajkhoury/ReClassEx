@@ -527,8 +527,9 @@ public:
 
 	int AddComment(ViewInfo& View, int x, int y)
 	{
-		x = AddText(View, x, y, crComment, NONE, _T("// "));
-		x = AddText(View, x, y, crComment, HS_COMMENT, _T("%s"), Comment);
+		x = AddText(View, x, y, crComment, NONE, _T("//"));
+		// Need the extra whitespace in "%s " anfter the %s to edit.
+		x = AddText(View, x, y, crComment, HS_COMMENT, _T("%s "), Comment);
 
 		// Added
 		//if (GetType() == nt_int64)
@@ -555,7 +556,7 @@ public:
 		{
 			float f = *((float*)&((BYTE*)View.pData)[offset]);
 			// TODO: Change to int64
-			int i = *((int*)&((BYTE*)View.pData)[offset]);
+			__int64 i = *((__int64*)&((BYTE*)View.pData)[offset]);
 
 			if (gbFloat)
 			{
@@ -654,7 +655,7 @@ public:
 				{
 					bool bAddStr = true;
 					char txt[64];
-					ReadMemory(Val, txt, 64); // TODO: find out why and how, and why it looks wrong
+					ReadMemory(Val, txt, 64); // TODO: find out why it looks wrong
 
 					for (int i = 0; i < 4; i++)
 					{
