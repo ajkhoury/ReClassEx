@@ -45,7 +45,7 @@ CReClass2015App::CReClass2015App()
 {
 	m_bHiColorIcons = TRUE;
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
-	SetAppID(_T("ReClass.2015.1.0.0.0"));
+	SetAppID(_T("ReClass 2015"));
 
 	#ifdef _DEBUG
 	Utils::CreateConsole();
@@ -250,6 +250,7 @@ void CReClass2015App::OnButtonReset()
 	tdVec3 = _T("D3DVECTOR3");
 	tdQuat = _T("D3DXQUATERNION");
 	tdMatrix = _T("D3DMATRIX");
+	tdPChar = _T("PCHAR");
 
 	CurrentFilePath = "";
 }
