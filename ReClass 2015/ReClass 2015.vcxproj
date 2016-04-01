@@ -134,7 +134,7 @@
       </IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/ignore:4006 %(AdditionalOptions)</AdditionalOptions>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>BeaEngine_s_stdcall.lib;SciLexer.lib;tinyxml.lib;SQLite_Static_Library.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>BeaEngine_s_stdcall.lib;SciLexer.lib;SQLite_Static_Library.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
       <AdditionalManifestDependencies>"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'"</AdditionalManifestDependencies>
     </Link>
     <Midl>
@@ -172,7 +172,7 @@
       </IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>crt.lib</IgnoreSpecificDefaultLibraries>
       <LinkStatus>false</LinkStatus>
-      <AdditionalDependencies>BeaEngine_s_stdcalld.lib;SciLexerd.lib;tinyxmld.lib;SQLite_Static_Libraryd.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>BeaEngine_s_stdcalld.lib;SciLexerd.lib;SQLite_Static_Libraryd.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -204,7 +204,7 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>BeaEngine_s_stdcall_64.lib;SciLexer_64.lib;tinyxml_64.lib;SQLite_Static_Library_64.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>BeaEngine_s_stdcall_64.lib;SciLexer_64.lib;SQLite_Static_Library_64.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
       <UACExecutionLevel>HighestAvailable</UACExecutionLevel>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <IgnoreSpecificDefaultLibraries>crt64.lib</IgnoreSpecificDefaultLibraries>
@@ -239,7 +239,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>BeaEngine_s_stdcalld_64.lib;SciLexerd_64.lib;tinyxmld_64.lib;SQLite_Static_Libraryd_64.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>BeaEngine_s_stdcalld_64.lib;SciLexerd_64.lib;SQLite_Static_Libraryd_64.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <IgnoreSpecificDefaultLibraries>crt64.lib</IgnoreSpecificDefaultLibraries>
