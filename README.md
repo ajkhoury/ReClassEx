@@ -24,3 +24,9 @@ New features include:
 - Added memory swap option to switch endianness: thanks buddyfavors
 - Added Bits type for a bit view instead of text
 - Added ability to input module names in address node (e.g. 'reclass.exe+0x40')
+
+# How to build
+
+See how to build in the wiki:
+
+[Reclass Wiki](https://github.com/dude719/Reclass-2015/wiki)
