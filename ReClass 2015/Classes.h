@@ -644,7 +644,7 @@ public:
 
 					if (bAddStr)
 					{
-						txt[31] = '\0'; // null terminte (even though we prolly dont have to)
+						txt[63] = '\0'; // null terminte (even though we prolly dont have to)
 						x = AddText(View, x, y, crChar, NONE, _T("'%hs'"), txt);
 					}
 				}
