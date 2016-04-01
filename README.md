@@ -23,3 +23,4 @@ New features include:
 - Made addresses edittable for copy & pasting
 - Added memory swap option to switch endianness: thanks buddyfavors
 - Added Bits type for a bit view instead of text
+- Added ability to input module names in address node (e.g. 'reclass.exe+0x40')
