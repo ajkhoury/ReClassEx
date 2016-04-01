@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--ReClass 2015-->
+    <TypeDef tdHex="char" tdInt64="__int64" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="unsigned char" tdFloat="float" tdDouble="double" tdVec2="Vector2" tdVec3="Vector3" tdQuat="Vector4" tdMatrix="matrix3x4_t" tdPChar="char*" />
+    <Header Text="" />
+    <Footer Text="" />
+    <Notes Text="" />
+    <Class Name="CGlobalVarsBase" Type="28" Comment="" Offset="1513324480" strOffset="5A337FC0" Code="">
+        <Node Name="realtime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="framecount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="absoluteframetime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="absoluteframestarttimestddev" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="curtime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="frametime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="maxClients" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="tickcount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="interval_per_tick" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="interpolation_amount" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="simTicksThisFrame" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="network_protocol" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="pSaveData" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_bClient" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_bRemoteClient" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000024" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000022" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="nTimestampNetworkingBase" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="nTimestampRandomizeWindow" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+</ReClass>

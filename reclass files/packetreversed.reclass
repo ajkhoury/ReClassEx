@@ -1,0 +1,106 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--ReClass 2015-->
+    <TypeDef tdHex="char" tdInt64="__int64" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="unsigned char" tdFloat="float" tdDouble="double" tdVec2="Vector2" tdVec3="Vector3" tdQuat="Vector4" tdMatrix="matrix3x4_t" tdPChar="char*" />
+    <Header Text="" />
+    <Footer Text="" />
+    <Notes Text="" />
+    <Class Name="N00000000" Type="28" Comment="" Offset="32226360" strOffset="1EBBC38" Code="">
+        <Node Name="N00000001" Type="30" Size="1" bHidden="0" Comment="Start. header here. read 6 bits, then read 2 more bits to find the state" />
+        <Node Name="N00000012" Type="30" Size="1" bHidden="0" Comment="9th bit tells us newway or not. If so, we read the 10th bit. If the 10th is 1 we lastIndex + 1. otherwise read 3, or 7 based on 11th bit." />
+        <Node Name="N00000015" Type="30" Size="1" bHidden="0" Comment=" read 7 or 3 bits. Read 7 again after 7 and you end up with FFF to end the field indices" />
+        <Node Name="N00000044" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000052" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000002" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000019" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_flSimulationTime" Type="30" Size="1" bHidden="0" Comment="first field indice value. length is based on the type. in this case its an int of 8 bits first field indice value. length is based on the type. in this case its an int of 8 bits" />
+        <Node Name="m_nTickBase" Type="30" Size="1" bHidden="0" Comment="next field indice value. another int but of 32 bits." />
+        <Node Name="N000000B9" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000C9" Type="30" Size="1" bHidden="0" Comment="End of field indices" />
+        <Node Name="N000000BA" Type="30" Size="1" bHidden="0" Comment="Start of netvar data" />
+        <Node Name="m_vecOrigin[0]" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000BC" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000CD" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000BD" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_vecOrigin[1]" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000BF" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000D1" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000C0" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_vecVelocity[0]" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000C2" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000D5" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000C3" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_vecVelocity[1]" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000C5" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000D9" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000C6" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_angEyeAngles[1]" Type="30" Size="1" bHidden="0" Comment="10 bits" />
+        <Node Name="N0000009A" Type="30" Size="1" bHidden="0" Comment="235th bit is last field" />
+        <Node Name="N0000009F" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000009B" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000084" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000080" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000090" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000081" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000078" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000095" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000A3" Type="30" Size="1" bHidden="0" Comment="start" />
+        <Node Name="N000000A6" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000A4" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000000B" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000AA" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000AD" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000AB" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000000C" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000B1" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000B4" Type="30" Size="1" bHidden="0" Comment="end of field indices" />
+        <Node Name="N000000B2" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000000D" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000F6" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000F9" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000F7" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000000E" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000FC" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000120" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000FD" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000000F" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000FF" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000124" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000100" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000010" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000102" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000128" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000103" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000ED" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000105" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000012C" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000106" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000EE" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000108" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000130" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000109" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000EF" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000010B" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000134" Type="30" Size="1" bHidden="0" Comment="start" />
+        <Node Name="N0000010C" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000F0" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000010E" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000138" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000010F" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000F1" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000111" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000013C" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000112" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000F2" Type="30" Size="1" bHidden="0" Comment="end of field indices" />
+        <Node Name="N00000114" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000140" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000115" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000F3" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000117" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000144" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000118" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000F4" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000011A" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N0000011B" Type="7" Size="1" bHidden="0" Comment="" />
+    </Class>
+</ReClass>

@@ -1,0 +1,2377 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--ReClass 2015-->
+    <TypeDef tdHex="char" tdInt64="__int64" tdInt32="int" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="bool" tdFloat="float" tdDouble="double" tdVec2="r3dPoint2D" tdVec3="r3dVector" tdQuat="r3dQuat" tdMatrix="D3DXMATRIX" tdPChar="char*" />
+    <Header Text="" />
+    <Footer Text="" />
+    <Notes Text="" />
+    <Class Name="g_pObjectManager" Type="28" Comment="" Offset="32913732" strOffset="1F63944" Code="">
+        <Node Name="pObjManager" Type="8" Size="4" bHidden="0" Comment="" Pointer="ObjectManager" />
+        <Node Name="N00000002" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000003" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000004" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000005" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000006" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000007" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000008" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000009" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000000A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000000B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000000C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000000D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000000E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000000F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000010" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000011" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000012" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000013" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000014" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000015" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000016" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000017" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000018" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000019" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000001A" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="ObjectManager" Type="28" Comment="" Offset="120053760" strOffset="727E000" Code="">
+        <Node Name="pObjectAddEvent" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="pObjectDeleteEvent" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_FrameId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pRootBox" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_ResourceHelper" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_CS" Type="1" Size="24" bHidden="0" Comment="" Instance="_RTL_CRITICAL_SECTION" />
+        <Node Name="MaxObjects" Type="1" Size="4" bHidden="0" Comment="MaxObjects" Instance="r3dSec_type" />
+        <Node Name="pFirstObject" Type="1" Size="4" bHidden="0" Comment="pFirstObject" Instance="r3dSec_type" />
+        <Node Name="NumObjects" Type="1" Size="4" bHidden="0" Comment="NumObjects" Instance="r3dSec_type" />
+        <Node Name="pLastObject" Type="1" Size="4" bHidden="0" Comment="pLastObject" Instance="r3dSec_type" />
+        <Node Name="bInited" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000002AC" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N000002AD" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="CurObjID" Type="1" Size="4" bHidden="0" Comment="" Instance="r3dSec_type" />
+        <Node Name="pObjectArray" Type="1" Size="4" bHidden="0" Comment="" Instance="r3dSec_type" />
+        <Node Name="LastFreeObject" Type="1" Size="4" bHidden="0" Comment="" Instance="r3dSec_type" />
+        <Node Name="MaxStaticObjects" Type="1" Size="4" bHidden="0" Comment="" Instance="r3dSec_type" />
+        <Node Name="NumStaticObjects" Type="1" Size="4" bHidden="0" Comment="" Instance="r3dSec_type" />
+        <Node Name="pStaticObjectArray" Type="1" Size="4" bHidden="0" Comment="" Instance="r3dSec_type" />
+        <Node Name="LastStaticUpdateIdx" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000034" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000035" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000036" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000037" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000038" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000039" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000003A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000003B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000003C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000003D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000003E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000003F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000040" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000041" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000042" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000043" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000044" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000079" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000007A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000007B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000007C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000007D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000007E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000007F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000080" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000081" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000082" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000083" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000084" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000085" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000086" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000087" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000088" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000089" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000008A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000008B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000008C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000008D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000008E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000008F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000090" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000091" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000092" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000093" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000094" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000095" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000096" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000097" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000098" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000099" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000009A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000009B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000009C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000009D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000009E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000009F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000A0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000A1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000A2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000A3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000A4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000A5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001A8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001A7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001A6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001A5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001A4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001A3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001A2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001A1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001A0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000019F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000019E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000019D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000019C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000019B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000019A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000199" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000198" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000197" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000196" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000195" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000194" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000193" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000192" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000191" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000190" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000018F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000018E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000018D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000018C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000018B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000018A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000189" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000188" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000187" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000186" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000185" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000184" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000183" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000182" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000181" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000180" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000017F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000017E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000017D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000017C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000017B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000017A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000179" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000178" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000177" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000176" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000175" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000174" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000173" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000172" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000171" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000170" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000016F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000016E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000016D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000016C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000016B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000016A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000169" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000168" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000167" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000166" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000165" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000164" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000163" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000162" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000161" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000160" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000015F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000015E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000015D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000015C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000015B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000015A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000159" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000158" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000157" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000156" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000155" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000154" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000153" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000152" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000151" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000150" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000014F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000014E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000014D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000014C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000014B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000014A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000149" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000148" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000147" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000146" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000145" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000144" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000143" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000142" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000141" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000140" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000013F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000013E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000013D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000013C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000013B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000013A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000139" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000138" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000137" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000136" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000135" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000134" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000133" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000132" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000131" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000130" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000012F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000012E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000012D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000012C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000012B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000012A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000129" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000128" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000127" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000126" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000125" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000124" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000123" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000122" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000121" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000120" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000011F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000011E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000011D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000011C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000011B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000011A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000119" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000118" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000117" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000116" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000115" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000114" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000113" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000112" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000111" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000110" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000010F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000010E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000010D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000010C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000010B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000010A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000109" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000108" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000107" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000106" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000105" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000104" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000103" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000102" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000101" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000100" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000FF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000FE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000FD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000FC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000FB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000FA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000F9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000F8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000F7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000F6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000F5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000F4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000F3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000F2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000F1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000F0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000EF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000EE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000ED" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000EC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000EB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000EA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000E9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000E8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000E7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000E6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000E5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000E4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000E3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000E2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000E1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000E0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000DF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000DE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000DD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000DC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000DB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000DA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000D9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000D8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000D7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000D6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000D5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000D4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000D3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000D2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000D1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000D0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000CF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000CE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000CD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000CC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000CB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000CA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000BF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000BE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000BD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000BC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000BB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000BA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000B9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000B8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000B7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000B6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000B5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000B4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000B3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000B2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000B1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000B0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000AF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000AE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000AD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000AC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000AB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000AA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000A9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000002A8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000002A7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000002A6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000002A5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000002A4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000002A3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000002A2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000002A1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000002A0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000029F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000029E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000029D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000029C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000029B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000029A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000299" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000298" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000297" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000296" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000295" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000294" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000293" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000292" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000291" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000290" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000028F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000028E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000028D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000028C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000028B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000028A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000289" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000288" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000287" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000286" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000285" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000284" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000283" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000282" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000281" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000280" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000027F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000027E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000027D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000027C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000027B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000027A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000279" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000278" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000277" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000276" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000275" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000274" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000273" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000272" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000271" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000270" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000026F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000026E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000026D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000026C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000026B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000026A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000269" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000268" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000267" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000266" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000265" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000264" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000263" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000262" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000261" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000260" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000025F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000025E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000025D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000025C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000025B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000025A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000259" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000258" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000257" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000256" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000255" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000254" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000253" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000252" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000251" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000250" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000024F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000024E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000024D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000024C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000024B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000024A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000249" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000248" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000247" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000246" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000245" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000244" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000243" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000242" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000241" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000240" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000023F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000023E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000023D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000023C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000023B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000023A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000239" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000238" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000237" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000236" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000235" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000234" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000233" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000232" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000231" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000230" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000022F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000022E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000022D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000022C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000022B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000022A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000229" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000228" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000227" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000226" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000225" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000224" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000223" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000222" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000221" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000220" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000021F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000021E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000021D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000021C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000021B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000021A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000219" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000218" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000217" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000216" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000215" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000214" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000213" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000212" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000211" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000210" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000020F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000020E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000020D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000020C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000020B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000020A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000209" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000208" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000207" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000206" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000205" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000204" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000203" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000202" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000201" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000200" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001FF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001FE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001FD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001FC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001FB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001FA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001F9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001F8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001F7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001F6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001F5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001F4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001F3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001F2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001F1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001F0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001EF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001EE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001ED" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001EC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001EB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001EA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001E9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001E8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001E7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001E6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001E5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001E4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001E3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001E2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001E1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001E0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001DF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001DE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001DD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001DC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001DB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001DA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001D9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001D8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001D7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001D6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001D5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000001D4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="PrepCam" Type="1" Size="64" bHidden="0" Comment="" Instance="r3dCamera" />
+        <Node Name="PrepCamInterm" Type="1" Size="64" bHidden="0" Comment="" Instance="r3dCamera" />
+        <Node Name="m_MinimapOrigin" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_MinimapSize" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_BulletMngr" Type="8" Size="4" bHidden="0" Comment="" Pointer="BulletShellMngr" />
+        <Node Name="JustLoaded" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="_RTL_CRITICAL_SECTION" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="DebugInfo" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="LockCount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="RecursionCount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="OwningThread" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="LockSemaphore" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="SpinCount" Type="15" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dSec_type" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N000002B1" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dCamera" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="point" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="NearClip" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="FarClip" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="vPointTo" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="vUP" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="FOV" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="ProjectionType" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Width" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Height" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Aspect" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="BulletShellMngr" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N000002D5" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="GameObject" Type="28" Comment="" Offset="455284804" strOffset="1B231844" Code="">
+        <Node Name="N000003D8" Type="26" Size="4" bHidden="0" Comment="">
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="001C8F10  retn 0x0008" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="001C8F10  retn 0x0008" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="001C8F10  retn 0x0008" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="001912A0  retn 0x0004" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="00191040  mov eax, ecx" />
+                <Code Assembly="00191042  ret " />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="001912B0  mov eax, dword ptr [ecx]" />
+                <Code Assembly="001912B2  mov edx, dword ptr [eax+0x2C]" />
+                <Code Assembly="001912B5  jmp edx" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="0033E6C0  xor eax, eax" />
+                <Code Assembly="0033E6C2  retn 0x0004" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="001910D0  push ebp" />
+                <Code Assembly="001910D1  mov ebp, esp" />
+                <Code Assembly="001910D3  and esp, 0xFFFFFFF8" />
+                <Code Assembly="001910D6  sub esp, 0x00000144" />
+                <Code Assembly="001910DC  push ebx" />
+                <Code Assembly="001910DD  mov ebx, ecx" />
+                <Code Assembly="001910DF  mov eax, dword ptr [ebx]" />
+                <Code Assembly="001910E1  mov edx, dword ptr [eax+0x40]" />
+                <Code Assembly="001910E4  push esi" />
+                <Code Assembly="001910E5  push edi" />
+                <Code Assembly="001910E6  call edx" />
+                <Code Assembly="001910E8  mov esi, eax" />
+                <Code Assembly="001910EA  mov eax, dword ptr [ebx]" />
+                <Code Assembly="001910EC  mov edx, dword ptr [eax+0x40]" />
+                <Code Assembly="001910EF  mov ecx, ebx" />
+                <Code Assembly="001910F1  call edx" />
+                <Code Assembly="001910F3  fld dword ptr [eax+0x08]" />
+                <Code Assembly="001910F6  mov eax, dword ptr [ebx]" />
+                <Code Assembly="001910F8  mov edx, dword ptr [eax+0x40]" />
+                <Code Assembly="001910FB  push ecx" />
+                <Code Assembly="001910FC  mov ecx, ebx" />
+                <Code Assembly="001910FE  fstp dword ptr [esp]" />
+                <Code Assembly="00191101  call edx" />
+                <Code Assembly="00191103  fld dword ptr [eax+0x04]" />
+                <Code Assembly="00191106  sub esp, 0x08" />
+                <Code Assembly="00191109  fstp dword ptr [esp+0x04]" />
+                <Code Assembly="0019110D  lea eax, dword ptr [esp+0x5C]" />
+                <Code Assembly="00191111  fld dword ptr [esi]" />
+                <Code Assembly="00191113  fstp dword ptr [esp]" />
+                <Code Assembly="00191116  push eax" />
+                <Code Assembly="00191117  call 0x003C9A12" />
+                <Code Assembly="0019111C  mov edx, dword ptr [ebx]" />
+                <Code Assembly="0019111E  mov edx, dword ptr [edx+0x48]" />
+                <Code Assembly="00191121  lea eax, dword ptr [esp+0x10]" />
+                <Code Assembly="00191125  push eax" />
+                <Code Assembly="00191126  mov ecx, ebx" />
+                <Code Assembly="00191128  call edx" />
+                <Code Assembly="0019112A  fld dword ptr [ebx+0x20]" />
+                <Code Assembly="0019112D  sub esp, 0x0C" />
+                <Code Assembly="00191130  fstp dword ptr [esp+0x08]" />
+                <Code Assembly="00191134  mov esi, eax" />
+                <Code Assembly="00191136  fld dword ptr [ebx+0x1C]" />
+                <Code Assembly="00191139  lea eax, dword ptr [esp+0x0000011C]" />
+                <Code Assembly="00191140  fstp dword ptr [esp+0x04]" />
+                <Code Assembly="00191144  mov ecx, 0x00000010" />
+                <Code Assembly="00191149  fld dword ptr [ebx+0x18]" />
+                <Code Assembly="0019114C  lea edi, dword ptr [esp+0x000000DC]" />
+                <Code Assembly="00191153  fstp dword ptr [esp]" />
+                <Code Assembly="00191156  push eax" />
+                <Code Assembly="00191157  rep movsd " />
+                <Code Assembly="00191159  call 0x003C9A18" />
+                <Code Assembly="0019115E  lea ecx, dword ptr [esp+0x000000D0]" />
+                <Code Assembly="00191165  push ecx" />
+                <Code Assembly="00191166  lea edx, dword ptr [esp+0x00000114]" />
+                <Code Assembly="0019116D  push edx" />
+                <Code Assembly="0019116E  lea eax, dword ptr [esp+0x00000098]" />
+                <Code Assembly="00191175  push eax" />
+                <Code Assembly="00191176  call 0x003C9A1E" />
+                <Code Assembly="0019117B  lea ecx, dword ptr [esp+0x50]" />
+                <Code Assembly="0019117F  push ecx" />
+                <Code Assembly="00191180  lea edx, dword ptr [esp+0x00000094]" />
+                <Code Assembly="00191187  push edx" />
+                <Code Assembly="00191188  lea eax, dword ptr [esp+0x18]" />
+                <Code Assembly="0019118C  push eax" />
+                <Code Assembly="0019118D  call 0x003C9A1E" />
+                <Code Assembly="00191192  lea edi, dword ptr [ebx+0x000001B0]" />
+                <Code Assembly="00191198  mov ecx, 0x00000010" />
+                <Code Assembly="0019119D  lea esi, dword ptr [esp+0x10]" />
+                <Code Assembly="001911A1  push ebx" />
+                <Code Assembly="001911A2  rep movsd " />
+                <Code Assembly="001911A4  call 0x001911B0" />
+                <Code Assembly="001911A9  pop edi" />
+                <Code Assembly="001911AA  pop esi" />
+                <Code Assembly="001911AB  pop ebx" />
+                <Code Assembly="001911AC  mov esp, ebp" />
+                <Code Assembly="001911AE  pop ebp" />
+                <Code Assembly="001911AF  ret " />
+                <Code Assembly="001911B0  push ecx" />
+                <Code Assembly="001911B1  push ebx" />
+                <Code Assembly="001911B2  mov ebx, dword ptr [esp+0x0C]" />
+                <Code Assembly="001911B6  movq xmm0, qword ptr [ebx+0x00000178]" />
+                <Code Assembly="001911BE  push esi" />
+                <Code Assembly="001911BF  lea esi, dword ptr [ebx+0x00000190]" />
+                <Code Assembly="001911C5  movq qword ptr [esi], xmm0" />
+                <Code Assembly="001911C9  movq xmm0, qword ptr [ebx+0x00000180]" />
+                <Code Assembly="001911D1  push edi" />
+                <Code Assembly="001911D2  movq qword ptr [esi+0x08], xmm0" />
+                <Code Assembly="001911D7  movq xmm0, qword ptr [ebx+0x00000188]" />
+                <Code Assembly="001911DF  lea eax, dword ptr [ebx+0x000001B0]" />
+                <Code Assembly="001911E5  push eax" />
+                <Code Assembly="001911E6  movq qword ptr [esi+0x10], xmm0" />
+                <Code Assembly="001911EB  call 0x0036A210" />
+                <Code Assembly="001911F0  movss xmm0, dword ptr [ebx+0x0000019C]" />
+                <Code Assembly="001911F8  movss xmm1, dword ptr [ebx+0x000001A0]" />
+                <Code Assembly="00191200  comiss xmm0, xmm1" />
+                <Code Assembly="00191203  jnbe 0x00191208" />
+                <Code Assembly="00191205  movaps xmm0, xmm1" />
+                <Code Assembly="00191208  movss xmm1, dword ptr [ebx+0x000001A4]" />
+                <Code Assembly="00191210  comiss xmm0, xmm1" />
+                <Code Assembly="00191213  jnbe 0x00191218" />
+                <Code Assembly="00191215  movaps xmm0, xmm1" />
+                <Code Assembly="00191218  mov edi, dword ptr [ebx+0x00000174]" />
+                <Code Assembly="0019121E  movss dword ptr [ebx+0x000001A8], xmm0" />
+                <Code Assembly="00191226  test edi, edi" />
+                <Code Assembly="00191228  je 0x00191230" />
+                <Code Assembly="0019122A  push ebx" />
+                <Code Assembly="0019122B  call 0x002E2110" />
+                <Code Assembly="00191230  pop edi" />
+                <Code Assembly="00191231  pop esi" />
+                <Code Assembly="00191232  pop ebx" />
+                <Code Assembly="00191233  pop ecx" />
+                <Code Assembly="00191234  retn 0x0004" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="002C4DD0  push esi" />
+                <Code Assembly="002C4DD1  mov esi, ecx" />
+                <Code Assembly="002C4DD3  mov edx, dword ptr [esi]" />
+                <Code Assembly="002C4DD5  push edi" />
+                <Code Assembly="002C4DD6  mov edi, dword ptr [esp+0x0C]" />
+                <Code Assembly="002C4DDA  movq xmm0, qword ptr [edi]" />
+                <Code Assembly="002C4DDE  movq qword ptr [esi+0x18], xmm0" />
+                <Code Assembly="002C4DE3  mov eax, dword ptr [edi+0x08]" />
+                <Code Assembly="002C4DE6  mov dword ptr [esi+0x20], eax" />
+                <Code Assembly="002C4DE9  mov eax, dword ptr [edx+0x1C]" />
+                <Code Assembly="002C4DEC  mov byte ptr [esi+0x00000328], 0x00000001" />
+                <Code Assembly="002C4DF3  call eax" />
+                <Code Assembly="002C4DF5  mov ecx, dword ptr [esi+0x00000270]" />
+                <Code Assembly="002C4DFB  test ecx, ecx" />
+                <Code Assembly="002C4DFD  je 0x002C4E07" />
+                <Code Assembly="002C4DFF  mov edx, dword ptr [ecx]" />
+                <Code Assembly="002C4E01  mov eax, dword ptr [edx+0x14]" />
+                <Code Assembly="002C4E04  push edi" />
+                <Code Assembly="002C4E05  call eax" />
+                <Code Assembly="002C4E07  pop edi" />
+                <Code Assembly="002C4E08  pop esi" />
+                <Code Assembly="002C4E09  retn 0x0004" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="00191270  mov eax, dword ptr [esp+0x04]" />
+                <Code Assembly="00191274  or dword ptr [ecx+0x00000214], eax" />
+                <Code Assembly="0019127A  retn 0x0004" />
+            </Function>
+        </Node>
+        <Node Name="Class" Type="1" Size="4" bHidden="0" Comment="" Instance="r3dSec_type" />
+        <Node Name="hashID" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="vLoadTimePos" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="vScl" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="vPos" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="vLoadTimeRot" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="vRot" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="NetworkID" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="PrivateFlags" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="pPrevObject" Type="1" Size="4" bHidden="0" Comment="" Instance="r3dSec_type" />
+        <Node Name="pNextObject" Type="1" Size="4" bHidden="0" Comment="" Instance="r3dSec_type" />
+        <Node Name="FirstUpdate" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="wasSetSkipOcclusionCheck" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_isSerializable" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="InMainFrustum" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000053F" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_MinQualityLevel" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="preparedVSConsts" Type="1" Size="272" bHidden="0" Comment="" Instance="PrecalculatedMeshShaderConsts" />
+        <Node Name="m_SceneBox" Type="8" Size="4" bHidden="0" Comment="" Pointer="SceneBox" />
+        <Node Name="bbox_local" Type="1" Size="24" bHidden="0" Comment="" Instance="r3dBox3D" />
+        <Node Name="bbox_world" Type="1" Size="24" bHidden="0" Comment="" Instance="r3dBox3D" />
+        <Node Name="bbox_radius" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="selfIllumMultiplier" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="mTransform" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="m_isActive" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ID" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="ownerID" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="CompoundID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="CompoundOffset" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="NetworkLocal" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000005B3" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N000005B4" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="ObjTypeFlags" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ObjFlags" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="bPersistent" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Name" Type="1" Size="12" bHidden="0" Comment="" Instance="r3dString" />
+        <Node Name="FileName" Type="1" Size="12" bHidden="0" Comment="" Instance="r3dString" />
+        <Node Name="oldstate" Type="1" Size="36" bHidden="0" Comment="" Instance="oldstate_s" />
+        <Node Name="time_LifeTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="DrawOrder" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="DrawDistanceSq" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="bLoaded" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000005D6" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N000005D7" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="ownerPrefab" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="serializeFile" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="PhysicsObject" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_bEnablePhysics" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000005DF" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N000005E0" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="PhysicsConfig" Type="1" Size="60" bHidden="0" Comment="" Instance="PhysicsObjectConfig" />
+        <Node Name="RecreatePhysicsObject" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000065F" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000765" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000768" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_BulletPierceable" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Velocity" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="ShadowExData" Type="1" Size="88" bHidden="0" Comment="" Instance="ShadowExtrusionData" />
+        <Node Name="LastShadowExtrusion" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="instancingMeshPtr" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ShadowExDirty" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000788" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000789" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="EditorID" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="PrecalculatedMeshShaderConsts" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="worldViewProj[0]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="worldViewProj[1]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="worldViewProj[2]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="worldViewProj[3]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="scaledWorld[0]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="scaledWorld[1]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="scaledWorld[2]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="normalWorld[0]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="normalWorld[1]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="normalWorld[2]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="scaledWorldView[0]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="scaledWorldView[1]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="scaledWorldView[2]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="normalWorldView[0]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="normalWorldView[1]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="normalWorldView[2]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="texcUnpackScale" Type="24" Size="16" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="SceneBox" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N0000059C" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dBox3D" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="Org" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="Size" Type="23" Size="12" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dString" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="data" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="len" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="maxlen" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="oldstate_s" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="Position" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="Velocity" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="Orientation" Type="23" Size="12" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="PhysicsObjectConfig" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="group" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="type" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mass" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="contactOffset" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="controllerRadius" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="controllerHeight" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="offset" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="isDynamic" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="isKinematic" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="isTrigger" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="isFastMoving" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="isVehicle" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="needBoxCollision" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="needExplicitCollisionMesh" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="canModifyContacts" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="controllerHitCallback" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="controllerBehaviorCallback" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="ready" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="requireNoBounceMaterial" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="isDestroyed" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000005EF" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000063F" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000642" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="meshFilename" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="destroyedMeshFilename" Type="29" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="ShadowExtrusionData" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="ToExtrusionBox" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="MinX" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="MinY" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="MinZ" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxX" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxY" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Extrude" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="ClientGameLogic" Type="28" Comment="" Offset="339828772" strOffset="14416024" Code="">
+        <Node Name="N0000078C" Type="26" Size="4" bHidden="0" Comment="">
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+        </Node>
+        <Node Name="ptrToImpl" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="impl_" Type="8" Size="4" bHidden="0" Comment="" Pointer="r3dNetworkImpl" />
+        <Node Name="dumpStats_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastPing_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="CountofSend" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="devEventItems" Type="27" Size="2304" bHidden="0" Comment="" Total="72">
+            <Array Name="wiInventoryItem" Type="28" Size="32" Comment="" />
+        </Node>
+        <Node Name="devEventItemsCount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="devEventBackpackId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="players2_" Type="27" Size="2048" bHidden="0" Comment="" Total="512">
+            <Array Name="r3dSec_type" Type="28" Size="4" Comment="" />
+        </Node>
+        <Node Name="reserved0" Type="10" Size="4" bHidden="0" Comment="padding that they added on the Feb 25th 2016 update" />
+        <Node Name="reserved1" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="reserved2" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="reserved3" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="CurMaxPlayerIdx" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="reserved4" Type="10" Size="4" bHidden="0" Comment="padding that they added on the Feb 25th 2016 update" />
+        <Node Name="reserved5" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="reserved6" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="reserved7" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="playerNames" Type="27" Size="851968" bHidden="0" Comment="" Total="512">
+            <Array Name="PlayerName_s" Type="28" Size="1664" Comment="" />
+        </Node>
+        <Node Name="net_lastFreeId" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="localPlayerConnectedTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="localPlayer_" Type="1" Size="4" bHidden="0" Comment="" Instance="r3dSec_type" />
+        <Node Name="serverConnected_" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000028CA" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N000028CB" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="serverVersionStatus_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="gameJoinAnswered_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="localPlayerIdx_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="gameStartAnswered_" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000B45" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000B46" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000B47" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="gameStartAnswered_" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000B4A" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000B4B" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="gameStartResult_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_gameInfo" Type="1" Size="52" bHidden="0" Comment="" Instance="GBGameInfo" />
+        <Node Name="m_gameCreatorCustomerID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_gameVoicePwd" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_gameVoiceId" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="gameServerTimeOffset" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="gameStartUtcTime_" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="lastShadowCacheReset_" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="gameStartTime_" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sessionId" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="disconnectStatus_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="disconnectReqTime_" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001413" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="gameShuttedDown_" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="gameDoNotAllowToPlaceObjects" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00002D97" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00002D95" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="nextSecTimeReport_" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="gppDataSeed_" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="d3dCheatSent2_" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00002D9B" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00002D9C" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="nextTimeToSendCameraPos" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000141B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000141C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000141D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000141E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000141F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001420" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001421" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001422" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001423" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001424" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001425" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001426" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001427" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001428" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001429" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000142A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000142B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000142C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000142D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000142E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000142F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001430" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001431" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001432" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001433" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001434" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001435" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001436" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001437" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001438" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001439" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000143A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000143B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000143C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000143D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000143E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000143F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001440" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001441" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001442" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001443" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001444" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001445" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001446" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001447" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001448" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001449" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000144A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000144B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000144C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000144D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000144E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000144F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001450" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001451" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001452" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001453" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001454" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001455" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001456" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001457" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001458" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001459" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000145A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000145B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000145C" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dNetworkImpl" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="networkName" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="peer" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="isHost" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000023EE" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N000023EF" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="peerData" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="maxPeers" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000022C2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000022C3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000022C4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000022C5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000022C6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000022C7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000022C8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000022C9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000022CA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000022CB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023F2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023F3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023F4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023F5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023F6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023F7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023F8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023F9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023FA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023FB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023FC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023FD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023FE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000023FF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002400" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002401" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002402" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002403" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002404" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002405" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002406" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002407" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002408" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002409" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000240A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000240B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000240C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000240D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000240E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000240F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002410" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002411" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002412" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002413" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002414" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002415" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002416" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002417" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002418" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002419" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000241A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000241B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000241C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000241D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000241E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000241F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002420" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00002421" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="wiInventoryItem" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="InventoryID" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="itemID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="quantity" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Var1" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Var2" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Var3" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Var4" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="PlayerName_s" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="reserved0" Type="10" Size="4" bHidden="0" Comment="padding that they added on the Feb 25th 2016 update" />
+        <Node Name="reserved1" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="reserved2" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="reserved3" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="reputation" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="groupFlags" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="clanID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastPosX" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastPosZ" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Gamertag" Type="18" Size="64" bHidden="0" Comment="" />
+        <Node Name="accountFlags" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="c4h_reward" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000026D0" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="c4h_distress" Type="18" Size="1024" bHidden="0" Comment="" />
+        <Node Name="c4h_reward" Type="18" Size="512" bHidden="0" Comment="" />
+        <Node Name="c4h_activeUntil" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="c4h_locX" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="c4h_locZ" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000279E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="voiceClientID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="voiceIsMuted" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="voiceEnabled" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000279D" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000279B" Type="7" Size="1" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="GBGameInfo" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="name" Type="18" Size="32" bHidden="0" Comment="" />
+        <Node Name="mapId" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="maxPlayers" Type="16" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00002D63" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="flags" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="gameServerId" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="gameTimeLimit" Type="16" Size="2" bHidden="0" Comment="" />
+        <Node Name="wut" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="region" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="channel" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00002D73" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00002D74" Type="7" Size="1" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="obj_player" Type="28" Comment="" Offset="1098519020" strOffset="417A11EC" Code="">
+        <Node Name="inheritedObject" Type="1" Size="816" bHidden="0" Comment="" Instance="GameObject" />
+        <Node Name="m_AuraType" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_AuraTransarency" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_SpawnProtectedUntil" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_MinimapTagIconName" Type="18" Size="64" bHidden="0" Comment="" />
+        <Node Name="CurrentSpread" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="physXObstacle" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000014A2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000014AE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="CurrentSpread" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="physXObstacle" Type="1" Size="56" bHidden="0" Comment="" Instance="PxCapsuleObstacle" />
+        <Node Name="N000014B4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000014A7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000014A8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="PhysXObstacleIndex" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="PhysXTerra3WarmUp" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="PhysXObstacleIndex" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="PhysXTerra3WarmUp" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="nextSendCamPosTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastTimeUsedConsumable" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="currentConsumableCooldownTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastTradeRequestedFrom" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="CustomerID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="GroupID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001485" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001473" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001474" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001488" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_EncryptedUserName" Type="1" Size="68" bHidden="0" Comment="" Instance="r3dSec_string" />
+        <Node Name="ClanID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ClanTagColor" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ClanTag" Type="18" Size="10" bHidden="0" Comment="" />
+        <Node Name="N000007D9" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="ClanTagColor" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="ClanTag" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000147C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000147D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_CharIcon" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000015E1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000015E3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="CurLoadout" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009E8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009F4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001467" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="padbitch" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="CurLoadout" Type="1" Size="3088" bHidden="0" Comment="" Instance="wiCharDataFull" />
+        <Node Name="N00000B72" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000849" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000084A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000084B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000084C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_GearWeight" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_enableRendering" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000B70" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000B71" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000007C5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007C6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007C7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007C8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="lifeProperties" Type="1" Size="72" bHidden="0" Comment="" Instance="PlayerLifeProps" />
+        <Node Name="showSlotsInfoTimer" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_ItemSimulateLeftClick" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000BA0" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000BA1" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_OrigBBox" Type="1" Size="24" bHidden="0" Comment="" Instance="r3dBox3D" />
+        <Node Name="preparedToFakeDie" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000BAA" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000BAB" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000007C9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007CA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007CB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007CC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_BarricadeMeshPlacement" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007CD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000958" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000987" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000959" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000095A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000098A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000095B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000095C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000098D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000095D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000095E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000990" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000095F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000960" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000993" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000961" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000962" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000996" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000963" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000964" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000999" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000965" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000966" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000099C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000967" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000968" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000099F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000969" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000096A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009A2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000096B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000096C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009A5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000096D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000096E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009A8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000096F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000970" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009AB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000971" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000972" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009AE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000973" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000974" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009B1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000975" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000976" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009B4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000977" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000978" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009B7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000979" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000097A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009BA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000097B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000097C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009BD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000097D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000097E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009C0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000097F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000980" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009C3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000981" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000982" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009C6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000983" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009C7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000984" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_PhysSkeleton" Type="8" Size="4" bHidden="0" Comment="" Pointer="r3dPhysSkeleton" />
+        <Node Name="m_disablePhysSkeleton" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000094C" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N0000094D" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000080B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000080C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_PhysSkeleton" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_disablePhysSkeleton" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="uberEquip_" Type="8" Size="4" bHidden="0" Comment="" Pointer="CUberEquip" />
+        <Node Name="uberAnim_" Type="8" Size="4" bHidden="0" Comment="" Pointer="CUberAnim" />
+        <Node Name="PlayerState" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="PlayerMoveDir" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="CreatedFromEditor" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="grenadeReadyTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="isFlashlightOn" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000854" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000855" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000835" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000844" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000840" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000841" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_Weapons[0]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_Weapons[1]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_Weapons[2]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_Weapons[3]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_Weapons[4]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_Weapons[5]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_Weapons[6]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_SelectedWeapon" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000843" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_PrevSelectedWeapon" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_isPressedFireTrigger" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_isAiming" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_isChangedAiming1" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_isInScope" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_isFinishedAiming" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000015F8" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N000015F9" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_BloodTimer" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_HitMarkerFadeout" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_HitMarkerTex" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="ActionUI_pressedKeyTimer" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="GameStats.XP" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="GameStats.GD" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="rewards_" Type="18" Size="28" bHidden="0" Comment="" />
+        <Node Name="lastRewardShowTime_" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="bodyAdjust_x" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="bodyAdjust_y[0]" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="bodyAdjust_y[1]" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000856" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000857" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000858" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000859" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="boneId_Bip01_Spine1" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="boneId_Bip01_Spine2" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="boneId_Bip01_Neck" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="boneId_Bip01_LUpperArm" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="boneId_Bip01_RUpperArm" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="boneId_Bip01_Head" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="boneId_Bip01_R_Hand" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="boneId_Bip01_L_Hand" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_SpeedBoost" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_SpeedBoostTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_MorhineShotTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_BandagesEffectTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="plr_local_Velocity" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="plr_local_moving_speed" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Height" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_Stamina" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_StaminaPenaltyTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000085B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000085C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000085D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_StaminaPenaltyTime" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="SniperViewMod" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_isHoldingBreath" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_Breath" Type="1" Size="4" bHidden="0" Comment="" Instance="r3dSec_type" />
+        <Node Name="N00001615" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00001616" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="lastDamageRcvd" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastTimeHit" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastTimeHitBone" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastTimeHitForce" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="BloodEffect" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="bDead" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="TimeOfDeath" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="DeathDamageSource" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="PosOfDeath" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="TimeOfLastRespawn" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Dead_KillerID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="DisableKillerView" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="bCrouch" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="bProne" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="bOnGround" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000087A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000087C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000086C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000086D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="bOnGround" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000877" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000878" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="fHeightAboveGround" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="JumpVelocity" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="JumpStartTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="StartFallingHeight" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="StartFallingTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="pushVelocity" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="pushStartTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="pushedDistance" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="pushedTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="bIsSwimming" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000091F" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000920" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000007A7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007A8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007A9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007AA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007AB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007AC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007AD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007AE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007AF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007B0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007B1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007B2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007B3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007B4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000087F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000880" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000881" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000882" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="RecoilCooldown" Type="1" Size="4" bHidden="0" Comment="" Instance="r3dSec_type" />
+        <Node Name="RecoilViewMod" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="PermRecoilViewMod" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_LastKillTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="RecoilViewModTarget" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="RecoilViewModTarget2" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="ViewAngle" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="RealAcceleration" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="InputAcceleration" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_RemainingSecondWindTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_vVision" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="DrawRotMatrix" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="DrawFullMatrix" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="DrawFullMatrix_Localized" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="MoveMatrix" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="m_fPlayerRotation" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_fPlayerRotationTarget" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="netMover" Type="1" Size="72" bHidden="0" Comment="" Instance="CNetCellMover" />
+        <Node Name="currentVehicle" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="afterRespawnTimer" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastTimeWeaponSwitch" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="padding" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="viewTargetPos" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="viewTargetNorm" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_ReticleTargetScale" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_ReticleCurrentScale" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_isFemaleHero" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000009C4" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N000009C5" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="seatPosition" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Darkness" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="bAllowToUseWeapons" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="isHitByVehicle" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000009CC" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="vehicleViewActive_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_isVoiceActive" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000009D0" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N000009D1" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="footsteps_timeSinceLastMissingHitResult" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="footStepsSnd" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="footstepsSndBaseVolume" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="footStepsArr" Type="27" Size="1536" bHidden="0" Comment="" Total="128">
+            <Array Name="footStepEntry_s" Type="28" Size="12" Comment="" />
+        </Node>
+        <Node Name="footStepsArrCount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="currentFootStepsSoundID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndBreathSprint" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndBreathBaseVolume" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndInPain" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndClothMovementSprint" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndSniperBreath" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndSniperHeartSlow" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndSniperExhale" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndSwimIdle" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndSwimSlow" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndSwim" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndSwimFast" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndSwimIdleId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndSwimSlowId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndSwimId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndSwimFastId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="isPlayerInVehicle" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="hasOpenVehicleRequest" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000CF6" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000CF4" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="currentVehicleId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="camoTimeLine" Type="1" Size="32" bHidden="0" Comment="" Instance="CamoTimeLine" />
+        <Node Name="N00000AC4" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="PxCapsuleObstacle" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="mType" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mUserData" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="mPos" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="mRot" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="mHalfHeight" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="mRadius" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dSec_string" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="crypted" Type="18" Size="64" bHidden="0" Comment="" />
+        <Node Name="length" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="IconValue" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="pObjectInterface" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="Type" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mValue" Type="15" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CUberAnim" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="data_" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="player" Type="8" Size="4" bHidden="0" Comment="" Pointer="obj_player" />
+        <Node Name="anim" Type="1" Size="8308" bHidden="0" Comment="" Instance="r3dAnimation" />
+        <Node Name="reloadAnimTrackID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="recoilAnimTrackID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="turnInPlaceTrackID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="grenadePinPullTrackID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="grenadeThrowTrackID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="shootAnimTrackID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="jumpTrackID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="jumpState" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="jumpPlayerState" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="jumpWeInAir" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00001735" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00001736" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="jumpAirTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="jumpMoveTrackID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="jumpMoveTrackID2" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="AnimPlayerState" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="AnimMoveDir" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="AnimSpeedStates" Type="27" Size="76" bHidden="0" Comment="" Total="19">
+            <Array Name="FLOAT" Type="28" Size="4" Comment="" />
+        </Node>
+        <Node Name="AnimSpeedRunFwd" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001743" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001744" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001745" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001746" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001747" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001748" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001749" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000174A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000174B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000174C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000174D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000174E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000174F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001750" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001751" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CUberEquip" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N000007EF" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dPhysSkeleton" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N000007F5" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CNetCellMover" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="owner" Type="8" Size="4" bHidden="0" Comment="" Pointer="GameObject" />
+        <Node Name="updateDelta" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="nextUpdate" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="cellSize" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastMd" Type="1" Size="28" bHidden="0" Comment="" Instance="netMoveData_s" />
+        <Node Name="lastRecv" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastMove" Type="1" Size="24" bHidden="0" Comment="" Instance="moveData_s" />
+    </Class>
+    <Class Name="netMoveData_s" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="cell" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="pos" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="turnAngle" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="bendAngle" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="state" Type="16" Size="2" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="moveData_s" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="pos" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="turnAngle" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="bendAngle" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="state" Type="16" Size="2" bHidden="0" Comment="" />
+        <Node Name="N000009B9" Type="6" Size="2" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="footStepEntry_s" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="id" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="snd" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="base_volume" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CamoTimeLine" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="transparentCamoAlphaTarget" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="currentTimeSpot" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="transparentCamoAlpha" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="camoMasterTransparency" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastCamoTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="fadeTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="transTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="transparencyOnShock" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dRenderLayer" Type="28" Comment="" Offset="325812260" strOffset="136B8024" Code="">
+        <Node Name="bInited" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Version" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="HLibWin" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="DeviceType" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="pdi" Type="15" Size="4" bHidden="0" Comment="IDirectInput8*" />
+        <Node Name="pd3d" Type="8" Size="4" bHidden="0" Comment="" Pointer="IDirect3D9" />
+        <Node Name="d3dpp" Type="1" Size="56" bHidden="0" Comment="" Instance="D3DPRESENT_PARAMETERS" />
+        <Node Name="pd3ddev" Type="8" Size="4" bHidden="0" Comment="" Pointer="IDirect3DDevice9" />
+        <Node Name="d3dCaps" Type="1" Size="304" bHidden="0" Comment="" Instance="_D3DCAPS9" />
+        <Node Name="CameraPosition" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="DistanceCullRefPos" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="N00001617" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="ViewMatrix" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="InvViewMatrix" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="ProjMatrix" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="ViewProjMatrix" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="InvProjMatrix" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="ViewMatrix_Localized" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="InvViewMatrix_Localized" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="ViewProjMatrix_Localized" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="LocalizationPos" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="FrustumCorners" Type="27" Size="96" bHidden="0" Comment="" Total="8">
+            <Array Name="D3DXVECTOR3" Type="28" Size="12" Comment="" />
+        </Node>
+        <Node Name="FrustumPlanes" Type="27" Size="96" bHidden="0" Comment="" Total="6">
+            <Array Name="D3DXPLANE" Type="28" Size="16" Comment="" />
+        </Node>
+        <Node Name="NearClip" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="FarClip" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_CameraStack" Type="1" Size="12" bHidden="0" Comment="" Instance="TArray" />
+        <Node Name="FirstTexture" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="ThumbnailTextures" Type="1" Size="12" bHidden="0" Comment="" Instance="TArray" />
+        <Node Name="LastThumbUpdated" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="bFullScreen" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="CurrentBPP" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ScreenW" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="ScreenH" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="ScreenW2" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="ScreenH2" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="ViewX" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="ViewY" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="ViewW" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="ViewH" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="ViewMinZ" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="ViewMaxZ" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Fog" Type="1" Size="16" bHidden="0" Comment="" Instance="r3dFogState" />
+        <Node Name="AmbientColor" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="Stats" Type="1" Size="112" bHidden="0" Comment="" Instance="r3dGPUStats" />
+        <Node Name="VertexShaderProfileName" Type="18" Size="16" bHidden="0" Comment="" />
+        <Node Name="PixelShaderProfileName" Type="18" Size="16" bHidden="0" Comment="" />
+        <Node Name="NumPixelShaders" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="PixelShaders" Type="27" Size="528384" bHidden="0" Comment="" Total="1536">
+            <Array Name="r3dPixelShader" Type="28" Size="344" Comment="" />
+        </Node>
+        <Node Name="NumVertexShaders" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="VertexShaders" Type="27" Size="528384" bHidden="0" Comment="" Total="1536">
+            <Array Name="r3dVertexShader" Type="28" Size="344" Comment="" />
+        </Node>
+        <Node Name="CurrentPixelShaderID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="CurrentVertexShaderID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="SupportsVertexTextureFetch" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="SupportsR32FBlending" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="SupportsOQ" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="SupportsEventQueries" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="SupportsStampQueries" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="SupportsNULLRenderTarget" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="SupportsHWShadowMapping" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="SupportsRESZResolve" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="SupportsINTZTextures" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="NVApiActive" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="NVApiStereoMode" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="NVApiStereoHandle" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="ActiveStereoEye" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="AllowNullViewport" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ForceBlackPixelShader" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ForceBlackPixelShaderId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="DeviceAvailable" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="DoubleDepthShadowPath" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ShadowPassType" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="DefaultCullMode" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="CurrentCullMode" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ShadowSliceIndexBit" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00001430" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00001431" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="VertexDecls" Type="1" Size="28" bHidden="0" Comment="" Instance="std::vector" />
+        <Node Name="resources_" Type="1" Size="12" bHidden="0" Comment="" Instance="TArray" />
+        <Node Name="ScreenBuffers_" Type="1" Size="12" bHidden="0" Comment="" Instance="TArray" />
+        <Node Name="deviceLost_" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="allowShaderLoading_" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000144E" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000144C" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="ZRange" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="PresentEye" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="pfnGetVertColor" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="InstanceCount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ActiveCommandCount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="LastIssueActiveCommandsCount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="PendingQuery" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="MainRT" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="MainDSS" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="MainDSSFormat" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="RTs[0]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="RTs[1]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="RTs[2]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="RTs[3]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="DSS" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="sysMemSurfaceForScreenShots" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="sysMemTextureForFrontBufferCopy" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="TexturesToDelete" Type="1" Size="12" bHidden="0" Comment="" Instance="TArray" />
+        <Node Name="FrustumType" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="IDirect3D9" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N0000109D" Type="26" Size="4" bHidden="0" Comment="">
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+        </Node>
+    </Class>
+    <Class Name="D3DPRESENT_PARAMETERS" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="BackBufferWidth" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="BackBufferHeight" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="BackBufferFormat" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="BackBufferCount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="MultiSampleType" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="MultiSampleQuality" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="SwapEffect" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="hDeviceWindow" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="Windowed" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="EnableAutoDepthStencil" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="AutoDepthStencilFormat" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Flags" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="FullScreen_RefreshRateInHz" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="PresentationInterval" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="IDirect3DDevice9" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N000010CF" Type="26" Size="4" bHidden="0" Comment="">
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+        </Node>
+        <Node Name="N000010D0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010D1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010D2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010D3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010D4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010D5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010D6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010D7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010D8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010D9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010DA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010DB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010DC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010DD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010DE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000010DF" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="_D3DCAPS9" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="DeviceType" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="AdapterOrdinal" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Caps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="Caps2" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="Caps3" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="PresentationIntervals" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="CursorCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="DevCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="PrimitiveMiscCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="RasterCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="ZCmpCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="SrcBlendCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="DestBlendCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="AlphaCmpCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="ShadeCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="TextureCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="TextureFilterCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="CubeTextureFilterCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="VolumeTextureFilterCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="TextureAddressCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="VolumeTextureAddressCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="LineCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxTextureWidth" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxTextureHeight" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxVolumeExtent" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxTextureRepeat" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxTextureAspectRatio" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxAnisotropy" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxVertexW" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="GuardBandLeft" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="GuardBandTop" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="GuardBandRight" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="GuardBandBottom" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="ExtentsAdjust" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="StencilCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="FVFCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="TextureOpCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxTextureBlendStages" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxSimultaneousTextures" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="VertexProcessingCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxActiveLights" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxUserClipPlanes" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxVertexBlendMatrices" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxVertexBlendMatrixIndex" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxPointSize" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxPrimitiveCount" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxVertexIndex" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxStreams" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxStreamStride" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="VertexShaderVersion" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxVertexShaderConst" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="PixelShaderVersion" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="PixelShader1xMaxValue" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="DevCaps2" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxNpatchTessellationLevel" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Reserved5" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MasterAdapterOrdinal" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="AdapterOrdinalInGroup" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="NumberOfAdaptersInGroup" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="DeclTypes" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="NumSimultaneousRTs" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="StretchRectFilterCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="VS20Caps" Type="1" Size="16" bHidden="0" Comment="" Instance="D3DVSHADERCAPS2_0" />
+        <Node Name="PS20Caps" Type="1" Size="20" bHidden="0" Comment="" Instance="D3DPSHADERCAPS2_0" />
+        <Node Name="VertexTextureFilterCaps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxVShaderInstructionsExecuted" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxPShaderInstructionsExecuted" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxVertexShader30InstructionSlots" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="MaxPixelShader30InstructionSlots" Type="15" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="D3DVSHADERCAPS2_0" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="Caps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="DynamicFlowControlDepth" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="NumTemps" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="StaticFlowControlDepth" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="D3DPSHADERCAPS2_0" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="Caps" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="DynamicFlowControlDepth" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="NumTemps" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="StaticFlowControlDepth" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="NumInstructionSlots" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="D3DXVECTOR3" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N00001277" Type="23" Size="12" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="D3DXPLANE" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="a" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="b" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="c" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="d" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="TArray" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="mElems" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="mCount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mSpace" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dFogState" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="Enabled" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Color" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="Start" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="End" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dPixelShader" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="m_pShader" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="Name" Type="18" Size="64" bHidden="0" Comment="" />
+        <Node Name="FileName" Type="18" Size="260" bHidden="0" Comment="" />
+        <Node Name="bSystem" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Macros" Type="1" Size="12" bHidden="0" Comment="" Instance="TArray" />
+    </Class>
+    <Class Name="r3dVertexShader" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="m_pShader" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="Name" Type="18" Size="64" bHidden="0" Comment="" />
+        <Node Name="FileName" Type="18" Size="260" bHidden="0" Comment="" />
+        <Node Name="bSystem" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Macros" Type="1" Size="12" bHidden="0" Comment="" Instance="TArray" />
+    </Class>
+    <Class Name="std::vector" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N00001451" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001452" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001453" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001454" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001455" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001456" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001457" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dGPUStats" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="mTexMem" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mPlayerTexMem" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mUITexMem" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mBufferMem" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mUIBufferMem" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mPlayerBufferMem" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mRenderTargetMem" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mTerrainBufferDXMem" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mGrassBufferDXMem" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mOtherBufferDXMem" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mVMemTotal" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumMaterialChanges" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumModesChanges" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumTextureChanges" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumTrianglesRendered" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mAverageStripLength" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumDraws" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumTerrainDraws" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumTerrainTris" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumOcclusionQueries" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumParticlesRendered" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumLocks" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumLocksDiscard" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumLocksNooverwrite" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mBytesLocked" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumVisGridOcclusions" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumDoubleShadowDips" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mNumShadowDips" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dAnimation" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N00001630" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000162F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001632" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001631" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001634" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001633" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="bInited" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="bSkelDirty" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00001647" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00001648" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="pSkeleton" Type="8" Size="4" bHidden="0" Comment="" Pointer="r3dSkeleton" />
+        <Node Name="mRotation" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="vPosition" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="pAnimPool" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="pBoneRemaps" Type="27" Size="8192" bHidden="0" Comment="" Total="2048">
+            <Array Name="PointerToBoneRemap_s" Type="28" Size="4" Comment="" />
+        </Node>
+    </Class>
+    <Class Name="r3dSkeleton" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="pFileName" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="pAdjustBoneCallback" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="dwCallbackData1" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="bLoaded" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="dwSkeletonId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="NumBones" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Bones" Type="8" Size="4" bHidden="0" Comment="" Pointer="r3dBone" />
+        <Node Name="BoneNames" Type="29" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dBone" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="Name" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="iBoneId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="iParentId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="fLength" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="fCollisionRadius" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="mAbsPlacement" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="qRelPlacement" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="vRelPlacement" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="qCur" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="vCur" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="mBonePlacement" Type="25" Size="64" bHidden="0" Comment="" />
+        <Node Name="CurrentTM" Type="25" Size="64" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="PointerToBoneRemap_s" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="pBoneRemap" Type="8" Size="4" bHidden="0" Comment="" Pointer="BoneRemap_s" />
+    </Class>
+    <Class Name="BoneRemap_s" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N0000170A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000170B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000170C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000170D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000170E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000170F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001710" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001711" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001712" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001713" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001714" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001715" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001716" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001717" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001718" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001719" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000171A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000171B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000171C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000171D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000171E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000171F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001720" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001721" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001722" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001723" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001724" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001725" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001726" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001727" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001728" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00001729" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000172A" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="FLOAT" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N00001740" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="wiCharDataFull" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="LoadoutID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Gamertag" Type="18" Size="64" bHidden="0" Comment="" />
+        <Node Name="Hardcore" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="HeroItemID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="HeadIdx" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="BodyIdx" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="LegsIdx" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="BackpackID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Alive" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="DeathUtcTime" Type="18" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000006FC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="SecToRevive" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Health" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Hunger" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Thirst" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Toxic" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="MedBleeding" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="MedFeverCold" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="MedFoodPoison" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="MedBloodInfection" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="GameMapId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="GameServerId" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="GamePos" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="GameDir" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="GameFlags" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="SecFromLastGame" Type="18" Size="8" bHidden="0" Comment="" />
+        <Node Name="stats" Type="1" Size="44" bHidden="0" Comment="" Instance="wiStats" />
+        <Node Name="Skills" Type="27" Size="200" bHidden="0" Comment="" Total="50">
+            <Array Name="INT" Type="28" Size="4" Comment="" />
+        </Node>
+        <Node Name="N00000A72" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="ClanID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ClanRank" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ClanTag" Type="18" Size="10" bHidden="0" Comment="" />
+        <Node Name="N00000A7F" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="ClanTagColor" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="BackpackSize" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="someint" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Items" Type="27" Size="2304" bHidden="0" Comment="" Total="72">
+            <Array Name="wiInventoryItem" Type="28" Size="32" Comment="" />
+        </Node>
+        <Node Name="Attachment[0]" Type="1" Size="32" bHidden="0" Comment="" Instance="wiWeaponAttachment" />
+        <Node Name="Attachment[1]" Type="1" Size="32" bHidden="0" Comment="" Instance="wiWeaponAttachment" />
+        <Node Name="RecipesLearned" Type="27" Size="256" bHidden="0" Comment="" Total="64">
+            <Array Name="INT" Type="28" Size="4" Comment="" />
+        </Node>
+        <Node Name="NumRecipes" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="wiStats" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="XP" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="SpendXP" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="TimePlayed" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Reputation" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="KilledZombies" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="KilledSurvivors" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="KilledBandits" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Deaths" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="ShotsFired" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="ShotsHits" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="ShotsHeadshots" Type="15" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="INT" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="int" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="wiWeaponAttachment" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="attachments" Type="27" Size="32" bHidden="0" Comment="" Total="8">
+            <Array Name="INT" Type="28" Size="4" Comment="" />
+        </Node>
+    </Class>
+    <Class Name="PlayerLifeProps" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="standStillVisiblity" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="walkVisibility" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="runVisibility" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="sprintVisibility" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="swimIdleVisibility" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="swimSlowVisibility" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="swimVisibility" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="swimFastVisibility" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="walkNoise" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="runNoise" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="sprintNoise" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="fireNoise" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="swimSlowNoise" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="swimNoise" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="swimFastNoise" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="smell" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="owner" Type="8" Size="4" bHidden="0" Comment="" Pointer="obj_player" />
+        <Node Name="weaponFired" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000B9C" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000B9D" Type="7" Size="1" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dBox3D" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="Org" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="Size" Type="23" Size="12" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="PhysXWorld" Type="28" Comment="" Offset="212697088" strOffset="CAD8000" Code="">
+        <Node Name="m_needFetchResults" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000715" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000716" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="PhysXFoundation" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="PhysXProfileZoneMgr" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="PhysXSDK" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="PhysXScene" Type="8" Size="4" bHidden="0" Comment="" Pointer="PxScene" />
+        <Node Name="CharacterManager" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="Cooking" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="defaultMaterial" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="noBounceMaterial" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_VehicleManager" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_PlayerObstaclesManager" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_VehicleObstacleManager" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="concurrencyGuard" Type="1" Size="24" bHidden="0" Comment="" Instance="_RTL_CRITICAL_SECTION" />
+        <Node Name="N00000711" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000712" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000713" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="obj_Zombie" Type="28" Comment="" Offset="-2140360116" strOffset="806CB24C" Code="">
+        <Node Name="inheritedObject" Type="1" Size="816" bHidden="0" Comment="" Instance="GameObject" />
+        <Node Name="m_typeIndex" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_isFemale" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_isIdleCrouched" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_isIdleEating" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000076C" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="attackCounter" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="superAttackDir" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndMaxDistScream" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndMaxDistIdle" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndMaxDistChase" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndMaxDistAttack" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndMaxDistAll" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndScreamHandle" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndIdleHandle" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndChaseHandle" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndAttackHandle" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndAttackLength" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndAttackNextPlayTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndDeathHandle" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_sndHurtHandle" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="prevAttackFrame" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="prevWalkFrame" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="prevRunFrame" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="prevSprintFrame" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="gotDebugMove" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000786" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000787" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="dbgAiInfo.from" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007A0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007B1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="dbgAiInfo.to" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007A2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007B4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="CreateParams" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007A4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007B7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007A5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007A6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007BA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007A7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007A8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007BD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007A9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007AA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007C0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007AB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007AC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007C3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007AD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000007AE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="anim_" Type="1" Size="8308" bHidden="0" Comment="" Instance="r3dAnimation" />
+        <Node Name="ZombieAnimState" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ZombieAnimStateLevel" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ZombieAnimGroup" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ZombieReqAnimTimers" Type="1" Size="20" bHidden="0" Comment="" Instance="RequestAnimTimers" />
+        <Node Name="AvgVelocity" Type="1" Size="48" bHidden="0" Comment="" Instance="r3dVectorAverage" />
+        <Node Name="turnInterp" Type="1" Size="48" bHidden="0" Comment="" Instance="r3dSlerpInterpolator" />
+        <Node Name="physSkeletonIndex" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="isPhysInRagdoll" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="wasVisible" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="targetId" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="zombieParts[0]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="zombieParts[1]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="zombieParts[2]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="zombieParts[3]" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="gotLocalBbox" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000134E" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N0000134F" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="netMover" Type="1" Size="72" bHidden="0" Comment="" Instance="CNetCellMover" />
+        <Node Name="PhysXObstacleIndex" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastTimeHitPos" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="lastTimeDmgType" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="lastTimeHitBoneID" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="staggeredTrack" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="attackTrack" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="holdAttackTrack" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="WalkTrack" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="RunTrack" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="SprintTrack" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="walkSpeed" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="SprintTimer" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="SprintFalloffTimer" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="ZombieState" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="bDead" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00001314" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00001315" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="UpdateWarmUp" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="PhysicsOn" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00001310" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00001311" Type="7" Size="1" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dSlerpInterpolator" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="m_start" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="m_finish" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="m_timeToFinish" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_elapsedTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_finishAngle" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_isPaused" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_isFinished" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00001370" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000136E" Type="7" Size="1" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="r3dVectorAverage" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="CurrentSample" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="SetTimer" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="MinTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="Samples[0]" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="Samples[1]" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="Samples[2]" Type="23" Size="12" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="RequestAnimTimers" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="IdleReqTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="WalkReqTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="RunReqTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="SprintReqTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="CurAnimReqTime" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="PKT_S2C_CreateZombie_s" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="spawnID" Type="16" Size="2" bHidden="0" Comment="" />
+        <Node Name="N000013C5" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="spawnPos" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="spawnDir" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="moveCell" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="HeroItemID" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="HeadIdx" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="BodyIdx" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="LegsIdx" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="something" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="State" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="FastZombie" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00001431" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000142F" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="WalkSpeed" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="RunSpeed" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="SprintMaxSpeed" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="SprintMaxTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="SprintSlope" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="SprintCooldownTime" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="PxScene" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="userData" Type="29" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N000007DB" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N000007DC" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N0002425D" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N0002425E" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N00024657" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N00024658" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="PxCapsuleObstacle" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="mType" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="mUserData" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="mPos" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="mRot" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="mHalfHeight" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="mRadius" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000082F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000831" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000830" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N000014DD" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N000014DE" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N00000949" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N0000094A" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N0000094F" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N00000950" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N000009C9" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N000009CA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009CB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009CC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009CD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009CE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009CF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009D0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009D1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009D2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009D3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009D4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009D5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009D6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009D7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009D8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009D9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009DA" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009DB" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009DC" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009DD" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009DE" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009DF" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009E0" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009E1" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009E2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009E3" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009E4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009E5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009E6" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009E7" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009E8" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009E9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000009EA" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N00000866" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N00000867" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N00000884" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N00000885" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+</ReClass>

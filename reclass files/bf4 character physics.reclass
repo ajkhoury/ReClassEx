@@ -1,0 +1,435 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--reclass 2014-->
+    <TypeDef tdHex="char" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="BYTE" tdVec2="D3DXVECTOR2" tdVec3="D3DXVECTOR3" tdQuat="D3DXVECTOR4" tdMatrix="D3DXMATRIX" />
+    <Header Text="" />
+    <Footer Text="" />
+    <Notes Text="" />
+    <Class Name="CharacterPhysicsEntity" Type="28" Comment="" Offset="-1447114128" strOffset="A9BECA70" Code="">
+        <Node Name="VTable" Type="8" Size="8" bHidden="0" Comment="" Pointer="N3611FE1D" />
+        <Node Name="N3611D5FB" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611D5FC" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611D5FD" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611D5FE" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611D5FF" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611D600" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611D601" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B1B7" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B1B8" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B1B9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B1BA" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B1BB" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B1BC" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B1BD" Type="8" Size="8" bHidden="0" Comment="" Pointer="N36334269" />
+        <Node Name="N3612B1BE" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B410" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B411" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="m_GameWorldTransform" Type="8" Size="8" bHidden="0" Comment="" Pointer="LinearTransform" />
+        <Node Name="pad" Type="18" Size="16" bHidden="0" Comment="" />
+        <Node Name="m_currentPose" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_poseTransitionTimer" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_collisionShapes" Type="8" Size="8" bHidden="0" Comment="" Pointer="CharacterPhysicsEntityCollisionShapes" />
+        <Node Name="pad" Type="18" Size="24" bHidden="0" Comment="" />
+        <Node Name="m_currentLocalEyePosition" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="m_mass" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="pad" Type="18" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_data" Type="8" Size="8" bHidden="0" Comment="" Pointer="CharacterPhysicsData" />
+        <Node Name="m_poseData" Type="8" Size="8" bHidden="0" Comment="" Pointer="CharacterPoseData" />
+        <Node Name="unk" Type="8" Size="8" bHidden="0" Comment="" Pointer="N3613FDC6" />
+        <Node Name="unk" Type="8" Size="8" bHidden="0" Comment="" Pointer="N36142611" />
+        <Node Name="N3612B9AF" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B9B0" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B9B1" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B9B2" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B9B3" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B9B4" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612B9B5" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N3611FE1D" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N3611FE1E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611FE1F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611FE20" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611FE21" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611FE22" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611FE23" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611FE24" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3611FE25" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3633015F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36330160" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36330161" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36330162" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36330163" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36330164" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36330165" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36330166" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CharacterPoseData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N3612DB79" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612DB7A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612DB7B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612DB7C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612DB7D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612DB7E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612DB7F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3612DB80" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361390A8" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361390A9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361390AA" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361390AB" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361390AC" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361390AD" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361390AE" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361390AF" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A735" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A736" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A737" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A738" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A739" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A73A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A73B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A73C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A73D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A73E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A73F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A740" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A741" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A742" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A743" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A744" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A745" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A746" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A747" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A748" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A749" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A74A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A74B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A74C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A74D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A74E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A74F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A750" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A751" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A752" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A753" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A754" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A755" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A756" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A757" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A758" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A759" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A75A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A75B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A75C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A75D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A75E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A75F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A760" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A761" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A762" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A763" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A764" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A765" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A766" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A767" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A768" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A769" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A76A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A76B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A76C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A76D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A76E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A76F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A770" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A771" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A772" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A773" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A774" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A775" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A776" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A777" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A778" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A779" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A77A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A77B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A77C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A77D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A77E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A77F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A780" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A781" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A782" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A783" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A784" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A785" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A786" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A787" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A788" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A789" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A78A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A78B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A78C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A78D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A78E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A78F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A790" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A791" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A792" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A793" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A794" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A795" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A796" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A797" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A798" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A799" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A79A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A79B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A79C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A79D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A79E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A79F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7A0" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7A1" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7A2" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7A3" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7A4" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7A5" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7A6" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7A7" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7A8" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7A9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7AA" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7AB" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7AC" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7AD" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7AE" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7AF" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7B0" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7B1" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7B2" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7B3" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613A7B4" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N3613FDC6" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N3613FDC7" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613FDC8" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613FDC9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613FDCA" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613FDCB" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613FDCC" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613FDCD" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3613FDCE" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3614128F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36141290" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36141291" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36141292" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36141293" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36141294" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36141295" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36141296" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N36142611" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N36142612" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36142613" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36142614" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36142615" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36142616" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36142617" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36142618" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36142619" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CharacterPhysicsEntityCollisionShapes" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="pad" Type="18" Size="32" bHidden="0" Comment="" />
+        <Node Name="min" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="max" Type="24" Size="16" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N361777A2" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N361777A3" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361777A4" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361777A5" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361777A6" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361777A7" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361777A8" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361777A9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361777AA" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N36179D93" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N36179D94" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36179D95" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36179D96" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36179D97" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36179D98" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36179D99" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36179D9A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36179D9B" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N3617CB92" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N3617CB93" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617CB94" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617CB95" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617CB96" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617CB97" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617CB98" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617CB99" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617CB9A" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N3617E203" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N3617E204" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617E205" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617E206" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617E207" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617E208" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617E209" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617E20A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3617E20B" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N36186E20" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N36186E21" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36186E22" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36186E23" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36186E24" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36186E25" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36186E26" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36186E27" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36186E28" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N3618C7D3" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N3618C7D4" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3618C7D5" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3618C7D6" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3618C7D7" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3618C7D8" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3618C7D9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3618C7DA" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3618C7DB" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CharacterPhysicsData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="VTable" Type="8" Size="8" bHidden="0" Comment="" Pointer="N362D1514" />
+        <Node Name="m_refCountAndId" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="pad" Type="18" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_AssetName" Type="30" Size="8" bHidden="0" Comment="" />
+        <Node Name="m_Poses" Type="8" Size="8" bHidden="0" Comment="" Pointer="N3621AE8B" />
+        <Node Name="m_States" Type="8" Size="8" bHidden="0" Comment="" Pointer="N3621DF3A" />
+        <Node Name="m_DefaultState" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="pad" Type="18" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pSprint" Type="8" Size="8" bHidden="0" Comment="" Pointer="CharacterSprintData" />
+        <Node Name="m_MaterialPair" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_PushableObjectWeight" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_Mass" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_MaxAscendAngle" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_PhysicalRadius" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_EnterSwimStateDepth" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_ExitSwimStateDepth" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_InputAcceleration" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_LadderAcceptAngle" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_LadderAcceptAnglePitch" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_JumpPenaltyTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_JumpPenaltyFactor" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_RadiusToPredictCollisionOnCharacters" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_AllowPoseChangeDuringTransition" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_AutoPushAwayFromWallsInProne" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N362959FA" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N36294373" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N36225852" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36225853" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N361AC7D6" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N361AC7D7" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="N361AC7D9" Type="24" Size="16" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N361D156C" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N361D156D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361D156E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361D156F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361D1570" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361D1571" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361D1572" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361D1573" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N361D1574" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N3620DD28" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N3620DD29" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3620DD2A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3620DD2B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3620DD2C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3620DD2D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3620DD2E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3620DD2F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3620DD30" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N362106A6" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N362106A7" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362106A8" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362106A9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362106AA" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362106AB" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362106AC" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362106AD" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362106AE" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N3621AE8B" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N3621AE8C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621AE8D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621AE8E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621AE8F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621AE90" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621AE91" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621AE92" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621AE93" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N3621DF3A" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N3621DF3B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621DF3C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621DF3D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621DF3E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621DF3F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621DF40" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621DF41" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3621DF42" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CharacterSprintData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N3622BF1E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3622BF1F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3622BF20" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3622BF21" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3622BF22" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3622BF23" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3622BF24" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3622BF25" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N362C9121" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N362C9122" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362C9123" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362C9124" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362C9125" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362C9126" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362C9127" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362C9128" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362C9129" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N362D1514" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N362D1515" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362D1516" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362D1517" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362D1518" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362D1519" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362D151A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362D151B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N362D151C" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="LinearTransform" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="m_right" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="m_up" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="m_forward" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="m_trans" Type="24" Size="16" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N36334269" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N3633426A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3633426B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3633426C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3633426D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3633426E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N3633426F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36334270" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N36334271" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+</ReClass>

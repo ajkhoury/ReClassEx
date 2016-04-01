@@ -1,0 +1,347 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--ReClass 2015-->
+    <TypeDef tdHex="char" tdInt64="__int64" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="unsigned char" tdFloat="float" tdDouble="double" tdVec2="Vector2" tdVec3="Vector3" tdQuat="Vector4" tdMatrix="matrix3x4_t" tdPChar="char*" />
+    <Header Text="" />
+    <Footer Text="" />
+    <Notes Text="" />
+    <Class Name="CModelLoader" Type="28" Comment="" Offset="269411280" strOffset="100EE3D0" Code="">
+        <Node Name="N00000001" Type="26" Size="4" bHidden="0" Comment="">
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="push esi" />
+                <Code Assembly="mov esi, ecx" />
+                <Code Assembly="lea ecx, dword ptr [esi+04h]" />
+                <Code Assembly="call 0FA0D4E0h" />
+                <Code Assembly="mov dword ptr [esi+5Ch], 00000000h" />
+                <Code Assembly="cmp dword ptr [esi+58h], 00000000h" />
+                <Code Assembly="jl 0FAAB43Ah" />
+                <Code Assembly="mov edx, dword ptr [esi+50h]" />
+                <Code Assembly="test edx, edx" />
+                <Code Assembly="je 0FAAB433h" />
+                <Code Assembly="mov eax, dword ptr [0FD9157Ch]" />
+                <Code Assembly="push edx" />
+                <Code Assembly="mov ecx, dword ptr [eax]" />
+                <Code Assembly="mov eax, dword ptr [ecx]" />
+                <Code Assembly="call dword ptr [eax+14h]" />
+                <Code Assembly="mov dword ptr [esi+50h], 00000000h" />
+                <Code Assembly="mov dword ptr [esi+54h], 00000000h" />
+                <Code Assembly="cmp dword ptr [1019AFC0h], 00000000h" />
+                <Code Assembly="mov eax, dword ptr [esi+50h]" />
+                <Code Assembly="mov dword ptr [esi+60h], eax" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="movzx eax, word ptr [ecx+16h]" />
+                <Code Assembly="ret " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="push ebp" />
+                <Code Assembly="mov ebp, esp" />
+                <Code Assembly="mov edx, dword ptr [ebp+08h]" />
+                <Code Assembly="push esi" />
+                <Code Assembly="mov esi, ecx" />
+                <Code Assembly="test edx, edx" />
+                <Code Assembly="js 0FAAB546h" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="push ebp" />
+                <Code Assembly="mov ebp, esp" />
+                <Code Assembly="mov eax, dword ptr [ebp+08h]" />
+                <Code Assembly="test eax, eax" />
+                <Code Assembly="je 0FAAB561h" />
+                <Code Assembly="add eax, 04h" />
+                <Code Assembly="pop ebp" />
+                <Code Assembly="retn 0004h" />
+                <Code Assembly="xor eax, eax" />
+                <Code Assembly="pop ebp" />
+                <Code Assembly="retn 0004h" />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="push ebp" />
+                <Code Assembly="mov ebp, esp" />
+                <Code Assembly="sub esp, 00000104h" />
+                <Code Assembly="push esi" />
+                <Code Assembly="mov esi, dword ptr [ebp+08h]" />
+                <Code Assembly="test esi, esi" />
+                <Code Assembly="je 0FAABED7h" />
+                <Code Assembly="cmp byte ptr [esi], 00000000h" />
+                <Code Assembly="je 0FAABED7h" />
+                <Code Assembly="push edi" />
+                <Code Assembly="push esi" />
+                <Code Assembly="call 0FAAB570h" />
+                <Code Assembly="mov edx, 0FE15F34h" />
+                <Code Assembly="lea edi, dword ptr [eax+04h]" />
+                <Code Assembly="mov ecx, edi" />
+                <Code Assembly="call 0FC43290h" />
+                <Code Assembly="test eax, eax" />
+                <Code Assembly="jne 0FAABE80h" />
+                <Code Assembly="mov edx, 0FE15F58h" />
+                <Code Assembly="mov ecx, edi" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="push ebp" />
+                <Code Assembly="mov ebp, esp" />
+                <Code Assembly="push dword ptr [ebp+08h]" />
+                <Code Assembly="call 0FAAB570h" />
+                <Code Assembly="mov ecx, dword ptr [ebp+0Ch]" />
+                <Code Assembly="or dword ptr [eax+00000108h], ecx" />
+                <Code Assembly="pop ebp" />
+                <Code Assembly="retn 0008h" />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="int3 " />
+                <Code Assembly="push ebp" />
+                <Code Assembly="mov ebp, esp" />
+                <Code Assembly="and esp, FFFFFFC0h" />
+                <Code Assembly="sub esp, 00000238h" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="push ebp" />
+                <Code Assembly="mov ebp, esp" />
+                <Code Assembly="push ebx" />
+                <Code Assembly="push edi" />
+                <Code Assembly="mov edi, ecx" />
+                <Code Assembly="xor eax, eax" />
+                <Code Assembly="movzx ebx, word ptr [edi+16h]" />
+                <Code Assembly="test ebx, ebx" />
+                <Code Assembly="jle 0FAABF3Fh" />
+                <Code Assembly="push esi" />
+                <Code Assembly="mov esi, dword ptr [ebp+08h]" />
+                <Code Assembly="not esi" />
+                <Code Assembly="mov ecx, dword ptr [edi+08h]" />
+                <Code Assembly="movzx edx, ax" />
+                <Code Assembly="inc eax" />
+                <Code Assembly="add edx, edx" />
+                <Code Assembly="mov ecx, dword ptr [ecx+edx*8+0Ch]" />
+                <Code Assembly="and dword ptr [ecx+00000108h], esi" />
+                <Code Assembly="cmp eax, ebx" />
+                <Code Assembly="jl 0FAABF27h" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="push ebp" />
+                <Code Assembly="mov ebp, esp" />
+                <Code Assembly="push ecx" />
+                <Code Assembly="push esi" />
+                <Code Assembly="mov esi, dword ptr [0FF1E1C4h]" />
+                <Code Assembly="push edi" />
+                <Code Assembly="mov dword ptr [ebp-04h], ecx" />
+                <Code Assembly="mov eax, dword ptr [esi+000000E8h]" />
+                <Code Assembly="cmp eax, 03h" />
+                <Code Assembly="jnl 0FAAC1BEh" />
+                <Code Assembly="cmp eax, 02h" />
+                <Code Assembly="jl 0FAAC1A8h" />
+                <Code Assembly="cmp byte ptr [esi+00004C22h], 00000000h" />
+                <Code Assembly="jne 0FAAC1BEh" />
+                <Code Assembly="cmp dword ptr [10127904h], 01h" />
+                <Code Assembly="mov esi, dword ptr [1019BCC0h]" />
+                <Code Assembly="cmovnl esi, dword ptr [10127B68h]" />
+                <Code Assembly="jmp 0FAAC1C4h" />
+                <Code Assembly="mov esi, dword ptr [esi+000000F8h]" />
+                <Code Assembly="mov eax, ecx" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="push ebp" />
+                <Code Assembly="mov ebp, esp" />
+                <Code Assembly="mov al, byte ptr [ebp+08h]" />
+                <Code Assembly="mov byte ptr [ecx+000001B0h], al" />
+                <Code Assembly="pop ebp" />
+                <Code Assembly="retn 0004h" />
+                <Code Assembly="push ebp" />
+                <Code Assembly="mov ebp, esp" />
+                <Code Assembly="push edi" />
+                <Code Assembly="mov edi, dword ptr [ebp+08h]" />
+                <Code Assembly="test edi, edi" />
+                <Code Assembly="je 0FAAE1D9h" />
+                <Code Assembly="push esi" />
+                <Code Assembly="lea edx, dword ptr [ecx+00000170h]" />
+                <Code Assembly="push 00000040h" />
+                <Code Assembly="lea ecx, dword ptr [edi+04h]" />
+                <Code Assembly="call 0FC43840h" />
+                <Code Assembly="add esp, 04h" />
+                <Code Assembly="lea edx, dword ptr [edi+04h]" />
+                <Code Assembly="mov ecx, edi" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="push ebp" />
+                <Code Assembly="mov ebp, esp" />
+                <Code Assembly="sub esp, 08h" />
+                <Code Assembly="push ebx" />
+                <Code Assembly="mov ebx, dword ptr [0FD91570h]" />
+                <Code Assembly="push esi" />
+                <Code Assembly="push edi" />
+                <Code Assembly="mov edi, ecx" />
+                <Code Assembly="push 0FE16480h" />
+                <Code Assembly="mov dword ptr [ebp-08h], edi" />
+                <Code Assembly="call ebx" />
+                <Code Assembly="movzx eax, word ptr [edi+16h]" />
+                <Code Assembly="add esp, 04h" />
+                <Code Assembly="xor esi, esi" />
+                <Code Assembly="mov dword ptr [ebp-04h], eax" />
+                <Code Assembly="test eax, eax" />
+                <Code Assembly="jle 0FAAE27Fh" />
+                <Code Assembly="jmp 0FAAE210h" />
+                <Code Assembly="lea ecx, dword ptr [ecx+00h]" />
+                <Code Assembly="mov eax, dword ptr [edi+08h]" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="push ebp" />
+                <Code Assembly="mov ebp, esp" />
+                <Code Assembly="push ecx" />
+                <Code Assembly="mov eax, dword ptr [ebp+08h]" />
+                <Code Assembly="push edi" />
+                <Code Assembly="xor edi, edi" />
+                <Code Assembly="mov dword ptr [ebp-04h], ecx" />
+                <Code Assembly="mov eax, dword ptr [eax+00000138h]" />
+                <Code Assembly="cmp dword ptr [eax], edi" />
+                <Code Assembly="jle 0FAAD2F2h" />
+                <Code Assembly="push ebx" />
+                <Code Assembly="push esi" />
+                <Code Assembly="xor ebx, ebx" />
+                <Code Assembly="jmp 0FAAD2B0h" />
+                <Code Assembly="lea ecx, dword ptr [ecx+00h]" />
+                <Code Assembly="mov esi, dword ptr [ecx+50h]" />
+                <Code Assembly="add esi, ebx" />
+                <Code Assembly="mov ecx, esi" />
+                <Code Assembly="call 0FAAC350h" />
+                <Code Assembly="test edi, edi" />
+            </Function>
+        </Node>
+        <Node Name="m_Models" Type="1" Size="28" bHidden="0" Comment="" Instance="CUtlMap" />
+        <Node Name="m_ModelPool" Type="1" Size="48" bHidden="0" Comment="" Instance="CUtlMemoryPool" />
+        <Node Name="m_InlineModels" Type="1" Size="20" bHidden="0" Comment="" Instance="CUtlVector" />
+        <Node Name="m_pWorldModel" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nWorldLights" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="worldbrushdata_t" Type="1" Size="248" bHidden="0" Comment="" Instance="worldbrushdata_t" />
+        <Node Name="unk1" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="pMemStack" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="unk2" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_szLoadName" Type="18" Size="64" bHidden="0" Comment="" />
+        <Node Name="m_bMapRenderInfoLoaded" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_bMapHasHDRLighting" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_szActiveMapName" Type="18" Size="64" bHidden="0" Comment="" />
+        <Node Name="N00000205" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="pad1" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="pad2" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_somevector" Type="1" Size="20" bHidden="0" Comment="" Instance="CUtlVector" />
+    </Class>
+    <Class Name="CUtlVector" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="m_Memory" Type="1" Size="12" bHidden="0" Comment="" Instance="CUtlMemory" />
+        <Node Name="m_Size" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pElements" Type="29" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CUtlMemory" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="m_pMemory" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nAllocationCount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nGrowSize" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CUtlMemoryPool" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="m_BlockSize" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_BlocksPerBlob" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_GrowMode" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_BlocksAllocated" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_PeakAlloc" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nAlignment" Type="16" Size="2" bHidden="0" Comment="" />
+        <Node Name="m_NumBlobs" Type="16" Size="2" bHidden="0" Comment="" />
+        <Node Name="N000000E9" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pszAllocOwner" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C2" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C5" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000C4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000B9" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CUtlMap" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="m_LessFunc" Type="20" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_Elements" Type="1" Size="12" bHidden="0" Comment="" Instance="CUtlMemory" />
+        <Node Name="m_Root" Type="16" Size="2" bHidden="0" Comment="" />
+        <Node Name="m_NumElements" Type="16" Size="2" bHidden="0" Comment="" />
+        <Node Name="m_FirstFree" Type="16" Size="2" bHidden="0" Comment="" />
+        <Node Name="m_LastAlloc" Type="16" Size="2" bHidden="0" Comment="" />
+        <Node Name="m_pElements" Type="29" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="worldbrushdata_t" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="numsubmodels" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="numplanes" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="planes" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numleafs" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="leafs" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numleafwaterdata" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="leafwaterdata" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numvertexes" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="vertexes" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numoccluders" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="occluders" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numoccluderpolys" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="occluderpolys" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numoccludervertindices" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="occludervertindices" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numvertnormalindices" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="vertnormalindices" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numvertnormals" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="vertnormals" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numnodes" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="nodes" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_LeafMinDistToWater" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="numtexinfo" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="texinfo" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numtexdata" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="texdata" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numDispInfos" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="hDispInfos" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numsurfaces" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="surfaces1" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="surfaces2" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="surfacelighting" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="surfacenormals" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="unk1" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="unk2" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numvertindices" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="vertindices" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="nummarksurfaces" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="marksurfaces" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="lightdata" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="unk3" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="numworldlights" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="worldlights" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="shadowzbuffers" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numprimitives" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="primitives" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numprimverts" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="primverts" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="numprimindices" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="primindices" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nAreas" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pAreas" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nAreaPortals" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pAreaPortals" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nClipPortalVerts" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pClipPortalVerts" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pCubemapSamples" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nCubemapSamples" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nDispInfoReferences" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pDispInfoReferences" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pLeafAmbient" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pAmbientSamples" Type="29" Size="4" bHidden="0" Comment="" />
+    </Class>
+</ReClass>

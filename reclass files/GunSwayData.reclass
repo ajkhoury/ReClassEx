@@ -1,0 +1,182 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--reclass 2014-->
+    <TypeDef tdHex="char" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="BYTE" tdVec2="D3DXVECTOR2" tdVec3="D3DXVECTOR3" tdQuat="D3DXVECTOR4" tdMatrix="D3DXMATRIX" />
+    <Header Text="" />
+    <Footer Text="" />
+    <Notes Text="" />
+    <Class Name="ClientSoldierWeapon" Type="28" Comment="" Offset="-1279622112" strOffset="B3BA8420" Code="">
+        <Node Name="N00D7EC0B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="m_data" Type="8" Size="8" bHidden="0" Comment="GunSwayData" Pointer="GunSwayData" />
+        <Node Name="N00D7EC0D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D7EC0E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D7EC0F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D7EC10" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D7EC11" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D7EC12" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D8273F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82740" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82741" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82742" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82743" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82744" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82745" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82746" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82B6C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82B6D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82B6E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82B6F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82B70" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82B71" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82B72" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D82B73" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D843F3" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D843F4" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D843F5" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D843F6" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D843F7" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D843F8" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D843F9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D843FA" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D847D2" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D847D3" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D847D4" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D847D5" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D847D6" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D847D7" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D847D9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D84E6F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D84E70" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D84E71" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D84E72" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D84E73" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D84E74" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D84E75" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D84E76" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D850A8" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D850A9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D850AA" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D850AB" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D850AC" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D850AD" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D850AE" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D850AF" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85810" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85811" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85812" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85813" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85814" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85815" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85816" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85817" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85A3A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85A3B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85A3C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85A3D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85A3E" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85A3F" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85A40" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D85A41" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D86385" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D86386" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D86387" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D86388" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D86389" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D8638A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D8638B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D8638C" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="GunSwayData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N00D9DBF9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00D9DBFA" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="m_Stand" Type="1" Size="280" bHidden="0" Comment="" Instance="GunSwayStandData" />
+        <Node Name="m_Crouch" Type="1" Size="152" bHidden="0" Comment="" Instance="GunSwayCrouchProneData" />
+        <Node Name="m_Prone" Type="1" Size="152" bHidden="0" Comment="" Instance="GunSwayCrouchProneData" />
+        <Node Name="N00DA3DE0" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA3DE1" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA3DE2" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA3DE3" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA3DE4" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA3DE5" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA3DE6" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA43FF" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA4400" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA4401" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA4402" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA4403" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA4405" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA4EE3" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00DA4EE5" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="m_SuppressionModifierUnZoomed" Type="1" Size="68" bHidden="0" Comment="" Instance="GunSwayStanceZoomModifierData" />
+        <Node Name="m_SuppressionModifierZoomed" Type="1" Size="68" bHidden="0" Comment="" Instance="GunSwayStanceZoomModifierData" />
+        <Node Name="m_ModifierUnlocks" Type="8" Size="8" bHidden="0" Comment="" Pointer="GunSwayStanceZoomModifierData" />
+        <Node Name="m_DeviationScaleFactorZoom" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_GameplayDeviationScaleFactorZoom" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_DeviationScaleFactorNoZoom" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_GameplayDeviationScaleFactorNoZoom" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_ShootingRecoilDecreaseScale" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_FirstShotRecoilMultiplier" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_CameraRecoil" Type="9" Size="8" bHidden="0" Comment="CameraRecoilData" />
+    </Class>
+    <Class Name="GunSwayStanceZoomModifierData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="m_DispersionMod" Type="1" Size="16" bHidden="0" Comment="" Instance="GunSwayDispersionModData" />
+        <Node Name="m_MovingDispersionMod" Type="1" Size="16" bHidden="0" Comment="" Instance="GunSwayDispersionModData" />
+        <Node Name="m_SprintingDispersionMod" Type="1" Size="16" bHidden="0" Comment="" Instance="GunSwayDispersionModData" />
+        <Node Name="m_RecoilMangitudeMod" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_RecoilAngleMod" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_FirstShotRecoilMod" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_LagYawMod" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_LagPitchMod" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="GunSwayDispersionModData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="m_MinAngleModifier" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_MaxAngleModifier" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_IncreasePerShotModifier" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_DecreasePerShotModifier" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="GunSwayStandData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="m_NoZoom" Type="1" Size="140" bHidden="0" Comment="" Instance="GunSwayBaseMoveJumpData" />
+        <Node Name="m_Zoom" Type="1" Size="140" bHidden="0" Comment="" Instance="GunSwayBaseMoveJumpData" />
+    </Class>
+    <Class Name="GunSwayBaseMoveJumpData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="m_BaseValue" Type="1" Size="16" bHidden="0" Comment="" Instance="GunSwayDispersionData" />
+        <Node Name="m_Moving" Type="1" Size="16" bHidden="0" Comment="" Instance="GunSwayDispersionData" />
+        <Node Name="m_Jumping" Type="1" Size="16" bHidden="0" Comment="" Instance="GunSwayDispersionData" />
+        <Node Name="m_Sprinting" Type="1" Size="16" bHidden="0" Comment="" Instance="GunSwayDispersionData" />
+        <Node Name="m_VaultingSmallObject" Type="1" Size="16" bHidden="0" Comment="" Instance="GunSwayDispersionData" />
+        <Node Name="m_VaultingMediumObject" Type="1" Size="16" bHidden="0" Comment="" Instance="GunSwayDispersionData" />
+        <Node Name="m_Recoil" Type="1" Size="24" bHidden="0" Comment="" Instance="GunSwayRecoilData" />
+        <Node Name="m_GunSwayLag" Type="1" Size="20" bHidden="0" Comment="" Instance="GunSwayLagData" />
+    </Class>
+    <Class Name="GunSwayDispersionData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="m_MinAngle" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_MaxAngle" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_IncreasePerShot" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_IncreasePerSecond" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="GunSwayRecoilData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="m_RecoilAmplitude" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_RecoilAmplitudeIncPerShot" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_HorizontalRecoilAmplitudeIncPerShotMin" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_HorizontalRecoilAmplitudeIncPerShotMax" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_HorizontalRecoilAmplitudeMax" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_RecoilAmplitudeDecreaseFactor" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="GunSwayLagData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="m_MoveStrafeModifier" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_MoveForwardModifier" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_RotateYawModifier" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_RotatePitchModifier" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_ReleaseModifier" Type="13" Size="4" bHidden="0" Comment="&#x10;o¤@&#x01;" />
+    </Class>
+    <Class Name="GunSwayCrouchProneData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="m_NoZoom" Type="1" Size="76" bHidden="0" Comment="SoldierWeaponBlueprint" Instance="GunSwayBaseMoveData" />
+        <Node Name="m_Zoom" Type="1" Size="76" bHidden="0" Comment="" Instance="GunSwayBaseMoveData" />
+    </Class>
+    <Class Name="GunSwayBaseMoveData" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="m_BaseValue" Type="1" Size="16" bHidden="0" Comment="SoldierWeaponBlueprint" Instance="GunSwayDispersionData" />
+        <Node Name="m_Moving" Type="1" Size="16" bHidden="0" Comment="" Instance="GunSwayDispersionData" />
+        <Node Name="m_Recoil" Type="1" Size="24" bHidden="0" Comment="" Instance="GunSwayRecoilData" />
+        <Node Name="m_GunSwayLag" Type="1" Size="20" bHidden="0" Comment="" Instance="GunSwayLagData" />
+    </Class>
+</ReClass>

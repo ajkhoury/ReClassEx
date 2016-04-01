@@ -1,0 +1,152 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--ReClass 2015-->
+    <TypeDef tdHex="char" tdInt64="__int64" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="unsigned char" tdFloat="float" tdDouble="double" tdVec2="Vector2" tdVec3="Vector3" tdQuat="Vector4" tdMatrix="matrix3x4_t" tdPChar="char*" />
+    <Header Text="" />
+    <Footer Text="" />
+    <Notes Text="" />
+    <Class Name="_PEB" Type="28" Comment="" Offset="2035400704" strOffset="0x00007ff67951c000" Code="">
+        <Node Name="InheritedAddressSpace" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="ReadImageFileExecOptions" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="BeingDebugged" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="BitField" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000005F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="Mutant" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="ImageBaseAddress" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="Ldr" Type="8" Size="8" bHidden="0" Comment="" Pointer="PEB_LDR_DATA" />
+        <Node Name="N00000006" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000007" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000008" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="PEB_LDR_DATA" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="Length" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="BOOLEAN" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000002E" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N0000002F" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="SsHandle" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="InLoadOrderModuleList" Type="1" Size="16" bHidden="0" Comment="" Instance="LIST_ENTRY" />
+        <Node Name="InMemoryOrderModuleList" Type="1" Size="16" bHidden="0" Comment="" Instance="LIST_ENTRY" />
+        <Node Name="InInitializationOrderModuleList" Type="1" Size="16" bHidden="0" Comment="" Instance="LIST_ENTRY" />
+        <Node Name="EntryInProgress" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="ShutdownInProgress" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000053" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="ShutdownThreadId" Type="9" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="LIST_ENTRY" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N00000033" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N0000003A" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N00000035" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N00000036" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N0000003C" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N0000003D" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N0000003F" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N00000040" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N00000042" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N00000043" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000044" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000045" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000046" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000047" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000048" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000049" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N0000004A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N0000004B" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N0000006C" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N0000006D" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N0000006F" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N00000070" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000071" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000072" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000073" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000074" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000075" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000076" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000077" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N00000078" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N0000007D" Type="28" Comment="" Offset="-557779712" strOffset="0x00007ffddec0f500" Code="">
+        <Node Name="N0000007E" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000008A" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000007F" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000008F" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000080" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000091" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000081" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000093" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000082" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000095" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000083" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000097" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000084" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000099" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000085" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000009B" Type="15" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N00000087" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N00000088" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N000000AA" Type="28" Comment="" Offset="-557766376" strOffset="7FFDDEC12918" Code="">
+        <Node Name="N000000AB" Type="18" Size="10" bHidden="0" Comment="" />
+        <Node Name="N000000B6" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000B4" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N000000B5" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N000000AD" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000AE" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000AF" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000B0" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000B1" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000B2" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="N000000B7" Type="28" Comment="" Offset="5513160" strOffset="541FC8" Code="">
+        <Node Name="NextEntryDelta" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="ThreadCount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Reserved1[0]" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Reserved1[1]" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Reserved1[2]" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Reserved1[3]" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Reserved1[4]" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="Reserved1[5]" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="CreateTime" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="UserTime" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="KernelTime" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000BF" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000C2" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000C3" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000C4" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000C5" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000C6" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000C7" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000C8" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000C9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000CA" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000CB" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000CC" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000CD" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000CE" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000CF" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000D0" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000D1" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000D2" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000D3" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000D4" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000D5" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000D6" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000D7" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000D8" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000D9" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000DA" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000DB" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000DC" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000DD" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000DE" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000DF" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000E0" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N000000E1" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+</ReClass>

@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--ReClass 2015-->
+    <TypeDef tdHex="char" tdInt64="__int64" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="unsigned char" tdFloat="float" tdDouble="double" tdVec2="Vector2" tdVec3="Vector3" tdQuat="Vector4" tdMatrix="matrix3x4_t" tdPChar="char*" />
+    <Header Text="" />
+    <Footer Text="" />
+    <Notes Text="" />
+    <Class Name="CSVCMsg_PacketEntities" Type="28" Comment="" Offset="62978468" strOffset="03C0F9A4" Code="">
+        <Node Name="N00000001" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="_cached_size_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="max_entries_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="updated_entries_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="is_delta_" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="update_baseline_" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000002B" Type="7" Size="1" bHidden="1" Comment="" />
+        <Node Name="N00000029" Type="7" Size="1" bHidden="1" Comment="" />
+        <Node Name="baseline_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="entity_data" Type="8" Size="4" bHidden="0" Comment="" Pointer="std::string" />
+        <Node Name="delta_from_" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000009" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000000A" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000030" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000031" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000000B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000000C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000000D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000000E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000000F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000010" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="std::string" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="pData" Type="8" Size="4" bHidden="0" Comment="" Pointer="EntityData" />
+        <Node Name="N00000015" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000016" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000017" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="length" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="size" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000001A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000001B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000001C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000001D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000001E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000001F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000020" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000021" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000022" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000023" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000024" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="EntityData" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N00000037" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000038" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000039" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000003A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000003B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000003C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000003D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000003E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000003F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000040" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000041" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000042" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000043" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000044" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000045" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000046" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000047" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+</ReClass>

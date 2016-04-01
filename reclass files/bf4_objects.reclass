@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--reclass 2014-->
+    <TypeDef tdHex="char" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="BYTE" tdVec2="D3DXVECTOR2" tdVec3="D3DXVECTOR3" tdQuat="D3DXVECTOR4" tdMatrix="D3DXMATRIX" />
+    <Header Text="#ifndef BF4MANAGER_H&#x0D;&#x0A;#define BF4MANAGER_H&#x0D;&#x0A;&#x0D;&#x0A;#include &lt;windows.h&gt;&#x0D;&#x0A;&#x0D;&#x0A;" />
+    <Footer Text="#endif" />
+    <Notes Text="" />
+    <Class Name="CObjectList" Type="28" Comment="" Offset="1108672240" strOffset="14214FEF0" Code="&#x09;static unsigned int Size( )&#x0D;&#x0A;&#x09;{&#x0D;&#x0A;&#x09;&#x09;// 0x1420AE760 has size&#x0D;&#x0A;&#x09;}&#x0D;&#x0A;&#x0D;&#x0A;&#x09;static CObjectList* GetInstance( )&#x0D;&#x0A;&#x09;{&#x0D;&#x0A;&#x09;&#x09;return ( CObjectList* )( 0x14209AEB0 );&#x0D;&#x0A;&#x09;}">
+        <Node Name="N16C87F16" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16C87F17" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16C87F18" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16C87F19" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16C87F1A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16C87F1B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="vec" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="N16CC71B1" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CC71B2" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="m_Collection" Type="27" Size="16000" bHidden="0" Comment="" Total="200">
+            <Array Name="CObjectEntry" Type="28" Size="80" Comment="" />
+        </Node>
+    </Class>
+    <Class Name="CObjectEntry" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="m_pEntity" Type="8" Size="8" bHidden="0" Comment="" Pointer="GameObject" />
+        <Node Name="func1" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="func2" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="func3" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="func4" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CA436A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="m_position" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="m_vec" Type="24" Size="16" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="GameObject" Type="28" Comment="" Offset="1073741824" strOffset="140000000" Code="">
+        <Node Name="N16CA6466" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CA6467" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CA6468" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CA6469" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CA646A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CA646B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CA646C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CA646D" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CD8897" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CD8898" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CD8899" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CD889A" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CD889B" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CD889C" Type="5" Size="8" bHidden="0" Comment="" />
+        <Node Name="N16CD889D" Type="5" Size="8" bHidden="0" Comment="" />
+    </Class>
+</ReClass>

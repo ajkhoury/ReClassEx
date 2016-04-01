@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--reclass 2014-->
+    <TypeDef tdHex="char" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="BYTE" tdVec2="Vec2" tdVec3="Vec3" tdQuat="Vec4" tdMatrix="Mat4" />
+    <Header Text="" />
+    <Footer Text="" />
+    <Notes Text="" />
+    <Class Name="N01FEF12B" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="ghj" Type="9" Size="8" bHidden="0" Comment="" />
+        <Node Name="N01FEF12E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF12F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF130" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF131" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF132" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF133" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF134" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF135" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF136" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF137" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF138" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF139" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF13A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N01FEF13B" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+</ReClass>

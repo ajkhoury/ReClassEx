@@ -1,0 +1,152 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--ReClass 2015-->
+    <TypeDef tdHex="char" tdInt64="__int64" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="unsigned char" tdFloat="float" tdDouble="double" tdVec2="Vector2" tdVec3="Vector3" tdQuat="Vector4" tdMatrix="matrix3x4_t" tdPChar="char*" />
+    <Header Text="" />
+    <Footer Text="" />
+    <Notes Text="" />
+    <Class Name="CViewRender" Type="28" Comment="" Offset="515639144" strOffset="1EBC0768" Code="">
+        <Node Name="N00000001" Type="26" Size="4" bHidden="0" Comment="">
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="1A5032C0  jmp 0x1A48E9F0" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0">
+                <Code Assembly="1A48ECF0  mov eax, dword ptr [0x1ABDDBB8]" />
+                <Code Assembly="1A48ECF5  push esi" />
+                <Code Assembly="1A48ECF6  mov esi, ecx" />
+                <Code Assembly="1A48ECF8  mov ecx, 0x1ABDDBB8" />
+                <Code Assembly="1A48ECFD  call dword ptr [eax+0x08]" />
+                <Code Assembly="1A48ED00  mov eax, dword ptr [0x1EBF4160]" />
+                <Code Assembly="1A48ED05  mov ecx, 0x1EBF4160" />
+                <Code Assembly="1A48ED0A  call dword ptr [eax+0x18]" />
+                <Code Assembly="1A48ED0D  mov dword ptr [esi+0x0000017C], 0x00000000" />
+                <Code Assembly="1A48ED17  mov dword ptr [esi+0x0000045C], 0x00000000" />
+                <Code Assembly="1A48ED21  mov byte ptr [esi+0x000004CC], 0x00000000" />
+                <Code Assembly="1A48ED28  mov dword ptr [esi+0x000004D0], 0x00000000" />
+                <Code Assembly="1A48ED32  mov ecx, dword ptr [esi+0x000002E0]" />
+                <Code Assembly="1A48ED38  test ecx, ecx" />
+                <Code Assembly="1A48ED3A  je 0x1A48ED5E" />
+                <Code Assembly="1A48ED3C  cmp dword ptr [0x1EC77D80], 0x00000000" />
+                <Code Assembly="1A48ED43  je 0x1A48ED54" />
+                <Code Assembly="1A48ED45  mov eax, dword ptr [ecx]" />
+                <Code Assembly="1A48ED47  call dword ptr [eax+0x34]" />
+                <Code Assembly="1A48ED4A  mov dword ptr [esi+0x000002E0], 0x00000000" />
+                <Code Assembly="1A48ED54  mov dword ptr [esi+0x000002E0], 0x00000000" />
+                <Code Assembly="1A48ED5E  mov ecx, 0x1ABDBC60" />
+                <Code Assembly="1A48ED63  call 0x1A4662E0" />
+                <Code Assembly="1A48ED68  mov eax, dword ptr [esi]" />
+                <Code Assembly="1A48ED6A  mov ecx, esi" />
+                <Code Assembly="1A48ED6C  pop esi" />
+                <Code Assembly="1A48ED6D  jmp dword ptr [eax+0x00000080]" />
+            </Function>
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+            <Function Name="" Comment="" bHidden="0" />
+        </Node>
+        <Node Name="m_UserView" Type="1" Size="332" bHidden="0" Comment="" Instance="CViewSetup" />
+        <Node Name="m_bAllowViewAccess" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="pad_0x154" Type="18" Size="40" bHidden="0" Comment="" />
+        <Node Name="m_BuildWorldListsNumber" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_CurrentView" Type="1" Size="332" bHidden="0" Comment="" Instance="CViewSetup" />
+        <Node Name="m_bForceNoVis" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000036F" Type="6" Size="2" bHidden="1" Comment="" />
+        <Node Name="N00000370" Type="7" Size="1" bHidden="1" Comment="" />
+        <Node Name="m_pDrawEntities" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pDrawBrushModels" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_TranslucentSingleColor" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_ModulateSingleColor" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_ScreenOverlayMaterial" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_UnderWaterOverlayMaterial" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_vecLastFacing" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_flCheapWaterStartDistance" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flCheapWaterEndDistance" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_OverlayViewSetup" Type="1" Size="332" bHidden="0" Comment="" Instance="CViewSetup" />
+        <Node Name="m_OverlayClearFlags" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_OverlayDrawFlags" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_bDrawOverlay" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000380" Type="6" Size="2" bHidden="1" Comment="" />
+        <Node Name="N00000381" Type="7" Size="1" bHidden="1" Comment="" />
+        <Node Name="m_BaseDrawFlags" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pCurrentlyDrawingEntity" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_BuildRenderableListsNumber" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_Frustum[0]" Type="1" Size="16" bHidden="0" Comment="" Instance="VPlane" />
+        <Node Name="m_Frustum[1]" Type="1" Size="16" bHidden="0" Comment="" Instance="VPlane" />
+        <Node Name="m_Frustum[2]" Type="1" Size="16" bHidden="0" Comment="" Instance="VPlane" />
+        <Node Name="m_Frustum[3]" Type="1" Size="16" bHidden="0" Comment="" Instance="VPlane" />
+        <Node Name="m_Frustum[4]" Type="1" Size="16" bHidden="0" Comment="" Instance="VPlane" />
+        <Node Name="m_Frustum[5]" Type="1" Size="16" bHidden="0" Comment="" Instance="VPlane" />
+        <Node Name="m_pActiveRenderer" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_SimpleExecutorVtable" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_SimpleExecutorView" Type="8" Size="4" bHidden="0" Comment="" Pointer="CViewRender" />
+        <Node Name="m_flFreezeFrameUntil" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_FadeData" Type="1" Size="20" bHidden="0" Comment="" Instance="FadeData_t" />
+        <Node Name="m_WhiteMaterial" Type="15" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CViewSetup" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="x" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="x_old" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="y" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="y_old" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="width" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="width_old" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="height" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="height_old" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_bOrtho" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000033B" Type="6" Size="2" bHidden="1" Comment="" />
+        <Node Name="N0000033C" Type="7" Size="1" bHidden="1" Comment="" />
+        <Node Name="m_OrthoLeft" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_OrthoTop" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_OrthoRight" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_OrthoBottom" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_bCustomViewMatrix" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000342" Type="6" Size="2" bHidden="1" Comment="" />
+        <Node Name="N00000343" Type="7" Size="1" bHidden="1" Comment="" />
+        <Node Name="m_matCustomViewMatrix[0]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="m_matCustomViewMatrix[1]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="m_matCustomViewMatrix[3]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="pad_0x68" Type="18" Size="72" bHidden="0" Comment="" />
+        <Node Name="fov" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="fovViewmodel" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="origin" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="angles" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="zNear" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="zFar" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="zNearViewmodel" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="zFarViewmodel" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flAspectRatio" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flNearBlurDepth" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flNearFocusDepth" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flFarFocusDepth" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flFarBlurDepth" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flNearBlurRadius" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flFarBlurRadius" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nDoFQuality" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nMotionBlurMode" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flShutterTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_vShutterOpenPosition" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_shutterOpenAngles" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_vShutterClosePosition" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_shutterCloseAngles" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_flOffCenterTop" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flOffCenterBottom" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flOffCenterLeft" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flOffCenterRight" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_EdgeBlur" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="VPlane" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="m_Normal" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_Dist" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="FadeData_t" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="m_flPercentMin" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flPercentMax" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flPixelMin" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flPixelMax" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flWidth" Type="13" Size="4" bHidden="0" Comment="" />
+    </Class>
+</ReClass>

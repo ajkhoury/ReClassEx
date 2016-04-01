@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--ReClass 2015-->
+    <TypeDef tdHex="char" tdInt64="__int64" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="unsigned char" tdFloat="float" tdDouble="double" tdVec2="Vector2" tdVec3="Vector3" tdQuat="Vector4" tdMatrix="matrix3x4_t" tdPChar="char*" />
+    <Header Text="" />
+    <Footer Text="" />
+    <Notes Text="" />
+    <Class Name="GlowObjectDefinition_t" Type="28" Comment="" Offset="714757688" strOffset="2A9A5638" Code="">
+        <Node Name="m_pEntity" Type="29" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_vGlowColor" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_flGlowAlpha" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_hSomeHandle" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="fill1" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flBloomAmount" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="fill2" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_bRenderWhenOccluded" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_bRenderWhenUnoccluded" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_bFullBloomRender" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000046" Type="7" Size="1" bHidden="1" Comment="" />
+        <Node Name="m_nFullBloomStencilTestValue" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="reserved" Type="15" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nSplitScreenSlot" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nNextFreeSlot" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="GlowObjectManager" Type="28" Comment="" Offset="475506660" strOffset="1C57A7E4" Code="">
+        <Node Name="m_GlowObjectDefinitions" Type="1" Size="20" bHidden="0" Comment="" Instance="CUtlVector" />
+        <Node Name="m_nFirstFreeSlot" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="CUtlVector" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="m_Memory" Type="1" Size="12" bHidden="0" Comment="" Instance="CUtlMemory" />
+        <Node Name="m_Size" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_pElements" Type="8" Size="4" bHidden="0" Comment="" Pointer="GlowObjectArray" />
+    </Class>
+    <Class Name="CUtlMemory" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="m_pMemory" Type="8" Size="4" bHidden="0" Comment="" Pointer="GlowObjectDefinition_t" />
+        <Node Name="m_nAllocationCount" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nGrowSize" Type="10" Size="4" bHidden="0" Comment="" />
+    </Class>
+    <Class Name="GlowObjectArray" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="glowObjects" Type="27" Size="7168" bHidden="0" Comment="" Total="128">
+            <Array Name="GlowObjectDefinition_t" Type="28" Size="56" Comment="" />
+        </Node>
+    </Class>
+    <Class Name="N0000007A" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
+        <Node Name="N0000007B" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+</ReClass>

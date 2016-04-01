@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+<ReClass>
+    <!--ReClass 2015-->
+    <TypeDef tdHex="char" tdInt64="__int64" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="unsigned char" tdFloat="float" tdDouble="double" tdVec2="Vector2" tdVec3="Vector3" tdQuat="Vector4" tdMatrix="matrix3x4_t" tdPChar="char*" />
+    <Header Text="" />
+    <Footer Text="" />
+    <Notes Text="" />
+    <Class Name="CViewSetup" Type="28" Comment="" Offset="1501376588" strOffset="597D304C" Code="">
+        <Node Name="x" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nUnscaledX" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="y" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nUnscaledY" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="width" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nUnscaledWidth" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="height" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nUnscaledHeight" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_bOrtho" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000012A" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N0000012B" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_OrthoLeft" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_OrthoTop" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_OrthoRight" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_OrthoBottom" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_bCustomViewMatrix" Type="17" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000131" Type="6" Size="2" bHidden="0" Comment="" />
+        <Node Name="N00000132" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="m_matCustomViewMatrix[0]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="m_matCustomViewMatrix[1]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="m_matCustomViewMatrix[2]" Type="24" Size="16" bHidden="0" Comment="" />
+        <Node Name="N0000001B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000001C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000001D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000001E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000001F" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000020" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000021" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000022" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000023" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000024" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000025" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000026" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000027" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000028" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000029" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000002A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000002B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000002C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="fov" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="fovViewmodel" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="origin" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="angles" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="zNear" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="zFar" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="zNearViewmodel" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="zFarViewmodel" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flAspectRatio" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flNearBlurDepth" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flNearFocusDepth" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flFarFocusDepth" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flFarBlurDepth" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flNearBlurRadius" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flFarBlurRadius" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nDoFQuality" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_nMotionBlurMode" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flShutterTime" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_vShutterOpenPosition" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_shutterOpenAngles" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_vShutterClosePosition" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_shutterCloseAngles" Type="23" Size="12" bHidden="0" Comment="" />
+        <Node Name="m_flOffCenterTop" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flOffCenterBottom" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flOffCenterLeft" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_flOffCenterRight" Type="13" Size="4" bHidden="0" Comment="" />
+        <Node Name="m_EdgeBlur" Type="10" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000054" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000157" Type="30" Size="1" bHidden="0" Comment="" />
+        <Node Name="N0000015A" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000158" Type="7" Size="1" bHidden="0" Comment="" />
+        <Node Name="N00000055" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000056" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000057" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000058" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N00000059" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000005A" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000005B" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000005C" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000005D" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000005E" Type="4" Size="4" bHidden="0" Comment="" />
+        <Node Name="N0000005F" Type="4" Size="4" bHidden="0" Comment="" />
+    </Class>
+</ReClass>
