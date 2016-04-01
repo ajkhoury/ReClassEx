@@ -583,7 +583,7 @@ public:
 
 					if (bAddStr)
 					{
-						txt[64] = '\0';
+						txt[63] = '\0';
 						x = AddText(View, x, y, crChar, NONE, _T("'%hs'"), txt);
 					}
 				}
