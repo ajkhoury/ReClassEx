@@ -27,6 +27,6 @@ New features include:
 
 # How to build
 
-See how to build in the wiki:
+See wiki for instructions on how to compile:
 
 [Reclass Wiki](https://github.com/dude719/Reclass-2015/wiki)
