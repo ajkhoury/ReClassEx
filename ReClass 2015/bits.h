@@ -55,7 +55,6 @@ public:
 		{
 			unsigned char bit = GetBit(i);
 			bits[(length - 1) - i] = bit + 0x30;
-			//printf("%d", bit);
 		}
 
 		bits[size - 1] = '\0';
@@ -69,7 +68,6 @@ public:
 		{
 			unsigned char bit = GetBit(i);
 			bits[i] = bit + 48; // Get ascii representation of bit
-			//printf("%d", bit);
 		}
 
 		bits[size - 1] = '\0';
@@ -116,16 +114,5 @@ private:
 	int length;
 	char* bits;
 };
-
-
-//int main(void) 
-//{
-//	BitArray bits(0xDCAB);
-//	printf("Before rotation: 0x%X\nAfter rotation: 0x%X\n", bits.GetValue(), bits.RotateRight(8, 16));
-//	printf("Bits: ");
-//	bits.PrintBits();
-//	
-//	return 0;
-//}
 
 #endif	/* BITS_H */

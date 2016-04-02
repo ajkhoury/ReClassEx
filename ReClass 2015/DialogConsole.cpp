@@ -58,6 +58,7 @@ CDialogConsole::CDialogConsole(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_DIALOG_CONSOLE, pParent)
 {
 	m_hwndEditWindow = NULL;
+	m_bInited = FALSE;
 }
 
 CDialogConsole::~CDialogConsole()
@@ -128,7 +129,9 @@ BOOL CDialogConsole::OnInitDialog()
 	SendEditor(SCI_SETSEL, 0, 0);
 	//delete[] pText; // free memory
 
-	return FALSE;  // return TRUE unless you set the focus to a control
+	m_bInited = TRUE;
+
+	return TRUE;  // return TRUE unless you set the focus to a control
 }
 
 void CDialogConsole::InitialiseEditor()
@@ -144,7 +147,7 @@ void CDialogConsole::InitialiseEditor()
 	// Did we get the editor window
 	if (!::IsWindow(m_hwndEditWindow))
 	{
-		_tprintf(_T("Unable to create editor window\n"));
+		//PrintOut(_T("Unable to create editor window"));
 		return;
 	}
 

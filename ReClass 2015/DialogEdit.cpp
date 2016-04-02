@@ -91,7 +91,7 @@ void CDialogEdit::InitialiseEditor()
 	// Did we get the editor window
 	if (!::IsWindow(m_hwndEditor))
 	{	
-		_tprintf(_T("Unable to create editor window\n"));
+		PrintOut(_T("Unable to create editor window"));
 		return;
 	}
 

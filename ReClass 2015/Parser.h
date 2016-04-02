@@ -26,7 +26,7 @@
 //	if ( brk == -1 ) 
 //	{
 //		brk = code.Find(_T('{'),  pointer );
-//		_tprintf(_T("<{>"));
+//		PrintOut(_T("<{>"));
 //	};
 //	if ( brk == -1 ) brk = code.Find(_T('}'),  pointer );
 //
@@ -39,7 +39,7 @@
 //	out.Replace(_T("\n"), _T(""));
 //	out.Replace(_T("\r"), _T(""));
 //
-//	_tprintf(_T("%s\n"), out.GetBuffer( ) );
+//	PrintOut(_T("%s\n"), out.GetBuffer( ) );
 //
 //	return brk;
 //}

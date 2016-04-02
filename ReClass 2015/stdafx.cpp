@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "ReClass2015.h"
 
 //Globals
 HANDLE g_hProcess = NULL;
@@ -75,9 +76,9 @@ void ReadMemory(size_t Address, void* Buffer, DWORD Size)
 {
 	if (ReadProcessMemory(g_hProcess, (void*)Address, Buffer, Size, NULL) == 0)
 	{
-		#ifdef _DEBUG
-		_tprintf(_T("[ReadMemory]: Failed to read memory @ %IX GetLastError() = %d\n"), Address, GetLastError());
-		#endif
+		//#ifdef _DEBUG
+		//PrintOut(_T("[ReadMemory]: Failed to read memory @ %IX GetLastError() = %s"), Address, Utils::GetLastErrorString().GetString());
+		//#endif
 		ZeroMemory(Buffer, Size);
 	}
 }
@@ -103,9 +104,9 @@ CString ReadMemoryString(size_t address, SIZE_T max)
 
 	if (ReadProcessMemory(g_hProcess, (PVOID)address, buffer, max, &bytesRead) != 0)
 	{
-		//printf( "Read: %p\n", address );
-		//printf( "Bytes Read: %d\n", bytesRead );
-		//printf( "String %s\n", buffer );
+		//PrintOut( "Read: %p\n", address );
+		//PrintOut( "Bytes Read: %d\n", bytesRead );
+		//PrintOut( "String %s\n", buffer );
 		for (int i = 0; i < bytesRead; i++)
 		{
 			// If not a printable character and is not null terminator replace with '.'
@@ -121,7 +122,7 @@ CString ReadMemoryString(size_t address, SIZE_T max)
 	}
 	else
 	{
-		//printf( "Failed to read memory, GetLastError( )=%p\n", GetLastError( ) );
+		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s"), Utils::GetLastErrorString().GetString());
 		return "..";
 	}
 }
@@ -389,7 +390,7 @@ bool UpdateMemoryMap(void)
 	if (g_hProcess == NULL)
 	{
 		#ifdef _DEBUG
-		wprintf(_T("[UpdateMemoryMap]: Process handle NULL!\n"));
+		PrintOut(_T("[UpdateMemoryMap]: Process handle NULL!"));
 		#endif
 		return 0;
 	}
@@ -397,7 +398,7 @@ bool UpdateMemoryMap(void)
 	{
 		g_hProcess = NULL;
 		#ifdef _DEBUG
-		wprintf(_T("[UpdateMemoryMap]: Process handle invalid!\n"));
+		PrintOut(_T("[UpdateMemoryMap]: Process handle invalid!"));
 		#endif
 		return 0;
 	}
@@ -449,7 +450,7 @@ bool UpdateMemoryMap(void)
 		if (!ProcessInfo)
 		{
 			#ifdef _DEBUG
-			wprintf(_T("[UpdateMemoryMap]: Couldn't allocate heap buffer!\n"));
+			PrintOut(_T("[UpdateMemoryMap]: Couldn't allocate heap buffer!"));
 			#endif
 			return 0;
 		}
@@ -464,7 +465,7 @@ bool UpdateMemoryMap(void)
 		if (!ProcessInfo->PebBaseAddress)
 		{
 			#ifdef _DEBUG
-			printf("[UpdateMemoryMap]: PEB is null! Aborting UpdateExports.\n");
+			PrintOut(_T("[UpdateMemoryMap]: PEB is null! Aborting UpdateExports!"));
 			#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
@@ -476,7 +477,7 @@ bool UpdateMemoryMap(void)
 		if (ReadProcessMemory(g_hProcess, ProcessInfo->PebBaseAddress, &Peb, sizeof(PEB), &dwBytesRead) == 0)
 		{
 			#ifdef _DEBUG
-			printf("[UpdateMemoryMap]: Failed to read PEB! Aborting UpdateExports.\n");
+			PrintOut(_T("[UpdateMemoryMap]: Failed to read PEB! Aborting UpdateExports!"));
 			#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
@@ -488,7 +489,7 @@ bool UpdateMemoryMap(void)
 		if (ReadProcessMemory(g_hProcess, Peb.Ldr, &LdrData, sizeof(LdrData), &dwBytesRead) == 0)
 		{
 			#ifdef _DEBUG
-			printf("[UpdateMemoryMap]: Failed to read PEB Ldr Data! Aborting UpdateExports.\n");
+			PrintOut(_T("[UpdateMemoryMap]: Failed to read PEB Ldr Data! Aborting UpdateExports!"));
 			#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
@@ -504,7 +505,7 @@ bool UpdateMemoryMap(void)
 			if (!ReadProcessMemory(g_hProcess, (void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
 			{
 				#ifdef _DEBUG
-				printf("[UpdateMemoryMap]: Could not read list entry from LDR list. Error = %X\n", GetLastError());
+				PrintOut(_T("[UpdateMemoryMap]: Could not read list entry from LDR list. Error = %s"), Utils::GetLastErrorString().GetString());
 				#endif
 				if (ProcessInfo)
 					HeapFree(hHeap, 0, ProcessInfo);
@@ -547,7 +548,7 @@ bool UpdateMemoryMap(void)
 				Mem.Name = wcsModule;
 				Mem.Path = wcsFullDllName;
 
-				//_tprintf(_T("ModuleBase: %s\nStart: %IX\nEnd: %IX\nSize: %X\nName: %s\nPath: %s\n\n\n"), Mem.Start, Mem.End, Mem.Size, Mem.Name, Mem.Path);
+				PrintOut(_T("%s: %IX"), Mem.Name.GetBuffer(), Mem.Start);
 
 				MemMapModule.push_back(Mem);
 
@@ -588,7 +589,7 @@ bool UpdateMemoryMap(void)
 	else
 	{
 		#ifdef _DEBUG
-		printf("[UpdateExports]: NtQueryInformationProcess failed! Aborting...\n");
+		PrintOut(_T("[UpdateExports]: NtQueryInformationProcess failed! Aborting..."));
 		#endif
 		if (ProcessInfo)
 			HeapFree(hHeap, 0, ProcessInfo);
@@ -636,7 +637,7 @@ bool UpdateExports()
 		if (!ProcessInfo)
 		{
 			#ifdef _DEBUG
-			wprintf(L"Couldn't allocate heap buffer!\n");
+			PrintOut(_T("[UpdateExports]: Couldn't allocate heap buffer!"));
 			#endif
 			return 0;
 		}
@@ -651,7 +652,7 @@ bool UpdateExports()
 		if (!ProcessInfo->PebBaseAddress)
 		{
 			#ifdef _DEBUG
-			wprintf(L"[UpdateExports]: PEB is null! Aborting UpdateExports.\n");
+			PrintOut(_T("[UpdateExports]: PEB is null! Aborting..."));
 			#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
@@ -663,7 +664,7 @@ bool UpdateExports()
 		if (ReadProcessMemory(g_hProcess, ProcessInfo->PebBaseAddress, &Peb, sizeof(PEB), &dwBytesRead) == 0)
 		{
 			#ifdef _DEBUG
-			wprintf(L"[UpdateExports]: Failed to read PEB! Aborting UpdateExports.\n");
+			PrintOut(_T("[UpdateExports]: Failed to read PEB! Aborting UpdateExports."));
 			#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
@@ -675,7 +676,7 @@ bool UpdateExports()
 		if (ReadProcessMemory(g_hProcess, Peb.Ldr, &LdrData, sizeof(LdrData), &dwBytesRead) == 0)
 		{
 			#ifdef _DEBUG
-			wprintf(L"[UpdateExports]: Failed to read PEB Ldr Data! Aborting UpdateExports.\n");
+			PrintOut(_T("[UpdateExports]: Failed to read PEB Ldr Data! Aborting UpdateExports."));
 			#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
@@ -691,7 +692,7 @@ bool UpdateExports()
 			if (!ReadProcessMemory(g_hProcess, (void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
 			{
 				#ifdef _DEBUG
-				wprintf(L"[UpdateExports]: Could not read list entry from LDR list. Error = %X\n", GetLastError());
+				PrintOut(_T("[UpdateExports]: Could not read list entry from LDR list. Error = %s"), Utils::GetLastErrorString().GetString());
 				#endif
 				if (ProcessInfo)
 					HeapFree(hHeap, 0, ProcessInfo);
@@ -755,7 +756,7 @@ bool UpdateExports()
 	else
 	{
 		#ifdef _DEBUG
-		wprintf(L"[UpdateExports]: NtQueryInformationProcess failed! Aborting UpdateExports.\n");
+		PrintOut(_T("[UpdateExports]: NtQueryInformationProcess failed! Aborting..."));
 		#endif
 		if (ProcessInfo)
 			HeapFree(hHeap, 0, ProcessInfo);
@@ -923,17 +924,16 @@ size_t ConvertStrToAddress(CString Address)
 		else
 		{
 			curadd = (size_t)_tcstoui64(a.GetBuffer(), NULL, 16);//StrToNum(a.GetBuffer(), a.GetLength(), 16);
-			//printf( "Final [%p] %d\n", curadd, a.GetLength( ) );
+			//PrintOut(_T("Final [%p] %d"), curadd, a.GetLength( ) );
 		}
 
 		Final += curadd;
 
 		if (bPointer)
 		{
-			//printf( "here2\n" );
 			if (ReadProcessMemory(g_hProcess, (PVOID)Final, &Final, sizeof(Final), NULL) == 0)
 			{
-				_tprintf(_T("[ConvertStrToAddress]: Failed to read memory (stdafx.cpp) GetLastError() = %d\n"), GetLastError());
+				PrintOut(_T("[ConvertStrToAddress]: Failed to read memory (stdafx.cpp) GetLastError() = %s"), Utils::GetLastErrorString().GetString());
 			}
 		}
 	}

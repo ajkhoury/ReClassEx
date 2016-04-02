@@ -79,7 +79,7 @@ public:
 		CNodeBase* pBase = FindPointerByClassId(classId);
 		if (!pBase)
 		{
-			_tprintf(_T("[!] Cannot find class\n"));
+			PrintOut(_T("[!] Cannot find class %d"), classId);
 			return false;
 		}
 

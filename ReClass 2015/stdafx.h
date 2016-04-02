@@ -329,6 +329,12 @@ CString ReadMemoryString(size_t address, SIZE_T max = 40);
 
 #include "Classes.h"
 
+#ifdef _WIN64
+#define CNodeHex CNodeHex64
+#else
+#define CNodeHex CNodeHex32
+#endif
+
 extern DWORD NodeCreateIndex;
 
 __int64 StrToNum(const TCHAR *udata, int udatalen, int base);

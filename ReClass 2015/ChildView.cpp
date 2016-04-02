@@ -565,8 +565,6 @@ void CChildView::OnPaint()
 	Memory.SetSize(classSize);
 	ReadMemory(m_pClass->offset, Memory.pMemory, classSize);
 
-	//printf("Setting address: %p\n", m_pClass->offset);
-
 	ViewInfo View;
 	View.Address = m_pClass->offset;
 	View.pData = Memory.pMemory;
@@ -931,8 +929,6 @@ void CChildView::ReplaceNode(CNodeClass* pClass, UINT idx, CNodeBase* pNewNode)
 	CNodeBase* pOldNode = pClass->Nodes[idx];
 	pNewNode->Name = pOldNode->Name;
 	pNewNode->Comment = pOldNode->Comment;
-
-	//printf( "OFFSET %p ********************************\n ", pOldNode->offset );
 
 	// This looks wrong
 	//if ( pOldNode->offset < 0x140000000 )

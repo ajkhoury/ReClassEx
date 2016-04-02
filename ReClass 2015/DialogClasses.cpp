@@ -85,12 +85,11 @@ void CDialogClasses::OnOK()
 		CString szBuffer = m_ClassViewList.GetItemText(nItem, 0);
 
 		#ifdef _DEBUG
-		_tprintf(_T("nitem %d\n"), nItem);
+		PrintOut(_T("nitem %d"), nItem);
 		#endif
 
 		nItem = FindClassByName(szBuffer.GetBuffer());
 
-		//printf( "szBuffer %s new %d\n", szBuffer.GetBuffer( ), nItem );
 		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
 		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
 		pChild->m_wndView.m_pClass = theApp.Classes[nItem];

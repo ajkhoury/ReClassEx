@@ -92,31 +92,72 @@ __inline int FindModuleByName(const TCHAR* szName)
 	return -1;
 };
 
+__inline CNodeClass* GetClassByName(const TCHAR* szClassName)
+{
+	CNodeClass* pClass = 0;
+	for (unsigned int i = 0; i < theApp.Classes.size(); i++) {
+		if (theApp.Classes[i]->Name == szClassName) {
+			pClass = theApp.Classes[i];
+			break;
+		}
+	}
+	return pClass;
+}
+
 void CDialogModules::OnOK()
 {
 	unsigned numselected = m_ModuleViewList.GetSelectedCount();
 	POSITION pos = m_ModuleViewList.GetFirstSelectedItemPosition();
-	//while (pos)
-	//{
-	//	int nItem = m_ModuleViewList.GetNextSelectedItem(pos);
-	//	CString szBuffer = m_ModuleViewList.GetItemText(nItem, 0);
-	//
-	//	#ifdef _DEBUG
-	//	_tprintf(_T("nitem %d\n"), nItem);
-	//	#endif
-	//
-	//	nItem = FindModuleByName(szBuffer.GetBuffer());
-	//
-	//	//printf( "szBuffer %s new %d\n", szBuffer.GetBuffer( ), nItem );
-	//	CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
-	//	CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
-	//	pChild->m_wndView.m_pClass = theApp.Classes[nItem];
-	//
-	//	// This will get overwritten for each class that is opened
-	//	pChild->SetTitle(MemMapModule[nItem].Name);
-	//	pChild->SetWindowText(MemMapModule[nItem].Name);
-	//	pFrame->UpdateFrameTitleForDocument(MemMapModule[nItem].Name);
-	//}
+	while (pos)
+	{
+		int nItem = m_ModuleViewList.GetNextSelectedItem(pos);
+		CString szBuffer = m_ModuleViewList.GetItemText(nItem, 0);
+	
+		#ifdef _DEBUG
+		PrintOut(_T("nitem %d"), nItem);
+		#endif
+	
+		nItem = FindModuleByName(szBuffer.GetBuffer());
+	
+		//printf( "szBuffer %s new %d\n", szBuffer.GetBuffer( ), nItem );
+		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
+		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
+		CNodeClass* pNewClass = GetClassByName(MemMapModule[nItem].Name);
+		if (!pNewClass)
+		{
+			pNewClass = new CNodeClass;
+
+			CString ClassName = MemMapModule[nItem].Name.Left(MemMapModule[nItem].Name.GetLength() - 4);
+			ClassName += _T("_base");
+			pNewClass->Name = ClassName;
+
+			TCHAR strStart[64];
+			_stprintf(strStart, _T("0x%IX"), MemMapModule[nItem].Start);
+			pNewClass->strOffset = strStart;
+			pNewClass->offset = MemMapModule[nItem].Start;
+
+			pNewClass->idx = (int)theApp.Classes.size();
+
+			theApp.Classes.push_back(pNewClass);
+
+			DWORD offset = 0;
+			for (int i = 0; i < 64 / sizeof(size_t); i++)
+			{
+				CNodeHex* pNode = new CNodeHex;
+				pNode->pParent = pNewClass;
+				pNode->offset = offset;
+				offset += pNode->GetMemorySize();
+				pNewClass->Nodes.push_back(pNode);
+			}
+		}
+
+		pChild->m_wndView.m_pClass = pNewClass; // theApp.Classes[nItem];
+	
+		// This will get overwritten for each class that is opened
+		pChild->SetTitle(MemMapModule[nItem].Name);
+		pChild->SetWindowText(MemMapModule[nItem].Name);
+		pFrame->UpdateFrameTitleForDocument(MemMapModule[nItem].Name);
+	}
 
 	CDialogEx::OnOK();
 }

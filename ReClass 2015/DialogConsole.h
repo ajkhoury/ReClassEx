@@ -47,6 +47,7 @@ public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 
 	LRESULT PrintText(WPARAM wParam, LPARAM lParam);
+	BOOL IsInitialized() { return m_bInited; }
 
 	CString m_strWindowTitle;
 	BOOL m_bVisible;
@@ -57,4 +58,5 @@ private:
 
 	HWND m_hwndEditWindow;
 	CString m_strConsoleText;
+	BOOL m_bInited;
 };

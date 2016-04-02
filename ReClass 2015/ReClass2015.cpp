@@ -50,8 +50,6 @@ CReClass2015App::CReClass2015App()
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
 	SetAppID(_T("ReClass 2015"));
 
-	//PrintOut(_T("%s"), _T("Hello World"))
-
 	FontWidth = 12;
 	FontHeight = 12;
 }
@@ -106,7 +104,6 @@ BOOL CReClass2015App::InitInstance()
 	gbPointers = GetProfileInt(_T("Display"), _T("gbPointers"), gbPointers) > 0 ? true : false;
 	gbClassBrowser = GetProfileInt(_T("Display"), _T("gbClassBrowser"), gbClassBrowser) > 0 ? true : false;
 	gbFilterProcesses = GetProfileInt(_T("Display"), _T("gbFilterProcesses"), gbFilterProcesses) > 0 ? true : false;
-
 
 	// make toggle
 	gbTop = false; //GetProfileInt("Display","gbTop",gbTop) > 0 ? true : false;
@@ -181,11 +178,11 @@ BOOL CReClass2015App::InitInstance()
 	Utils::SetDebugPrivilege(TRUE);
 
 	m_pConsole = new CDialogConsole;
-	m_pConsole->m_strWindowTitle = _T("Debug Console");
+	m_pConsole->m_strWindowTitle = _T("Console");
 	if (m_pConsole->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
 	{
+		// Start hidden
 		m_pConsole->ShowWindow(SW_HIDE);
-		m_pConsole->RunModalLoop();
 	}
 
 	return TRUE;
@@ -197,6 +194,11 @@ int CReClass2015App::ExitInstance()
 		FreeResource(m_hMDIMenu);
 	if (m_hMDIAccel != NULL)
 		FreeResource(m_hMDIAccel);
+
+	if (m_pConsole) {
+		m_pConsole->EndDialog(0);
+		delete m_pConsole;
+	}
 
 	AfxOleTerm(FALSE);
 
@@ -315,9 +317,6 @@ void CReClass2015App::OnFileNew()
 	CMainFrame* pFrame = STATIC_DOWNCAST(CMainFrame, m_pMainWnd);
 	CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, m_hMDIMenu, m_hMDIAccel);
 
-	//char name[64];
-	//sprintf(name,"Class%0.8X",GetTickCount());
-
 	CNodeClass* pClass = new CNodeClass;
 	theApp.Classes.push_back(pClass);
 	pChild->m_wndView.m_pClass = pClass;
@@ -329,11 +328,7 @@ void CReClass2015App::OnFileNew()
 
 	for (int i = 0; i < 64 / sizeof(size_t); i++)
 	{
-#ifdef _WIN64
-		CNodeHex64* pNode = new CNodeHex64;
-#else
-		CNodeHex32* pNode = new CNodeHex32;
-#endif
+		CNodeHex* pNode = new CNodeHex;
 		pNode->pParent = pClass;
 		pClass->Nodes.push_back(pNode);
 	}
@@ -389,11 +384,7 @@ void CReClass2015App::OnFileNew()
 	{
 		// 
 		CNodeArray* pNode = new CNodeArray;
-#ifdef _WIN64
-		CNodeHex64* pNode2 = new CNodeHex64;
-#else
-		CNodeHex32* pNode2 = new CNodeHex32;
-#endif
+		CNodeHex* pNode2 = new CNodeHex;
 		pNode->pNode = pNode2;
 		pClass->Nodes.push_back(pNode);
 	}
@@ -752,11 +743,7 @@ void CReClass2015App::OnButtonNewClass()
 
 	for (int i = 0; i < 64 / sizeof(size_t); i++)
 	{
-#ifdef _WIN64
-		CNodeHex64* pNode = new CNodeHex64;
-#else
-		CNodeHex32* pNode = new CNodeHex32;
-#endif
+		CNodeHex* pNode = new CNodeHex;
 		pNode->pParent = pClass;
 		pClass->Nodes.push_back(pNode);
 	}
@@ -772,13 +759,14 @@ void CReClass2015App::OnButtonConsole()
 
 void CReClass2015App::OnButtonModules()
 {
-	PrintOut(_T("%s"), _T("OnButtonModules called"));
+	PrintOut(_T("OnButtonModules called"));
 	CDialogModules dlg;
 	dlg.DoModal();
 }
 
 void CReClass2015App::OnButtonNotes()
 {
+	PrintOut(_T("OnButtonNotes called"));
 	CDialogEdit dlg;
 	dlg.Title = _T("Notes");
 	dlg.Text = Notes;
@@ -803,6 +791,7 @@ void CReClass2015App::OnButtonParser()
 
 void CReClass2015App::OnButtonHeader()
 {
+	PrintOut(_T("OnButtonHeader called"));
 	CDialogEdit dlg;
 	dlg.Title = _T("Header");
 	dlg.Text = Header;
@@ -812,6 +801,7 @@ void CReClass2015App::OnButtonHeader()
 
 void CReClass2015App::OnButtonFooter()
 {
+	PrintOut(_T("OnButtonFooter called"));
 	CDialogEdit dlg;
 	dlg.Title = _T("Footer");
 	dlg.Text = Footer;
@@ -864,6 +854,8 @@ CNodeBase* CReClass2015App::CreateNewNode(NodeType Type)
 
 void CReClass2015App::SaveXML(TCHAR* FileName)
 {
+	PrintOut(_T("SaveXML(\"%s\") called"), FileName);
+
 	TiXMLDocument doc;
 
 	XMLDeclaration* decl = doc.NewDeclaration(/*"xml version = \"1.0\" encoding=\"UTF-8\""*/);
@@ -1003,7 +995,14 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 	char* szFilename = FileName.GetBuffer();
 #endif
 
-	doc.SaveFile(szFilename);
+	XMLError err = doc.SaveFile(szFilename);
+	if (err == XML_NO_ERROR)
+	{
+		PrintOut(_T("ReClass files saved successfully to \"%s\""), FileName);
+		return;
+	}
+
+	PrintOut(_T("Failed to save file to \"%s\". Error %d"), FileName, err);
 }
 
 void CReClass2015App::OnFileSave()
@@ -1025,6 +1024,8 @@ void CReClass2015App::OnFileSaveAs()
 
 void CReClass2015App::OnFileOpen()
 {
+	PrintOut(_T("OnFileOpen() called"));
+
 	TCHAR Filters[] = _T("ReClass (*.reclass)|*.reclass|All Files (*.*)|*.*||");
 	CFileDialog fileDlg(TRUE, _T("reclass"), _T(""), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, Filters, NULL);
 	if (fileDlg.DoModal() != IDOK)
@@ -1240,6 +1241,8 @@ void CReClass2015App::OnFileOpen()
 
 void CReClass2015App::OnButtonGenerate()
 {
+	PrintOut(_T("OnButtonGenerate() called"));
+
 	CDialogEdit dlg;
 	dlg.Title = _T("Headers");
 
@@ -1477,13 +1480,15 @@ void CReClass2015App::OnButtonGenerate()
 
 void CReClass2015App::DeleteClass(CNodeClass* pClass)
 {
+	PrintOut(_T("DeleteClass(\"%s\") called"), pClass->Name.GetString());
+
 	CNodeBase* pNode = isNodeRef(pClass);
 	if (pNode)
 	{
+		PrintOut(_T("Class still has a reference in %s.%s"), pNode->pParent->Name.GetString(), pNode->Name.GetString());
 		CString msg;
-		_tprintf(_T("Class still has a reference in %s.%s\n"), pNode->pParent->Name.GetString(), pNode->Name.GetString());
 		msg.Format(_T("Class still has a reference in %s.%s"), pNode->pParent->Name.GetString(), pNode->Name.GetString());
-		MessageBox(NULL, msg, _T("Error"), MB_OK);
+		MessageBox(GetMainWnd()->GetSafeHwnd(), msg, _T("Error"), MB_OK);
 		return;
 	}
 	for (UINT i = 0; i < Classes.size(); i++)
@@ -1570,6 +1575,7 @@ void CReClass2015App::OnButtonClean()
 		}
 	}
 
+	PrintOut(_T("Unused Classes removed: %i"), count);
 	CString msg;
 	msg.Format(_T("Unused Classes removed: %i"), count);
 	MessageBox(NULL, msg, _T("Cleaner"), MB_OK);

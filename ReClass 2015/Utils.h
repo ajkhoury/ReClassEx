@@ -19,9 +19,12 @@ namespace Utils
 		return (val % alignment == 0) ? val : (val / alignment + 1) * alignment;
 	}
 
-	static void CreateConsole()
+	static CString GetLastErrorString()
 	{
-		//AllocConsole();
+		DWORD err = GetLastError();
+		TCHAR buf[256];
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf, 256, NULL);
+		return CString(buf);
 	}
 
 	template<class T> 
