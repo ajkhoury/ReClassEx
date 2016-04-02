@@ -1,4 +1,4 @@
-This is a complete port of ReClass to x64. ReClass was originally written by DrUnKeN ChEeTaH, later developed by @P47R!CK and @DogMatt. I will try to continue all the great work they've done over the years. I know there have been previous discussions on mods here and here. I will revisit all those ideas shortly, feel free to recommend any ideas and please post any problems you encounter running ReClass x64.
+This is a complete port of ReClass to x64. ReClass was originally written by DrUnKeN ChEeTaH, later developed by @P47R!CK and @DogMatt. I will try to continue all the great work they've done over the years. I know there have been previous discussions on mods here and there. I will revisit all those ideas shortly, feel free to recommend any ideas and please post any problems you encounter running ReClass.
 
 Contact me by sending a message to dude719 @ unknowncheats.me
 
