@@ -27,18 +27,6 @@
     <None Include="res\output_wnd_hc.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\properties_wnd.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\properties_wnd_hc.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\properties.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\properties_hc.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="res\buttons.bmp">
       <Filter>Resource Files</Filter>
     </None>
@@ -58,12 +46,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\ribbon.mfcribbon-ms">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\Toolbar.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\Toolbar256.bmp">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\icon1.ico">
@@ -138,15 +120,6 @@
     <None Include="..\Images\icon.bmp">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\toolbar1.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\bmp00001.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\bmp00002.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="..\Images\button.bmp">
       <Filter>Resource Files</Filter>
     </None>
@@ -159,13 +132,7 @@
     <None Include="..\Images\camera.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\bitmap1.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="res\ReClass2015.rc2">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\ReClass2015.ico">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\classicon.bmp">
@@ -239,6 +206,12 @@
     <ClInclude Include="DialogAbout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DialogModules.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogConsole.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -271,6 +244,12 @@
     <ClCompile Include="tinyxml2.cpp">
       <Filter>Source Files\XML</Filter>
     </ClCompile>
+    <ClCompile Include="DialogModules.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogConsole.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ReClass2015.rc">
@@ -278,10 +257,19 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\toolbar2.bmp">
+    <Image Include="res\menu_modify.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\menu_modify.bmp">
+    <Image Include="res\home_large.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\home_small.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\mainframe.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\mainframe256.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

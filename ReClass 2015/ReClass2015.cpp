@@ -6,6 +6,7 @@
 #include "ChildFrm.h"
 #include "DialogEdit.h"
 #include "DialogClasses.h"
+#include "DialogModules.h"
 #include "DialogAbout.h"
 #include "Parser.h"
 
@@ -22,6 +23,8 @@ BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx)
 	ON_COMMAND(ID_FILE_IMPORT, &CReClass2015App::OnFileImport)
 	ON_COMMAND(ID_BUTTON_NEWCLASS, &CReClass2015App::OnButtonNewClass)
 	ON_COMMAND(ID_BUTTON_NOTES, &CReClass2015App::OnButtonNotes)
+	ON_COMMAND(ID_BUTTON_CONSOLE, &CReClass2015App::OnButtonConsole) 
+	ON_COMMAND(ID_BUTTON_MODULES, &CReClass2015App::OnButtonModules)
 	ON_COMMAND(ID_BUTTON_PARSER, &CReClass2015App::OnButtonParser)
 	ON_COMMAND(ID_BUTTON_HEADER, &CReClass2015App::OnButtonHeader)
 	ON_COMMAND(ID_BUTTON_FOOTER, &CReClass2015App::OnButtonFooter)
@@ -47,9 +50,7 @@ CReClass2015App::CReClass2015App()
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
 	SetAppID(_T("ReClass 2015"));
 
-	#ifdef _DEBUG
-	Utils::CreateConsole();
-	#endif
+	//PrintOut(_T("%s"), _T("Hello World"))
 
 	FontWidth = 12;
 	FontHeight = 12;
@@ -178,6 +179,14 @@ BOOL CReClass2015App::InitInstance()
 	pFrame->UpdateWindow();
 
 	Utils::SetDebugPrivilege(TRUE);
+
+	m_pConsole = new CDialogConsole;
+	m_pConsole->m_strWindowTitle = _T("Debug Console");
+	if (m_pConsole->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
+	{
+		m_pConsole->ShowWindow(SW_HIDE);
+		m_pConsole->RunModalLoop();
+	}
 
 	return TRUE;
 }
@@ -755,6 +764,18 @@ void CReClass2015App::OnButtonNewClass()
 	CalcOffsets(pClass);
 }
 
+void CReClass2015App::OnButtonConsole()
+{
+	m_pConsole->ShowWindow(SW_SHOW);
+	m_pConsole->SetForegroundWindow();
+}
+
+void CReClass2015App::OnButtonModules()
+{
+	PrintOut(_T("%s"), _T("OnButtonModules called"));
+	CDialogModules dlg;
+	dlg.DoModal();
+}
 
 void CReClass2015App::OnButtonNotes()
 {

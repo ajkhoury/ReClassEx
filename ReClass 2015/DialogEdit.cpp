@@ -34,28 +34,7 @@ static const char g_cppKeyWords[] =
 	"__try __except __finally __unaligned uuid __uuidof "
 	"__virtual_inheritance";
 
-
-
-/// Scintilla Colors structure
-struct SScintillaColors
-{	
-	int			iItem;
-	COLORREF	rgb;
-};
-
-// A few basic colors
-const COLORREF black = RGB( 0, 0, 0 );
-const COLORREF white = RGB( 255, 255, 255 );
-const COLORREF green = RGB( 0, 200, 0 );
-const COLORREF red = RGB( 255, 0, 0 );
-const COLORREF blue = RGB( 0, 0, 255 );
-const COLORREF darkblue = RGB( 0, 0, 100 );
-const COLORREF yellow = RGB( 255, 255, 0 );
-const COLORREF magenta = RGB( 255, 0, 255 );
-const COLORREF cyan = RGB( 0, 255, 255 );
-const COLORREF purple = RGB( 128, 0, 255 );
-
-/// Default color scheme
+// Default color scheme
 static SScintillaColors g_rgbSyntaxCpp[] = 
 {
 	{ SCE_C_COMMENT,		green },
@@ -156,6 +135,8 @@ BOOL CDialogEdit::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	ShowWindow(SW_HIDE);
+
 	CWnd* pWnd = GetDesktopWindow();
 	CenterWindow(pWnd);
 
@@ -206,9 +187,10 @@ void CDialogEdit::SizeEditor()
 	if (m_hwndEditor)
 	{
 		RECT rect;
-		GetClientRect( &rect );
-		CWnd *pWnd = CWnd::FromHandle( m_hwndEditor );
-		if ( pWnd ) pWnd->MoveWindow( &rect );
+		GetClientRect(&rect);
+		CWnd *pWnd = CWnd::FromHandle(m_hwndEditor);
+		if (pWnd)
+			pWnd->MoveWindow(&rect);
 	}
 }
 
@@ -217,7 +199,6 @@ void CDialogEdit::OnSize(UINT nType, int cx, int cy)
 	CDialogEx::OnSize(nType, cx, cy);
 	SizeEditor();
 }
-
 
 void CDialogEdit::OnFileEditoropen()
 {

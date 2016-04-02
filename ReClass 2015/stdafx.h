@@ -40,6 +40,26 @@
 #include "..\\scintilla\\include\\SciLexer.h"
 #include "..\\scintilla\\include\\Scintilla.h"
 
+// A few basic colors for scintilla editor
+const COLORREF black = RGB(0, 0, 0);
+const COLORREF white = RGB(255, 255, 255);
+const COLORREF green = RGB(0, 200, 0);
+const COLORREF red = RGB(255, 0, 0);
+const COLORREF lightred = RGB(255, 100, 100);
+const COLORREF blue = RGB(0, 0, 255);
+const COLORREF darkblue = RGB(0, 0, 100);
+const COLORREF yellow = RGB(255, 255, 0);
+const COLORREF orange = RGB(255, 175, 65);
+const COLORREF magenta = RGB(255, 0, 255);
+const COLORREF cyan = RGB(0, 255, 255);
+const COLORREF purple = RGB(128, 0, 255);
+
+// Scintilla Colors structure
+struct SScintillaColors {
+	int			iItem;
+	COLORREF	rgb;
+};
+
 // Include TinyXml parser
 //#include "tinyxml2_unicode.h"
 #include "tinyxml2.h"
@@ -54,12 +74,13 @@ using namespace tinyxml2;
 // Classes
 #include "CMemory.h"
 
-
 struct MemMapInfo
 {
-	size_t Start;
-	size_t End;
+	size_t  Start;
+	size_t  End;
+	DWORD   Size;
 	CString Name;
+	CString Path;
 	//bool IsModule;
 };
 
@@ -141,9 +162,20 @@ extern CString tdPChar;
 #define WM_MAXITEMS 128
 
 #define WM_CLASSMENU WM_USER
-#define WM_PROCESSMENU (WM_USER+128)
-#define WM_CHANGECLASSMENU (WM_USER+256)
-#define WM_DELETECLASSMENU (WM_USER+384)
+#define WM_PROCESSMENU (WM_USER+WM_MAXITEMS)
+#define WM_CHANGECLASSMENU (WM_USER+WM_MAXITEMS+WM_MAXITEMS)
+#define WM_DELETECLASSMENU (WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS)
+
+
+#define PrintOut(fmt, ...) { \
+do { \
+	static TCHAR s_logbuf[1024]; \
+	if (fmt) { \
+		_sntprintf(s_logbuf, 1024, fmt, ##__VA_ARGS__); \
+		theApp.m_pConsole->SendMessage((WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS+1), (WPARAM)s_logbuf, 0); \
+	} \
+} while (0);\
+}
 
 #define	NONE -1
 #define	HS_NONE -1

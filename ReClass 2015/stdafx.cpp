@@ -513,7 +513,7 @@ bool UpdateMemoryMap(void)
 
 			pLdrCurrentNode = lstEntry.InLoadOrderLinks.Flink;
 
-			if (lstEntry.DllBase != nullptr && lstEntry.SizeOfImage != 0)
+			if (lstEntry.DllBase != NULL /*&& lstEntry.SizeOfImage != 0*/)
 			{
 				unsigned char* ModuleBase = (unsigned char*)lstEntry.DllBase;
 				DWORD ModuleSize = lstEntry.SizeOfImage;
@@ -538,11 +538,17 @@ bool UpdateMemoryMap(void)
 						}
 					} 
 				}
+
 				// module info
 				MemMapInfo Mem;
-				Mem.Start = (DWORD_PTR)ModuleBase;
+				Mem.Start = (size_t)ModuleBase;
 				Mem.End = Mem.Start + ModuleSize;
+				Mem.Size = ModuleSize;
 				Mem.Name = wcsModule;
+				Mem.Path = wcsFullDllName;
+
+				//_tprintf(_T("ModuleBase: %s\nStart: %IX\nEnd: %IX\nSize: %X\nName: %s\nPath: %s\n\n\n"), Mem.Start, Mem.End, Mem.Size, Mem.Name, Mem.Path);
+
 				MemMapModule.push_back(Mem);
 
 				// module code

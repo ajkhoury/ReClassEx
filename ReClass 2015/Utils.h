@@ -19,6 +19,11 @@ namespace Utils
 		return (val % alignment == 0) ? val : (val / alignment + 1) * alignment;
 	}
 
+	static void CreateConsole()
+	{
+		//AllocConsole();
+	}
+
 	template<class T> 
 	__forceinline int NumDigits(T number)
 	{
@@ -111,19 +116,6 @@ namespace Utils
 		}
 		CloseHandle(hToken);
 		return TRUE;
-	}
-
-	static void CreateConsole()
-	{
-		int hConHandle = 0;   
-		HANDLE lStdHandle = 0;  
-		FILE *fp = 0;
-		AllocConsole( );
-		lStdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-		hConHandle = _open_osfhandle(PtrToUlong( lStdHandle ), _O_TEXT);
-		fp = _fdopen(hConHandle, "w");
-		*stdout = *fp;
-		setvbuf(stdout, NULL, _IONBF, 0);
 	}
 
 	static HMODULE GetLocalModuleHandle(const char* moduleName)

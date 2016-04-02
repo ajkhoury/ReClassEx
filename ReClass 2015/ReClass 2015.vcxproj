@@ -285,9 +285,6 @@
     <None Include="..\Images\text.ico" />
     <None Include="..\Images\unsigned.ico" />
     <None Include="..\Images\vector.ico" />
-    <None Include="res\bitmap1.bmp" />
-    <None Include="res\bmp00001.bmp" />
-    <None Include="res\bmp00002.bmp" />
     <None Include="res\buttons.bmp" />
     <None Include="res\classicon.bmp" />
     <None Include="res\filelarge.bmp" />
@@ -296,18 +293,10 @@
     <None Include="res\main.bmp" />
     <None Include="res\output_wnd.ico" />
     <None Include="res\output_wnd_hc.ico" />
-    <None Include="res\properties.bmp" />
-    <None Include="res\properties_hc.bmp" />
-    <None Include="res\properties_wnd.ico" />
-    <None Include="res\properties_wnd_hc.ico" />
-    <None Include="res\ReClass2015.ico" />
     <None Include="res\ReClass2015.rc2" />
     <None Include="res\ribbon.mfcribbon-ms">
       <SubType>Designer</SubType>
     </None>
-    <None Include="res\Toolbar.bmp" />
-    <None Include="res\toolbar1.bmp" />
-    <None Include="res\Toolbar256.bmp" />
     <None Include="res\writelarge.bmp" />
     <None Include="res\writesmall.bmp" />
   </ItemGroup>
@@ -321,7 +310,9 @@
     <ClInclude Include="CMemory.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DialogClasses.h" />
+    <ClInclude Include="DialogConsole.h" />
     <ClInclude Include="DialogEdit.h" />
+    <ClInclude Include="DialogModules.h" />
     <ClInclude Include="DialogTypes.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="nt_ddk.h" />
@@ -339,7 +330,9 @@
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="DialogClasses.cpp" />
+    <ClCompile Include="DialogConsole.cpp" />
     <ClCompile Include="DialogEdit.cpp" />
+    <ClCompile Include="DialogModules.cpp" />
     <ClCompile Include="DialogTypes.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="ReClass2015.cpp" />
@@ -355,15 +348,18 @@
     <ResourceCompile Include="ReClass2015.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\home_large.bmp" />
+    <Image Include="res\home_small.bmp" />
+    <Image Include="res\mainframe.bmp" />
+    <Image Include="res\mainframe256.bmp" />
     <Image Include="res\menu_modify.bmp" />
-    <Image Include="res\toolbar2.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties RESOURCE_FILE="ReClass 2015.rc" />
+      <UserProperties RESOURCE_FILE="" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

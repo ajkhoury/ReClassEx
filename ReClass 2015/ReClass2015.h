@@ -5,6 +5,8 @@
 #endif
 
 #include "resource.h"       // main symbols
+// Console
+#include "DialogConsole.h"
 
 class CReClass2015App : public CWinAppEx
 {
@@ -19,6 +21,8 @@ public:
 	std::vector<CNodeClass*> Classes;
 
 	CString CurrentFilePath;
+
+	CDialogConsole* m_pConsole;
 
 // Overrides
 	virtual BOOL InitInstance();
@@ -57,6 +61,8 @@ public:
 	afx_msg void OnFileImport();
 	afx_msg void OnButtonNewClass();
 	afx_msg void OnButtonNotes();
+	afx_msg void OnButtonConsole();
+	afx_msg void OnButtonModules();
 	afx_msg void OnButtonParser();
 	afx_msg void OnButtonHeader();
 	afx_msg void OnButtonFooter();
