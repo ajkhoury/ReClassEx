@@ -34,24 +34,7 @@ DWORD __stdcall WaitThread( LPVOID lpParam )
 
 void Pause()
 {
-	printf("\n\nPress the space bar to continue...\n");
 	WaitForSingleObject( CreateThread( 0, 0, WaitThread, 0, 0, 0 ), INFINITE );
-}
-
-std::wstring widestring( const std::string &text )
-{
-	std::wstring result;
-	result.resize( text.length() );
-	mbstowcs( &result[0], &text[0], text.length() ); 
-	return result;
-}
-
-std::string narrowstring( const std::wstring &text )
-{
-	std::string result;
-	result.resize( text.length( ) );
-	wcstombs( &result[0], &text[0], text.length( ) );
-	return result;
 }
 
 bool is_number( const std::string& s )

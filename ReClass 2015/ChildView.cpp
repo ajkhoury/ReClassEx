@@ -1288,9 +1288,7 @@ void CChildView::ReplaceSelectedWithType(NodeType Type)
 {
 	std::vector<CNodeBase*> newSelected;
 
-#ifndef NDEBUG
-	printf("Replace Node Type %s\n", NodeTypeToString(Type));
-#endif
+	PrintOut(_T("Replace Node Type %s"), NodeTypeToString(Type));
 
 	for (UINT i = 0; i < Selected.size(); i++)
 	{
@@ -1318,8 +1316,6 @@ void CChildView::ReplaceSelectedWithType(NodeType Type)
 		}
 		if (Type == nt_pointer)
 		{
-			//printf( "Create POINTER******\n" );
-
 			CNodePtr*	pPtr = (CNodePtr*)pNewNode;
 			CNodeClass* pClass = (CNodeClass*)theApp.CreateNewNode(nt_class);
 			MakeBasicClass(pClass);

@@ -16,6 +16,10 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
+	afx_msg void OnEnChangeModuleName();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnDblclkListControl(NMHDR* pNMHDR, LRESULT* pResult);
+
 private:
 	enum
 	{
@@ -34,11 +38,10 @@ public:
 	CString					m_Filter;
 	std::vector<HICON>		m_hModuleIcons;
 
+	void SetSelected();
+
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	virtual int AddData(int Index, LPTSTR ModuleName, LPTSTR StartAddress, LPTSTR EndAddress, LPTSTR ModuleSize, LPARAM lParam);
 	virtual void BuildList();
-
-	afx_msg void OnEnChangeModuleName();
-	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

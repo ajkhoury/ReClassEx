@@ -31,6 +31,7 @@ void CDialogModules::OnSize(UINT nType, int cx, int cy)
 }
 
 BEGIN_MESSAGE_MAP(CDialogModules, CDialogEx)
+	ON_NOTIFY(NM_DBLCLK, IDC_MODULELIST, OnDblclkListControl)
 	ON_EN_CHANGE(IDC_MODULENAME, &CDialogModules::OnEnChangeModuleName)
 END_MESSAGE_MAP()
 
@@ -104,7 +105,7 @@ __inline CNodeClass* GetClassByName(const TCHAR* szClassName)
 	return pClass;
 }
 
-void CDialogModules::OnOK()
+void CDialogModules::SetSelected()
 {
 	unsigned numselected = m_ModuleViewList.GetSelectedCount();
 	POSITION pos = m_ModuleViewList.GetFirstSelectedItemPosition();
@@ -112,27 +113,26 @@ void CDialogModules::OnOK()
 	{
 		int nItem = m_ModuleViewList.GetNextSelectedItem(pos);
 		CString szBuffer = m_ModuleViewList.GetItemText(nItem, 0);
-	
-		#ifdef _DEBUG
-		PrintOut(_T("nitem %d"), nItem);
-		#endif
-	
+
 		nItem = FindModuleByName(szBuffer.GetBuffer());
-	
+
 		//printf( "szBuffer %s new %d\n", szBuffer.GetBuffer( ), nItem );
 		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
 		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
-		CNodeClass* pNewClass = GetClassByName(MemMapModule[nItem].Name);
+		
+		CString ClassName = MemMapModule[nItem].Name.Left(MemMapModule[nItem].Name.GetLength() - 4);
+		ClassName += _T("_base");
+
+		CNodeClass* pNewClass = GetClassByName(ClassName);
 		if (!pNewClass)
 		{
 			pNewClass = new CNodeClass;
 
-			CString ClassName = MemMapModule[nItem].Name.Left(MemMapModule[nItem].Name.GetLength() - 4);
-			ClassName += _T("_base");
+			
 			pNewClass->Name = ClassName;
 
 			TCHAR strStart[64];
-			_stprintf(strStart, _T("0x%IX"), MemMapModule[nItem].Start);
+			_stprintf(strStart, _T("%IX"), MemMapModule[nItem].Start);
 			pNewClass->strOffset = strStart;
 			pNewClass->offset = MemMapModule[nItem].Start;
 
@@ -151,14 +151,26 @@ void CDialogModules::OnOK()
 			}
 		}
 
-		pChild->m_wndView.m_pClass = pNewClass; // theApp.Classes[nItem];
-	
-		// This will get overwritten for each class that is opened
-		pChild->SetTitle(MemMapModule[nItem].Name);
-		pChild->SetWindowText(MemMapModule[nItem].Name);
-		pFrame->UpdateFrameTitleForDocument(MemMapModule[nItem].Name);
-	}
+		pChild->m_wndView.m_pClass = pNewClass;
 
+		// This will get overwritten for each module that is selected
+		pChild->SetTitle(ClassName);
+		pChild->SetWindowText(ClassName);
+		pFrame->UpdateFrameTitleForDocument(ClassName);
+	}
+}
+
+void CDialogModules::OnDblclkListControl(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	UNREFERENCED_PARAMETER(pNMHDR);
+	UNREFERENCED_PARAMETER(pResult);
+	SetSelected();
+	CDialogEx::OnOK();
+}
+
+void CDialogModules::OnOK()
+{
+	SetSelected();
 	CDialogEx::OnOK();
 }
 
