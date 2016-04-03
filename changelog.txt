@@ -1,9 +1,29 @@
-This is a complete port of ReClass to x64. ReClass was originally written by DrUnKeN ChEeTaH, later developed by @P47R!CK and @DogMatt. I will try to continue all the great work they've done over the years. I know there have been previous discussions on mods here and here. I will revisit all those ideas shortly, feel free to recommend any ideas and please post any problems you encounter running ReClass x64.
+This is a complete port of ReClass to x64. ReClass was originally written by DrUnKeN ChEeTaH, later developed by @P47R!CK and @DogMatt. I will try to continue all the great work they've done over the years. I know there have been previous discussions on mods here and there. I will revisit all those ideas shortly, feel free to recommend any ideas and please post any problems you encounter running ReClass.
 
-Contact me by sending a message to IChooseYou @ unknowncheats.me
+Contact me by sending a message to dude719 @ unknowncheats.me
+
+[version 1.0.1]
+- Up and down arrow hotkeys to switch nodes
+- Delete hotkey to delete selected nodes
+- Delete button to delete selected nodes
+- Right click quick modify menu
+- Hex 64 type
+- Insert 2048 bytes
+- New icons for some types
+- Fixed syntax highlighting for 64 bit when generating code
+- Fixed array sizes when loading .reclass files
+- Added more themes
+- Colorful tabs with sexy border
+- Added RTTI info for pointers
+- Cleaned up RTTI and made the RTTI string editable
+- Made addresses edittable for copy & pasting
+- Added memory swap option to switch endianness: thanks buddyfavors
+- Added Bits type for a bit view instead of text
+- Added ability to input module names in address node (e.g. 'reclass.exe+0x40')
+- Added Module list with the ability to create a new class at module start address
+- Added Console dialog with syntax highlighting
 
 [version 0.1b]
-
 - ribbon items have been slightly re-ordered
 - added a PCHAR type
 - fixed pasting issue where characters ended up being truncated, the subclassed edit control is now created with the ES_AUTOHSCROLL style

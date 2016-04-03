@@ -2,7 +2,7 @@
 
 ReClass 2015
 
-![Alt text](/Images/reclass.png?raw=true "Optional Title")
+![Alt text](/Images/reclass.png?raw=true "ReClass")
 
 Cleaned up the code a bit and added some new features. Also got rid of a ton of bugs still crawling around.
 
@@ -24,6 +24,11 @@ New features include:
 - Added memory swap option to switch endianness: thanks buddyfavors
 - Added Bits type for a bit view instead of text
 - Added ability to input module names in address node (e.g. 'reclass.exe+0x40')
+- Added Module list with the ability to create a new class at module start address
+- Added Console dialog with syntax highlighting
+
+
+![Alt text](/Images/reclass2.png?raw=true "ReClass")
 
 # How to build
 
