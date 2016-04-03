@@ -40,9 +40,9 @@ See wiki for instructions on how to compile:
 - DrUnKeN ChEeTaH
 - P47R!CK
 - DogMatt
-- Dude719
-- IChooseYou
+- [Dude719](https://github.com/dude719)
+- [IChooseYou](https://github.com/IChooseYou)
 - [stevemk14ebr](https://github.com/stevemk14ebr)
-- Timboy67678
+- [Timboy67678](https://github.com/Timboy67678)
 - leveln
 - buddyfavors
