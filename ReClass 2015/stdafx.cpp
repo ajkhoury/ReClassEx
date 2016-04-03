@@ -3,9 +3,8 @@
 
 //Globals
 HANDLE g_hProcess = NULL;
-DWORD ProcessID = NULL;
-
-size_t ProcessBaseAddress = NULL;
+DWORD g_ProcessID = NULL;
+size_t g_AttachedProcessAddress = NULL;
 
 std::vector<MemMapInfo> MemMap;
 std::vector<MemMapInfo> MemMapCode;
@@ -212,7 +211,7 @@ bool PauseResumeThreadList(bool bResumeThread)
 size_t GetBase()
 {
 	if (MemMap.size() > 1)
-		return ProcessBaseAddress;
+		return g_AttachedProcessAddress;
 	#ifdef _WIN64
 	return 0x140000000;
 	#else
@@ -530,12 +529,12 @@ bool UpdateMemoryMap(void)
 							wcsModule = wcsrchr(wcsFullDllName, L'/');
 						wcsModule++;
 
-						if (ProcessBaseAddress == NULL)
+						if (g_AttachedProcessAddress == NULL)
 						{
 							wchar_t filename[MAX_PATH];
 							GetModuleFileNameExW(g_hProcess, NULL, filename, MAX_PATH);
 							if (_wcsicmp(filename, wcsFullDllName) == 0)
-								ProcessBaseAddress = (size_t)ModuleBase;
+								g_AttachedProcessAddress = (size_t)ModuleBase;
 						}
 					} 
 				}

@@ -95,8 +95,8 @@ struct AddressName
 
 // Globals
 extern HANDLE g_hProcess;
-extern DWORD ProcessID;
-extern size_t ProcessBaseAddress;
+extern DWORD g_ProcessID;
+extern size_t g_AttachedProcessAddress;
 
 extern std::vector<MemMapInfo> MemMap;
 extern std::vector<MemMapInfo> MemMapCode;

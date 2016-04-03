@@ -73,6 +73,8 @@ public:
 	afx_msg void OnUpdateButtonResume(CCmdUI *pCmdUI);
 	afx_msg void OnButtonKill();
 	afx_msg void OnUpdateButtonKill(CCmdUI *pCmdUI);
+	afx_msg void OnButtonSearch();
+	afx_msg void OnUpdateButtonSearch(CCmdUI *pCmdUI);
 	afx_msg void OnButtonGenerate();
 	afx_msg void OnButtonClean();
 	afx_msg void OnUpdateButtonClean(CCmdUI *pCmdUI);

@@ -23,6 +23,7 @@ BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx)
 	ON_COMMAND(ID_FILE_IMPORT, &CReClass2015App::OnFileImport)
 	ON_COMMAND(ID_BUTTON_NEWCLASS, &CReClass2015App::OnButtonNewClass)
 	ON_COMMAND(ID_BUTTON_NOTES, &CReClass2015App::OnButtonNotes)
+	ON_COMMAND(ID_BUTTON_SEARCH, &CReClass2015App::OnButtonSearch)
 	ON_COMMAND(ID_BUTTON_CONSOLE, &CReClass2015App::OnButtonConsole) 
 	ON_COMMAND(ID_BUTTON_MODULES, &CReClass2015App::OnButtonModules)
 	ON_COMMAND(ID_BUTTON_PARSER, &CReClass2015App::OnButtonParser)
@@ -38,6 +39,7 @@ BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_PAUSE, &CReClass2015App::OnUpdateButtonPause)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_RESUME, &CReClass2015App::OnUpdateButtonResume)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_KILL, &CReClass2015App::OnUpdateButtonKill)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_SEARCH, &CReClass2015App::OnUpdateButtonSearch)
 	ON_COMMAND(ID_BUTTON_GENERATE, &CReClass2015App::OnButtonGenerate)
 	ON_COMMAND(ID_BUTTON_CLEAN, &CReClass2015App::OnButtonClean)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_CLEAN, &CReClass2015App::OnUpdateButtonClean)
@@ -236,9 +238,13 @@ int CReClass2015App::ExitInstance()
 
 void CReClass2015App::OnButtonReset()
 {
-	CMDIFrameWnd* pFrame = (CMDIFrameWnd*)AfxGetApp()->m_pMainWnd;
+	g_hProcess = NULL;
+	g_ProcessID = 0;
+	g_AttachedProcessAddress = NULL;
 
+	CMDIFrameWnd* pFrame = (CMDIFrameWnd*)AfxGetApp()->m_pMainWnd;
 	CMDIChildWnd* wnd = pFrame->MDIGetActive();
+
 	while (wnd)
 	{
 		wnd->SendMessage(WM_CLOSE, 0, 0);
@@ -733,10 +739,8 @@ void CReClass2015App::OnButtonNewClass()
 	CMainFrame* pFrame = STATIC_DOWNCAST(CMainFrame, m_pMainWnd);
 	CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, m_hMDIMenu, m_hMDIAccel);
 
-	//pChild->SetTitle(name);
-	//pChild->SetWindowTextA(name);
-	//pFrame->UpdateFrameTitleForDocument(name);
 	CNodeClass* pClass = new CNodeClass;
+	pClass->pChildWindow = pChild;
 	pClass->idx = (int)theApp.Classes.size();
 	theApp.Classes.push_back(pClass);
 	pChild->m_wndView.m_pClass = pClass;
@@ -749,6 +753,16 @@ void CReClass2015App::OnButtonNewClass()
 	}
 
 	CalcOffsets(pClass);
+}
+
+void CReClass2015App::OnButtonSearch()
+{
+	MessageBox(GetMainWnd()->GetSafeHwnd(), _T("Coming Soon!"), _T("ReClass2015"), MB_OK | MB_ICONINFORMATION);
+}
+
+void CReClass2015App::OnUpdateButtonSearch(CCmdUI *pCmdUI)
+{
+	pCmdUI->Enable(g_hProcess != NULL);
 }
 
 void CReClass2015App::OnButtonConsole()
@@ -1599,7 +1613,7 @@ CNodeBase* CReClass2015App::isNodeRef(CNodeBase* pTestNode)
 
 void CReClass2015App::OnButtonClean()
 {
-	CMDIFrameWnd* pFrame = (CMDIFrameWnd*)AfxGetApp()->m_pMainWnd;
+	CMDIFrameWnd* pFrame = STATIC_DOWNCAST(CMDIFrameWnd, AfxGetApp()->m_pMainWnd);
 	CMDIChildWnd* wnd = pFrame->MDIGetActive();
 	while (wnd)
 	{
@@ -1638,9 +1652,8 @@ void CReClass2015App::OnButtonClean()
 	}
 
 	PrintOut(_T("Unused Classes removed: %i"), count);
-	CString msg;
-	msg.Format(_T("Unused Classes removed: %i"), count);
-	MessageBox(NULL, msg, _T("Cleaner"), MB_OK);
+	CString msg; msg.Format(_T("Unused Classes removed: %i"), count);
+	MessageBox(this->GetMainWnd()->GetSafeHwnd(), msg, _T("Cleaner"), MB_OK);
 }
 void CReClass2015App::OnUpdateButtonClean(CCmdUI *pCmdUI)
 {

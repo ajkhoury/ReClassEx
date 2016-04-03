@@ -54,6 +54,9 @@ public:
 		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
 		pChild->m_wndView.m_pClass = pClass;
 
+		pClass->pChildWindow = pChild;
+		theApp.Classes.push_back(pClass);
+
 		// Terrible; Fix this later
 		return theApp.Classes.size() - 1;
 

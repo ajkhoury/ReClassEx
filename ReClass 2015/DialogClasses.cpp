@@ -90,14 +90,23 @@ void CDialogClasses::OnOK()
 
 		nItem = FindClassByName(szBuffer.GetBuffer());
 
+		// Thanks timboy67678
 		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
-		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
-		pChild->m_wndView.m_pClass = theApp.Classes[nItem];
-
-		// This will get overwritten for each class that is opened
-		pChild->SetTitle(theApp.Classes[nItem]->Name);
-		pChild->SetWindowText(theApp.Classes[nItem]->Name);
-		pFrame->UpdateFrameTitleForDocument(theApp.Classes[nItem]->Name);
+		CChildFrame* pChild = theApp.Classes[nItem]->pChildWindow;
+		// Check if its a window first to dodge the assertion in IsWindowVisible
+		if (pChild && IsWindow(pChild->GetSafeHwnd()) && pChild->IsWindowVisible())
+		{
+			static_cast<CMDIChildWnd*>(pChild)->MDIActivate();
+		}
+		else 
+		{
+			CChildFrame* pNewChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
+			pNewChild->m_wndView.m_pClass = theApp.Classes[nItem];
+			theApp.Classes[nItem]->pChildWindow = pNewChild;
+			pNewChild->SetTitle(theApp.Classes[nItem]->Name);
+			pNewChild->SetWindowText(theApp.Classes[nItem]->Name);
+			pFrame->UpdateFrameTitleForDocument(theApp.Classes[nItem]->Name);
+		}
 	}
 
 	CDialogEx::OnOK();

@@ -14,6 +14,8 @@
 
 #pragma once
 
+#define TIMER_MEMORYMAP_UPDATE 0xDEADF00D
+
 class CProcessMenuInfo
 {
 public:

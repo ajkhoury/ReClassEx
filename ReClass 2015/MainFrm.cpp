@@ -143,7 +143,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CHEX);			pColor->SetColor(crHex);
 
 	// update after 5 seconds
-	SetTimer(0xB00B1E5, 5000, NULL);
+	SetTimer(TIMER_MEMORYMAP_UPDATE, 5000, NULL);
 
 	return 0;
 }
@@ -365,6 +365,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 
 			CChildFrame* pChild = (CChildFrame*)this->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
 			CNodeClass* pClass = theApp.Classes[idx];
+			pClass->pChildWindow = pChild;
 
 			pChild->SetTitle(pClass->Name);
 			pChild->SetWindowText(pClass->Name);
@@ -375,14 +376,16 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 		if (nID >= WM_PROCESSMENU && nID < (WM_PROCESSMENU + WM_MAXITEMS) )
 		{
 			UINT idx = nID - WM_PROCESSMENU;
-			ProcessID = ProcMenuItems[idx].ProcessId;
-			g_hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, ProcessID);
+			g_ProcessID = ProcMenuItems[idx].ProcessId;
+			g_hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, g_ProcessID);
 			UpdateMemoryMap();
 			return TRUE;
 		}
 		if (nID >= WM_DELETECLASSMENU && nID < (WM_DELETECLASSMENU + WM_MAXITEMS) )
 		{
 			UINT idx = nID - WM_DELETECLASSMENU;
+			if (theApp.Classes[idx]->pChildWindow)
+				theApp.Classes[idx]->pChildWindow->SendMessage(WM_CLOSE, 0, 0);
 			theApp.DeleteClass(theApp.Classes[idx]);
 			return TRUE;
 		}
@@ -695,19 +698,29 @@ void CMainFrame::OnUpdateCheckFilterProcesses(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(gbFilterProcesses);
 }
-
+// Multi monitor support. Thank timboy67678
 void CMainFrame::OnButtonLeft()
 {
-	RECT Screen;
-	SystemParametersInfo(SPI_GETWORKAREA, 0, &Screen, 0);
-	SetWindowPos(NULL, 0, 0, Screen.right / 2, Screen.bottom, SWP_NOZORDER);
+	RECT rc; HMONITOR hMon;
+	MONITORINFO mi = { sizeof(MONITORINFO) };
+	::GetWindowRect(GetSafeHwnd(), &rc);
+	hMon = ::MonitorFromRect(&rc, MONITOR_DEFAULTTONEAREST);
+	if (!::GetMonitorInfo(hMon, &mi))
+		MessageBox(_T("Failed to get monitor info!"));
+	LONG nWidth = mi.rcWork.right - mi.rcWork.left, nHeight = mi.rcWork.bottom - mi.rcWork.top;
+	SetWindowPos(NULL, mi.rcMonitor.left, mi.rcMonitor.top, nWidth / 2, nHeight, SWP_NOZORDER);
 }
 
 void CMainFrame::OnButtonRight()
 {
-	RECT Screen;
-	SystemParametersInfo(SPI_GETWORKAREA, 0, &Screen, 0);
-	SetWindowPos(NULL, Screen.right/2, 0, Screen.right / 2, Screen.bottom, SWP_NOZORDER);
+	RECT rc; HMONITOR hMon;
+	MONITORINFO mi = { sizeof(MONITORINFO) };
+	::GetWindowRect(GetSafeHwnd(), &rc);
+	hMon = ::MonitorFromRect(&rc, MONITOR_DEFAULTTONEAREST);
+	if (!::GetMonitorInfo(hMon, &mi)) 
+		MessageBox(_T("Failed to get monitor info!"));
+	LONG nWidth = mi.rcWork.right - mi.rcWork.left, nHeight = mi.rcWork.bottom - mi.rcWork.top;
+	SetWindowPos(NULL, mi.rcMonitor.left + (nWidth / 2), 0, nWidth / 2, nHeight, SWP_NOZORDER);
 }
 
 void CMainFrame::OnCheckFloat()

@@ -184,9 +184,9 @@ int CDialogModules::AddData(int Index, LPTSTR ModuleName, LPTSTR StartAddress, L
 	lvi.cchTextMax = static_cast<int>(_tcslen(ModuleName)) + 1;
 	lvi.iImage = Index;
 	lvi.lParam = lParam;
-	lvi.iItem = ListView_GetItemCount(m_ModuleViewList.GetSafeHwnd());
+	lvi.iItem = m_ModuleViewList.GetItemCount();
 
-	int pos = ListView_InsertItem(m_ModuleViewList.GetSafeHwnd(), &lvi);
+	int pos = m_ModuleViewList.InsertItem(&lvi); //ListView_InsertItem(m_ModuleViewList.GetSafeHwnd(), &lvi);
 
 	m_ModuleViewList.SetItemText(pos, COLUMN_START, (LPTSTR)StartAddress);
 	m_ModuleViewList.SetItemText(pos, COLUMN_END, (LPTSTR)EndAddress);
