@@ -42,7 +42,7 @@ See wiki for instructions on how to compile:
 - DogMatt
 - Dude719
 - IChooseYou
-- stevemk14ebr
+- [stevemk14ebr](https://github.com/stevemk14ebr)
 - Timboy67678
 - leveln
 - buddyfavors
