@@ -1288,7 +1288,7 @@ void CChildView::ReplaceSelectedWithType(NodeType Type)
 {
 	std::vector<CNodeBase*> newSelected;
 
-	PrintOut(_T("Replace Node Type %s"), NodeTypeToString(Type));
+	PrintOut(_T("Replace Node Type %Ts"), NodeTypeToString(Type));
 
 	for (UINT i = 0; i < Selected.size(); i++)
 	{

@@ -42,16 +42,16 @@ namespace Utils
 		return digits;
 	}
 
-	wchar_t* GetFilePath(wchar_t* append)
+	TCHAR* GetFilePath(TCHAR* append)
 	{
-		static wchar_t szFile[MAX_PATH] = {};
+		static TCHAR szFile[MAX_PATH] = {};
 		GetModuleFileName(GetModuleHandle(0), szFile, MAX_PATH);
-		for (int i = 0; i < (int)wcslen(szFile); i++)
+		for (int i = 0; i < (int)_tcslen(szFile); i++)
 		{
-			if (szFile[wcslen(szFile) - i] == L'\\')
+			if (szFile[_tcslen(szFile) - i] == L'\\')
 			{
-				szFile[(wcslen(szFile) - i) + 1] = L'\0';
-				wcscat_s(szFile, append);
+				szFile[(_tcslen(szFile) - i) + 1] = L'\0';
+				_tcscat_s(szFile, append);
 				return szFile;
 			}
 		}

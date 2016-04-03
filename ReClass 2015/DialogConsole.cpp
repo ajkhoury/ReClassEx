@@ -101,7 +101,7 @@ LRESULT CDialogConsole::PrintText(WPARAM wParam, LPARAM lParam)
 	size_t converted = 0;
 	wcstombs_s(&converted, pText, length + 1, m_strConsoleText.GetBuffer(), length + 1);
 	#else
-	strcpy_s(pText, length, Text.GetBuffer());
+	strcpy_s(pText, length + 1, m_strConsoleText.GetBuffer());
 	#endif
 
 	SendEditor(SCI_SETTEXT, 0, (LPARAM)pText);

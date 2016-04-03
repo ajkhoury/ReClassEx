@@ -97,7 +97,7 @@ void WriteMemory(size_t Address, void* Buffer, DWORD Size)
 	//}
 }
 
-CString ReadMemoryString(size_t address, SIZE_T max)
+CStringA ReadMemoryString(size_t address, SIZE_T max)
 {
 	char	buffer[1024];
 	SIZE_T	bytesRead;
@@ -533,7 +533,7 @@ bool UpdateMemoryMap(void)
 						if (ProcessBaseAddress == NULL)
 						{
 							wchar_t filename[MAX_PATH];
-							GetModuleFileNameEx(g_hProcess, NULL, filename, MAX_PATH);
+							GetModuleFileNameExW(g_hProcess, NULL, filename, MAX_PATH);
 							if (_wcsicmp(filename, wcsFullDllName) == 0)
 								ProcessBaseAddress = (size_t)ModuleBase;
 						}
@@ -548,7 +548,7 @@ bool UpdateMemoryMap(void)
 				Mem.Name = wcsModule;
 				Mem.Path = wcsFullDllName;
 
-				PrintOut(_T("%s: %IX"), Mem.Name.GetBuffer(), Mem.Start);
+				//PrintOut(_T("%s: %IX"), Mem.Name.GetBuffer(), Mem.Start);
 
 				MemMapModule.push_back(Mem);
 
@@ -846,7 +846,7 @@ int SplitString(const CString& input, const CString& delimiter, CStringArray& re
 	return numFound;
 }
 
-size_t ConvertStrToAddress(CString Address)
+size_t ConvertStrToAddress(CString str)
 {
 	//int foundIdx = -1;
 	//if ((foundIdx = Spot.Text.FindOneOf(_T("+-"))) != -1)
@@ -869,37 +869,31 @@ size_t ConvertStrToAddress(CString Address)
 	//}
 
 	CStringArray chunks;
-	if (SplitString(Address, "+", chunks) == 0)
-		chunks.Add(Address);
+	if (SplitString(str, "+", chunks) == 0)
+		chunks.Add(str);
 
 	size_t Final = 0;
 
 	for (UINT i = 0; i < (UINT)chunks.GetCount(); i++)
 	{
 		CString a = chunks[i];
-		a.MakeLower();
-		a.Trim();
+
+		a.MakeLower();  // Make all lowercase
+		a.Trim();		// Trim whitespace
+		a.Remove(_T('\"')); // Remove quotes
 
 		bool bPointer = false;
 		bool bMod = false;
 
-		if (a.Find(_T(".exe")) != -1)
-		{
+		if (a.Find(_T(".exe")) != -1 || a.Find(_T(".dll")) != -1)
 			bMod = true;
-			//a = a.Mid(a.Find(_T(".exe")) + 4);
-		}
-		else if (a.Find(_T(".dll")) != -1)
-		{
-			bMod = true;
-			//a = a.Mid(a.Find(_T(".dll")) + 4);
-		}
 
-		if (a[0] == '*')
+		if (a[0] == _T('*'))
 		{
 			bPointer = true;
 			a = a.Mid(1);
 		}
-		else if (a[0] == '&')
+		else if (a[0] == _T('&'))
 		{
 			bMod = true;
 			a = a.Mid(1);
@@ -931,9 +925,9 @@ size_t ConvertStrToAddress(CString Address)
 
 		if (bPointer)
 		{
-			if (ReadProcessMemory(g_hProcess, (PVOID)Final, &Final, sizeof(Final), NULL) == 0)
+			if (ReadProcessMemory(g_hProcess, (void*)Final, &Final, sizeof(Final), NULL) == 0)
 			{
-				PrintOut(_T("[ConvertStrToAddress]: Failed to read memory (stdafx.cpp) GetLastError() = %s"), Utils::GetLastErrorString().GetString());
+				PrintOut(_T("[ConvertStrToAddress]: Failed to read memory GetLastError() = %s"), Utils::GetLastErrorString().GetString());
 			}
 		}
 	}

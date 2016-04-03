@@ -119,15 +119,15 @@ public:
 	int AddText(ViewInfo& View, int x, int y, DWORD color, int HitID, const wchar_t *fmt, ...)
 	{
 		va_list va_alist;
-		static wchar_t logbuf[1024];
+		static wchar_t wcsbuf[1024];
 		if (fmt == NULL)
 			return x;
 
 		va_start(va_alist, fmt);
-		_vsnwprintf(logbuf, sizeof(logbuf), fmt, va_alist);
+		_vsnwprintf(wcsbuf, sizeof(wcsbuf), fmt, va_alist);
 		va_end(va_alist);
 
-		int width = (int)wcslen(logbuf) * FontWidth;
+		int width = static_cast<int>(wcslen(wcsbuf)) * FontWidth;
 
 		if ((y >= -(FontHeight)) && (y + FontHeight <= View.client->bottom + FontHeight))
 		{
@@ -140,13 +140,13 @@ public:
 				else
 					pos.SetRect(x, y, x + FontWidth * 2, y + FontHeight);
 
-				AddHotSpot(View, pos, logbuf, HitID, HS_EDIT);
+				AddHotSpot(View, pos, wcsbuf, HitID, HS_EDIT);
 			}
 
 			pos.SetRect(x, y, 0, 0);
 			View.dc->SetTextColor(color);
 			View.dc->SetBkMode(TRANSPARENT);
-			View.dc->DrawText(logbuf, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX);
+			View.dc->DrawText(wcsbuf, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX);
 		}
 
 		return x + width;
@@ -155,24 +155,27 @@ public:
 	int AddText(ViewInfo& View, int x, int y, DWORD color, int HitID, const char* fmt, ...)
 	{
 		va_list va_alist;
-		static wchar_t logbuf[1024];
+		size_t converted;
+
+		static char buffer[1024];
+		static TCHAR finalBuffer[1024];
+
 		if (fmt == NULL)
 			return x;
 
-		static wchar_t fmtwcs[1024];
-		size_t converted = 0;
-		mbstowcs_s(&converted, fmtwcs, fmt, 1024);
-
 		va_start(va_alist, fmt);
-		_vsnwprintf(logbuf, sizeof(logbuf), fmtwcs, va_alist);
+		_vsnprintf(buffer, 1024, fmt, va_alist);
 		va_end(va_alist);
 
-		int width = (int)wcslen(logbuf) * FontWidth;
+		#ifdef UNICODE
+		mbstowcs_s(&converted, finalBuffer, buffer, 1024);
+		#endif
+
+		int width = static_cast<int>(_tcslen(finalBuffer)) * FontWidth;
 
 		if ((y >= -FontHeight) && (y + FontHeight <= View.client->bottom + FontHeight))
 		{
 			CRect pos;
-
 			if (HitID != NONE)
 			{
 				if (width >= FontWidth * 2)
@@ -180,13 +183,13 @@ public:
 				else
 					pos.SetRect(x, y, x + FontWidth * 2, y + FontHeight);
 
-				AddHotSpot(View, pos, logbuf, HitID, HS_EDIT);
+				AddHotSpot(View, pos, CString(finalBuffer), HitID, HS_EDIT);
 			} 
 
 			pos.SetRect(x, y, 0, 0);
 			View.dc->SetTextColor(color);
 			View.dc->SetBkMode(TRANSPARENT);
-			View.dc->DrawText(logbuf, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX);
+			View.dc->DrawText(finalBuffer, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX);
 		}
 
 		return x + width;
@@ -196,7 +199,7 @@ public:
 	{
 		if (gbOffset)
 		{
-#ifdef _WIN64
+			#ifdef _WIN64
 			// goto 722
 			// just the left side 0000
 			// TODO: fix the ghetto rig FontWidth * x
@@ -209,21 +212,18 @@ public:
 			//	x += ((numdigits - 8) * FontWidth);
 
 			x = AddText(View, x, y, crOffset, NONE, _T("%0.4X"), offset) + FontWidth;
-#else
+			#else
 			x = AddText(View, x, y, crOffset, NONE, _T("%0.4X"), offset) + FontWidth;
-#endif
+			#endif
 		}
 
 		if (gbAddress)
 		{
-#ifdef _WIN64
-			// full address
-			// printf( "%p + %p = %p\n", View.Address, offset, View.Address + offset );
-			// %0.9X //"%I64x",
+			#ifdef _WIN64
 			x = AddText(View, x, y, crAddress, HS_ADDRESS, _T("%0.9I64X"), View.Address + offset) + FontWidth;
-#else
+			#else
 			x = AddText(View, x, y, crAddress, HS_ADDRESS, _T("%0.8X"), View.Address + offset) + FontWidth;
-#endif
+			#endif
 		}
 
 		return x;
@@ -318,7 +318,7 @@ public:
 
 	int ResolveRTTI(size_t Val, int &x, ViewInfo& View, int y)
 	{
-#ifdef _WIN64
+	#ifdef _WIN64
 		size_t ModuleBase = 0x0;
 		//Find module Val is in, then get module base
 		for (int i = 0; i < MemMapModule.size(); i++)
@@ -420,7 +420,7 @@ public:
 		}
 		x = AddText(View, x, y, crOffset, HS_RTTI, RTTIString);
 		return x; 
-#else	
+	#else	
 		size_t pRTTIObjectLocator = Val - 4;
 		if (!IsValidPtr(pRTTIObjectLocator))
 			return x;
@@ -499,9 +499,9 @@ public:
 			//x = AddText(View, x, y, crOffset, HS_RTTI, "%s", RTTIName.c_str());
 		}
 
-		x = AddText(View, x, y, crOffset, HS_RTTI, RTTIString);
+		x = AddText(View, x, y, crOffset, HS_RTTI, _T("%s"), RTTIString);
 		return x;
-#endif
+	#endif
 	}
 
 	int AddComment(ViewInfo& View, int x, int y)
@@ -533,39 +533,39 @@ public:
 
 		if (GetType() == nt_hex64)
 		{
-			float f = *((float*)&((BYTE*)View.pData)[offset]);
+			float flVal = *((float*)&((BYTE*)View.pData)[offset]);
 			// TODO: Change to int64
-			__int64 i = *((__int64*)&((BYTE*)View.pData)[offset]);
+			__int64 intVal = *((__int64*)&((BYTE*)View.pData)[offset]);
 
 			if (gbFloat)
 			{
-				if (f > -99999.0 && f < 99999.0)
-					x = AddText(View, x, y, crValue, NONE, _T("(%0.3f)"), f);
+				if (flVal > -99999.0 && flVal < 99999.0)
+					x = AddText(View, x, y, crValue, NONE, _T("(%0.3f)"), flVal);
 				else
 					x = AddText(View, x, y, crValue, NONE, _T("(%0.3f)"), 0.0f);
 			}
 
 			if (gbInt)
 			{
-				if (f > 0x6FFFFFFF && f < 0x7FFFFFFFFFFF)
-					x = AddText(View, x, y, crValue, NONE, _T("(0x%I64X %i)"), i, i);
+				if (intVal > 0x6FFFFFFF && intVal < 0x7FFFFFFFFFFF)
+					x = AddText(View, x, y, crValue, NONE, _T("(0x%I64X %I64d)"), intVal, intVal);
 				else
-					x = AddText(View, x, y, crValue, NONE, _T("(%i)"), i);
+					x = AddText(View, x, y, crValue, NONE, _T("(%I64d)"), intVal);
 			}
 
 			// *** this is probably broken, let's fix it after
-			size_t Val = *((size_t*)&((BYTE*)View.pData)[offset]);
-			CString a(GetAddressName(Val, false));
+			size_t uintVal = (size_t)intVal;
+			CString a(GetAddressName(uintVal, false));
 			if (a.GetLength() > 0)
 			{
 				if (gbPointers)
 				{
 					//printf( "<%p> here\n", Val );
-					if (Val > 0x6FFFFFFF && Val < 0x7FFFFFFFFFFF)
+					if (uintVal > 0x6FFFFFFF && uintVal < 0x7FFFFFFFFFFF)
 					{
 						x = AddText(View, x, y, crOffset, NONE, _T("*->%s "), a);
 						if (gbRTTI)
-							x = ResolveRTTI(Val, x, View, y);
+							x = ResolveRTTI(uintVal, x, View, y);
 					}
 				}
 
@@ -573,7 +573,7 @@ public:
 				{
 					bool bAddStr = true;
 					char txt[64];
-					ReadMemory(Val, txt, 64);
+					ReadMemory(uintVal, txt, 64);
 
 					for (int i = 0; i < 8; i++)
 					{
@@ -589,44 +589,46 @@ public:
 				}
 			}
 		}
-
-		if (GetType() == nt_hex32)
+		else if (GetType() == nt_hex32)
 		{
-			float f = *((float*)&((BYTE*)View.pData)[offset]);
-			int i = *((int*)&((BYTE*)View.pData)[offset]);
+			float flVal = *((float*)&((BYTE*)View.pData)[offset]);
+			int intVal = *((int*)&((BYTE*)View.pData)[offset]);
 
 			if (gbFloat)
 			{
-				if (f > -99999.0 && f < 99999.0)
-					x = AddText(View, x, y, crValue, NONE, _T("(%0.3f)"), f);
+				if (flVal > -99999.0 && flVal < 99999.0)
+					x = AddText(View, x, y, crValue, NONE, _T("(%0.3f)"), flVal);
 				else
 					x = AddText(View, x, y, crValue, NONE, _T("(%0.3f)"), 0.0f);
 			}
 
 			if (gbInt)
 			{
-#ifdef _WIN64
-				if (f > 0x140000000 && f < 0x7FFFFFFFFFFF) // in 64 bit address range
-					x = AddText(View, x, y, crValue, NONE, _T("(0x%I64X %i)"), i, i);
-				else
-					x = AddText(View, x, y, crValue, NONE, _T("(%i)"), i);
-#else
-				x = AddText(View, x, y, crValue, NONE, _T("(%i)"), i);
-#endif
+				#ifdef _WIN64
+				if (intVal > 0x140000000 && intVal < 0x7FFFFFFFFFFF) // in 64 bit address range
+					x = AddText(View, x, y, crValue, NONE, _T("(%i|0x%I64X)"), intVal, intVal);
+				else if (intVal > 0x400000 && intVal < 0x140000000)
+					x = AddText(View, x, y, crValue, NONE, _T("(%i|0x%IX)"), intVal);
+				#else
+				x = AddText(View, x, y, crValue, NONE, _T("(%i|0x%IX)"), intVal, intVal);
+				#endif
 			}
 
 			// *** this is probably broken, let's fix it after
-			size_t Val = *((size_t*)&((BYTE*)View.pData)[offset]);
-			CString a(GetAddressName(Val, false));
-			if (a.GetLength() > 0)
+			size_t uintVal = (size_t)intVal;
+			CString addressStr(GetAddressName(uintVal, false));
+			if (addressStr.GetLength() > 0)
 			{
 				if (gbPointers)
-				{
-					if (Val > 0x400000 && Val < 0x100000000)
+				{	
+					//#ifdef _WIN64
+					// If set max to 0x140000000 a bunch of invalid pointers come up
+					// Set to 0x110000000 instead
+					if (uintVal > 0x400000 && uintVal < 0xFFFFFFFF)
 					{
-						x = AddText(View, x, y, crOffset, NONE, _T("*->%s "), a);
+						x = AddText(View, x, y, crOffset, NONE, _T("*->%s "), addressStr);
 						if (gbRTTI)
-							x = ResolveRTTI(Val, x, View, y);
+							x = ResolveRTTI(uintVal, x, View, y);
 					}
 				}
 
@@ -634,11 +636,11 @@ public:
 				{
 					bool bAddStr = true;
 					char txt[64];
-					ReadMemory(Val, txt, 64); // TODO: find out why it looks wrong
+					ReadMemory(uintVal, txt, 64); // TODO: find out why it looks wrong
 
 					for (int i = 0; i < 4; i++)
 					{
-						if (!isprint((BYTE)txt[i]))
+						if (!isprint((unsigned char)txt[i]))
 							bAddStr = false;
 					}
 
@@ -663,23 +665,26 @@ public:
 			Comment = Spot.Text;
 	}
 
-	CString GetStringFromMemoryA(unsigned char* pMemory, int Length)
+	CStringA GetStringFromMemoryA(unsigned char* pMemory, int Length)
 	{
-		CString str;
-		for (int i = 0; i < Length; i += sizeof(unsigned char)) {
-			bool isPrintable = (std::isprint(pMemory[i]) > 0);
-			str += isPrintable ? (TCHAR)(pMemory[i]) : (TCHAR)'.';
+		CStringA ascii;
+		for (int i = 0; i < Length; i++)
+		{
+			if (isprint(pMemory[i] & 0xFF))
+				ascii += pMemory[i];
+			else
+				ascii += '.';
 		}
-		return str;
+		return ascii;
 	}
 
 	CStringW GetStringFromMemoryW(unsigned char* pMemory, int Length)
 	{
-		CStringW str;
+		CStringW widechar;
 		for (int i = 0; i < Length; i += sizeof(wchar_t)) {
-			str += iswprint(pMemory[i]) > 0 ? (wchar_t)pMemory[i] : (wchar_t)(L'.');
+			widechar += iswprint(pMemory[i]) > 0 ? (wchar_t)pMemory[i] : (wchar_t)(L'.');
 		}
-		return str;
+		return widechar;
 	}
 
 	int DrawHidden(ViewInfo& View, int x, int y)
@@ -821,8 +826,8 @@ public:
 
 		if (gbText)
 		{
-			CString str = GetStringFromMemoryA(pMemory, 8) + " ";
-			tx = AddText(View, tx, y, crChar, HS_NONE, str);
+			CStringA str = GetStringFromMemoryA(pMemory, 8) + " ";
+			tx = AddText(View, tx, y, crChar, HS_NONE, "%s", str.GetBuffer());
 		}
 
 		tx = AddText(View, tx, y, crHex, 0, _T("%0.2X"), pMemory[0]) + FontWidth;
@@ -848,10 +853,14 @@ public:
 	{
 		StandardUpdate(Spot);
 		BYTE v = (BYTE)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
-		if (Spot.ID == 0) WriteMemory(Spot.Address + 0, &v, 1);
-		if (Spot.ID == 1) WriteMemory(Spot.Address + 1, &v, 1);
-		if (Spot.ID == 2) WriteMemory(Spot.Address + 2, &v, 1);
-		if (Spot.ID == 3) WriteMemory(Spot.Address + 3, &v, 1);
+		if (Spot.ID == 0) 
+			WriteMemory(Spot.Address + 0, &v, 1);
+		if (Spot.ID == 1) 
+			WriteMemory(Spot.Address + 1, &v, 1);
+		if (Spot.ID == 2) 
+			WriteMemory(Spot.Address + 2, &v, 1);
+		if (Spot.ID == 3) 
+			WriteMemory(Spot.Address + 3, &v, 1);
 	}
 
 	virtual int GetMemorySize() { return 4; }
@@ -873,14 +882,15 @@ public:
 		if (gbText)
 		{
 			// TODO these are the dots, do alignment instead of 4
-			CString str = GetStringFromMemoryA(pMemory, 4) + "     ";
-			tx = AddText(View, tx, y, crChar, HS_NONE, str);
+			CStringA str = GetStringFromMemoryA(pMemory, 4);
+			str += " ";
+			tx = AddText(View, tx, y, crChar, HS_NONE, "%s", str);
 		}
 
-		tx = AddText(View, tx, y, crHex, 0, "%0.2X", pMemory[0]) + FontWidth;
-		tx = AddText(View, tx, y, crHex, 1, "%0.2X", pMemory[1]) + FontWidth;
-		tx = AddText(View, tx, y, crHex, 2, "%0.2X", pMemory[2]) + FontWidth;
-		tx = AddText(View, tx, y, crHex, 3, "%0.2X", pMemory[3]) + FontWidth;
+		tx = AddText(View, tx, y, crHex, 0, _T("%0.2X"), pMemory[0]) + FontWidth;
+		tx = AddText(View, tx, y, crHex, 1, _T("%0.2X"), pMemory[1]) + FontWidth;
+		tx = AddText(View, tx, y, crHex, 2, _T("%0.2X"), pMemory[2]) + FontWidth;
+		tx = AddText(View, tx, y, crHex, 3, _T("%0.2X"), pMemory[3]) + FontWidth;
 		tx = AddComment(View, tx, y);
 
 		return y += FontHeight;
@@ -896,15 +906,19 @@ public:
 	{
 		StandardUpdate(Spot);
 		BYTE v = (BYTE)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
-		if (Spot.ID == 0) WriteMemory(Spot.Address, &v, 1);
-		if (Spot.ID == 1) WriteMemory(Spot.Address + 1, &v, 1);
+		if (Spot.ID == 0) 
+			WriteMemory(Spot.Address, &v, 1);
+		if (Spot.ID == 1)
+			WriteMemory(Spot.Address + 1, &v, 1);
 	}
 
 	virtual int GetMemorySize() { return 2; }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
-		if (bHidden) return DrawHidden(View, x, y);
+		if (bHidden) 
+			return DrawHidden(View, x, y);
+
 		BYTE* pMemory = (BYTE*)&((BYTE*)View.pData)[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
@@ -916,13 +930,13 @@ public:
 
 		if (gbText)
 		{
-			CString str = GetStringFromMemoryA(pMemory, 2) + "    ";
-			str += "   ";
-			tx = AddText(View, tx, y, crChar, NONE, str);
+			CStringA str = GetStringFromMemoryA(pMemory, 2);
+			str += "  ";
+			tx = AddText(View, tx, y, crChar, NONE, "%s", str.GetBuffer());
 		}
 
-		tx = AddText(View, tx, y, crHex, 0, _T("%0.2X"), pMemory[0]) + FontWidth;
-		tx = AddText(View, tx, y, crHex, 1, _T("%0.2X"), pMemory[1]) + FontWidth;
+		tx = AddText(View, tx, y, crHex, 0, _T("%0.2X"), pMemory[0] & 0xFF) + FontWidth;
+		tx = AddText(View, tx, y, crHex, 1, _T("%0.2X"), pMemory[1] & 0xFF) + FontWidth;
 		tx = AddComment(View, tx, y);
 
 		return y += FontHeight;
@@ -946,7 +960,9 @@ public:
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
-		if (bHidden) return DrawHidden(View, x, y);
+		if (bHidden) 
+			return DrawHidden(View, x, y);
+
 		BYTE* pMemory = (BYTE*)&((BYTE*)View.pData)[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
@@ -958,12 +974,12 @@ public:
 
 		if (gbText)
 		{
-			CString str = GetStringFromMemoryA(pMemory, 1) + "    ";
-			str += "    ";
-			tx = AddText(View, tx, y, crChar, HS_NONE, str);
+			CStringA str = GetStringFromMemoryA(pMemory, 1);
+			str += " ";
+			tx = AddText(View, tx, y, crChar, HS_NONE, "%s", str.GetBuffer());
 		}
 
-		tx = AddText(View, tx, y, crHex, 0, _T("%0.2X"), pMemory[0]) + FontWidth;
+		tx = AddText(View, tx, y, crHex, 0, _T("%0.2X"), pMemory[0] & 0xFF) + FontWidth;
 		tx = AddComment(View, tx, y);
 
 		return y += FontHeight;
@@ -1004,9 +1020,9 @@ public:
 			BitArray<unsigned char> bits;
 			bits.SetValue(pMemory[0]);
 
-			CString str = bits.GetBitsReverseString();
+			CStringA str = bits.GetBitsReverseString();
 			str += ' ';
-			tx = AddText(View, tx, y, crChar, HS_NONE, str);
+			tx = AddText(View, tx, y, crChar, HS_NONE, "%s", str.GetBuffer());
 		}
 
 		tx = AddText(View, tx, y, crHex, 0, _T("%0.2X"), pMemory[0]) + FontWidth;
@@ -1048,7 +1064,7 @@ public:
 		x = AddText(View, x, y, crVTable, HS_NONE, _T("VTable[%i]"), Nodes.size()) + FontWidth;
 
 		if (Name.IsEmpty())
-			x = AddText(View, x, y, crName, HS_NONE, Name) + FontWidth;
+			x = AddText(View, x, y, crName, HS_NONE, _T("%s"), Name) + FontWidth;
 		else
 			x = AddText(View, x, y, crName, HS_NONE, _T("%s_vtable"), pParent->Name) + FontWidth;
 
@@ -1088,7 +1104,7 @@ public:
 		Name = _T("");
 	}
 
-	std::vector<CString> Assembly;
+	std::vector<CStringA> Assembly;
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -1109,11 +1125,11 @@ public:
 			MyDisasm.EIP = (size_t)code;
 
 			MyDisasm.VirtualAddr = (unsigned __int64)addy;
-#ifdef _WIN64
+			#ifdef _WIN64
 			MyDisasm.Archi = 64;
-#else
+			#else
 			MyDisasm.Archi = 0;
-#endif
+			#endif
 			MyDisasm.Options = PrefixedNumeral;
 
 			bool Error = 0;
@@ -1129,8 +1145,7 @@ public:
 				else
 				{
 					char szInstruction[96];
-					sprintf_s(szInstruction, "%p  ", (void*)MyDisasm.VirtualAddr);
-					strcat_s(szInstruction, MyDisasm.CompleteInstr);
+					sprintf_s(szInstruction, "%p  %s", (void*)MyDisasm.VirtualAddr, MyDisasm.CompleteInstr);
 					Assembly.push_back(szInstruction);
 
 					MyDisasm.EIP = MyDisasm.EIP + len;
@@ -1140,7 +1155,7 @@ public:
 
 					unsigned char opcode;
 					ReadMemory(MyDisasm.VirtualAddr, &opcode, sizeof(unsigned char));
-					if (opcode == 0xCC) // INT 3 instruction
+					if (opcode == 0xCC) // INT3 instruction
 						break;
 				}
 			}
@@ -1168,25 +1183,17 @@ public:
 		tx = AddAddressOffset(View, tx, y);
 
 		if (pParent->GetType() != nt_vtable)
-		{
-			tx = AddText(View, tx, y, crType, HS_NONE, "Function");
-		}
+			tx = AddText(View, tx, y, crType, HS_NONE, _T("Function"));
 		else
-		{
 			tx = AddText(View, tx, y, crFunction, HS_NONE, _T("(%i)"), offset / sizeof(size_t));
-		}
 
 		tx = AddIcon(View, tx, y, ICON_CAMERA, HS_EDIT, HS_CLICK);
 		tx += FontWidth;
 
 		if (Name.IsEmpty())
-		{
 			tx = AddText(View, tx, y, crName, HS_NAME, _T("Function_%i"), offset / sizeof(size_t));
-		}
 		else
-		{
-			tx = AddText(View, tx, y, crName, HS_NAME, Name);
-		}
+			tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 
 		tx += FontWidth;
 
@@ -1202,7 +1209,7 @@ public:
 			for (UINT i = 0; i < Assembly.size(); i++)
 			{
 				y += FontHeight;
-				AddText(View, ax, y, crHex, HS_NONE, Assembly[i]);
+				AddText(View, ax, y, crHex, HS_NONE, "%s", Assembly[i].GetBuffer());
 			}
 		}
 
@@ -1298,7 +1305,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_INTEGER, HS_NONE, HS_NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, HS_NONE, _T("Int64 "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crName, HS_NONE, _T(" = "));
 		tx = AddText(View, tx, y, crValue, HS_EDIT, _T("%lli"), pMemory[0]) + FontWidth;
 		tx = AddComment(View, tx, y);
@@ -1335,7 +1342,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_INTEGER, HS_NONE, HS_NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, HS_NONE, _T("Int32 "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crName, HS_NONE, _T(" = "));
 		tx = AddText(View, tx, y, crValue, HS_EDIT, _T("%i"), pMemory[0]) + FontWidth;
 		tx = AddComment(View, tx, y);
@@ -1371,7 +1378,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_INTEGER, HS_NONE, HS_NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, HS_NONE, _T("Int16 "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crName, HS_NONE, _T(" = "));
 		tx = AddText(View, tx, y, crValue, HS_EDIT, _T("%i"), pMemory[0]) + FontWidth;
 		tx = AddComment(View, tx, y);
@@ -1408,7 +1415,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_INTEGER, HS_NONE, HS_NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, HS_NONE, _T("Int8  "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crName, HS_NONE, _T(" = "));
 		tx = AddText(View, tx, y, crValue, HS_EDIT, _T("%i"), pMemory[0]) + FontWidth;
 		tx = AddComment(View, tx, y);
@@ -1445,7 +1452,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_UNSIGNED, HS_NONE, HS_NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, HS_NONE, _T("DWORD "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crName, HS_NONE, _T(" = "));
 		tx = AddText(View, tx, y, crValue, HS_EDIT, _T("%u"), pMemory[0]) + FontWidth;
 		tx = AddComment(View, tx, y);
@@ -1485,7 +1492,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_UNSIGNED, NONE, NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, _T("WORD  "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crName, NONE, _T(" = "));
 		tx = AddText(View, tx, y, crValue, HS_EDIT, _T("%u"), pMemory[0]) + FontWidth;
 		tx = AddComment(View, tx, y);
@@ -1524,7 +1531,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_UNSIGNED, HS_NONE, HS_NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, HS_NONE, _T("BYTE  "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crName, HS_NONE, _T(" = "));
 		tx = AddText(View, tx, y, crValue, HS_EDIT, _T("%u"), pMemory[0]) + FontWidth;
 		tx = AddComment(View, tx, y);
@@ -1577,14 +1584,14 @@ public:
 		tx = AddIcon(View, tx, y, ICON_TEXT, HS_NONE, HS_NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, HS_NONE, _T("Text "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crIndex, HS_NONE, _T("["));
 		tx = AddText(View, tx, y, crIndex, HS_EDIT, _T("%i"), memsize);
 		tx = AddText(View, tx, y, crIndex, HS_NONE, _T("]"));
 
-		CString str = GetStringFromMemoryA(pMemory, memsize);
+		CStringA str = GetStringFromMemoryA(pMemory, memsize);
 		tx = AddText(View, tx, y, crChar, HS_NONE, _T(" = '"));
-		tx = AddText(View, tx, y, crChar, 1, str);
+		tx = AddText(View, tx, y, crChar, 1, "%s", str.GetBuffer());
 		tx = AddText(View, tx, y, crChar, HS_NONE, _T("' ")) + FontWidth;
 
 		tx = AddComment(View, tx, y);
@@ -1649,18 +1656,12 @@ public:
 		tx = AddText(View,tx,y,crIndex,NONE,"]");
 		*/
 
-		CString str;
 		tx = AddText(View, tx, y, crChar, HS_NONE, _T(" = '"));
-
 		if (VALID(pMemory))
 		{
-			DWORD_PTR dw = pMemory[0];
-			CString sc = ReadMemoryString(dw, 20);
-			tx = AddText(View, tx, y, crChar, 1, sc.GetBuffer());
-		}
-		else
-		{
-			str = "";
+			size_t dw = pMemory[0];
+			CStringA sc = ReadMemoryString(dw, 64);
+			tx = AddText(View, tx, y, crChar, 1, "%s", sc.GetBuffer());
 		}
 
 		tx = AddText(View, tx, y, crChar, HS_NONE, _T("' ")) + FontWidth;
@@ -1723,7 +1724,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_TEXT, HS_NONE, HS_NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, HS_NONE, _T("Unicode "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crIndex, HS_NONE, _T("["));
 		tx = AddText(View, tx, y, crIndex, HS_EDIT, _T("%i"), memsize / sizeof(wchar_t));
 		tx = AddText(View, tx, y, crIndex, HS_NONE, _T("]"));
@@ -1768,7 +1769,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_FLOAT, HS_NONE, HS_NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, HS_NONE, _T("float "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crName, HS_NONE, _T(" = "));
 		//tx = AddText(View,tx,y,crValue,0,"%.4f",pMemory[0]) + FontWidth;
 
@@ -1815,7 +1816,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_FLOAT, HS_NONE, HS_NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, HS_NONE, _T("double "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crName, HS_NONE, _T(" = "));
 		//tx = AddText(View, tx, y, crValue, 0, "%.4lg", pMemory[0]) + FontWidth;
 		tx = AddText(View, tx, y, crValue, HS_EDIT, _T("%.4g"), pMemory[0]) + FontWidth;
@@ -1859,7 +1860,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_VECTOR, HS_NONE, HS_NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, HS_NONE, _T("Vec2 "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddOpenClose(View, tx, y);
 		if (bOpen[View.Level])
 		{
@@ -1907,7 +1908,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_VECTOR, HS_NONE, HS_NONE);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, HS_NONE, _T("Vec3 "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddOpenClose(View, tx, y);
 		if (bOpen[View.Level])
 		{
@@ -1960,7 +1961,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_VECTOR, -1, -1);
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, _T("Vec4 "));
-		tx = AddText(View, tx, y, crName, 69, Name);
+		tx = AddText(View, tx, y, crName, 69, _T("%s"), Name);
 		tx = AddOpenClose(View, tx, y);
 		if (bOpen[View.Level])
 		{
@@ -2011,7 +2012,7 @@ public:
 		int mx = tx;
 		tx = AddAddressOffset(View, tx, y);
 		tx = AddText(View, tx, y, crType, NONE, _T("Matrix "));
-		tx = AddText(View, tx, y, crName, 69, Name);
+		tx = AddText(View, tx, y, crName, 69, _T("%s"), Name);
 		tx = AddOpenClose(View, tx, y);
 		tx += FontWidth;
 		tx = AddComment(View, tx, y);
@@ -2130,7 +2131,7 @@ public:
 		tx = AddAddressOffset(View, tx, y);
 
 		tx = AddText(View, tx, y, crType, NONE, _T("Array "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crIndex, NONE, _T("["));
 		tx = AddText(View, tx, y, crIndex, HS_EDIT, _T("%i"), Total);
 		tx = AddText(View, tx, y, crIndex, NONE, _T("]"));
@@ -2175,6 +2176,7 @@ public:
 	{
 		if (bHidden)
 			return DrawHidden(View, x, y);
+
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -2186,7 +2188,7 @@ public:
 		tx = AddAddressOffset(View, tx, y);
 
 		tx = AddText(View, tx, y, crType, NONE, _T("Instance "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
 		tx = AddText(View, tx, y, crValue, NONE, _T("<%s>"), pNode->Name);
 		tx = AddIcon(View, tx, y, ICON_CHANGE, HS_CLICK, HS_CHANGE_X);
 
@@ -2246,7 +2248,7 @@ public:
 		tx = AddText(View, tx, y, crIndex, NONE, _T("["));
 		tx = AddText(View, tx, y, crIndex, HS_EDIT, _T("%i"), memsize);
 		tx = AddText(View, tx, y, crIndex, NONE, _T("] "));
-		tx = AddText(View, tx, y, crName, HS_NAME, Name) + FontWidth;
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name) + FontWidth;
 		tx = AddComment(View, tx, y);
 		return y += FontHeight;
 	}

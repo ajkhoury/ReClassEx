@@ -868,6 +868,7 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 	root->LinkEndChild(comment);
 	//---------------------------------------------
 	XMLElement* settings = doc.NewElement("TypeDef");
+#ifdef UNICODE
 	settings->SetAttribute("tdHex", CW2A(tdHex));
 	settings->SetAttribute("tdInt64", CW2A(tdInt64));
 	settings->SetAttribute("tdInt32", CW2A(tdInt32));
@@ -883,9 +884,27 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 	settings->SetAttribute("tdQuat", CW2A(tdQuat));
 	settings->SetAttribute("tdMatrix", CW2A(tdMatrix));
 	settings->SetAttribute("tdPChar", CW2A(tdPChar));
+#else
+	settings->SetAttribute("tdHex",	  tdHex);
+	settings->SetAttribute("tdInt64", tdInt64);
+	settings->SetAttribute("tdInt32", tdInt32);
+	settings->SetAttribute("tdInt16", tdInt16);
+	settings->SetAttribute("tdInt8",  tdInt8);
+	settings->SetAttribute("tdDWORD", tdDWORD);
+	settings->SetAttribute("tdWORD",  tdWORD);
+	settings->SetAttribute("tdBYTE",  tdBYTE);
+	settings->SetAttribute("tdFloat", tdFloat);
+	settings->SetAttribute("tdDouble",tdDouble);
+	settings->SetAttribute("tdVec2",  tdVec2);
+	settings->SetAttribute("tdVec3",  tdVec3);
+	settings->SetAttribute("tdQuat",  tdQuat);
+	settings->SetAttribute("tdMatrix",tdMatrix);
+	settings->SetAttribute("tdPChar", tdPChar);
+#endif
 	root->LinkEndChild(settings);
 
 	settings = doc.NewElement("Header");
+#ifdef UNICODE
 	settings->SetAttribute("Text", CW2A(Header));
 	root->LinkEndChild(settings);
 
@@ -896,14 +915,34 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 	settings = doc.NewElement("Notes");
 	settings->SetAttribute("Text", CW2A(Notes));
 	root->LinkEndChild(settings);
+#else
+	settings->SetAttribute("Text", Header);
+	root->LinkEndChild(settings);
+
+	settings = doc.NewElement("Footer");
+	settings->SetAttribute("Text", Footer);
+	root->LinkEndChild(settings);
+
+	settings = doc.NewElement("Notes");
+	settings->SetAttribute("Text", Notes);
+	root->LinkEndChild(settings);
+#endif
 
 	for (UINT i = 0; i < Classes.size(); i++)
 	{
 		CNodeClass* pClass = Classes[i];
+
+#ifdef UNICODE
 		CStringA strClassName = CW2A(pClass->Name);
 		CStringA strClassComment = CW2A(pClass->Comment);
 		CStringA strClassOffset = CW2A(pClass->strOffset);
 		CStringA strClassCode = CW2A(pClass->Code);
+#else
+		CStringA strClassName = pClass->Name;
+		CStringA strClassComment = pClass->Comment;
+		CStringA strClassOffset = pClass->strOffset;
+		CStringA strClassCode = pClass->Code;
+#endif
 
 		XMLElement* classNode = doc.NewElement("Class");
 		classNode->SetAttribute("Name", strClassName);
@@ -920,8 +959,13 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 			if (!pNode)
 				continue;
 
+#ifdef UNICODE
 			CStringA strNodeName = CW2A(pNode->Name);
 			CStringA strNodeComment = CW2A(pNode->Comment);
+#else
+			CStringA strNodeName = pNode->Name;
+			CStringA strNodeComment = pNode->Comment;
+#endif
 
 			XMLElement* node = doc.NewElement("Node");
 			node->SetAttribute("Name", strNodeName);
@@ -937,8 +981,13 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 				CNodeArray* pptr = (CNodeArray*)pNode;
 				node->SetAttribute("Total", (UINT)pptr->Total);
 
+#ifdef UNICODE
 				CStringA strArrayNodeName = CW2A(pptr->pNode->Name);
 				CStringA strArrayNodeComment = CW2A(pptr->pNode->Comment);
+#else
+				CStringA strArrayNodeName = pptr->pNode->Name;
+				CStringA strArrayNodeComment = pptr->pNode->Comment;
+#endif
 
 				XMLElement *item = doc.NewElement("Array");
 				item->SetAttribute("Name", strArrayNodeName);
@@ -947,26 +996,40 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 				item->SetAttribute("Comment", strArrayNodeComment);
 				node->LinkEndChild(item);
 			}
-			if (pNode->GetType() == nt_pointer)
+			else if (pNode->GetType() == nt_pointer)
 			{
 				CNodePtr* pptr = (CNodePtr*)pNode;
+#ifdef UNICODE
 				CStringA strPtrNodeName = CW2A(pptr->pNode->Name);
+#else
+				CStringA strPtrNodeName = pptr->pNode->Name;
+#endif
+
 				node->SetAttribute("Pointer", strPtrNodeName);
 			}
-			if (pNode->GetType() == nt_instance)
+			else if (pNode->GetType() == nt_instance)
 			{
 				CNodeClassInstance* pptr = (CNodeClassInstance*)pNode;
+#ifdef UNICODE
 				CStringA strInstanceNodeName = CW2A(pptr->pNode->Name);
+#else
+				CStringA strInstanceNodeName = pptr->pNode->Name;
+#endif
 				node->SetAttribute("Instance", strInstanceNodeName);
 			}
-			if (pNode->GetType() == nt_vtable)
+			else if (pNode->GetType() == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
 				for (UINT f = 0; f < pVTable->Nodes.size(); f++)
 				{
 					CNodeFunctionPtr* pNodefun = (CNodeFunctionPtr*)pVTable->Nodes[f];
+#ifdef UNICODE
 					CStringA strFunctionNodeName = CW2A(pNodefun->Name);
 					CStringA strFunctionNodeComment = CW2A(pNodefun->Comment);
+#else
+					CStringA strFunctionNodeName = pNodefun->Name;
+					CStringA strFunctionNodeComment = pNodefun->Comment;
+#endif
 
 					XMLElement *fun = doc.NewElement("Function");			
 					fun->SetAttribute("Name", strFunctionNodeName);
@@ -976,7 +1039,7 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 					for (UINT as = 0; as < pNodefun->Assembly.size(); as++)
 					{
 						XMLElement *pCode = doc.NewElement("Code");
-						CStringA strFunctionNodeAssembler = CW2A(pNodefun->Assembly[as]);
+						CStringA strFunctionNodeAssembler = pNodefun->Assembly[as];
 						pCode->SetAttribute("Assembly", strFunctionNodeAssembler);
 						fun->LinkEndChild(pCode);
 					}
@@ -986,13 +1049,13 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 	}
 
 
+	char szFilename[MAX_PATH] = { 0 };
 #ifdef UNICODE
 	// Convert path to mbs in unicode mode
-	char szFilename[MAX_PATH] = { 0 };
 	size_t converted = 0;
 	wcstombs_s(&converted, szFilename, FileName, MAX_PATH);
 #else
-	char* szFilename = FileName.GetBuffer();
+	strcpy_s(szFilename, FileName);
 #endif
 
 	XMLError err = doc.SaveFile(szFilename);
@@ -1148,9 +1211,8 @@ void CReClass2015App::OnFileOpen()
 						XMLElement* pCode = pVTableElem->FirstChildElement();
 						while (pCode)
 						{
-							CString d;
-							d = CA2W(pCode->Attribute("Assembly"));
-							pFun->Assembly.push_back(d);
+							CStringA disassembly = pCode->Attribute("Assembly");
+							pFun->Assembly.push_back(disassembly);
 							pCode = pCode->NextSiblingElement();
 						}
 						pVTableElem = pVTableElem->NextSiblingElement();

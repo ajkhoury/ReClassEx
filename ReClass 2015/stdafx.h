@@ -270,41 +270,41 @@ enum NodeType
 
 #define ISHEXTYPE(type) (type == nt_hex64 || type == nt_hex32 || type == nt_hex16 || type == nt_hex8 || type == nt_bits)
 
-__inline const char* NodeTypeToString(NodeType type)
+__inline const TCHAR* NodeTypeToString(NodeType type)
 {
-	static const char* pszNodeTypes[] = {
-		"nt_base",
-		"nt_instance",
-		"nt_struct",
-		"nt_hidden",
-		"nt_hex32",
-		"nt_hex64",
-		"nt_hex16",
-		"nt_hex8",
-		"nt_pointer",
-		"nt_int64",
-		"nt_int32",
-		"nt_int16",
-		"nt_int8",
-		"nt_float",
-		"nt_double",
-		"nt_uint32",
-		"nt_uint16",
-		"nt_uint8",
-		"nt_text",
-		"nt_unicode",
-		"nt_function",
-		"nt_custom",
-		"nt_vec2",
-		"nt_vec3",
-		"nt_quat",
-		"nt_matrix",
-		"nt_vtable",
-		"nt_array",
-		"nt_class",
-		"nt_pchar",
-		"nt_bits"
-	};
+	static const TCHAR* pszNodeTypes[] = {
+		_T("nt_base"),
+		_T("nt_instance"),
+		_T("nt_struct"),
+		_T("nt_hidden"),
+		_T("nt_hex32"),
+		_T("nt_hex64"),
+		_T("nt_hex16"),
+		_T("nt_hex8"),
+		_T("nt_pointer"),
+		_T("nt_int64"),
+		_T("nt_int32"),
+		_T("nt_int16"),
+		_T("nt_int8"),
+		_T("nt_float"),
+		_T("nt_double"),
+		_T("nt_uint32"),
+		_T("nt_uint16"),
+		_T("nt_uint8"),
+		_T("nt_text"),
+		_T("nt_unicode"),
+		_T("nt_function"),
+		_T("nt_custom"),
+		_T("nt_vec2"),
+		_T("nt_vec3"),
+		_T("nt_quat"),
+		_T("nt_matrix"),
+		_T("nt_vtable"),
+		_T("nt_array"),
+		_T("nt_class"),
+		_T("nt_pchar"),
+		_T("nt_bits")
+	};	
 	return pszNodeTypes[type];
 }
 
@@ -325,7 +325,7 @@ size_t  GetAddressFromName(CString moduleName);
 
 void ReadMemory(size_t Address,void* Buffer,DWORD Size);
 void WriteMemory(size_t Address,void* Buffer,DWORD Size);
-CString ReadMemoryString(size_t address, SIZE_T max = 40);
+CStringA ReadMemoryString(size_t address, SIZE_T max = 40);
 
 #include "Classes.h"
 
@@ -339,5 +339,5 @@ extern DWORD NodeCreateIndex;
 
 __int64 StrToNum(const TCHAR *udata, int udatalen, int base);
 int SplitString(const CString& input, const CString& delimiter, CStringArray& results);
-size_t ConvertStrToAddress(CString Address);
+size_t ConvertStrToAddress(CString str);
 
