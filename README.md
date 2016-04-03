@@ -35,3 +35,14 @@ New features include:
 See wiki for instructions on how to compile:
 
 [Reclass Wiki](https://github.com/dude719/Reclass-2015/wiki)
+
+# Authors
+- DrUnKeN ChEeTaH
+- P47R!CK
+- DogMatt
+- Dude719
+- IChooseYou
+- stevemk14ebr
+- Timboy67678
+- leveln
+- buddyfavors
