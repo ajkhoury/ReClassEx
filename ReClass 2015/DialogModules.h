@@ -19,6 +19,7 @@ protected:
 	afx_msg void OnEnChangeModuleName();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnDblclkListControl(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnGetMinMaxInfo(MINMAXINFO *lpinfo);
 
 private:
 	enum
@@ -37,7 +38,7 @@ public:
 	CEdit					m_Edit;
 	CString					m_Filter;
 	std::vector<HICON>		m_hModuleIcons;
-
+	CRect					m_OriginalSize;
 	void SetSelected();
 
 	virtual BOOL OnInitDialog();

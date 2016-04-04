@@ -10,13 +10,12 @@
 
 IMPLEMENT_DYNAMIC(CDialogModules, CDialogEx)
 
-CDialogModules::CDialogModules(CWnd* pParent) : CDialogEx(CDialogModules::IDD, pParent)
-{
-}
+CDialogModules::CDialogModules(CWnd* pParent) 
+	: CDialogEx(CDialogModules::IDD, pParent)
+{}
 
 CDialogModules::~CDialogModules()
-{
-}
+{}
 
 void CDialogModules::DoDataExchange(CDataExchange* pDX)
 {
@@ -27,27 +26,40 @@ void CDialogModules::DoDataExchange(CDataExchange* pDX)
 
 void CDialogModules::OnSize(UINT nType, int cx, int cy)
 {
+	CDialogEx::OnSize( nType, cx, cy );
+}
 
+void CDialogModules::OnGetMinMaxInfo( MINMAXINFO *lpinfo )
+{
+	CDialogEx::OnGetMinMaxInfo( lpinfo );
+	
+	if ( !m_OriginalSize.IsRectNull( ) )
+	{
+		lpinfo->ptMinTrackSize.x = m_OriginalSize.Width( );
+		lpinfo->ptMinTrackSize.y = m_OriginalSize.Height( );
+	}
 }
 
 BEGIN_MESSAGE_MAP(CDialogModules, CDialogEx)
 	ON_NOTIFY(NM_DBLCLK, IDC_MODULELIST, OnDblclkListControl)
 	ON_EN_CHANGE(IDC_MODULENAME, &CDialogModules::OnEnChangeModuleName)
+	ON_WM_GETMINMAXINFO()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
 void CDialogModules::BuildList()
 {
 	for (UINT i = 0; i < MemMapModule.size(); i++)
-	{
+	{		
 		MemMapInfo moduleInfo = MemMapModule[i];
 
-		SHFILEINFO    sfi;
+		SHFILEINFO sfi = { 0 };
 		SHGetFileInfo(MemMapModule[i].Path, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
 		m_ImageList.Add(sfi.hIcon);
 
-		CString name = moduleInfo.Name;
-		if (m_Filter.GetLength() != 0 && name.MakeUpper().Find(m_Filter.MakeUpper()) == -1)
+		CString name = moduleInfo.Name, upercase_name = CString(moduleInfo.Name).MakeUpper();
+		if ( m_Filter.GetLength( ) != 0 && upercase_name.Find( m_Filter.MakeUpper( ) ) == -1 )
 			continue;
 
 		TCHAR strStart[64];
@@ -65,15 +77,18 @@ BOOL CDialogModules::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	GetWindowRect( &m_OriginalSize );
+	ScreenToClient( &m_OriginalSize );
+
 	m_ImageList.Create(GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), ILC_COLOR32, 1, 1);
 	m_ImageList.SetBkColor(RGB(255, 255, 255));
 
 	m_ModuleViewList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);
 
-	m_ModuleViewList.InsertColumn(COLUMN_MODULE, _T("Module"), LVCFMT_LEFT, 200);
-	m_ModuleViewList.InsertColumn(COLUMN_START, _T("Start"), LVCFMT_LEFT, 200);
-	m_ModuleViewList.InsertColumn(COLUMN_END, _T("End"), LVCFMT_LEFT, 200);
-	m_ModuleViewList.InsertColumn(COLUMN_SIZE, _T("Size"), LVCFMT_LEFT, 200);
+	m_ModuleViewList.InsertColumn(COLUMN_MODULE, _T("Module"), LVCFMT_LEFT, 300);
+	m_ModuleViewList.InsertColumn(COLUMN_START, _T("Start"), LVCFMT_LEFT, 80);
+	m_ModuleViewList.InsertColumn(COLUMN_END, _T("End"), LVCFMT_LEFT, 80);
+	m_ModuleViewList.InsertColumn(COLUMN_SIZE, _T("Size"), LVCFMT_LEFT, 80);
 
 	m_ModuleViewList.SetImageList(&m_ImageList, LVSIL_SMALL);
 
@@ -114,12 +129,12 @@ void CDialogModules::SetSelected()
 		int nItem = m_ModuleViewList.GetNextSelectedItem(pos);
 		CString szBuffer = m_ModuleViewList.GetItemText(nItem, 0);
 
-		nItem = FindModuleByName(szBuffer.GetBuffer());
+		nItem = FindModuleByName(szBuffer);
 
 		//printf( "szBuffer %s new %d\n", szBuffer.GetBuffer( ), nItem );
 		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
 		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
-		
+
 		CString ClassName = MemMapModule[nItem].Name.Left(MemMapModule[nItem].Name.GetLength() - 4);
 		ClassName += _T("_base");
 
@@ -127,15 +142,13 @@ void CDialogModules::SetSelected()
 		if (!pNewClass)
 		{
 			pNewClass = new CNodeClass;
-
-			
 			pNewClass->Name = ClassName;
 
 			TCHAR strStart[64];
 			_stprintf(strStart, _T("%IX"), MemMapModule[nItem].Start);
 			pNewClass->strOffset = strStart;
 			pNewClass->offset = MemMapModule[nItem].Start;
-
+			pNewClass->pChildWindow = pChild;
 			pNewClass->idx = (int)theApp.Classes.size();
 
 			theApp.Classes.push_back(pNewClass);
@@ -180,13 +193,13 @@ int CDialogModules::AddData(int Index, LPTSTR ModuleName, LPTSTR StartAddress, L
 
 	lvi.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM;
 
-	lvi.pszText = (LPTSTR)ModuleName;
+	lvi.pszText = ModuleName;
 	lvi.cchTextMax = static_cast<int>(_tcslen(ModuleName)) + 1;
 	lvi.iImage = Index;
 	lvi.lParam = lParam;
 	lvi.iItem = m_ModuleViewList.GetItemCount();
 
-	int pos = m_ModuleViewList.InsertItem(&lvi); //ListView_InsertItem(m_ModuleViewList.GetSafeHwnd(), &lvi);
+	int pos = m_ModuleViewList.InsertItem(&lvi);
 
 	m_ModuleViewList.SetItemText(pos, COLUMN_START, (LPTSTR)StartAddress);
 	m_ModuleViewList.SetItemText(pos, COLUMN_END, (LPTSTR)EndAddress);

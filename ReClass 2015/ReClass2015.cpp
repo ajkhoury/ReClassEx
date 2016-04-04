@@ -324,6 +324,7 @@ void CReClass2015App::OnFileNew()
 	CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, m_hMDIMenu, m_hMDIAccel);
 
 	CNodeClass* pClass = new CNodeClass;
+	pClass->pChildWindow = pChild;
 	theApp.Classes.push_back(pClass);
 	pChild->m_wndView.m_pClass = pClass;
 

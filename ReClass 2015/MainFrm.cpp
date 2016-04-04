@@ -461,7 +461,7 @@ void CMainFrame::OnButtonSelectprocess()
 {
 	HANDLE hProcess = 0;
 	void* pBuffer = NULL;
-	ULONG cbBuffer = 131072;
+	ULONG cbBuffer = 0x20000;
 	HANDLE hHeap = NULL;
 	NTSTATUS Status = STATUS_INFO_LENGTH_MISMATCH;
 	bool bHasEnumeratedProcesses = false;
@@ -469,7 +469,7 @@ void CMainFrame::OnButtonSelectprocess()
 
 	CMFCRibbonButton* pButton = NULL;
 	
-	pButton = (CMFCRibbonButton*)m_wndRibbonBar.FindByID(ID_BUTTON_SELECTPROCESS);
+	pButton = static_cast<CMFCRibbonButton*>(m_wndRibbonBar.FindByID(ID_BUTTON_SELECTPROCESS));
 
 	CRect pos = pButton->GetRect();
 	ClientToScreen(&pos);
@@ -553,16 +553,15 @@ void CMainFrame::OnButtonSelectprocess()
 							Item.pBitmap = pBitmap;
 
 							CClientDC clDC(this);
-							CDC dc;
-							dc.CreateCompatibleDC(&clDC);
+							CDC dc; dc.CreateCompatibleDC(&clDC);
 
 							int size = 16;
 							pBitmap->CreateCompatibleBitmap(&clDC, size, size);
 							CBitmap* pOldBmp = dc.SelectObject(pBitmap);
 
 							dc.FillSolidRect(0, 0, size, size, GetSysColor(COLOR_3DFACE));
-							DrawIconEx(dc.GetSafeHdc(), 0, 0, sfi.hIcon, size, size, 0, NULL, DI_NORMAL);
-
+							::DrawIconEx(dc.GetSafeHdc(), 0, 0, sfi.hIcon, size, size, 0, NULL, DI_NORMAL);
+							
 							dc.SelectObject(pOldBmp);
 							dc.DeleteDC();
 
@@ -660,7 +659,7 @@ void CMainFrame::OnUpdateButtonDeleteclass(CCmdUI *pCmdUI)
 
 void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 {
-	if (nIDEvent == 0xB00B1E5)
+	if (nIDEvent == TIMER_MEMORYMAP_UPDATE)
 		UpdateMemoryMap();
 	CMDIFrameWndEx::OnTimer(nIDEvent);
 }
