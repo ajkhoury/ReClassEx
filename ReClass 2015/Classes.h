@@ -548,9 +548,11 @@ public:
 			if (gbInt)
 			{
 				if (intVal > 0x6FFFFFFF && intVal < 0x7FFFFFFFFFFF)
-					x = AddText(View, x, y, crValue, HS_NONE, _T("(0x%I64X %I64d)"), intVal, intVal);
-				else
+					x = AddText(View, x, y, crValue, HS_NONE, _T("(%I64d|0x%IX)"), intVal, intVal);
+				else if (intVal == 0)
 					x = AddText(View, x, y, crValue, HS_NONE, _T("(%I64d)"), intVal);
+				else
+					x = AddText(View, x, y, crValue, HS_NONE, _T("(%I64d|0x%X)"), intVal, intVal);
 			}
 
 			// *** this is probably broken, let's fix it after
@@ -606,11 +608,15 @@ public:
 			{
 				#ifdef _WIN64
 				if (intVal > 0x140000000 && intVal < 0x7FFFFFFFFFFF) // in 64 bit address range
-					x = AddText(View, x, y, crValue, HS_NONE, _T("(%i|0x%I64X)"), intVal, intVal);
+					x = AddText(View, x, y, crValue, HS_NONE, _T("(%i|0x%IX)"), intVal, intVal);
 				else if (intVal > 0x400000 && intVal < 0x140000000)
-					x = AddText(View, x, y, crValue, HS_NONE, _T("(%i|0x%IX)"), intVal);
+					x = AddText(View, x, y, crValue, HS_NONE, _T("(%i|0x%X)"), intVal, intVal);
+				else if (intVal == 0)
+					x = AddText(View, x, y, crValue, HS_NONE, _T("(%i)"), intVal);
+				else
+					x = AddText(View, x, y, crValue, HS_NONE, _T("(%i|0x%X)"), intVal, intVal); 
 				#else
-				x = AddText(View, x, y, crValue, HS_NONE, _T("(%i|0x%IX)"), intVal, intVal);
+				x = (intVal == 0) ? AddText(View, x, y, crValue, HS_NONE, _T("(%i)"), intVal) : AddText(View, x, y, crValue, HS_NONE, _T("(%i|0x%X)"), intVal, intVal);
 				#endif
 			}
 
@@ -624,7 +630,7 @@ public:
 					//#ifdef _WIN64
 					// If set max to 0x140000000 a bunch of invalid pointers come up
 					// Set to 0x110000000 instead
-					if (uintVal > 0x400000 && uintVal < 0xFFFFFFFF)
+					if (uintVal > 0x400000 && uintVal < 0x110000000)
 					{
 						x = AddText(View, x, y, crOffset, HS_NONE, _T("*->%s "), addressStr);
 						if (gbRTTI)
@@ -716,11 +722,11 @@ public:
 		nodeType = nt_class;
 		offset = GetBase();
 		TCHAR szOffset[128];
-#ifdef _WIN64
+		#ifdef _WIN64
 		_ui64tot_s(offset, szOffset, 128, 16);
-#else
+		#else
 		_ultot_s(offset, szOffset, 128, 16);
-#endif
+		#endif
 		strOffset = szOffset;
 		RequestPosition = -1;
 		idx = 0;
