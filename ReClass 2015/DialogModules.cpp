@@ -119,7 +119,7 @@ void CDialogModules::SetSelected()
 		//printf( "szBuffer %s new %d\n", szBuffer.GetBuffer( ), nItem );
 		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
 		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
-		
+
 		CString ClassName = MemMapModule[nItem].Name.Left(MemMapModule[nItem].Name.GetLength() - 4);
 		ClassName += _T("_base");
 
@@ -127,15 +127,13 @@ void CDialogModules::SetSelected()
 		if (!pNewClass)
 		{
 			pNewClass = new CNodeClass;
-
-			
 			pNewClass->Name = ClassName;
 
 			TCHAR strStart[64];
 			_stprintf(strStart, _T("%IX"), MemMapModule[nItem].Start);
 			pNewClass->strOffset = strStart;
 			pNewClass->offset = MemMapModule[nItem].Start;
-
+			pNewClass->pChildWindow = pChild;
 			pNewClass->idx = (int)theApp.Classes.size();
 
 			theApp.Classes.push_back(pNewClass);
@@ -186,7 +184,7 @@ int CDialogModules::AddData(int Index, LPTSTR ModuleName, LPTSTR StartAddress, L
 	lvi.lParam = lParam;
 	lvi.iItem = m_ModuleViewList.GetItemCount();
 
-	int pos = m_ModuleViewList.InsertItem(&lvi); //ListView_InsertItem(m_ModuleViewList.GetSafeHwnd(), &lvi);
+	int pos = m_ModuleViewList.InsertItem(&lvi);
 
 	m_ModuleViewList.SetItemText(pos, COLUMN_START, (LPTSTR)StartAddress);
 	m_ModuleViewList.SetItemText(pos, COLUMN_END, (LPTSTR)EndAddress);
