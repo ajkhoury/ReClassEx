@@ -314,7 +314,6 @@
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="nt_ddk.h" />
     <ClInclude Include="Parser.h" />
-    <ClInclude Include="Plugins.h" />
     <ClInclude Include="ReClass2015.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SDK.h" />
@@ -333,7 +332,6 @@
     <ClCompile Include="DialogModules.cpp" />
     <ClCompile Include="DialogTypes.cpp" />
     <ClCompile Include="MainFrm.cpp" />
-    <ClCompile Include="Plugins.cpp" />
     <ClCompile Include="ReClass2015.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
