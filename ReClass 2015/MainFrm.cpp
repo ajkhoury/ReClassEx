@@ -660,7 +660,7 @@ void CMainFrame::OnUpdateButtonDeleteclass(CCmdUI *pCmdUI)
 
 void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 {
-	if (nIDEvent == 0xB00B1E5)
+	if (nIDEvent == TIMER_MEMORYMAP_UPDATE)
 		UpdateMemoryMap();
 	CMDIFrameWndEx::OnTimer(nIDEvent);
 }
