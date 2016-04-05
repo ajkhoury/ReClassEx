@@ -372,8 +372,7 @@ namespace Utils
 	static HANDLE NtCreateThreadEx(HANDLE hProcess, LPVOID lpRemoteThreadStart, LPVOID lpParam, DWORD* threadId)
 	{
 		tNtCreateThreadEx NtCreateThreadEx = (tNtCreateThreadEx)Utils::GetProcAddress(Utils::GetLocalModuleHandle("ntdll.dll"), "NtCreateThreadEx");
-		if (NtCreateThreadEx == NULL)
-			return NULL;
+		if (NtCreateThreadEx == NULL) return NULL;
 
 		PS_ATTRIBUTE_LIST attrList;
 		ZeroMemory(&attrList, sizeof(PS_ATTRIBUTE_LIST));
@@ -384,7 +383,7 @@ namespace Utils
 
 		attrList.Attributes[0].Attribute = ProcThreadAttributeValue(PsAttributeClientId, TRUE, FALSE, FALSE);
 		attrList.Attributes[0].Size = sizeof(CLIENT_ID);
-		attrList.Attributes[0].ValuePtr = (ULONG_PTR*)&cid;
+		attrList.Attributes[0].ValuePtr = (ULONG_PTR *)&cid;
 
 		attrList.TotalLength = sizeof(PS_ATTRIBUTE_LIST);
 
@@ -394,8 +393,7 @@ namespace Utils
 		if (!NT_SUCCESS(NtCreateThreadEx(&hRemoteThread, THREAD_ALL_ACCESS, NULL, hProcess, lpRemoteThreadStart, lpParam, 0, 0, 0x1000, 0x100000, &attrList)))
 			return NULL;
 
-		if (threadId)
-			*threadId = (DWORD)cid.UniqueThread;
+		if (threadId) *threadId = (DWORD)cid.UniqueThread;
 
 		return hRemoteThread;
 	}

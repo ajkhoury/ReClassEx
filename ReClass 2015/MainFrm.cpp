@@ -210,12 +210,8 @@ void CMainFrame::OnButtonCCustom()
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
-	if( !CMDIFrameWndEx::PreCreateWindow(cs) )
-		return FALSE;
-
-	if (gbTop)
-		cs.dwExStyle |= WS_EX_TOPMOST;
-
+	if(!CMDIFrameWndEx::PreCreateWindow(cs)) return FALSE;
+	if (gbTop) cs.dwExStyle |= WS_EX_TOPMOST;
 	return TRUE;
 }
 
@@ -425,6 +421,7 @@ void CMainFrame::OnCheckCbRtti()
 {
 	gbRTTI = !gbRTTI;
 }
+
 void CMainFrame::OnUpdateCheckCbRtti(CCmdUI *pCmdUI)
 {
 	if (!gbPointers)
@@ -446,15 +443,20 @@ void CMainFrame::OnButtonTypedef()
 // Annoying processes to filter out that you probably won't be looking in the memory of
 static const char* CommonProcesses[] = 
 {
-	"svchost.exe", "conhost.exe", "wininit.exe", "smss.exe", "StikyNot.exe", "dwm.exe", "winlogon.exe",
-	"winint.exe", "wlanext.exe", "spoolsv.exe", "spoolsv.exe", "ApplicationFrameHost.exe",
-	"notepad.exe", "explorer.exe", "sqlservr.exe", "sqlwriter.exe", "nvtray.exe", "SearchIndexer.exe",
-	"nvxdsync.exe", "lsass.exe", "jusched.exe", "conhost.exe", "ShellExperienceHost.exe",
-	"winamp.exe", "calc.exe", "win32calc.exe", "taskhostex.exe", "Taskmgr.exe", "WUDFHost.exe",
-	"plugin-container.exe", "SearchProtocolHost.exe", "SearchFilterHost.exe", "fontdrvhost.exe",
-	"ReClass.exe", "ReClass_64.exe", "SearchUI.exe", "DataExchangeHost.exe", "WmiPrvSe.exe",
-	"SettingSyncHost.exe", "SkyDrive.exe", "ctfmon.exe", "RuntimeBroker.exe", "SystemSettingsBroker.exe",
-	"BTTray.exe", "BTStackServer.exe", "Bluetooth Headset Helper.exe", "taskhostw.exe"
+	"svchost.exe", "conhost.exe", "wininit.exe", "smss.exe","winint.exe", "wlanext.exe",
+	"spoolsv.exe", "spoolsv.exe","notepad.exe", "explorer.exe", "itunes.exe",
+	"sqlservr.exe", "nvtray.exe", "nvxdsync.exe", "lsass.exe", "jusched.exe",
+	"conhost.exe", "chrome.exe", "firefox.exe", "winamp.exe", "TrustedInstaller.exe",
+	"WinRAR.exe", "calc.exe", "taskhostex.exe", "Taskmgr.exe", "dwm.exe", "SpotifyWebHelper.exe"
+	"plugin-container.exe", "services.exe","devenv.exe", "flux.exe", "skype.exe", "spotify.exe", 
+	"csrss.exe", "taskeng.exe","spotifyhelper.exe", "vcpkgsrv.exe", "msbuild.exe", "cmd.exe", "taskhost.exe",
+	"SettingSyncHost.exe", "SkyDrive.exe", "ctfmon.exe", "RuntimeBroker.exe","BTTray.exe", "BTStackServer.exe", 
+	"Bluetooth Headset Helper.exe", "winlogon.exe", "PnkBstrA.exe", "armsvc.exe", "MSIAfterburner.exe", "vmnat.exe",
+	"vmware-authd.exe", "vmnetdhcp.exe", "pia_manager.exe", "SpotifyWebHelper.exe", "Dropbox.exe", "Viber.exe", "idaq.exe",
+	"idaq64.exe", "CoreSync.exe", "Steam.exe", "SpotifyCrashService.exe", "RzSynapse.exe", "acrotray.exe",
+	"CCLibrary.exe", "pia_tray.exe", "rubyw.exe", "netsession_win.exe", "NvBackend.exe", "TeamViewer_Service.exe",
+	"DisplayFusionHookAppWIN6032.exe", "DisplayFusionHookAppWIN6064.exe", "GameScannerService.exe", "AdobeUpdateService.exe",
+	"steamwebhelper.exe", "c2c_service.exe", "Sync Server.exe", "NvNetworkService.exe", "Creative Cloud.exe", "foobar2000.exe",
 };
 
 void CMainFrame::OnButtonSelectProcess()
@@ -517,12 +519,15 @@ void CMainFrame::OnButtonSelectProcess()
 					if (gbFilterProcesses)
 					{
 						bool skip = false;
-						for (int i = 0; i < sizeof(CommonProcesses) / sizeof(*CommonProcesses); i++) {
-							if (_stricmp(pName, CommonProcesses[i]) == 0) {
+						for (int i = 0; i < sizeof(CommonProcesses) / sizeof(*CommonProcesses); i++) 
+						{
+							if ( _stricmp( pName, CommonProcesses[ i ] ) == 0 || (DWORD)infoP->UniqueProcessId == GetCurrentProcessId( ) )
+							{
 								skip = true;
 								break;
 							}
 						}
+
 						if (skip)
 						{
 							if (!infoP->NextEntryOffset)
@@ -530,7 +535,7 @@ void CMainFrame::OnButtonSelectProcess()
 							infoP = (PSYSTEM_PROCESS_INFORMATION)((unsigned char*)infoP + infoP->NextEntryOffset);
 							continue;
 						}
-					}				
+					}
 
 					hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, (DWORD)infoP->UniqueProcessId);
 					if (hProcess)
@@ -544,7 +549,7 @@ void CMainFrame::OnButtonSelectProcess()
 							TCHAR filename[1024];
 							GetModuleFileNameEx(hProcess, NULL, filename, 1024);
 
-							SHFILEINFO    sfi;
+							SHFILEINFO sfi;
 							SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
 
 							CBitmap* pBitmap = new CBitmap();
@@ -561,7 +566,6 @@ void CMainFrame::OnButtonSelectProcess()
 
 							dc.FillSolidRect(0, 0, size, size, GetSysColor(COLOR_3DFACE));
 							::DrawIconEx(dc.GetSafeHdc(), 0, 0, sfi.hIcon, size, size, 0, NULL, DI_NORMAL);
-							
 							dc.SelectObject(pOldBmp);
 							dc.DeleteDC();
 
