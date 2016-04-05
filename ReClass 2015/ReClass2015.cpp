@@ -366,7 +366,7 @@ void CReClass2015App::OnFileNew()
 	pClass->Nodes.push_back(new CNodeInt8);
 	pClass->Nodes.push_back(new CNodeDWORD);
 	pClass->Nodes.push_back(new CNodeWORD);
-	pClass->Nodes.push_back(new CNodeBYTE);
+	pClass->Nodes.push_back(new CNodeByte);
 	pClass->Nodes.push_back(new CNodeText);
 	pClass->Nodes.push_back(new CNodeUnicode);
 	pClass->Nodes.push_back(new CNodeFloat);
@@ -549,7 +549,7 @@ void CReClass2015App::OnFileImport()
 	//
 	//				if ( t == nt_uint32   ) pNode = new CNodeDWORD;
 	//				if ( t == nt_uint16   ) pNode = new CNodeWORD;
-	//				if ( t == nt_uint8    ) pNode = new CNodeBYTE;
+	//				if ( t == nt_uint8    ) pNode = new CNodeByte;
 	//				if ( t == nt_pointer  ) pNode = new CNodePtr;
 	//				if ( t == nt_float    ) pNode = new CNodeFloat;
 	//				if ( t == nt_double   ) pNode = new CNodeDouble;
@@ -842,7 +842,7 @@ CNodeBase* CReClass2015App::CreateNewNode(NodeType Type)
 
 	if (Type == nt_uint32) return new CNodeDWORD;
 	if (Type == nt_uint16) return new CNodeWORD;
-	if (Type == nt_uint8) return new CNodeBYTE;
+	if (Type == nt_uint8) return new CNodeByte;
 
 	if (Type == nt_vec2) return new CNodeVec2;
 	if (Type == nt_vec3) return new CNodeVec3;

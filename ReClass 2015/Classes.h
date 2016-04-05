@@ -25,7 +25,7 @@ class CNodeInt32;
 class CNodeInt8;
 class CNodeDWORD;
 class CNodeWORD;
-class CNodeBYTE;
+class CNodeByte;
 class CNodeText;
 class CNodeCharPtr;
 class CNodeUnicode;
@@ -50,7 +50,7 @@ struct ViewInfo
 	std::vector<HotSpot>* HotSpots;
 	std::vector<CNodeClass*>* Classes;
 	size_t Address;
-	void* pData;
+	unsigned char* pData;
 	UINT Level;
 	bool bMultiSelected;
 };
@@ -513,7 +513,7 @@ public:
 		// Added
 		//if (GetType() == nt_int64)
 		//{
-			//DWORD_PTR Val = *((DWORD_PTR*)&((BYTE*)View.pData)[offset]);
+			//DWORD_PTR Val = *((DWORD_PTR*)&View.pData[offset]);
 			//x = AddText(View, x, y, crValue, HS_NONE, "(0x%I64X)", Val);
 
 			// Frostbite typeinfo shit
@@ -533,9 +533,9 @@ public:
 
 		if (GetType() == nt_hex64)
 		{
-			float flVal = *((float*)&((BYTE*)View.pData)[offset]);
+			float flVal = *((float*)&View.pData[offset]);
 			// TODO: Change to int64
-			__int64 intVal = *((__int64*)&((BYTE*)View.pData)[offset]);
+			__int64 intVal = *((__int64*)&View.pData[offset]);
 
 			if (gbFloat)
 			{
@@ -579,7 +579,7 @@ public:
 
 					for (int i = 0; i < 8; i++)
 					{
-						if (!isprint((BYTE)txt[i]))
+						if (!isprint((unsigned char)txt[i]))
 							bAddStr = false;
 					}
 
@@ -593,8 +593,8 @@ public:
 		}
 		else if (GetType() == nt_hex32)
 		{
-			float flVal = *((float*)&((BYTE*)View.pData)[offset]);
-			int intVal = *((int*)&((BYTE*)View.pData)[offset]);
+			float flVal = *((float*)&View.pData[offset]);
+			int intVal = *((int*)&View.pData[offset]);
 
 			if (gbFloat)
 			{
@@ -810,7 +810,7 @@ public:
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-		BYTE v = (BYTE)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
+		unsigned char v = (unsigned char)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
 		WriteMemory(Spot.Address + Spot.ID, &v, 1);
 	}
 
@@ -821,7 +821,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		BYTE* pMemory = (BYTE*)&((BYTE*)View.pData)[offset];
+		unsigned char* pMemory = (unsigned char*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -858,7 +858,7 @@ public:
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-		BYTE v = (BYTE)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
+		unsigned char v = (unsigned char)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
 		if (Spot.ID == 0) 
 			WriteMemory(Spot.Address + 0, &v, 1);
 		if (Spot.ID == 1) 
@@ -876,7 +876,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		BYTE* pMemory = (BYTE*)&((BYTE*)View.pData)[offset];
+		unsigned char* pMemory = (unsigned char *)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -911,7 +911,7 @@ public:
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-		BYTE v = (BYTE)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
+		unsigned char v = (unsigned char)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
 		if (Spot.ID == 0) 
 			WriteMemory(Spot.Address, &v, 1);
 		if (Spot.ID == 1)
@@ -925,7 +925,7 @@ public:
 		if (bHidden) 
 			return DrawHidden(View, x, y);
 
-		BYTE* pMemory = (BYTE*)&((BYTE*)View.pData)[offset];
+		unsigned char* pMemory = (unsigned char*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -957,7 +957,7 @@ public:
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-		BYTE v = (BYTE)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
+		unsigned char v = (unsigned char)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
 		if (Spot.ID == 0)
 			WriteMemory(Spot.Address, &v, 1);
 	}
@@ -969,7 +969,7 @@ public:
 		if (bHidden) 
 			return DrawHidden(View, x, y);
 
-		BYTE* pMemory = (BYTE*)&((BYTE*)View.pData)[offset];
+		unsigned char* pMemory = (unsigned char*)&((unsigned char*)View.pData)[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1000,7 +1000,7 @@ public:
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-		BYTE v = (BYTE)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
+		unsigned char v = (unsigned char)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
 		if (Spot.ID == 0)
 			WriteMemory(Spot.Address, &v, 1);
 	}
@@ -1012,7 +1012,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		BYTE* pMemory = (BYTE*)&((BYTE*)View.pData)[offset];
+		unsigned char* pMemory = (unsigned char*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1057,7 +1057,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		DWORD_PTR* pMemory = (DWORD_PTR*)&((BYTE*)View.pData)[offset];
+		size_t* pMemory = (size_t*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1243,7 +1243,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		size_t* pMemory = (size_t*)&((BYTE*)View.pData)[offset];
+		size_t* pMemory = (size_t*)&View.pData[offset];
 
 		//printf( "read ptr: %p\n", View.pData );
 		AddSelection(View, 0, y, FontHeight);
@@ -1301,7 +1301,7 @@ public:
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
 		if (bHidden) return DrawHidden(View, x, y);
-		__int64* pMemory = (__int64*)&((BYTE*)View.pData)[offset];
+		__int64* pMemory = (__int64*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1338,7 +1338,7 @@ public:
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
 		if (bHidden) return DrawHidden(View, x, y);
-		__int32* pMemory = (__int32*)&((BYTE*)View.pData)[offset];
+		__int32* pMemory = (__int32*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1374,7 +1374,7 @@ public:
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
 		if (bHidden) return DrawHidden(View, x, y);
-		__int16* pMemory = (__int16*)&((BYTE*)View.pData)[offset];
+		__int16* pMemory = (__int16*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1411,7 +1411,7 @@ public:
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
 		if (bHidden) return DrawHidden(View, x, y);
-		__int8* pMemory = (__int8*)&((BYTE*)View.pData)[offset];
+		__int8* pMemory = (__int8*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1448,7 +1448,7 @@ public:
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
 		if (bHidden) return DrawHidden(View, x, y);
-		DWORD* pMemory = (DWORD*)&((BYTE*)View.pData)[offset];
+		DWORD* pMemory = (DWORD*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1488,7 +1488,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		WORD* pMemory = (WORD*)&((BYTE*)View.pData)[offset];
+		WORD* pMemory = (WORD*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1507,15 +1507,15 @@ public:
 	}
 };
 
-class CNodeBYTE : public CNodeBase
+class CNodeByte : public CNodeBase
 {
 public:
-	CNodeBYTE() { nodeType = nt_uint8; }
+	CNodeByte() { nodeType = nt_uint8; }
 
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-		BYTE v = _ttoi(Spot.Text);
+		unsigned char v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
 			WriteMemory(Spot.Address, &v, 1);
 	}
@@ -1527,7 +1527,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		BYTE* pMemory = (BYTE*)&((BYTE*)View.pData)[offset];
+		unsigned char* pMemory = (unsigned char*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1580,7 +1580,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		BYTE* pMemory = (BYTE*)&((BYTE*)View.pData)[offset];
+		unsigned char* pMemory = (unsigned char*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1634,7 +1634,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		size_t* pMemory = (size_t*)&((BYTE*)View.pData)[offset];
+		size_t* pMemory = (size_t*)&View.pData[offset];
 
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
@@ -1764,7 +1764,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		float* pMemory = (float*)&((BYTE*)View.pData)[offset];
+		float* pMemory = (float*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1811,7 +1811,9 @@ public:
 	{
 		if (bHidden)
 			return DrawHidden(View, x, y);
-		double* pMemory = (double*)&((BYTE*)View.pData)[offset];
+
+		double* pMemory = (double*)&View.pData[offset];
+		
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1856,7 +1858,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		float* pMemory = (float*)&((BYTE*)View.pData)[offset];
+		float* pMemory = (float*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1904,7 +1906,7 @@ public:
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
 		if (bHidden) return DrawHidden(View, x, y);
-		float* pMemory = (float*)&((BYTE*)View.pData)[offset];
+		float* pMemory = (float*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1957,7 +1959,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		float* pMemory = (float*)&((BYTE*)View.pData)[offset];
+		float* pMemory = (float*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -2007,7 +2009,7 @@ public:
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
 		if (bHidden) return DrawHidden(View, x, y);
-		float* pMemory = (float*)&((BYTE*)View.pData)[offset];
+		float* pMemory = (float*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -2159,7 +2161,7 @@ public:
 			ViewInfo newView;
 			newView = View;
 			newView.Address = View.Address + offset + pNode->GetMemorySize() * Current;
-			newView.pData = (void*)((size_t)View.pData + offset + pNode->GetMemorySize() * Current);
+			newView.pData = (unsigned char*)((size_t)View.pData + offset + pNode->GetMemorySize() * Current);
 			y = pNode->Draw(newView, x, y);
 		};
 		return y;
@@ -2206,8 +2208,7 @@ public:
 			ViewInfo newView;
 			newView = View;
 			newView.Address = View.Address + offset;
-			newView.pData = (void*)((size_t)newView.pData + offset);
-
+			newView.pData = (unsigned char*)((size_t)newView.pData + offset);
 			y = pNode->Draw(newView, x, y);
 		}
 

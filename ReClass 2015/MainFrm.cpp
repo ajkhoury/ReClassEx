@@ -17,36 +17,36 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_WM_SETTINGCHANGE()
 	//ON_COMMAND(ID_BUTTON_SHOWCLASSES, &CMainFrame::OnButtonShowclasses)
-	ON_COMMAND(ID_BUTTON_CBACKGROUND, &CMainFrame::OnButtonCbackground)
-	ON_COMMAND(ID_BUTTON_CSELECT, &CMainFrame::OnButtonCselect)
-	ON_COMMAND(ID_BUTTON_CHIDDEN, &CMainFrame::OnButtonChidden)
-	ON_COMMAND(ID_BUTTON_COFFSET, &CMainFrame::OnButtonCoffset)
-	ON_COMMAND(ID_BUTTON_CADDRESS, &CMainFrame::OnButtonCaddress)
-	ON_COMMAND(ID_BUTTON_CHEX, &CMainFrame::OnButtonChex)
-	ON_COMMAND(ID_BUTTON_CTYPE, &CMainFrame::OnButtonCtype)
-	ON_COMMAND(ID_BUTTON_CNAME, &CMainFrame::OnButtonCname)
-	ON_COMMAND(ID_BUTTON_CVALUE, &CMainFrame::OnButtonCvalue)
-	ON_COMMAND(ID_BUTTON_CINDEX, &CMainFrame::OnButtonCindex)
-	ON_COMMAND(ID_BUTTON_CCOMMENT, &CMainFrame::OnButtonCcomment)
-	ON_COMMAND(ID_BUTTON_CTEXT, &CMainFrame::OnButtonCtext)
-	ON_COMMAND(ID_BUTTON_CVTABLE, &CMainFrame::OnButtonCvtable)
-	ON_COMMAND(ID_BUTTON_CFUNCTION, &CMainFrame::OnButtonCfunction)
-	ON_COMMAND(ID_BUTTON_CCUSTOM, &CMainFrame::OnButtonCcustom)
-	ON_COMMAND(ID_CHECK_CBADDRESS, &CMainFrame::OnCheckCbaddress)
-	ON_UPDATE_COMMAND_UI(ID_CHECK_CBADDRESS, &CMainFrame::OnUpdateCheckCbaddress)
-	ON_COMMAND(ID_CHECK_CBOFFSET, &CMainFrame::OnCheckCboffset)
-	ON_UPDATE_COMMAND_UI(ID_CHECK_CBOFFSET, &CMainFrame::OnUpdateCheckCboffset)
+	ON_COMMAND(ID_BUTTON_CBACKGROUND, &CMainFrame::OnButtonCBackground)
+	ON_COMMAND(ID_BUTTON_CSELECT, &CMainFrame::OnButtonCSelect)
+	ON_COMMAND(ID_BUTTON_CHIDDEN, &CMainFrame::OnButtonCHidden)
+	ON_COMMAND(ID_BUTTON_COFFSET, &CMainFrame::OnButtonCOffset)
+	ON_COMMAND(ID_BUTTON_CADDRESS, &CMainFrame::OnButtonCAddress)
+	ON_COMMAND(ID_BUTTON_CHEX, &CMainFrame::OnButtonCHex)
+	ON_COMMAND(ID_BUTTON_CTYPE, &CMainFrame::OnButtonCType)
+	ON_COMMAND(ID_BUTTON_CNAME, &CMainFrame::OnButtonCName)
+	ON_COMMAND(ID_BUTTON_CVALUE, &CMainFrame::OnButtonCValue)
+	ON_COMMAND(ID_BUTTON_CINDEX, &CMainFrame::OnButtonCIndex)
+	ON_COMMAND(ID_BUTTON_CCOMMENT, &CMainFrame::OnButtonCComment)
+	ON_COMMAND(ID_BUTTON_CTEXT, &CMainFrame::OnButtonCText)
+	ON_COMMAND(ID_BUTTON_CVTABLE, &CMainFrame::OnButtonCVtable)
+	ON_COMMAND(ID_BUTTON_CFUNCTION, &CMainFrame::OnButtonCFunction)
+	ON_COMMAND(ID_BUTTON_CCUSTOM, &CMainFrame::OnButtonCCustom)
+	ON_COMMAND(ID_CHECK_CBADDRESS, &CMainFrame::OnCheckCbAddress)
+	ON_UPDATE_COMMAND_UI(ID_CHECK_CBADDRESS, &CMainFrame::OnUpdateCheckCbAddress)
+	ON_COMMAND(ID_CHECK_CBOFFSET, &CMainFrame::OnCheckCbOffset)
+	ON_UPDATE_COMMAND_UI(ID_CHECK_CBOFFSET, &CMainFrame::OnUpdateCheckCbOffset)
 	ON_COMMAND(ID_BUTTON_TYPEDEF, &CMainFrame::OnButtonTypedef)
-	ON_COMMAND(ID_CHECK_CBTEXT, &CMainFrame::OnCheckCbtext)
-	ON_UPDATE_COMMAND_UI(ID_CHECK_CBTEXT, &CMainFrame::OnUpdateCheckCbtext)
-	ON_COMMAND(ID_CHECK_CBRTTI, &CMainFrame::OnCheckCbrtti)
-	ON_UPDATE_COMMAND_UI(ID_CHECK_CBRTTI, &CMainFrame::OnUpdateCheckCbrtti)
+	ON_COMMAND(ID_CHECK_CBTEXT, &CMainFrame::OnCheckCbText)
+	ON_UPDATE_COMMAND_UI(ID_CHECK_CBTEXT, &CMainFrame::OnUpdateCheckCbText)
+	ON_COMMAND(ID_CHECK_CBRTTI, &CMainFrame::OnCheckCbRtti)
+	ON_UPDATE_COMMAND_UI(ID_CHECK_CBRTTI, &CMainFrame::OnUpdateCheckCbRtti)
 	//ON_COMMAND(ID_BUTTON_SELECT, &CMainFrame::OnButtonSelect)
-	ON_COMMAND(ID_BUTTON_SELECTPROCESS, &CMainFrame::OnButtonSelectprocess)
-	ON_COMMAND(ID_BUTTON_EDITCLASS, &CMainFrame::OnButtonEditclass)
-	ON_UPDATE_COMMAND_UI(ID_BUTTON_EDITCLASS, &CMainFrame::OnUpdateButtonEditclass)
-	ON_COMMAND(ID_BUTTON_DELETECLASS, &CMainFrame::OnButtonDeleteclass)
-	ON_UPDATE_COMMAND_UI(ID_BUTTON_DELETECLASS, &CMainFrame::OnUpdateButtonDeleteclass)
+	ON_COMMAND(ID_BUTTON_SELECTPROCESS, &CMainFrame::OnButtonSelectProcess)
+	ON_COMMAND(ID_BUTTON_EDITCLASS, &CMainFrame::OnButtonEditClass)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_EDITCLASS, &CMainFrame::OnUpdateButtonEditClass)
+	ON_COMMAND(ID_BUTTON_DELETECLASS, &CMainFrame::OnButtonDeleteClass)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_DELETECLASS, &CMainFrame::OnUpdateButtonDeleteClass)
 	ON_WM_TIMER()
 	ON_COMMAND(ID_CHECK_TOPMOST, &CMainFrame::OnCheckTopmost)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_TOPMOST, &CMainFrame::OnUpdateCheckTopmost)
@@ -147,63 +147,63 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	return 0;
 }
-void CMainFrame::OnButtonCbackground()
+void CMainFrame::OnButtonCBackground()
 {
 	crBackground = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CBACKGROUND))->GetColor();
 }
-void CMainFrame::OnButtonCselect()
+void CMainFrame::OnButtonCSelect()
 {
 	crSelect = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CSELECT))->GetColor();
 }
-void CMainFrame::OnButtonChidden()
+void CMainFrame::OnButtonCHidden()
 {
 	crHidden= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CHIDDEN))->GetColor();
 }
-void CMainFrame::OnButtonCoffset()
+void CMainFrame::OnButtonCOffset()
 {
 	crOffset= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_COFFSET))->GetColor();
 }
-void CMainFrame::OnButtonCaddress()
+void CMainFrame::OnButtonCAddress()
 {
 	crAddress= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CADDRESS))->GetColor();
 }
-void CMainFrame::OnButtonChex()
+void CMainFrame::OnButtonCHex()
 {
 	crHex= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CHEX))->GetColor();
 }
-void CMainFrame::OnButtonCtype()
+void CMainFrame::OnButtonCType()
 {
 	crType= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CTYPE))->GetColor();
 }
-void CMainFrame::OnButtonCname()
+void CMainFrame::OnButtonCName()
 {
 	crName= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CNAME))->GetColor();
 }
-void CMainFrame::OnButtonCvalue()
+void CMainFrame::OnButtonCValue()
 {
 	crValue= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CVALUE))->GetColor();
 }
-void CMainFrame::OnButtonCindex()
+void CMainFrame::OnButtonCIndex()
 {
 	crIndex= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CINDEX))->GetColor();
 }
-void CMainFrame::OnButtonCcomment()
+void CMainFrame::OnButtonCComment()
 {
 	crComment= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CCOMMENT))->GetColor();
 }
-void CMainFrame::OnButtonCtext()
+void CMainFrame::OnButtonCText()
 {
 	crChar= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CTEXT))->GetColor();
 }
-void CMainFrame::OnButtonCvtable()
+void CMainFrame::OnButtonCVtable()
 {
 	crVTable= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CVTABLE))->GetColor();
 }
-void CMainFrame::OnButtonCfunction()
+void CMainFrame::OnButtonCFunction()
 {
 	crFunction= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CFUNCTION))->GetColor();
 }
-void CMainFrame::OnButtonCcustom()
+void CMainFrame::OnButtonCCustom()
 {
 	crCustom= ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID(ID_BUTTON_CCUSTOM))->GetColor();
 }
@@ -394,38 +394,38 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 	return CMDIFrameWndEx::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
 }
 
-void CMainFrame::OnCheckCbaddress()
+void CMainFrame::OnCheckCbAddress()
 {
 	gbAddress = !gbAddress;
 }
-void CMainFrame::OnUpdateCheckCbaddress(CCmdUI *pCmdUI)
+void CMainFrame::OnUpdateCheckCbAddress(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(gbAddress);
 }
 
-void CMainFrame::OnCheckCboffset()
+void CMainFrame::OnCheckCbOffset()
 {
 	gbOffset = !gbOffset;
 }
-void CMainFrame::OnUpdateCheckCboffset(CCmdUI *pCmdUI)
+void CMainFrame::OnUpdateCheckCbOffset(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(gbOffset);
 }
 
-void CMainFrame::OnCheckCbtext()
+void CMainFrame::OnCheckCbText()
 {
 	gbText = !gbText;
 }
-void CMainFrame::OnUpdateCheckCbtext(CCmdUI *pCmdUI)
+void CMainFrame::OnUpdateCheckCbText(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(gbText);
 }
 
-void CMainFrame::OnCheckCbrtti()
+void CMainFrame::OnCheckCbRtti()
 {
 	gbRTTI = !gbRTTI;
 }
-void CMainFrame::OnUpdateCheckCbrtti(CCmdUI *pCmdUI)
+void CMainFrame::OnUpdateCheckCbRtti(CCmdUI *pCmdUI)
 {
 	if (!gbPointers)
 		pCmdUI->Enable(FALSE);
@@ -457,7 +457,7 @@ static const char* CommonProcesses[] =
 	"BTTray.exe", "BTStackServer.exe", "Bluetooth Headset Helper.exe", "taskhostw.exe"
 };
 
-void CMainFrame::OnButtonSelectprocess()
+void CMainFrame::OnButtonSelectProcess()
 {
 	HANDLE hProcess = 0;
 	void* pBuffer = NULL;
@@ -602,7 +602,7 @@ void CMainFrame::ClearProcMenuItems()
 	ProcMenuItems.clear();
 }
 
-void CMainFrame::OnButtonEditclass()
+void CMainFrame::OnButtonEditClass()
 {
 	if (gbClassBrowser)
 	{	
@@ -631,7 +631,7 @@ void CMainFrame::OnButtonEditclass()
 	}
 }
 
-void CMainFrame::OnButtonDeleteclass()
+void CMainFrame::OnButtonDeleteClass()
 {
 	CMFCRibbonBaseElement* pButton = m_wndRibbonBar.FindByID(ID_BUTTON_DELETECLASS);
 
@@ -647,12 +647,12 @@ void CMainFrame::OnButtonDeleteclass()
 	menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this);
 }
 
-void CMainFrame::OnUpdateButtonEditclass(CCmdUI *pCmdUI)
+void CMainFrame::OnUpdateButtonEditClass(CCmdUI *pCmdUI)
 {
 	pCmdUI->Enable((theApp.Classes.size() > 0));
 }
 
-void CMainFrame::OnUpdateButtonDeleteclass(CCmdUI *pCmdUI)
+void CMainFrame::OnUpdateButtonDeleteClass(CCmdUI *pCmdUI)
 {
 	pCmdUI->Enable((theApp.Classes.size() > 0));
 }
