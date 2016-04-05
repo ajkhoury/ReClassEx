@@ -278,5 +278,11 @@
     <Image Include="res\mainframe256.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\file_small.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\file_large.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

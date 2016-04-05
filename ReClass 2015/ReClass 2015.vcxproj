@@ -347,6 +347,8 @@
     <ResourceCompile Include="ReClass2015.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\file_large.bmp" />
+    <Image Include="res\file_small.bmp" />
     <Image Include="res\home_large.bmp" />
     <Image Include="res\home_small.bmp" />
     <Image Include="res\mainframe.bmp" />
