@@ -697,6 +697,7 @@ void CMainFrame::OnUpdateCheckFilterProcesses(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(gbFilterProcesses);
 }
+
 // Multi monitor support. Thank timboy67678
 void CMainFrame::OnButtonLeft()
 {
@@ -707,7 +708,7 @@ void CMainFrame::OnButtonLeft()
 	if (!::GetMonitorInfo(hMon, &mi))
 		MessageBox(_T("Failed to get monitor info!"));
 	LONG nWidth = mi.rcWork.right - mi.rcWork.left, nHeight = mi.rcWork.bottom - mi.rcWork.top;
-	SetWindowPos(NULL, mi.rcMonitor.left, mi.rcMonitor.top, nWidth / 2, nHeight, SWP_NOZORDER);
+	SetWindowPos(gbTop ? &wndTopMost : &wndNoTopMost, mi.rcMonitor.left, mi.rcMonitor.top, nWidth / 2, nHeight, SWP_NOZORDER);
 }
 
 void CMainFrame::OnButtonRight()
@@ -719,7 +720,7 @@ void CMainFrame::OnButtonRight()
 	if (!::GetMonitorInfo(hMon, &mi)) 
 		MessageBox(_T("Failed to get monitor info!"));
 	LONG nWidth = mi.rcWork.right - mi.rcWork.left, nHeight = mi.rcWork.bottom - mi.rcWork.top;
-	SetWindowPos(NULL, mi.rcMonitor.left + (nWidth / 2), 0, nWidth / 2, nHeight, SWP_NOZORDER);
+	SetWindowPos(gbTop ? &wndTopMost : &wndNoTopMost, mi.rcMonitor.left + (nWidth / 2), 0, nWidth / 2, nHeight, SWP_NOZORDER);
 }
 
 void CMainFrame::OnCheckFloat()

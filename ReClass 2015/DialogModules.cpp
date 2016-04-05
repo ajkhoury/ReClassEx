@@ -133,7 +133,7 @@ void CDialogModules::SetSelected()
 
 		//printf( "szBuffer %s new %d\n", szBuffer.GetBuffer( ), nItem );
 		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
-		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
+		CChildFrame* pChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
 
 		CString ClassName = MemMapModule[nItem].Name.Left(MemMapModule[nItem].Name.GetLength() - 4);
 		ClassName += _T("_base");
