@@ -20,7 +20,8 @@ CReClass2015App theApp;
 BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx) 
 	ON_COMMAND(ID_APP_ABOUT, &CReClass2015App::OnAppAbout)
 	ON_COMMAND(ID_FILE_NEW, &CReClass2015App::OnFileNew)
-	ON_COMMAND(ID_FILE_IMPORT, &CReClass2015App::OnFileImport)
+	//ON_COMMAND(ID_FILE_IMPORT, &CReClass2015App::OnFileImport)
+	ON_COMMAND(ID_RECLASS_PLUGINS, &CReClass2015App::OnButtonPlugins)
 	ON_COMMAND(ID_BUTTON_NEWCLASS, &CReClass2015App::OnButtonNewClass)
 	ON_COMMAND(ID_BUTTON_NOTES, &CReClass2015App::OnButtonNotes)
 	ON_COMMAND(ID_BUTTON_SEARCH, &CReClass2015App::OnButtonSearch)
@@ -1559,6 +1560,11 @@ void CReClass2015App::OnButtonGenerate()
 
 	dlg.Text = h;
 	dlg.DoModal();
+}
+
+void CReClass2015App::OnButtonPlugins()
+{
+	GetMainWnd( )->MessageBox( _T( "Comming Soon!" ) );
 }
 
 void CReClass2015App::DeleteClass(CNodeClass* pClass)

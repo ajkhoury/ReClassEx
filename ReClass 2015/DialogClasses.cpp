@@ -93,6 +93,7 @@ void CDialogClasses::OnOK()
 		// Thanks timboy67678
 		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
 		CChildFrame* pChild = theApp.Classes[nItem]->pChildWindow;
+
 		// Check if its a window first to dodge the assertion in IsWindowVisible
 		if (pChild && IsWindow(pChild->GetSafeHwnd()) && pChild->IsWindowVisible())
 		{

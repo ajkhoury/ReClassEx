@@ -66,6 +66,7 @@ public:
 	afx_msg void OnButtonHeader();
 	afx_msg void OnButtonFooter();
 	afx_msg void OnButtonGenerate();
+	afx_msg void OnButtonPlugins();
 
 	afx_msg void OnButtonPause();
 	afx_msg void OnUpdateButtonPause(CCmdUI *pCmdUI);
@@ -78,7 +79,7 @@ public:
 	afx_msg void OnButtonClean();
 	afx_msg void OnUpdateButtonClean(CCmdUI *pCmdUI);
 	afx_msg void OnButtonModules();
-	afx_msg void OnUpdateButtonModules(CCmdUI *pCmdU );
+	afx_msg void OnUpdateButtonModules(CCmdUI *pCmdUI);
 	afx_msg void OnFileSave( );
 	afx_msg void OnUpdateFileSave(CCmdUI *pCmdUI);
 };

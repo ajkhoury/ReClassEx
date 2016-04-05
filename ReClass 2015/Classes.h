@@ -730,6 +730,7 @@ public:
 		strOffset = szOffset;
 		RequestPosition = -1;
 		idx = 0;
+		pChildWindow = nullptr;
 	}
 
 	int idx;

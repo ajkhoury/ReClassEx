@@ -424,8 +424,7 @@ void CMainFrame::OnCheckCbRtti()
 
 void CMainFrame::OnUpdateCheckCbRtti(CCmdUI *pCmdUI)
 {
-	if (!gbPointers)
-		pCmdUI->Enable(FALSE);
+	if (!gbPointers) pCmdUI->Enable(FALSE);
 	else
 	{
 		pCmdUI->Enable(TRUE);
@@ -612,9 +611,7 @@ void CMainFrame::OnButtonEditClass()
 	{	
 		CDialogClasses dlg;
 		dlg.DoModal();
-	} 
-	else 
-	{
+	} else {
 		// TODO: instead of menu popup a window
 		CMFCRibbonBaseElement* pButton = m_wndRibbonBar.FindByID(ID_BUTTON_EDITCLASS);
 
