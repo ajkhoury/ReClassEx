@@ -889,7 +889,7 @@ public:
 		{
 			// TODO these are the dots, do alignment instead of 4
 			CStringA str = GetStringFromMemoryA(pMemory, 4);
-			str += " ";
+			str += "     ";
 			tx = AddText(View, tx, y, crChar, HS_NONE, "%s", str);
 		}
 
@@ -937,7 +937,7 @@ public:
 		if (gbText)
 		{
 			CStringA str = GetStringFromMemoryA(pMemory, 2);
-			str += "  ";
+			str += "       ";
 			tx = AddText(View, tx, y, crChar, HS_NONE, "%s", str.GetBuffer());
 		}
 
@@ -981,7 +981,7 @@ public:
 		if (gbText)
 		{
 			CStringA str = GetStringFromMemoryA(pMemory, 1);
-			str += " ";
+			str += "        ";
 			tx = AddText(View, tx, y, crChar, HS_NONE, "%s", str.GetBuffer());
 		}
 
