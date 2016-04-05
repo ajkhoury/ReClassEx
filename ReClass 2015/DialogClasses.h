@@ -15,6 +15,8 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 
 	DECLARE_MESSAGE_MAP()
+
+	void OnDblclkListControl(LPNMHDR, LRESULT*);
 public:
 	CImageList	m_ImageList;
 	CListCtrl	m_ClassViewList;

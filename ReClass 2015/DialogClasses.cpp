@@ -27,6 +27,7 @@ void CDialogClasses::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CDialogClasses, CDialogEx)
 	ON_EN_CHANGE(IDC_CLASSNAME, &CDialogClasses::OnEnChangeClassname)
+	ON_NOTIFY(NM_DBLCLK, IDC_CLASSLIST, &CDialogClasses::OnDblclkListControl)
 END_MESSAGE_MAP()
 
 
@@ -37,7 +38,8 @@ void CDialogClasses::BuildList()
 	m_ClassViewList.InsertColumn(0, _T("Class"), LVCFMT_CENTER, listRect.right - listRect.left - 4);
 	
 	m_ImageList.Add(m_hClassIcon);
-	ListView_SetImageList(m_ClassViewList.GetSafeHwnd(), m_ImageList.GetSafeHandle(), LVSIL_SMALL);
+	
+	m_ClassViewList.SetImageList( &m_ImageList, LVSIL_SMALL );
 
 	for (UINT i = 0; i < theApp.Classes.size(); i++)
 	{
@@ -46,6 +48,11 @@ void CDialogClasses::BuildList()
 			continue;
 		AddData(i, 0, name);
 	}
+}
+
+void CDialogClasses::OnDblclkListControl( LPNMHDR pnmhdr, LRESULT *lpresult )
+{
+	CDialogClasses::OnOK( );
 }
 
 BOOL CDialogClasses::OnInitDialog()
@@ -98,9 +105,7 @@ void CDialogClasses::OnOK()
 		if (pChild && IsWindow(pChild->GetSafeHwnd()) && pChild->IsWindowVisible())
 		{
 			static_cast<CMDIChildWnd*>(pChild)->MDIActivate();
-		}
-		else 
-		{
+		} else {
 			CChildFrame* pNewChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
 			pNewChild->m_wndView.m_pClass = theApp.Classes[nItem];
 			theApp.Classes[nItem]->pChildWindow = pNewChild;
