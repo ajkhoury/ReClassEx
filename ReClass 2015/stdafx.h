@@ -29,6 +29,7 @@
 #include <Shlwapi.h>
 #include <Psapi.h>
 #include <CommCtrl.h>
+#include <memory>
 
 // Include BeaEngine disassembler 
 #define BEA_ENGINE_STATIC
@@ -165,7 +166,6 @@ extern CString tdPChar;
 #define WM_PROCESSMENU (WM_USER+WM_MAXITEMS)
 #define WM_CHANGECLASSMENU (WM_USER+WM_MAXITEMS+WM_MAXITEMS)
 #define WM_DELETECLASSMENU (WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS)
-
 
 #define PrintOut(fmt, ...) { \
 do { \

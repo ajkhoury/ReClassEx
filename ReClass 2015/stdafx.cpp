@@ -36,6 +36,7 @@ COLORREF crHex = RGB(0, 0, 0);
 
 CFont Font;
 //CFont SmallFont;
+
 int FontWidth;
 int FontHeight;
 
@@ -85,44 +86,32 @@ void ReadMemory(size_t Address, void* Buffer, DWORD Size)
 void WriteMemory(size_t Address, void* Buffer, DWORD Size)
 {
 	DWORD OldProtect;
-	//VirtualProtectEx(hProcess,(void*)Address,Size,PAGE_READWRITE,&OldProtect); <- srsly PAGE_READWRITE? O_o
 	VirtualProtectEx(g_hProcess, (void*)Address, Size, PAGE_EXECUTE_READWRITE, &OldProtect);
 	WriteProcessMemory(g_hProcess, (void*)Address, Buffer, Size, NULL);
 	VirtualProtectEx(g_hProcess, (void*)Address, Size, OldProtect, NULL);
-	//{
-	//	CString e;
-	//	e.Format("Error: %0.8X (%i) %0.8X<-%i",GetLastError(),GetLastError(),Address,((BYTE*)Buffer)[0]);
-	//	MessageBox(NULL,e,"Info",MB_OK);
-	//}
 }
 
 CStringA ReadMemoryString(size_t address, SIZE_T max)
 {
-	char	buffer[1024];
-	SIZE_T	bytesRead;
+	auto buffer = std::make_unique<char[]>( max ); //this is so that not only does the buffer release at end of scope but also so that the max size is consistent
+	SIZE_T bytesRead;
 
-	if (ReadProcessMemory(g_hProcess, (PVOID)address, buffer, max, &bytesRead) != 0)
+	if (ReadProcessMemory(g_hProcess, (PVOID)address, buffer.get(), max, &bytesRead) != 0)
 	{
-		//PrintOut( "Read: %p\n", address );
-		//PrintOut( "Bytes Read: %d\n", bytesRead );
-		//PrintOut( "String %s\n", buffer );
 		for (int i = 0; i < bytesRead; i++)
 		{
 			// If not a printable character and is not null terminator replace with '.'
-			if (!(isprint(buffer[i] & 0xFF)) && buffer[i] != '\0') {
+			if (!(isprint(buffer[i] & 0xFF)) && buffer[i] != '\0') 
 				buffer[i] = '.';
-			}
 		}
 
 		// Terminate at max
 		buffer[bytesRead] = '\0';
 
-		return buffer;
-	}
-	else
-	{
+		return CStringA(buffer.get());
+	} else {
 		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s"), Utils::GetLastErrorString().GetString());
-		return "..";
+		return CStringA("..");
 	}
 }
 
@@ -185,18 +174,15 @@ bool PauseResumeThreadList(bool bResumeThread)
 	for (ULONG i = 0; i < numberOfThreads; i++)
 	{
 		PSYSTEM_THREAD_INFORMATION thread = &threads[i];
-		if (!thread)
-			continue;
+		if (!thread) continue;
 		DWORD thId = (DWORD)thread->ClientId.UniqueThread;
-		if (!thId)
-			continue;
+		if (!thId) continue;
+		
 		HANDLE hThread = OpenThread(THREAD_SUSPEND_RESUME, FALSE, thId);
-		if (bResumeThread)
-		{
+		
+		if (bResumeThread) {
 			ResumeThread(hThread);
-		}
-		else
-		{
+		} else {
 			SuspendThread(hThread);
 		}
 		CloseHandle(hThread);

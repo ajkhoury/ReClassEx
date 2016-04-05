@@ -40,6 +40,7 @@ BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_RESUME, &CReClass2015App::OnUpdateButtonResume)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_KILL, &CReClass2015App::OnUpdateButtonKill)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_SEARCH, &CReClass2015App::OnUpdateButtonSearch)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_MODULES, &CReClass2015App::OnUpdateButtonModules)
 	ON_COMMAND(ID_BUTTON_GENERATE, &CReClass2015App::OnButtonGenerate)
 	ON_COMMAND(ID_BUTTON_CLEAN, &CReClass2015App::OnButtonClean)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_CLEAN, &CReClass2015App::OnUpdateButtonClean)
@@ -777,6 +778,11 @@ void CReClass2015App::OnButtonModules()
 	PrintOut(_T("OnButtonModules called"));
 	CDialogModules dlg;
 	dlg.DoModal();
+}
+
+void CReClass2015App::OnUpdateButtonModules( CCmdUI * pCmdU )
+{ 
+	pCmdU->Enable( g_hProcess != NULL );
 }
 
 void CReClass2015App::OnButtonNotes()

@@ -82,8 +82,7 @@ BOOL CDialogConsole::Create(UINT nIDTemplate, CWnd* pParentWnd)
 
 LRESULT CDialogConsole::PrintText(WPARAM wParam, LPARAM lParam)
 {
-	if (wParam == NULL)
-		return FALSE;
+	if (wParam == NULL) return FALSE;
 
 	// Make temporarily editable
 	SendEditor(SCI_SETREADONLY, FALSE);
@@ -201,8 +200,7 @@ void CDialogConsole::SizeEditor()
 		RECT rect;
 		GetClientRect(&rect);
 		CWnd *pWnd = CWnd::FromHandle(m_hwndEditWindow);
-		if (pWnd)
-			pWnd->MoveWindow(&rect);
+		if (pWnd) pWnd->MoveWindow(&rect);
 	}
 }
 

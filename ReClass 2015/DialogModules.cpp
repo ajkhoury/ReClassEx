@@ -122,20 +122,21 @@ __inline CNodeClass* GetClassByName(const TCHAR* szClassName)
 
 void CDialogModules::SetSelected()
 {
-	unsigned numselected = m_ModuleViewList.GetSelectedCount();
 	POSITION pos = m_ModuleViewList.GetFirstSelectedItemPosition();
 	while (pos)
 	{
 		int nItem = m_ModuleViewList.GetNextSelectedItem(pos);
-		CString szBuffer = m_ModuleViewList.GetItemText(nItem, 0);
 
-		nItem = FindModuleByName(szBuffer);
+		nItem = FindModuleByName(m_ModuleViewList.GetItemText(nItem, 0));
 
-		//printf( "szBuffer %s new %d\n", szBuffer.GetBuffer( ), nItem );
 		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
 		CChildFrame* pChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
 
-		CString ClassName = MemMapModule[nItem].Name.Left(MemMapModule[nItem].Name.GetLength() - 4);
+		int extension_size = MemMapModule[ nItem ].Name.ReverseFind( '.' );
+		if ( extension_size == -1 ) extension_size = 0;
+		else extension_size = MemMapModule[ nItem ].Name.GetLength( ) - extension_size;
+
+		CString ClassName = MemMapModule[nItem].Name.Left( MemMapModule[nItem].Name.GetLength() - extension_size );
 		ClassName += _T("_base");
 
 		CNodeClass* pNewClass = GetClassByName(ClassName);
@@ -175,8 +176,6 @@ void CDialogModules::SetSelected()
 
 void CDialogModules::OnDblclkListControl(NMHDR* pNMHDR, LRESULT* pResult)
 {
-	UNREFERENCED_PARAMETER(pNMHDR);
-	UNREFERENCED_PARAMETER(pResult);
 	SetSelected();
 	CDialogEx::OnOK();
 }
