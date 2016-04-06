@@ -74,7 +74,9 @@ std::vector<HICON> Icons;
 
 BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read)
 {
-	return ReadProcessMemory( g_hProcess, (LPVOID) Address, Buffer, Size, num_read );
+	BOOL return_val = ReadProcessMemory( g_hProcess, (LPVOID) Address, Buffer, Size, num_read );
+	if ( !return_val ) ZeroMemory( Buffer, Size );
+	return return_val;
 }
 
 BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote )
