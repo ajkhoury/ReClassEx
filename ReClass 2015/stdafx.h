@@ -323,8 +323,8 @@ CString GetAddressName(size_t Address,bool bHEX);
 CString GetModuleName(size_t Address);
 size_t  GetAddressFromName(CString moduleName);
 
-void ReadMemory(size_t Address,void* Buffer,DWORD Size);
-void WriteMemory(size_t Address,void* Buffer,DWORD Size);
+BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read = nullptr);
+BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote = nullptr);
 CStringA ReadMemoryString(size_t address, SIZE_T max = 40);
 
 #include "Classes.h"
@@ -341,7 +341,15 @@ __int64 StrToNum(const TCHAR *udata, int udatalen, int base);
 int SplitString(const CString& input, const CString& delimiter, CStringArray& results);
 size_t ConvertStrToAddress(CString str);
 
-namespace Plugins
-{
+//Plugins
+typedef bool( WINAPI *plugin_read_callback )( HANDLE *process_handle, uintptr_t *read_address, uint8_t *read_buffer_ptr, size_t *read_size );
+typedef bool( WINAPI *plugin_write_callback )( HANDLE *process_handle, uintptr_t *write_address, const uint8_t *write_buffer_ptr, size_t *write_size );
 
-}
+typedef struct _RECLASS_PLUGIN_INFO
+{
+	plugin_read_callback read_callback;
+	plugin_write_callback write_callback;
+	std::string version, about;
+} RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
+
+__declspec( dllexport ) void WINAPI RegisterPlugin( RECLASS_PLUGIN_INFO *lpPlugin );

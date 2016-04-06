@@ -563,7 +563,7 @@ void CChildView::OnPaint()
 
 	DWORD classSize = m_pClass->GetMemorySize();
 	Memory.SetSize(classSize);
-	ReadMemory(m_pClass->offset, Memory.pMemory, classSize);
+	ReadMemory((LPVOID)m_pClass->offset, Memory.pMemory, classSize);
 
 	ViewInfo View;
 	View.Address = m_pClass->offset;
@@ -737,7 +737,7 @@ stdstring DisassembleCode(unsigned char** StartCodeSection, unsigned char** EndC
 				break;
 
 			unsigned char opcode;
-			ReadMemory(MyDisasm.VirtualAddr - 1, &opcode, sizeof(unsigned char));
+			ReadMemory((LPVOID)(MyDisasm.VirtualAddr - 1), &opcode, sizeof(unsigned char));
 			if (opcode == 0xCC) // INT 3 instruction
 				break;
 
@@ -791,10 +791,10 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 							continue;
 
 						DWORD_PTR addr = HotSpots[i].Address;
-						ReadMemory(addr, &addr, sizeof(DWORD_PTR));
+						ReadMemory((LPVOID)addr, &addr, sizeof(DWORD_PTR));
 
 						unsigned char* code = (unsigned char*)malloc(1024);
-						ReadMemory(addr, code, 1024);
+						ReadMemory((LPVOID)addr, code, 1024);
 
 						int textHeight = 0;
 						// CString object causes crashes here sometimes for an unknown reason (too lazy to figure out why). Using STL std::string in lieu of CString.
@@ -818,7 +818,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 					}
 					if (pNode->GetType() == nt_hex64)
 					{
-						ReadMemory(HotSpots[i].Address, data, sizeof(DWORD_PTR));
+						ReadMemory((LPVOID)HotSpots[i].Address, data, sizeof(DWORD_PTR));
 						float* pf = (float*)data;
 						__int64* pi = (__int64*)data;
 						size_t* pd = (size_t*)data;
@@ -831,7 +831,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 					}
 					else if (pNode->GetType() == nt_hex32)
 					{
-						ReadMemory(HotSpots[i].Address, data, 4);
+						ReadMemory((LPVOID)HotSpots[i].Address, data, 4);
 						float* pf = (float*)data;
 						int* pi = (int*)data;
 						DWORD* pd = (DWORD*)data;
@@ -843,7 +843,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 					}
 					else if (pNode->GetType() == nt_hex16)
 					{
-						ReadMemory(HotSpots[i].Address, data, 4);
+						ReadMemory((LPVOID)HotSpots[i].Address, data, 4);
 						__int16* pi = (__int16*)data;
 						WORD* pd = (WORD*)data;
 						msg.Format(_T("Int16: %i\r\nWORD: %u\r\n"), *pi, *pd);
@@ -854,7 +854,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 					}
 					else if (pNode->GetType() == nt_hex8)
 					{
-						ReadMemory(HotSpots[i].Address, data, 4);
+						ReadMemory((LPVOID)HotSpots[i].Address, data, 4);
 						__int8* pi = (__int8*)data;
 						BYTE* pd = (BYTE*)data;
 						msg.Format(_T("Int8: %i\r\nBYTE: %u\r\n"), *pi, *pd);
@@ -1735,7 +1735,7 @@ void CChildView::OnButtonZero()
 		DWORD_PTR a = Selected[i].Address;
 		mem.SetSize(s);
 		ZeroMemory(mem.pMemory, s);
-		WriteMemory(a, mem.pMemory, s);
+		WriteMemory((LPVOID)a, mem.pMemory, s);
 	}
 }
 
@@ -1754,7 +1754,7 @@ void CChildView::OnButtonOne()
 		DWORD_PTR a = Selected[i].Address;
 		mem.SetSize(s);
 		memset(mem.pMemory, 1, s);
-		WriteMemory(a, mem.pMemory, s);
+		WriteMemory((LPVOID)a, mem.pMemory, s);
 	}
 }
 
@@ -1776,7 +1776,7 @@ void CChildView::OnButtonRandom()
 		for (UINT r = 0; r < s; r++)
 			mem.pMemory[r] = rand();
 
-		WriteMemory(a, mem.pMemory, s);
+		WriteMemory((LPVOID)a, mem.pMemory, s);
 	}
 
 }
@@ -1795,11 +1795,11 @@ void CChildView::OnButtonSwap()
 		DWORD_PTR a = Selected[i].Address;
 		mem.SetSize(s);
 
-		ReadMemory(a, mem.pMemory, s);
+		ReadMemory((LPVOID)a, mem.pMemory, s);
 
 		std::reverse(mem.pMemory, mem.pMemory + s);
 
-		WriteMemory(a, mem.pMemory, s);
+		WriteMemory((LPVOID)a, mem.pMemory, s);
 	}
 }
 

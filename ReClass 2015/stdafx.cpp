@@ -72,23 +72,18 @@ CString tdPChar(_T("char*"));
 
 std::vector<HICON> Icons;
 
-void ReadMemory(size_t Address, void* Buffer, DWORD Size)
+BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read)
 {
-	if (ReadProcessMemory(g_hProcess, (void*)Address, Buffer, Size, NULL) == 0)
-	{
-		//#ifdef _DEBUG
-		//PrintOut(_T("[ReadMemory]: Failed to read memory @ %IX GetLastError() = %s"), Address, Utils::GetLastErrorString().GetString());
-		//#endif
-		ZeroMemory(Buffer, Size);
-	}
+	return ReadProcessMemory( g_hProcess, (LPVOID) Address, Buffer, Size, num_read );
 }
 
-void WriteMemory(size_t Address, void* Buffer, DWORD Size)
+BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote )
 {
 	DWORD OldProtect;
 	VirtualProtectEx(g_hProcess, (void*)Address, Size, PAGE_EXECUTE_READWRITE, &OldProtect);
-	WriteProcessMemory(g_hProcess, (void*)Address, Buffer, Size, NULL);
+	BOOL ret = WriteProcessMemory( g_hProcess, (void*)Address, Buffer, Size, num_wrote );
 	VirtualProtectEx(g_hProcess, (void*)Address, Size, OldProtect, NULL);
+	return ret;
 }
 
 CStringA ReadMemoryString(size_t address, SIZE_T max)
@@ -96,7 +91,7 @@ CStringA ReadMemoryString(size_t address, SIZE_T max)
 	auto buffer = std::make_unique<char[]>( max ); //this is so that not only does the buffer release at end of scope but also so that the max size is consistent
 	SIZE_T bytesRead;
 
-	if (ReadProcessMemory(g_hProcess, (PVOID)address, buffer.get(), max, &bytesRead) != 0)
+	if ( ReadMemory( (PVOID) address, buffer.get( ), max, &bytesRead ) != 0 )
 	{
 		for (int i = 0; i < bytesRead; i++)
 		{
@@ -379,6 +374,7 @@ bool UpdateMemoryMap(void)
 		#endif
 		return 0;
 	}
+
 	if (!IsProcHandleValid(g_hProcess))
 	{
 		g_hProcess = NULL;
@@ -459,7 +455,7 @@ bool UpdateMemoryMap(void)
 
 		// Read Process Environment Block (PEB)
 		SIZE_T dwBytesRead = 0;
-		if (ReadProcessMemory(g_hProcess, ProcessInfo->PebBaseAddress, &Peb, sizeof(PEB), &dwBytesRead) == 0)
+		if ( ReadMemory(  ProcessInfo->PebBaseAddress, &Peb, sizeof(PEB), &dwBytesRead) == 0)
 		{
 			#ifdef _DEBUG
 			PrintOut(_T("[UpdateMemoryMap]: Failed to read PEB! Aborting UpdateExports!"));
@@ -471,7 +467,7 @@ bool UpdateMemoryMap(void)
 
 		// Get Ldr
 		dwBytesRead = 0;
-		if (ReadProcessMemory(g_hProcess, Peb.Ldr, &LdrData, sizeof(LdrData), &dwBytesRead) == 0)
+		if ( ReadMemory( Peb.Ldr, &LdrData, sizeof(LdrData), &dwBytesRead) == 0)
 		{
 			#ifdef _DEBUG
 			PrintOut(_T("[UpdateMemoryMap]: Failed to read PEB Ldr Data! Aborting UpdateExports!"));
@@ -487,7 +483,7 @@ bool UpdateMemoryMap(void)
 		{
 			LDR_DATA_TABLE_ENTRY lstEntry = { 0 };
 			dwBytesRead = 0;
-			if (!ReadProcessMemory(g_hProcess, (void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
+			if (! ReadMemory( (void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
 			{
 				#ifdef _DEBUG
 				PrintOut(_T("[UpdateMemoryMap]: Could not read list entry from LDR list. Error = %s"), Utils::GetLastErrorString().GetString());
@@ -508,7 +504,7 @@ bool UpdateMemoryMap(void)
 				if (lstEntry.FullDllName.Length > 0)
 				{
 					dwBytesRead = 0;
-					if (ReadProcessMemory(g_hProcess, (LPCVOID)lstEntry.FullDllName.Buffer, &wcsFullDllName, lstEntry.FullDllName.Length, &dwBytesRead))
+					if ( ReadMemory( (LPVOID)lstEntry.FullDllName.Buffer, &wcsFullDllName, lstEntry.FullDllName.Length, &dwBytesRead))
 					{
 						wcsModule = wcsrchr(wcsFullDllName, L'\\');
 						if (!wcsModule)
@@ -541,11 +537,11 @@ bool UpdateMemoryMap(void)
 				IMAGE_DOS_HEADER DosHdr;
 				IMAGE_NT_HEADERS NtHdr;
 
-				ReadProcessMemory(g_hProcess, ModuleBase, &DosHdr, sizeof(IMAGE_DOS_HEADER), NULL);
-				ReadProcessMemory(g_hProcess, ModuleBase + DosHdr.e_lfanew, &NtHdr, sizeof(IMAGE_NT_HEADERS), NULL);
+				ReadMemory( ModuleBase, &DosHdr, sizeof(IMAGE_DOS_HEADER), NULL);
+				ReadMemory( ModuleBase + DosHdr.e_lfanew, &NtHdr, sizeof(IMAGE_NT_HEADERS), NULL);
 				DWORD sectionsSize = (DWORD)NtHdr.FileHeader.NumberOfSections * sizeof(IMAGE_SECTION_HEADER);
 				PIMAGE_SECTION_HEADER sections = (PIMAGE_SECTION_HEADER)malloc(sectionsSize);
-				ReadProcessMemory(g_hProcess, ModuleBase + DosHdr.e_lfanew + sizeof(IMAGE_NT_HEADERS), sections, sectionsSize, NULL);
+				ReadMemory( ModuleBase + DosHdr.e_lfanew + sizeof(IMAGE_NT_HEADERS), sections, sectionsSize, NULL);
 				for (int i = 0; i < NtHdr.FileHeader.NumberOfSections; i++)
 				{
 					CString txt;
@@ -646,7 +642,7 @@ bool UpdateExports()
 
 		// Read Process Environment Block (PEB)
 		SIZE_T dwBytesRead = 0;
-		if (ReadProcessMemory(g_hProcess, ProcessInfo->PebBaseAddress, &Peb, sizeof(PEB), &dwBytesRead) == 0)
+		if ( ReadMemory( ProcessInfo->PebBaseAddress, &Peb, sizeof(PEB), &dwBytesRead) == 0)
 		{
 			#ifdef _DEBUG
 			PrintOut(_T("[UpdateExports]: Failed to read PEB! Aborting UpdateExports."));
@@ -658,7 +654,7 @@ bool UpdateExports()
 
 		// Get Ldr
 		dwBytesRead = 0;
-		if (ReadProcessMemory(g_hProcess, Peb.Ldr, &LdrData, sizeof(LdrData), &dwBytesRead) == 0)
+		if ( ReadMemory( Peb.Ldr, &LdrData, sizeof(LdrData), &dwBytesRead) == 0)
 		{
 			#ifdef _DEBUG
 			PrintOut(_T("[UpdateExports]: Failed to read PEB Ldr Data! Aborting UpdateExports."));
@@ -674,7 +670,7 @@ bool UpdateExports()
 		{
 			LDR_DATA_TABLE_ENTRY lstEntry = { 0 };
 			dwBytesRead = 0;
-			if (!ReadProcessMemory(g_hProcess, (void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
+			if (! ReadMemory( (void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
 			{
 				#ifdef _DEBUG
 				PrintOut(_T("[UpdateExports]: Could not read list entry from LDR list. Error = %s"), Utils::GetLastErrorString().GetString());
@@ -694,7 +690,7 @@ bool UpdateExports()
 				if (lstEntry.BaseDllName.Length > 0)
 				{		
 					dwBytesRead = 0;
-					if (ReadProcessMemory(g_hProcess, (LPCVOID)lstEntry.BaseDllName.Buffer, &wcsDllName, lstEntry.BaseDllName.Length, &dwBytesRead))
+					if ( ReadMemory( (LPVOID)lstEntry.BaseDllName.Buffer, &wcsDllName, lstEntry.BaseDllName.Length, &dwBytesRead))
 					{
 						wcscpy_s(ModuleName, wcsDllName);
 					}
@@ -703,12 +699,12 @@ bool UpdateExports()
 				IMAGE_DOS_HEADER DosHdr;
 				IMAGE_NT_HEADERS NtHdr;
 
-				ReadProcessMemory(g_hProcess, ModuleHandle, &DosHdr, sizeof(DosHdr), NULL);
-				ReadProcessMemory(g_hProcess, ModuleHandle + DosHdr.e_lfanew, &NtHdr, sizeof(IMAGE_NT_HEADERS), NULL);
+				ReadMemory( ModuleHandle, &DosHdr, sizeof(DosHdr), NULL);
+				ReadMemory( ModuleHandle + DosHdr.e_lfanew, &NtHdr, sizeof(IMAGE_NT_HEADERS), NULL);
 				if (NtHdr.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress != 0)
 				{
 					IMAGE_EXPORT_DIRECTORY ExpDir;
-					ReadProcessMemory(g_hProcess, (LPCVOID)(ModuleHandle + NtHdr.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress), &ExpDir, sizeof(ExpDir), NULL);
+					ReadMemory( (LPVOID)(ModuleHandle + NtHdr.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress), &ExpDir, sizeof(ExpDir), NULL);
 					PVOID pName		= (PVOID)(ModuleHandle + ExpDir.AddressOfNames);
 					PVOID pOrd		= (PVOID)(ModuleHandle + ExpDir.AddressOfNameOrdinals);
 					PVOID pAddress	= (PVOID)(ModuleHandle + ExpDir.AddressOfFunctions);
@@ -716,14 +712,14 @@ bool UpdateExports()
 					ULONG aNames[MAX_EXPORTS];
 					WORD aOrds[MAX_EXPORTS];
 					ULONG aAddresses[MAX_EXPORTS];
-					ReadProcessMemory(g_hProcess, (LPCVOID)pName, aNames, ExpDir.NumberOfNames * sizeof(aNames[0]), NULL);
-					ReadProcessMemory(g_hProcess, (LPCVOID)pOrd, aOrds, ExpDir.NumberOfNames * sizeof(aOrds[0]), NULL);
-					ReadProcessMemory(g_hProcess, (LPCVOID)pAddress, aAddresses, ExpDir.NumberOfFunctions * sizeof(aAddresses[0]), NULL);
+					ReadMemory( (LPVOID)pName, aNames, ExpDir.NumberOfNames * sizeof(aNames[0]), NULL);
+					ReadMemory( (LPVOID)pOrd, aOrds, ExpDir.NumberOfNames * sizeof(aOrds[0]), NULL);
+					ReadMemory( (LPVOID)pAddress, aAddresses, ExpDir.NumberOfFunctions * sizeof(aAddresses[0]), NULL);
 
 					for (DWORD i = 0; i < ExpDir.NumberOfNames; i++)
 					{
 						char ExportName[256];
-						ReadProcessMemory(g_hProcess, (LPCVOID)(ModuleHandle + aNames[i]), ExportName, 256, NULL);
+						ReadMemory( (LPVOID)(ModuleHandle + aNames[i]), ExportName, 256, NULL);
 						DWORD_PTR Address = (DWORD_PTR)ModuleHandle + aAddresses[aOrds[i]];
 
 						AddressName Entry;
@@ -735,7 +731,6 @@ bool UpdateExports()
 
 				}
 			}
-
 		} while (pLdrListHead != pLdrCurrentNode);
 	}
 	else
@@ -910,7 +905,7 @@ size_t ConvertStrToAddress(CString str)
 
 		if (bPointer)
 		{
-			if (ReadProcessMemory(g_hProcess, (void*)Final, &Final, sizeof(Final), NULL) == 0)
+			if ( ReadMemory( (void*)Final, &Final, sizeof(Final), NULL) == 0)
 			{
 				PrintOut(_T("[ConvertStrToAddress]: Failed to read memory GetLastError() = %s"), Utils::GetLastErrorString().GetString());
 			}
@@ -918,4 +913,10 @@ size_t ConvertStrToAddress(CString str)
 	}
 
 	return Final;
+}
+
+//Plugins
+void WINAPI RegisterPlugin( RECLASS_PLUGIN_INFO * lpPlugin )
+{
+
 }

@@ -336,19 +336,19 @@ public:
 			return x;
 
 		size_t RTTIObjectLocator;
-		ReadMemory(pRTTIObjectLocator, &RTTIObjectLocator, sizeof(DWORD_PTR));
+		ReadMemory((LPVOID)pRTTIObjectLocator, &RTTIObjectLocator, sizeof(DWORD_PTR));
 
 		DWORD dwTypeDescriptorOffset;
-		ReadMemory(RTTIObjectLocator + 0x0C, &dwTypeDescriptorOffset, sizeof(DWORD));
+		ReadMemory((LPVOID)(RTTIObjectLocator + 0x0C), &dwTypeDescriptorOffset, sizeof(DWORD));
 		size_t TypeDescriptor = ModuleBase + dwTypeDescriptorOffset;
 
 		DWORD dwObjectBaseOffset;
-		ReadMemory(RTTIObjectLocator + 0x14, &dwObjectBaseOffset, sizeof(DWORD));
+		ReadMemory((LPVOID)(RTTIObjectLocator + 0x14), &dwObjectBaseOffset, sizeof(DWORD));
 		size_t ObjectBase = ModuleBase + dwObjectBaseOffset;
 
 
 		DWORD dwClassHierarchyDescriptorOffset;
-		ReadMemory(RTTIObjectLocator + 0x10, &dwClassHierarchyDescriptorOffset, sizeof(DWORD));
+		ReadMemory((LPVOID)(RTTIObjectLocator + 0x10), &dwClassHierarchyDescriptorOffset, sizeof(DWORD));
 
 		//Offsets are from base
 		size_t ClassHierarchyDescriptor = ModuleBase + dwClassHierarchyDescriptorOffset;
@@ -356,12 +356,12 @@ public:
 			return x;
 
 		DWORD NumBaseClasses;
-		ReadMemory(ClassHierarchyDescriptor + 0x8, &NumBaseClasses, sizeof(DWORD));
+		ReadMemory((LPVOID)(ClassHierarchyDescriptor + 0x8), &NumBaseClasses, sizeof(DWORD));
 		if (NumBaseClasses < 0 || NumBaseClasses > 25)
 			NumBaseClasses = 0;
 
 		DWORD BaseClassArrayOffset;
-		ReadMemory(ClassHierarchyDescriptor + 0xC, &BaseClassArrayOffset, sizeof(DWORD));
+		ReadMemory((LPVOID)(ClassHierarchyDescriptor + 0xC), &BaseClassArrayOffset, sizeof(DWORD));
 
 		size_t BaseClassArray = ModuleBase + BaseClassArrayOffset;
 		if (!IsValidPtr(BaseClassArray) || !BaseClassArrayOffset)
@@ -378,14 +378,14 @@ public:
 			}
 
 			DWORD BaseClassDescriptorOffset;
-			ReadMemory(BaseClassArray + (0x4 * i), &BaseClassDescriptorOffset, sizeof(DWORD));
+			ReadMemory((LPVOID)(BaseClassArray + (0x4 * i)), &BaseClassDescriptorOffset, sizeof(DWORD));
 
 			size_t BaseClassDescriptor = ModuleBase + BaseClassDescriptorOffset;
 			if (!IsValidPtr(BaseClassDescriptor) || !BaseClassDescriptorOffset)
 				continue;
 
 			DWORD TypeDescriptorOffset;
-			ReadMemory(BaseClassDescriptor, &TypeDescriptorOffset, sizeof(DWORD));
+			ReadMemory((LPVOID)BaseClassDescriptor, &TypeDescriptorOffset, sizeof(DWORD));
 
 			size_t TypeDescriptor = ModuleBase + TypeDescriptorOffset;
 			if (!IsValidPtr(TypeDescriptor) || !TypeDescriptorOffset)
@@ -397,7 +397,7 @@ public:
 			for (int j = 1; j < 45; j++)
 			{
 				char RTTINameChar;
-				ReadMemory(TypeDescriptor + 0x10 + j, &RTTINameChar, 1);
+				ReadMemory((LPVOID)(TypeDescriptor + 0x10 + j), &RTTINameChar, 1);
 				if (RTTINameChar == '@' && LastChar == '@') //Names seem to be ended with @@
 				{
 					FoundEnd = true;
@@ -426,17 +426,17 @@ public:
 			return x;
 
 		size_t RTTIObjectLocator;
-		ReadMemory(pRTTIObjectLocator, &RTTIObjectLocator, sizeof(size_t));
+		ReadMemory((LPVOID)pRTTIObjectLocator, &RTTIObjectLocator, sizeof(size_t));
 
 		size_t pClassHierarchyDescriptor = RTTIObjectLocator + 0x10;
 		if (!IsValidPtr(pClassHierarchyDescriptor))
 			return x;
 
 		size_t ClassHierarchyDescriptor;
-		ReadMemory(pClassHierarchyDescriptor, &ClassHierarchyDescriptor, sizeof(size_t));
+		ReadMemory((LPVOID)pClassHierarchyDescriptor, &ClassHierarchyDescriptor, sizeof(size_t));
 
 		int NumBaseClasses;
-		ReadMemory(ClassHierarchyDescriptor + 0x8, &NumBaseClasses, sizeof(int));
+		ReadMemory((LPVOID)(ClassHierarchyDescriptor + 0x8), &NumBaseClasses, sizeof(int));
 		if (NumBaseClasses < 0 || NumBaseClasses > 25)
 			NumBaseClasses = 0;
 
@@ -445,7 +445,7 @@ public:
 			return x;
 
 		size_t BaseClassArray;
-		ReadMemory(pBaseClassArray, &BaseClassArray, sizeof(size_t));
+		ReadMemory((LPVOID)pBaseClassArray, &BaseClassArray, sizeof(size_t));
 
 		//x = AddText(View, x, y, crOffset, HS_NONE, " RTTI: ");
 		CString RTTIString;
@@ -462,13 +462,13 @@ public:
 				continue;
 
 			size_t BaseClassDescriptor;
-			ReadMemory(pBaseClassDescriptor, &BaseClassDescriptor, sizeof(size_t));
+			ReadMemory((LPVOID)pBaseClassDescriptor, &BaseClassDescriptor, sizeof(size_t));
 
 			if (!IsValidPtr(BaseClassDescriptor))
 				continue;
 
 			size_t TypeDescriptor; //pointer at 0x00 in BaseClassDescriptor
-			ReadMemory(BaseClassDescriptor, &TypeDescriptor, sizeof(size_t));
+			ReadMemory((LPVOID)BaseClassDescriptor, &TypeDescriptor, sizeof(size_t));
 
 			CString RTTIName;
 			bool FoundEnd = false;
@@ -476,7 +476,7 @@ public:
 			for (int j = 1; j < 45; j++)
 			{
 				char RTTINameChar;
-				ReadMemory(TypeDescriptor + 0x08 + j, &RTTINameChar, 1);
+				ReadMemory((LPVOID)(TypeDescriptor + 0x08 + j), &RTTINameChar, 1);
 				if (RTTINameChar == '@' && LastChar == '@') // Names seem to be ended with @@
 				{
 					FoundEnd = true;
@@ -575,7 +575,7 @@ public:
 				{
 					bool bAddStr = true;
 					char txt[64];
-					ReadMemory(uintVal, txt, 64);
+					ReadMemory((LPVOID)uintVal, txt, 64);
 
 					for (int i = 0; i < 8; i++)
 					{
@@ -642,7 +642,7 @@ public:
 				{
 					bool bAddStr = true;
 					char txt[64];
-					ReadMemory(uintVal, txt, 64); // TODO: find out why it looks wrong
+					ReadMemory((LPVOID)uintVal, txt, 64); // TODO: find out why it looks wrong
 
 					for (int i = 0; i < 4; i++)
 					{
@@ -812,7 +812,7 @@ public:
 	{
 		StandardUpdate(Spot);
 		unsigned char v = (unsigned char)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
-		WriteMemory(Spot.Address + Spot.ID, &v, 1);
+		WriteMemory((LPVOID)(Spot.Address + Spot.ID), &v, 1);
 	}
 
 	virtual int GetMemorySize() { return 8; }
@@ -861,13 +861,13 @@ public:
 		StandardUpdate(Spot);
 		unsigned char v = (unsigned char)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
 		if (Spot.ID == 0) 
-			WriteMemory(Spot.Address + 0, &v, 1);
+			WriteMemory((LPVOID)(Spot.Address + 0), &v, 1);
 		if (Spot.ID == 1) 
-			WriteMemory(Spot.Address + 1, &v, 1);
+			WriteMemory((LPVOID)(Spot.Address + 1), &v, 1);
 		if (Spot.ID == 2) 
-			WriteMemory(Spot.Address + 2, &v, 1);
+			WriteMemory((LPVOID)(Spot.Address + 2), &v, 1);
 		if (Spot.ID == 3) 
-			WriteMemory(Spot.Address + 3, &v, 1);
+			WriteMemory((LPVOID)(Spot.Address + 3), &v, 1);
 	}
 
 	virtual int GetMemorySize() { return 4; }
@@ -914,9 +914,9 @@ public:
 		StandardUpdate(Spot);
 		unsigned char v = (unsigned char)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
 		if (Spot.ID == 0) 
-			WriteMemory(Spot.Address, &v, 1);
+			WriteMemory((LPVOID)Spot.Address, &v, 1);
 		if (Spot.ID == 1)
-			WriteMemory(Spot.Address + 1, &v, 1);
+			WriteMemory((LPVOID)(Spot.Address + 1), &v, 1);
 	}
 
 	virtual int GetMemorySize() { return 2; }
@@ -960,7 +960,7 @@ public:
 		StandardUpdate(Spot);
 		unsigned char v = (unsigned char)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
 		if (Spot.ID == 0)
-			WriteMemory(Spot.Address, &v, 1);
+			WriteMemory((LPVOID)Spot.Address, &v, 1);
 	}
 
 	virtual int GetMemorySize() { return 1; }
@@ -1003,7 +1003,7 @@ public:
 		StandardUpdate(Spot);
 		unsigned char v = (unsigned char)(_tcstoul(Spot.Text, NULL, 16) & 0xFF);
 		if (Spot.ID == 0)
-			WriteMemory(Spot.Address, &v, 1);
+			WriteMemory((LPVOID)Spot.Address, &v, 1);
 	}
 
 	virtual int GetMemorySize() { return 1; }
@@ -1089,7 +1089,7 @@ public:
 			newView.pData = Memory.pMemory;
 
 			newView.Address = pMemory[0];
-			ReadMemory(newView.Address, newView.pData, NeededSize);
+			ReadMemory((LPVOID)newView.Address, newView.pData, NeededSize);
 
 			for (UINT i = 0; i < Nodes.size(); i++)
 			{
@@ -1121,9 +1121,9 @@ public:
 			Assembly.clear();
 
 			size_t addy = Spot.Address;
-			ReadMemory(addy, &addy, sizeof(size_t));
+			ReadMemory((LPVOID)addy, &addy, sizeof(size_t));
 			char* code[1536]; // max 1536 lines
-			ReadMemory(addy, code, 1536);
+			ReadMemory((LPVOID)addy, code, 1536);
 			char** EndCodeSection = (code + 1536);
 
 			DISASM MyDisasm;
@@ -1161,7 +1161,7 @@ public:
 						break;
 
 					unsigned char opcode;
-					ReadMemory(MyDisasm.VirtualAddr, &opcode, sizeof(unsigned char));
+					ReadMemory((LPVOID)MyDisasm.VirtualAddr, &opcode, sizeof(unsigned char));
 					if (opcode == 0xCC) // INT3 instruction
 						break;
 				}
@@ -1276,7 +1276,7 @@ public:
 			newView.pData = Memory.pMemory;
 			newView.Address = pMemory[0];
 
-			ReadMemory(newView.Address, newView.pData, NeededSize);
+			ReadMemory((LPVOID)newView.Address, newView.pData, NeededSize);
 
 			y = pNode->Draw(newView, x, y);
 		}
@@ -1294,7 +1294,7 @@ public:
 		StandardUpdate(Spot);
 		__int64 v = _ttoi64(Spot.Text);
 		if (Spot.ID == 0)
-			WriteMemory(Spot.Address, &v, 8);
+			WriteMemory((LPVOID)Spot.Address, &v, 8);
 	}
 
 	virtual int GetMemorySize() { return 8; }
@@ -1331,7 +1331,7 @@ public:
 		StandardUpdate(Spot);
 		__int32 v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
-			WriteMemory(Spot.Address, &v, 4);
+			WriteMemory((LPVOID)Spot.Address, &v, 4);
 	}
 
 	virtual int GetMemorySize() { return 4; }
@@ -1367,7 +1367,7 @@ public:
 		StandardUpdate(Spot);
 		__int16 v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
-			WriteMemory(Spot.Address, &v, 2);
+			WriteMemory((LPVOID)Spot.Address, &v, 2);
 	}
 
 	virtual int GetMemorySize() { return 2; }
@@ -1404,7 +1404,7 @@ public:
 		StandardUpdate(Spot);
 		__int8 v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
-			WriteMemory(Spot.Address, &v, 1);
+			WriteMemory((LPVOID)Spot.Address, &v, 1);
 	}
 
 	virtual int GetMemorySize() { return 1; }
@@ -1441,7 +1441,7 @@ public:
 		StandardUpdate(Spot);
 		DWORD v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
-			WriteMemory(Spot.Address, &v, 4);
+			WriteMemory((LPVOID)Spot.Address, &v, 4);
 	}
 
 	virtual int GetMemorySize() { return 4; }
@@ -1478,7 +1478,7 @@ public:
 		StandardUpdate(Spot);
 		WORD v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
-			WriteMemory(Spot.Address, &v, 2);
+			WriteMemory((LPVOID)Spot.Address, &v, 2);
 
 	}
 
@@ -1518,7 +1518,7 @@ public:
 		StandardUpdate(Spot);
 		unsigned char v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
-			WriteMemory(Spot.Address, &v, 1);
+			WriteMemory((LPVOID)Spot.Address, &v, 1);
 	}
 
 	virtual int GetMemorySize() { return 1; }
@@ -1570,7 +1570,7 @@ public:
 			DWORD Length = Spot.Text.GetLength() + 1;
 			if (Length > memsize)
 				Length = memsize;
-			WriteMemory(Spot.Address, Spot.Text.GetBuffer(), Length);
+			WriteMemory((LPVOID)Spot.Address, Spot.Text.GetBuffer(), Length);
 		}
 	}
 
@@ -1622,7 +1622,7 @@ public:
 		StandardUpdate(Spot);
 		__int64 v = _ttoi64(Spot.Text);
 		if (Spot.ID == 0)
-			WriteMemory(Spot.Address, &v, 8);
+			WriteMemory((LPVOID)Spot.Address, &v, 8);
 	}
 
 	virtual int GetMemorySize()
@@ -1707,7 +1707,7 @@ public:
 			for (UINT i = 0; i <= Length; i++)
 				pwszConverted[i] = pSource[i];
 
-			WriteMemory(Spot.Address, pwszConverted, Length * sizeof(wchar_t));
+			WriteMemory((LPVOID)Spot.Address, pwszConverted, Length * sizeof(wchar_t));
 
 			delete pwszConverted;
 		}
@@ -1755,7 +1755,7 @@ public:
 		StandardUpdate(Spot);
 		float v = (float)_ttof(Spot.Text);
 		if (Spot.ID == HS_EDIT)
-			WriteMemory(Spot.Address, &v, 4);
+			WriteMemory((LPVOID)Spot.Address, &v, 4);
 	}
 
 	virtual int GetMemorySize() { return 4; }
@@ -1799,7 +1799,7 @@ public:
 		StandardUpdate(Spot);
 		double v = _ttof(Spot.Text);
 		if (Spot.ID == 0)
-			WriteMemory(Spot.Address, &v, 8);
+			WriteMemory((LPVOID)Spot.Address, &v, 8);
 	}
 
 	virtual int GetMemorySize(void)
@@ -1849,7 +1849,7 @@ public:
 		StandardUpdate(Spot);
 		float v = (float)_ttof(Spot.Text);
 		if (Spot.ID >= 0 && Spot.ID < 2)
-			WriteMemory(Spot.Address + (Spot.ID * 4), &v, 4);
+			WriteMemory((LPVOID)(Spot.Address + (Spot.ID * 4)), &v, 4);
 	}
 
 	virtual int GetMemorySize() { return 4 + 4; }
@@ -1899,7 +1899,7 @@ public:
 		StandardUpdate(Spot);
 		float v = (float)_ttof(Spot.Text);
 		if (Spot.ID >= 0 && Spot.ID < 3)
-			WriteMemory(Spot.Address + (Spot.ID * 4), &v, 4);
+			WriteMemory((LPVOID)(Spot.Address + (Spot.ID * 4)), &v, 4);
 	}
 
 	virtual int GetMemorySize() { return 12; }
@@ -1950,7 +1950,7 @@ public:
 		StandardUpdate(Spot);
 		float v = (float)_ttof(Spot.Text);
 		if (Spot.ID >= 0 && Spot.ID < 4)
-			WriteMemory(Spot.Address + (Spot.ID * 4), &v, 4);
+			WriteMemory((LPVOID)(Spot.Address + (Spot.ID * 4)), &v, 4);
 	}
 
 	virtual int GetMemorySize() { return 16; }
@@ -2001,7 +2001,7 @@ public:
 		if (Spot.ID < 16)
 		{
 			float v = (float)_ttof(Spot.Text);
-			WriteMemory(Spot.Address + (Spot.ID * 4), &v, 4);
+			WriteMemory((LPVOID)(Spot.Address + (Spot.ID * 4)), &v, 4);
 		}
 	}
 
