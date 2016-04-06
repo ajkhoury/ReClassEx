@@ -25,7 +25,6 @@ void CDialogPlugins::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 }
 
-
 BEGIN_MESSAGE_MAP(CDialogPlugins, CDialogEx)
 
 END_MESSAGE_MAP()

@@ -341,3 +341,7 @@ __int64 StrToNum(const TCHAR *udata, int udatalen, int base);
 int SplitString(const CString& input, const CString& delimiter, CStringArray& results);
 size_t ConvertStrToAddress(CString str);
 
+namespace Plugins
+{
+
+}

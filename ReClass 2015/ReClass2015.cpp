@@ -7,6 +7,7 @@
 #include "DialogEdit.h"
 #include "DialogClasses.h"
 #include "DialogModules.h"
+#include "DialogPlugins.h"
 #include "DialogAbout.h"
 #include "Parser.h"
 
@@ -760,7 +761,7 @@ void CReClass2015App::OnButtonNewClass()
 
 void CReClass2015App::OnButtonSearch()
 {
-	MessageBox(GetMainWnd()->GetSafeHwnd(), _T("Coming Soon!"), _T("ReClass2015"), MB_OK | MB_ICONINFORMATION);
+	GetMainWnd( )->MessageBoxW( _T( "Coming Soon!" ), _T( "ReClass2015" ) );
 }
 
 void CReClass2015App::OnUpdateButtonSearch(CCmdUI *pCmdUI)
@@ -1564,7 +1565,10 @@ void CReClass2015App::OnButtonGenerate()
 
 void CReClass2015App::OnButtonPlugins()
 {
+	//TODO: Work out some sort of plugin system
 	GetMainWnd( )->MessageBox( _T( "Comming Soon!" ) );
+	//CDialogPlugins plugin_dlg;
+	//plugin_dlg.DoModal( );
 }
 
 void CReClass2015App::DeleteClass(CNodeClass* pClass)
