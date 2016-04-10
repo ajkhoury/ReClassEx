@@ -8,3 +8,4 @@ BOOL WINAPI PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo )
 
 	return TRUE;
 }
+

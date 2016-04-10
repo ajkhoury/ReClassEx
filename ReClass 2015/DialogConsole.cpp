@@ -52,10 +52,10 @@ static SScintillaColors g_rgbSyntaxConsole[] =
 
 // CDialogConsole dialog
 
-IMPLEMENT_DYNAMIC(CDialogConsole, CDialogEx)
+IMPLEMENT_DYNAMIC( CDialogConsole, CDialogEx )
 
-CDialogConsole::CDialogConsole(CWnd* pParent /*=NULL*/)
-	: CDialogEx(IDD_DIALOG_CONSOLE, pParent)
+CDialogConsole::CDialogConsole( CString window_title, CWnd* pParent /*=NULL*/ )
+	: CDialogEx( IDD_DIALOG_CONSOLE, pParent ), m_strWindowTitle( window_title )
 {
 	m_hwndEditWindow = NULL;
 	m_bInited = FALSE;

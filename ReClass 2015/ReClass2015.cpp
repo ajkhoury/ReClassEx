@@ -182,13 +182,10 @@ BOOL CReClass2015App::InitInstance()
 
 	Utils::SetDebugPrivilege(TRUE);
 
-	m_pConsole = new CDialogConsole;
-	m_pConsole->m_strWindowTitle = _T("Console");
+	m_pConsole = new CDialogConsole( _T( "Console" ) );
+	
 	if (m_pConsole->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
-	{
-		// Start hidden
 		m_pConsole->ShowWindow(SW_HIDE);
-	}
 
 	CreateDirectory( _T( "plugins" ), NULL );
 
@@ -234,7 +231,6 @@ BOOL CReClass2015App::InitInstance()
 			} else FreeLibrary( plugin_base );
 		} while ( FindNextFile( findfile_tree, &file_data ) );
 	}
-
 	return TRUE;
 }
 
