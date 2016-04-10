@@ -1667,7 +1667,7 @@ public:
 		if (VALID(pMemory))
 		{
 			size_t dw = pMemory[0];
-			CStringA sc = ReadMemoryString(dw, 64);
+			CStringA sc = ReadMemoryStringA(dw, 64);
 			tx = AddText(View, tx, y, crChar, 1, "%s", sc.GetBuffer());
 		}
 

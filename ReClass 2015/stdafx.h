@@ -325,7 +325,8 @@ size_t  GetAddressFromName(CString moduleName);
 
 BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read = nullptr);
 BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote = nullptr);
-CStringA ReadMemoryString(size_t address, SIZE_T max = 40);
+CStringA ReadMemoryStringA(size_t address, SIZE_T max = 40);
+CStringW ReadMemoryStringW(size_t address, SIZE_T max = 40);
 
 #include "Classes.h"
 
@@ -342,6 +343,8 @@ int SplitString(const CString& input, const CString& delimiter, CStringArray& re
 size_t ConvertStrToAddress(CString str);
 
 //Plugins
+#define PLUGIN_EXPORT extern "C" __declspec( dllexport )
+
 typedef bool( WINAPI *plugin_read_callback )( HANDLE *process_handle, uintptr_t *read_address, uint8_t *read_buffer_ptr, size_t *read_size );
 typedef bool( WINAPI *plugin_write_callback )( HANDLE *process_handle, uintptr_t *write_address, const uint8_t *write_buffer_ptr, size_t *write_size );
 
@@ -352,4 +355,10 @@ typedef struct _RECLASS_PLUGIN_INFO
 	std::string version, about;
 } RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
-__declspec( dllexport ) void WINAPI RegisterPlugin( RECLASS_PLUGIN_INFO *lpPlugin );
+typedef struct _RECLASS_PROCESS_INFORMATION 
+{
+	DWORD ProcessID;
+} RECLASS_PROCESS_INFORMATION, *LPRECLASS_PROCESS_INFORMATION;
+
+PLUGIN_EXPORT DWORD WINAPI RegisterPlugin( const LPRECLASS_PLUGIN_INFO lpPlugin );
+PLUGIN_EXPORT BOOL WINAPI GetAttatchedInfo( LPRECLASS_PROCESS_INFORMATION lpProcInfo );

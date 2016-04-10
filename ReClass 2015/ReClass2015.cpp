@@ -12,7 +12,7 @@
 #include "Parser.h"
 
 //#include "SDK.h"
-//ReclassSDK*	ReclassSDK::m_pReclassSDK;
+//ReclassSDK* ReclassSDK::m_pReclassSDK;
 
 // The one and only CReClass2015App object
 CReClass2015App theApp;
@@ -189,6 +189,22 @@ BOOL CReClass2015App::InitInstance()
 		// Start hidden
 		m_pConsole->ShowWindow(SW_HIDE);
 	}
+
+	if ( !::CreateDirectory( _T( "plugins" ), NULL ) )
+	{
+		GetMainWnd( )->MessageBox( _T( "Failed to create the plugins folder!" ), NULL, MB_ICONERROR | MB_OK);
+		return FALSE;
+	}
+
+	WIN32_FIND_DATA file_data;
+	ZeroMemory( &file_data, sizeof( WIN32_FIND_DATA ) );
+	
+	HANDLE findfile_tree = FindFirstFile( _T( "plugins/*.rc-plugin" ), &file_data );
+
+	do
+	{
+
+	} while ( FindNextFile( findfile_tree, &file_data ) );
 
 	return TRUE;
 }
