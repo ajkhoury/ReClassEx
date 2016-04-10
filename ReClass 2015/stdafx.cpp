@@ -90,7 +90,7 @@ BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote )
 
 CStringA ReadMemoryStringA(size_t address, SIZE_T max)
 {
-	auto buffer = std::make_unique<char[]>( max );
+	auto buffer = std::make_unique<char[]>( max + 1 );
 	SIZE_T bytesRead;
 	
 	if ( ReadMemory( (PVOID) address, buffer.get( ), max, &bytesRead ) != 0 )
@@ -112,7 +112,7 @@ CStringA ReadMemoryStringA(size_t address, SIZE_T max)
 
 CStringW ReadMemoryStringW( size_t address, SIZE_T max )
 {
-	auto buffer = std::make_unique<wchar_t[ ]>( max );
+	auto buffer = std::make_unique<wchar_t[ ]>( max + 1 );
 	SIZE_T bytesRead;
 
 	if ( ReadMemory( (PVOID) address, buffer.get( ), max, &bytesRead ) != 0 )
