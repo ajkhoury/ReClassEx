@@ -70,6 +70,7 @@ CString tdQuat(_T("Vector4"));
 CString tdMatrix(_T("matrix3x4_t"));
 CString tdPChar(_T("char *"));
 
+std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
 std::vector<HICON> Icons;
 
 BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read)
@@ -106,7 +107,7 @@ CStringA ReadMemoryStringA(size_t address, SIZE_T max)
 		return CStringA(buffer.get());
 	} else {
 		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s"), Utils::GetLastErrorString().GetString());
-		return CStringA("..");
+		return CStringA( ".." );
 	}
 }
 
@@ -122,7 +123,7 @@ CStringW ReadMemoryStringW( size_t address, SIZE_T max )
 			if ( !( iswprint( buffer[ i ] ) ) && buffer[ i ] != '\0' )
 				buffer[ i ] = '.';
 		}
-
+		
 		buffer[ bytesRead ] = '\0';
 
 		return CStringW( buffer.get( ) );
@@ -932,16 +933,4 @@ size_t ConvertStrToAddress(CString str)
 	}
 
 	return Final;
-}
-
-//Plugins
-
-DWORD WINAPI RegisterPlugin( LPRECLASS_PLUGIN_INFO lpPlugin )
-{
-	return 0;
-}
-
-BOOL WINAPI GetAttatchedInfo( LPRECLASS_PROCESS_INFORMATION lpProcInfo )
-{
-	return FALSE;
 }

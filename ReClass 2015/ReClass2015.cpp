@@ -206,15 +206,32 @@ BOOL CReClass2015App::InitInstance()
 		do
 		{
 			HMODULE plugin_base = LoadLibrary( CString( _T( "plugins\\" ) ) + file_data.cFileName );
-			if ( !plugin_base )
+
+			if ( plugin_base == NULL )
 			{
 				CString message;
 				message.Format( _T( "plugin %s was not able to be loaded!" ), file_data.cFileName );
 				GetMainWnd( )->MessageBox( message );
+				continue;
 			}
 
-			//TODO: Add an exported function call for seting up the plugins
-
+			auto pfnPluginInit = reinterpret_cast<decltype( &PluginInit )>( GetProcAddress( plugin_base, "PluginInit" ) );
+			if ( pfnPluginInit == nullptr )
+			{
+				CString message;
+				message.Format( _T( "plugin %s is not a reclass plugin!" ), file_data.cFileName );
+				GetMainWnd( )->MessageBox( message );
+				FreeLibrary( plugin_base );
+				continue;
+			}
+			
+			RECLASS_PLUGIN_INFO plugin_info;
+			ZeroMemory( &plugin_info, sizeof RECLASS_PLUGIN_INFO );
+			if ( pfnPluginInit( &plugin_info ) )
+			{
+				LoadedPlugins.emplace( plugin_base, plugin_info );
+				//TODO: More stuff with the plugin info E.G: Getting callbacks
+			} else FreeLibrary( plugin_base );
 		} while ( FindNextFile( findfile_tree, &file_data ) );
 	}
 
@@ -263,6 +280,9 @@ int CReClass2015App::ExitInstance()
 	WriteProfileInt(_T("Display"), _T("gbTop"), gbTop);
 	WriteProfileInt(_T("Display"), _T("gbClassBrowser"), gbClassBrowser);
 	WriteProfileInt(_T("Display"), _T("gbFilterProcesses"), gbFilterProcesses);
+
+	for ( auto plugin : LoadedPlugins )
+		FreeLibrary( plugin.first );
 
 	return CWinAppEx::ExitInstance();
 }

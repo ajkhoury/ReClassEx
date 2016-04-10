@@ -30,6 +30,7 @@
 #include <Psapi.h>
 #include <CommCtrl.h>
 #include <memory>
+#include <map>
 
 // Include BeaEngine disassembler 
 #define BEA_ENGINE_STATIC
@@ -159,6 +160,25 @@ extern CString tdVec3;
 extern CString tdQuat;
 extern CString tdMatrix;
 extern CString tdPChar;
+
+#pragma region Plugin Stuff
+typedef struct _RECLASS_PLUGIN_INFO
+{
+	wchar_t Name[ 260 ];
+	wchar_t About[ 2048 ];
+	wchar_t Version[ 260 ];
+} RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
+
+#ifdef PLUGIN_EXPORT
+#define PLUGIN_API extern "C" __declspec(dllexport)
+#else
+#define PLUGIN_API
+#endif
+
+PLUGIN_API BOOL WINAPI PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
+
+extern std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
+#pragma endregion
 
 #define WM_MAXITEMS 128
 
@@ -341,24 +361,3 @@ extern DWORD NodeCreateIndex;
 __int64 StrToNum(const TCHAR *udata, int udatalen, int base);
 int SplitString(const CString& input, const CString& delimiter, CStringArray& results);
 size_t ConvertStrToAddress(CString str);
-
-//Plugins
-#define PLUGIN_EXPORT extern "C" __declspec( dllexport )
-
-typedef bool( WINAPI *plugin_read_callback )( HANDLE *process_handle, uintptr_t *read_address, uint8_t *read_buffer_ptr, size_t *read_size );
-typedef bool( WINAPI *plugin_write_callback )( HANDLE *process_handle, uintptr_t *write_address, const uint8_t *write_buffer_ptr, size_t *write_size );
-
-typedef struct _RECLASS_PLUGIN_INFO
-{
-	plugin_read_callback read_callback;
-	plugin_write_callback write_callback;
-	std::string version, about;
-} RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
-
-typedef struct _RECLASS_PROCESS_INFORMATION 
-{
-	DWORD ProcessID;
-} RECLASS_PROCESS_INFORMATION, *LPRECLASS_PROCESS_INFORMATION;
-
-PLUGIN_EXPORT DWORD WINAPI RegisterPlugin( const LPRECLASS_PLUGIN_INFO lpPlugin );
-PLUGIN_EXPORT BOOL WINAPI GetAttatchedInfo( LPRECLASS_PROCESS_INFORMATION lpProcInfo );
