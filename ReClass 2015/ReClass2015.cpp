@@ -190,21 +190,33 @@ BOOL CReClass2015App::InitInstance()
 		m_pConsole->ShowWindow(SW_HIDE);
 	}
 
-	if ( !::CreateDirectory( _T( "plugins" ), NULL ) )
-	{
-		GetMainWnd( )->MessageBox( _T( "Failed to create the plugins folder!" ), NULL, MB_ICONERROR | MB_OK);
-		return FALSE;
-	}
+	CreateDirectory( _T( "plugins" ), NULL );
 
 	WIN32_FIND_DATA file_data;
 	ZeroMemory( &file_data, sizeof( WIN32_FIND_DATA ) );
 	
-	HANDLE findfile_tree = FindFirstFile( _T( "plugins/*.rc-plugin" ), &file_data );
+#ifdef _WIN64
+	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin64" ), &file_data );
+#else
+	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin" ), &file_data );
+#endif
 
-	do
+	if ( findfile_tree != INVALID_HANDLE_VALUE )
 	{
+		do
+		{
+			HMODULE plugin_base = LoadLibrary( CString( _T( "plugins\\" ) ) + file_data.cFileName );
+			if ( !plugin_base )
+			{
+				CString message;
+				message.Format( _T( "plugin %s was not able to be loaded!" ), file_data.cFileName );
+				GetMainWnd( )->MessageBox( message );
+			}
 
-	} while ( FindNextFile( findfile_tree, &file_data ) );
+			//TODO: Add an exported function call for seting up the plugins
+
+		} while ( FindNextFile( findfile_tree, &file_data ) );
+	}
 
 	return TRUE;
 }

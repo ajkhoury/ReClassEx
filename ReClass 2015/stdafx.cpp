@@ -97,7 +97,7 @@ CStringA ReadMemoryStringA(size_t address, SIZE_T max)
 	{
 		for (int i = 0; i < bytesRead; i++)
 		{
-			if (!(isprint(buffer[i] & 0xFF)) && buffer[i] != '\0') 
+			if ( !( isprint( buffer[ i ] ) ) && buffer[ i ] != '\0' )
 				buffer[i] = '.';
 		}
 
@@ -112,14 +112,14 @@ CStringA ReadMemoryStringA(size_t address, SIZE_T max)
 
 CStringW ReadMemoryStringW( size_t address, SIZE_T max )
 {
-	auto buffer = std::make_unique<wchar_t[ ]>( max + 1 );
+	auto buffer = std::make_unique<wchar_t[]>( max + 1 );
 	SIZE_T bytesRead;
 
 	if ( ReadMemory( (PVOID) address, buffer.get( ), max, &bytesRead ) != 0 )
 	{
 		for ( int i = 0; i < bytesRead; i++ )
 		{
-			if ( !( isprint( buffer[ i ] & 0xFF ) ) && buffer[ i ] != '\0' )
+			if ( !( iswprint( buffer[ i ] ) ) && buffer[ i ] != '\0' )
 				buffer[ i ] = '.';
 		}
 
