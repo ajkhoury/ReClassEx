@@ -68,8 +68,9 @@ CString tdVec2(_T("Vector2"));
 CString tdVec3(_T("Vector3"));
 CString tdQuat(_T("Vector4"));
 CString tdMatrix(_T("matrix3x4_t"));
-CString tdPChar(_T("char*"));
+CString tdPChar(_T("char *"));
 
+std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
 std::vector<HICON> Icons;
 
 BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read)
@@ -88,27 +89,47 @@ BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote )
 	return ret;
 }
 
-CStringA ReadMemoryString(size_t address, SIZE_T max)
+CStringA ReadMemoryStringA(size_t address, SIZE_T max)
 {
-	auto buffer = std::make_unique<char[]>( max + 1 ); //this is so that not only does the buffer release at end of scope but also so that the max size is consistent
+	auto buffer = std::make_unique<char[]>( max + 1 );
 	SIZE_T bytesRead;
-
+	
 	if ( ReadMemory( (PVOID) address, buffer.get( ), max, &bytesRead ) != 0 )
 	{
 		for (int i = 0; i < bytesRead; i++)
 		{
-			// If not a printable character and is not null terminator replace with '.'
-			if (!(isprint(buffer[i] & 0xFF)) && buffer[i] != '\0') 
+			if ( !( isprint( buffer[ i ] ) ) && buffer[ i ] != '\0' )
 				buffer[i] = '.';
 		}
 
-		// Terminate at max
 		buffer[bytesRead] = '\0';
 
 		return CStringA(buffer.get());
 	} else {
 		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s"), Utils::GetLastErrorString().GetString());
-		return CStringA("..");
+		return CStringA( ".." );
+	}
+}
+
+CStringW ReadMemoryStringW( size_t address, SIZE_T max )
+{
+	auto buffer = std::make_unique<wchar_t[]>( max + 1 );
+	SIZE_T bytesRead;
+
+	if ( ReadMemory( (PVOID) address, buffer.get( ), max, &bytesRead ) != 0 )
+	{
+		for ( int i = 0; i < bytesRead; i++ )
+		{
+			if ( !( iswprint( buffer[ i ] ) ) && buffer[ i ] != '\0' )
+				buffer[ i ] = '.';
+		}
+		
+		buffer[ bytesRead ] = '\0';
+
+		return CStringW( buffer.get( ) );
+	} else {
+		PrintOut( _T( "[ReadMemoryString]: Failed to read memory, GetLastError() = %s" ), Utils::GetLastErrorString( ).GetString( ) );
+		return CStringW( L".." );
 	}
 }
 
@@ -896,11 +917,8 @@ size_t ConvertStrToAddress(CString str)
 					break;
 				}
 			}
-		}
-		else
-		{
-			curadd = (size_t)_tcstoui64(a.GetBuffer(), NULL, 16);//StrToNum(a.GetBuffer(), a.GetLength(), 16);
-			//PrintOut(_T("Final [%p] %d"), curadd, a.GetLength( ) );
+		} else {
+			curadd = (size_t)_tcstoui64(a.GetBuffer(), NULL, 16);
 		}
 
 		Final += curadd;
@@ -915,10 +933,4 @@ size_t ConvertStrToAddress(CString str)
 	}
 
 	return Final;
-}
-
-//Plugins
-void WINAPI RegisterPlugin( RECLASS_PLUGIN_INFO * lpPlugin )
-{
-
 }

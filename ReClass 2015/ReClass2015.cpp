@@ -12,7 +12,7 @@
 #include "Parser.h"
 
 //#include "SDK.h"
-//ReclassSDK*	ReclassSDK::m_pReclassSDK;
+//ReclassSDK* ReclassSDK::m_pReclassSDK;
 
 // The one and only CReClass2015App object
 CReClass2015App theApp;
@@ -182,14 +182,55 @@ BOOL CReClass2015App::InitInstance()
 
 	Utils::SetDebugPrivilege(TRUE);
 
-	m_pConsole = new CDialogConsole;
-	m_pConsole->m_strWindowTitle = _T("Console");
+	m_pConsole = new CDialogConsole( _T( "Console" ) );
+	
 	if (m_pConsole->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
-	{
-		// Start hidden
 		m_pConsole->ShowWindow(SW_HIDE);
-	}
 
+	CreateDirectory( _T( "plugins" ), NULL );
+
+	WIN32_FIND_DATA file_data;
+	ZeroMemory( &file_data, sizeof( WIN32_FIND_DATA ) );
+	
+#ifdef _WIN64
+	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin64" ), &file_data );
+#else
+	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin" ), &file_data );
+#endif
+
+	if ( findfile_tree != INVALID_HANDLE_VALUE )
+	{
+		do
+		{
+			HMODULE plugin_base = LoadLibrary( CString( _T( "plugins\\" ) ) + file_data.cFileName );
+
+			if ( plugin_base == NULL )
+			{
+				CString message;
+				message.Format( _T( "plugin %s was not able to be loaded!" ), file_data.cFileName );
+				GetMainWnd( )->MessageBox( message );
+				continue;
+			}
+
+			auto pfnPluginInit = reinterpret_cast<decltype( &PluginInit )>( GetProcAddress( plugin_base, "PluginInit" ) );
+			if ( pfnPluginInit == nullptr )
+			{
+				CString message;
+				message.Format( _T( "plugin %s is not a reclass plugin!" ), file_data.cFileName );
+				GetMainWnd( )->MessageBox( message );
+				FreeLibrary( plugin_base );
+				continue;
+			}
+			
+			RECLASS_PLUGIN_INFO plugin_info;
+			ZeroMemory( &plugin_info, sizeof RECLASS_PLUGIN_INFO );
+			if ( pfnPluginInit( &plugin_info ) )
+			{
+				LoadedPlugins.emplace( plugin_base, plugin_info );
+				//TODO: More stuff with the plugin info E.G: Getting callbacks
+			} else FreeLibrary( plugin_base );
+		} while ( FindNextFile( findfile_tree, &file_data ) );
+	}
 	return TRUE;
 }
 
@@ -235,6 +276,9 @@ int CReClass2015App::ExitInstance()
 	WriteProfileInt(_T("Display"), _T("gbTop"), gbTop);
 	WriteProfileInt(_T("Display"), _T("gbClassBrowser"), gbClassBrowser);
 	WriteProfileInt(_T("Display"), _T("gbFilterProcesses"), gbFilterProcesses);
+
+	for ( auto plugin : LoadedPlugins )
+		FreeLibrary( plugin.first );
 
 	return CWinAppEx::ExitInstance();
 }
