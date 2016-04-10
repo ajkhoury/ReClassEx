@@ -632,6 +632,11 @@ void CMainFrame::OnButtonEditClass()
 	}
 }
 
+void CMainFrame::OnUpdateButtonEditClass(CCmdUI *pCmdUI)
+{
+	pCmdUI->Enable((theApp.Classes.size() > 0));
+}
+
 void CMainFrame::OnButtonDeleteClass()
 {
 	CMFCRibbonBaseElement* pButton = m_wndRibbonBar.FindByID(ID_BUTTON_DELETECLASS);
@@ -646,11 +651,6 @@ void CMainFrame::OnButtonDeleteClass()
 		menu.AppendMenu(MF_STRING | MF_ENABLED, WM_DELETECLASSMENU + m, theApp.Classes[m]->Name);
 	}
 	menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this);
-}
-
-void CMainFrame::OnUpdateButtonEditClass(CCmdUI *pCmdUI)
-{
-	pCmdUI->Enable((theApp.Classes.size() > 0));
 }
 
 void CMainFrame::OnUpdateButtonDeleteClass(CCmdUI *pCmdUI)
@@ -699,7 +699,7 @@ void CMainFrame::OnUpdateCheckFilterProcesses(CCmdUI *pCmdUI)
 	pCmdUI->SetCheck(gbFilterProcesses);
 }
 
-// Multi monitor support. Thank timboy67678
+// Multi monitor support. Thanks timboy67678
 void CMainFrame::OnButtonLeft()
 {
 	RECT rc; HMONITOR hMon;

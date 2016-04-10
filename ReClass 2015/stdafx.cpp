@@ -90,7 +90,7 @@ BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote )
 
 CStringA ReadMemoryString(size_t address, SIZE_T max)
 {
-	auto buffer = std::make_unique<char[]>( max ); //this is so that not only does the buffer release at end of scope but also so that the max size is consistent
+	auto buffer = std::make_unique<char[]>( max + 1 ); //this is so that not only does the buffer release at end of scope but also so that the max size is consistent
 	SIZE_T bytesRead;
 
 	if ( ReadMemory( (PVOID) address, buffer.get( ), max, &bytesRead ) != 0 )
