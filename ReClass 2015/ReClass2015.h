@@ -22,7 +22,7 @@ public:
 
 	CString CurrentFilePath;
 
-	CDialogConsole* m_pConsole;
+	CDialogConsole* Console;
 
 // Overrides
 	virtual BOOL InitInstance();

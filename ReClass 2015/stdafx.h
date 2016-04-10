@@ -192,7 +192,7 @@ do { \
 	static TCHAR s_logbuf[1024]; \
 	if (fmt) { \
 		_sntprintf(s_logbuf, 1024, fmt, ##__VA_ARGS__); \
-		theApp.m_pConsole->SendMessage((WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS+1), (WPARAM)s_logbuf, 0); \
+		theApp.Console->SendMessage((WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS+1), (WPARAM)s_logbuf, 0); \
 	} \
 } while (0);\
 }

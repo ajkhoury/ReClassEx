@@ -182,10 +182,10 @@ BOOL CReClass2015App::InitInstance()
 
 	Utils::SetDebugPrivilege(TRUE);
 
-	m_pConsole = new CDialogConsole( _T( "Console" ) );
+	Console = new CDialogConsole( _T( "Console" ) );
 	
-	if (m_pConsole->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
-		m_pConsole->ShowWindow(SW_HIDE);
+	if (Console->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
+		Console->ShowWindow(SW_HIDE);
 
 	CreateDirectory( _T( "plugins" ), NULL );
 
@@ -241,9 +241,9 @@ int CReClass2015App::ExitInstance()
 	if (m_hMDIAccel != NULL)
 		FreeResource(m_hMDIAccel);
 
-	if (m_pConsole) {
-		m_pConsole->EndDialog(0);
-		delete m_pConsole;
+	if (Console) {
+		Console->EndDialog(0);
+		delete Console;
 	}
 
 	AfxOleTerm(FALSE);
@@ -815,8 +815,8 @@ void CReClass2015App::OnUpdateButtonSearch(CCmdUI *pCmdUI)
 
 void CReClass2015App::OnButtonConsole()
 {
-	m_pConsole->ShowWindow(SW_SHOW);
-	m_pConsole->SetForegroundWindow();
+	Console->ShowWindow(SW_SHOW);
+	Console->SetForegroundWindow();
 }
 
 void CReClass2015App::OnButtonModules()

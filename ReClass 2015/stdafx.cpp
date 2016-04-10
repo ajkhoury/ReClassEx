@@ -118,6 +118,8 @@ CStringW ReadMemoryStringW( size_t address, SIZE_T max )
 
 	if ( ReadMemory( (PVOID) address, buffer.get( ), max, &bytesRead ) != 0 )
 	{
+		bytesRead /= sizeof( wchar_t );
+		
 		for ( int i = 0; i < bytesRead; i++ )
 		{
 			if ( !( iswprint( buffer[ i ] ) ) && buffer[ i ] != '\0' )
