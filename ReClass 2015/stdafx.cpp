@@ -113,7 +113,7 @@ CStringA ReadMemoryStringA(size_t address, SIZE_T max)
 
 CStringW ReadMemoryStringW( size_t address, SIZE_T max )
 {
-	auto buffer = std::make_unique<wchar_t[]>( max + 1 );
+	auto buffer = std::make_unique<wchar_t[ ]>( ( max / sizeof( wchar_t ) ) + 1 );
 	SIZE_T bytesRead;
 
 	if ( ReadMemory( (PVOID) address, buffer.get( ), max, &bytesRead ) != 0 )
