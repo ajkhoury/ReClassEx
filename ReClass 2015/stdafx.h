@@ -333,22 +333,33 @@ struct HotSpot
 // Plugins
 //
 #pragma region Plugins
+typedef BOOL(WINAPI *MEMORY_OPERATION)(LPVOID, LPVOID, SIZE_T, PSIZE_T);
+extern MEMORY_OPERATION g_PluginOverideMemoryWrite;
+extern MEMORY_OPERATION g_PluginOverideMemoryRead;
+
 typedef struct _RECLASS_PLUGIN_INFO
 {
-	wchar_t Name[ 260 ];
-	wchar_t About[ 2048 ];
-	wchar_t Version[ 260 ];
+	wchar_t Name[260];
+	wchar_t About[2048];
+	wchar_t Version[260];
+	HMODULE ModuleBase;
 } RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
-#ifdef PLUGIN_EXPORT
-#define PLUGIN_API extern "C" __declspec(dllexport)
-#else
-#define PLUGIN_API
-#endif
+#define PLUGIN_API extern "C" __declspec(dllexport) 
+#define PLUGIN_CC __stdcall
 
-PLUGIN_API BOOL WINAPI PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
+BOOL PLUGIN_CC PluginInit(HMODULE callee_base, LPRECLASS_PLUGIN_INFO lpRCInfo);
 
-extern std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
+///Exported Functions Below
+
+/**
+*	Exported function that will register overides for the read/write memory operations
+*  returns false if a plugin has already registered it or one of the paramaters was null
+*  returns true if succeeded or if force flag is set
+*/
+PLUGIN_API BOOL PLUGIN_CC ReClassOverrideMemoryOperations(MEMORY_OPERATION write, MEMORY_OPERATION read, BOOL force = FALSE);
+
+extern std::vector<RECLASS_PLUGIN_INFO> LoadedPlugins;
 #pragma endregion
 
 
