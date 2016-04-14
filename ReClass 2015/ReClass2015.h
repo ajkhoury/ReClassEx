@@ -83,5 +83,3 @@ public:
 	afx_msg void OnFileSave( );
 	afx_msg void OnUpdateFileSave(CCmdUI *pCmdUI);
 };
-
-extern CReClass2015App theApp;
