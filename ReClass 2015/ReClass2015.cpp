@@ -178,7 +178,7 @@ BOOL CReClass2015App::InitInstance()
 	g_AttachedProcessAddress = NULL;
 
 	// Initialize the editor
-	if (!Scintilla_RegisterClasses(AfxGetApp()->m_hInstance))
+	if (!Scintilla_RegisterClasses(m_hInstance))
 	{
 		AfxMessageBox(_T("Scintilla failed to initiailze"));
 		return FALSE;
@@ -231,13 +231,13 @@ BOOL CReClass2015App::InitInstance()
 			
 			RECLASS_PLUGIN_INFO plugin_info;
 			ZeroMemory( &plugin_info, sizeof RECLASS_PLUGIN_INFO );
-			if ( pfnPluginInit( &plugin_info ) )
-			{
-				LoadedPlugins.emplace( plugin_base, plugin_info );
-				//TODO: More stuff with the plugin info E.G: Getting callbacks
+			plugin_info.ModuleBase = plugin_base;
+			if ( pfnPluginInit( GetModuleHandle(NULL), &plugin_info ) ) {
+				LoadedPlugins.push_back( plugin_info );
 			} else FreeLibrary( plugin_base );
 		} while ( FindNextFile( findfile_tree, &file_data ) );
 	}
+
 	return TRUE;
 }
 
@@ -285,7 +285,7 @@ int CReClass2015App::ExitInstance()
 	WriteProfileInt(_T("Display"), _T("gbFilterProcesses"), gbFilterProcesses);
 
 	for ( auto plugin : LoadedPlugins )
-		FreeLibrary( plugin.first );
+		FreeLibrary( plugin.ModuleBase );
 
 	return CWinAppEx::ExitInstance();
 }
