@@ -70,11 +70,31 @@ CString tdQuat(_T("Vector4"));
 CString tdMatrix(_T("matrix3x4_t"));
 CString tdPChar(_T("char *"));
 
-std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
 std::vector<HICON> Icons;
+
+std::vector<RECLASS_PLUGIN_INFO> LoadedPlugins;
+
+MEMORY_OPERATION g_PluginOverideMemoryWrite = nullptr;
+MEMORY_OPERATION g_PluginOverideMemoryRead = nullptr;
+
+BOOL WINAPI ReClassOverrideMemoryOperations( MEMORY_OPERATION write, MEMORY_OPERATION read, BOOL force )
+{ 
+	if ( write == nullptr || read == nullptr )
+		return FALSE;
+	if ( g_PluginOverideMemoryRead != nullptr && g_PluginOverideMemoryWrite != nullptr && !force )
+		return FALSE;
+	else {
+		g_PluginOverideMemoryRead = read;
+		g_PluginOverideMemoryWrite = write;
+		return TRUE;
+	}
+}
 
 BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read)
 {
+	if ( g_PluginOverideMemoryRead != nullptr )
+		return g_PluginOverideMemoryRead( Address, Buffer, Size, num_read );
+
 	BOOL return_val = ReadProcessMemory( g_hProcess, (LPVOID) Address, Buffer, Size, num_read );
 	if ( !return_val ) ZeroMemory( Buffer, Size );
 	return return_val;
@@ -82,6 +102,9 @@ BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read)
 
 BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote )
 {
+	if ( g_PluginOverideMemoryWrite != nullptr )
+		return g_PluginOverideMemoryWrite( Address, Buffer, Size, num_wrote );
+
 	DWORD OldProtect;
 	VirtualProtectEx(g_hProcess, (void*)Address, Size, PAGE_EXECUTE_READWRITE, &OldProtect);
 	BOOL ret = WriteProcessMemory( g_hProcess, (void*)Address, Buffer, Size, num_wrote );

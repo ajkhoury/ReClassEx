@@ -141,6 +141,9 @@
     <None Include="..\Images\reclass.png">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="exports.def">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
