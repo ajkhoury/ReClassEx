@@ -26,6 +26,7 @@ New features include:
 - Added ability to input module names in address node (e.g. 'reclass.exe+0x40')
 - Added Module list with the ability to create a new class at module start address
 - Added Console dialog with syntax highlighting
+- Added ability to load PDB file and display PDB Symbols 
 
 
 ![Alt text](/Images/reclass2.png?raw=true "ReClass")
