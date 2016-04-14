@@ -14,7 +14,7 @@ bool PDBReader::LoadDataFromPdb(const wchar_t* szFilename)
 	wchar_t wszExt[MAX_PATH];
 	wchar_t *wszSearchPath = L"SRV**\\\\symbols\\symbols"; // Alternate path to search for debug data
 	DWORD dwMachType = 0;
-
+	
 	HRESULT hr = CoInitialize(NULL);
 
 	// Obtain access to the provider
@@ -489,7 +489,6 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 		if (pSymbol->get_type(&pBaseType) == S_OK)
 		{
 			ReadType(pBaseType, outString);
-			// We'll take care of this part later in CheckMemberTypeArray
 			if (pSymbol->get_rank(&dwRank) == S_OK) 
 			{
 				if (SUCCEEDED(pSymbol->findChildren(SymTagDimension, NULL, nsNone, &pEnumSym)) && (pEnumSym != NULL)) 
@@ -590,11 +589,13 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 
 		switch (dwInfo)
 		{
+		case btULong:
 		case btUInt:
 		{
 			outString += _T("unsigned ");
 			//wprintf(L"unsigned ");	
 		} // Fall through
+		case btLong:
 		case btInt:
 		{
 			switch (ulLen)
@@ -837,7 +838,7 @@ void PDBReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 		break;
 
 	case SymTagData:
-		ReadData(pSymbol, outString);
+		//ReadData(pSymbol, outString);
 		break;
 
 	case SymTagFunction:
@@ -977,6 +978,11 @@ bool PDBReader::GetSymbolStringWithVA(size_t dwVA, CString& outString)
 {
 	IDiaSymbol *pSymbol;
 	LONG lDisplacement;
+
+	if (dwVA == 0x25A938A4420)
+	{
+		PrintOut(_T("Test!"));
+	}
 	
 	size_t dwRVA = dwVA - g_AttachedProcessAddress;
 
@@ -984,9 +990,6 @@ bool PDBReader::GetSymbolStringWithVA(size_t dwVA, CString& outString)
 	{
 		return false;
 	}
-
-	if (dwVA == 0x7FF658122DE8)
-		PrintOut(_T("Test!"));
 
 	ReadSymbol(pSymbol, outString);
 	pSymbol->Release();

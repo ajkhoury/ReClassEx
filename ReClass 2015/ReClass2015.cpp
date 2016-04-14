@@ -15,8 +15,7 @@
 //ReclassSDK* ReclassSDK::m_pReclassSDK;
 
 // The one and only CReClass2015App object
-CReClass2015App theApp;
-
+CReClass2015App theApp; 
 
 // CReClass2015App
 BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx) 
@@ -210,7 +209,6 @@ BOOL CReClass2015App::InitInstance()
 		do
 		{
 			HMODULE plugin_base = LoadLibrary( CString( _T( "plugins\\" ) ) + file_data.cFileName );
-
 			if ( plugin_base == NULL )
 			{
 				CString message;
@@ -232,9 +230,15 @@ BOOL CReClass2015App::InitInstance()
 			RECLASS_PLUGIN_INFO plugin_info;
 			ZeroMemory( &plugin_info, sizeof RECLASS_PLUGIN_INFO );
 			plugin_info.ModuleBase = plugin_base;
-			if ( pfnPluginInit( GetModuleHandle(NULL), &plugin_info ) ) {
+			if ( pfnPluginInit( GetModuleHandle(NULL), &plugin_info ) ) 
+			{
 				LoadedPlugins.push_back( plugin_info );
-			} else FreeLibrary( plugin_base );
+			} 
+			else 
+			{
+				FreeLibrary(plugin_base);
+			}
+
 		} while ( FindNextFile( findfile_tree, &file_data ) );
 	}
 

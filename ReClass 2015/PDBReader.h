@@ -1,11 +1,9 @@
 #pragma once
 
 #include <dia2.h>
-#include <DbgHelp.h>
-#pragma comment(lib, "Dbghelp.lib")
 
 // Basic types
-const TCHAR* const rgBaseType[] =
+static const TCHAR* rgBaseType[] =
 {
 	_T("<NoType>"),                         // btNoType = 0,
 	_T("void"),                             // btVoid = 1,
@@ -42,7 +40,7 @@ const TCHAR* const rgBaseType[] =
 };
 
 // Tags returned by Dia
-const TCHAR* const rgTags[] =
+static const TCHAR* const rgTags[] =
 {
 	_T("(SymTagNull)"),                     // SymTagNull
 	_T("Executable (Global)"),              // SymTagExe
@@ -88,7 +86,7 @@ const TCHAR* const rgTags[] =
 	_T("CoffGroup")                         // SymTagCoffGroup
 };
 
-const TCHAR* const rgDataKind[] =
+static const TCHAR* const rgDataKind[] =
 {
 	_T("Unknown"),
 	_T("Local"),
@@ -102,7 +100,7 @@ const TCHAR* const rgDataKind[] =
 	_T("Constant")
 };
 
-const TCHAR* const rgLocationTypeString[] =
+static const TCHAR* const rgLocationTypeString[] =
 {
 	_T("NULL"),
 	_T("static"),
@@ -117,7 +115,7 @@ const TCHAR* const rgLocationTypeString[] =
 	_T("Constant")
 };
 
-const TCHAR* const rgUdtKind[] =
+static const TCHAR* const rgUdtKind[] =
 {
 	_T("struct"),
 	_T("class"),
@@ -125,7 +123,7 @@ const TCHAR* const rgUdtKind[] =
 	_T("interface")
 };
 
-const TCHAR* const rgCallingConvention[] =
+static const TCHAR* const rgCallingConvention[] =
 {
 	_T("CV_CALL_NEAR_C      "),
 	_T("CV_CALL_FAR_C       "),
@@ -165,6 +163,7 @@ public:
 	bool IsInitialized() { return m_bInitialized; }
 
 	bool LoadFile(CString FilePath);
+
 	bool GetSymbolStringWithVA(size_t dwRVA, CString& outString);
 
 private:
@@ -194,20 +193,14 @@ private:
 
 	bool LoadDataFromPdb(const wchar_t* szFilename);
 
+private:
 	IDiaDataSource* m_pSource;
 	IDiaSession*	m_pSession;
 	IDiaSymbol*		m_pGlobal;
 
 	DWORD			m_dwMachineType;
 
-
-	bool m_bInitialized;
-
-	size_t m_ModuleBase;
-	size_t m_ModuleSize;
-
-	size_t m_ModuleBaseReturned;
-
+	bool			m_bInitialized;
 };
 
 extern PDBReader pdb;
