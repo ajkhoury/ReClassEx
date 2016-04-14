@@ -371,9 +371,16 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 		if (nID >= WM_PROCESSMENU && nID < (WM_PROCESSMENU + WM_MAXITEMS) )
 		{
 			UINT idx = nID - WM_PROCESSMENU;
+			
 			g_ProcessID = ProcMenuItems[idx].ProcessId;
 			g_hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, g_ProcessID);
+
+			// Update memory map
 			UpdateMemoryMap();
+
+			// Init pdb
+			//pdb.Init();
+
 			return TRUE;
 		}
 		if (nID >= WM_DELETECLASSMENU && nID < (WM_DELETECLASSMENU + WM_MAXITEMS) )
@@ -423,7 +430,10 @@ void CMainFrame::OnCheckCbRtti()
 
 void CMainFrame::OnUpdateCheckCbRtti(CCmdUI *pCmdUI)
 {
-	if (!gbPointers) pCmdUI->Enable(FALSE);
+	if (!gbPointers) 
+	{
+		pCmdUI->Enable(FALSE);
+	}
 	else
 	{
 		pCmdUI->Enable(TRUE);
@@ -610,7 +620,9 @@ void CMainFrame::OnButtonEditClass()
 	{	
 		CDialogClasses dlg;
 		dlg.DoModal();
-	} else {
+	}
+	else 
+	{
 		// TODO: instead of menu popup a window
 		CMFCRibbonBaseElement* pButton = m_wndRibbonBar.FindByID(ID_BUTTON_EDITCLASS);
 

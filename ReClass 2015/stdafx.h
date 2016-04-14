@@ -6,6 +6,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include "targetver.h"
 
+//
+// MFC 
+//
 #include <afx.h>
 
 // turns off MFC's hiding of some common and often safely ignored warning messages
@@ -25,6 +28,9 @@
 
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 
+//
+// WinAPI and STD
+//
 #include <vector>
 #include <Shlwapi.h>
 #include <Psapi.h>
@@ -83,39 +89,25 @@ using namespace tinyxml2;
 //
 #include "Utils.h"
 
-// Memory Class. Probably not needed
-#include "CMemory.h"
-
-struct MemMapInfo
-{
-	size_t  Start;
-	size_t  End;
-	DWORD   Size;
-	CString Name;
-	CString Path;
-	//bool IsModule;
-};
-
-struct AddressName
-{
-	CString Name;
-	size_t Address;
-};
-
-// Max export entries allowed
-#define MAX_EXPORTS 16384
-
+//
 // Globals
+//
 extern HANDLE g_hProcess;
-extern DWORD g_ProcessID;
+extern DWORD  g_ProcessID;
 extern size_t g_AttachedProcessAddress;
+extern DWORD  g_AttachedProcessSize;
 
-extern std::vector<MemMapInfo> MemMap;
-extern std::vector<MemMapInfo> MemMapCode;
-extern std::vector<MemMapInfo> MemMapData;
-extern std::vector<MemMapInfo> MemMapModule;
-extern std::vector<AddressName> Exports;
-extern std::vector<AddressName> CustomNames;
+extern std::vector<struct MemMapInfo> MemMap;
+extern std::vector<struct MemMapInfo> MemMapCode;
+extern std::vector<struct MemMapInfo> MemMapData;
+extern std::vector<struct MemMapInfo> MemMapModule;
+extern std::vector<struct AddressName> Exports;
+extern std::vector<struct AddressName> CustomNames;
+
+extern std::vector<HICON> Icons;
+
+// Global node index
+extern DWORD NodeCreateIndex;
 
 extern COLORREF crBackground;
 extern COLORREF crSelect;
@@ -171,25 +163,9 @@ extern CString tdQuat;
 extern CString tdMatrix;
 extern CString tdPChar;
 
-#pragma region Plugins
-typedef struct _RECLASS_PLUGIN_INFO
-{
-	wchar_t Name[ 260 ];
-	wchar_t About[ 2048 ];
-	wchar_t Version[ 260 ];
-} RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
-
-#ifdef PLUGIN_EXPORT
-#define PLUGIN_API extern "C" __declspec(dllexport)
-#else
-#define PLUGIN_API
-#endif
-
-PLUGIN_API BOOL WINAPI PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
-
-extern std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
-#pragma endregion
-
+//
+// Hotspot and Item IDs
+//
 #define WM_MAXITEMS 128
 
 #define WM_CLASSMENU WM_USER
@@ -211,20 +187,6 @@ extern std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
 #define HS_ADDRESS 68
 #define HS_NAME 69
 #define HS_COMMENT 70
-
-class CNodeBase;
-
-class HotSpot
-{
-public:
-	CRect Rect;
-	CString Text;
-	size_t Address;
-	int ID;
-	int Type;
-	UINT Level;
-	CNodeBase* object;
-};
 
 #define ICON_OPEN 0
 #define ICON_CLOSED 1
@@ -250,7 +212,8 @@ public:
 #define ICON_CHANGE 21
 #define ICON_CAMERA 22
 
-extern std::vector<HICON> Icons;
+// Max export entries allowed
+#define MAX_EXPORTS 16384
 
 enum NodeType
 {
@@ -287,43 +250,14 @@ enum NodeType
 	nt_pchar,
 	nt_bits
 };
-
 #define ISHEXTYPE(type) (type == nt_hex64 || type == nt_hex32 || type == nt_hex16 || type == nt_hex8 || type == nt_bits)
 
 __inline const TCHAR* NodeTypeToString(NodeType type)
 {
-	static const TCHAR* pszNodeTypes[] = {
-		_T("nt_base"),
-		_T("nt_instance"),
-		_T("nt_struct"),
-		_T("nt_hidden"),
-		_T("nt_hex32"),
-		_T("nt_hex64"),
-		_T("nt_hex16"),
-		_T("nt_hex8"),
-		_T("nt_pointer"),
-		_T("nt_int64"),
-		_T("nt_int32"),
-		_T("nt_int16"),
-		_T("nt_int8"),
-		_T("nt_float"),
-		_T("nt_double"),
-		_T("nt_uint32"),
-		_T("nt_uint16"),
-		_T("nt_uint8"),
-		_T("nt_text"),
-		_T("nt_unicode"),
-		_T("nt_function"),
-		_T("nt_custom"),
-		_T("nt_vec2"),
-		_T("nt_vec3"),
-		_T("nt_quat"),
-		_T("nt_matrix"),
-		_T("nt_vtable"),
-		_T("nt_array"),
-		_T("nt_class"),
-		_T("nt_pchar"),
-		_T("nt_bits")
+	static const TCHAR* pszNodeTypes[] = { _T("nt_base"), _T("nt_instance"), _T("nt_struct"), _T("nt_hidden"), _T("nt_hex32"), _T("nt_hex64"), _T("nt_hex16"), _T("nt_hex8"),
+		_T("nt_pointer"), _T("nt_int64"), _T("nt_int32"), _T("nt_int16"), _T("nt_int8"), _T("nt_float"), _T("nt_double"), _T("nt_uint32"), _T("nt_uint16"), _T("nt_uint8"),
+		_T("nt_text"), _T("nt_unicode"), _T("nt_function"), _T("nt_custom"), _T("nt_vec2"), _T("nt_vec3"), _T("nt_quat"), _T("nt_matrix"), _T("nt_vtable"), _T("nt_array"),
+		_T("nt_class"), _T("nt_pchar"), _T("nt_bits")
 	};	
 	return pszNodeTypes[type];
 }
@@ -351,30 +285,85 @@ BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote =
 CStringA ReadMemoryStringA(size_t address, SIZE_T max = 40);
 CStringW ReadMemoryStringW(size_t address, SIZE_T max = 40);
 
+__int64 StrToNum(const TCHAR *udata, int udatalen, int base);
+int SplitString(const CString& input, const CString& delimiter, CStringArray& results);
+size_t ConvertStrToAddress(CString str);
+
+
+// 
+// Classes & Structs
 //
+#include "CMemory.h"
+
+struct MemMapInfo
+{
+	size_t  Start;
+	size_t  End;
+	DWORD   Size;
+	CString Name;
+	CString Path;
+};
+
+struct AddressName
+{
+	CString Name;
+	size_t Address;
+};
+
+struct HotSpot
+{
+	CRect Rect;
+	CString Text;
+	size_t Address;
+	int ID;
+	int Type;
+	UINT Level;
+	class CNodeBase* object;
+};
+
 // All node type classes
-//
 #include "Classes.h"
 #ifdef _WIN64
 #define CNodeHex CNodeHex64
 #else
 #define CNodeHex CNodeHex32
 #endif
-// Global node index
-extern DWORD NodeCreateIndex;
 
 //
-// More Global functions
+// Plugins
 //
-__int64 StrToNum(const TCHAR *udata, int udatalen, int base);
-int SplitString(const CString& input, const CString& delimiter, CStringArray& results);
-size_t ConvertStrToAddress(CString str);
+#pragma region Plugins
+typedef struct _RECLASS_PLUGIN_INFO
+{
+	wchar_t Name[ 260 ];
+	wchar_t About[ 2048 ];
+	wchar_t Version[ 260 ];
+} RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
+
+#ifdef PLUGIN_EXPORT
+#define PLUGIN_API extern "C" __declspec(dllexport)
+#else
+#define PLUGIN_API
+#endif
+
+PLUGIN_API BOOL WINAPI PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
+
+extern std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
+#pragma endregion
+
 
 //
 // Main Application
 //
 #include "ReClass2015.h"
 extern CReClass2015App theApp;
+
+
+//
+// PDB Reader
+//
+#include "PDBReader.h"
+
 
 //
 // Global preprocessor directive for printing to the Console

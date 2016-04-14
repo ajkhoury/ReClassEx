@@ -17,6 +17,7 @@
 // The one and only CReClass2015App object
 CReClass2015App theApp;
 
+
 // CReClass2015App
 BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx) 
 	ON_COMMAND(ID_APP_ABOUT, &CReClass2015App::OnAppAbout)
@@ -34,6 +35,7 @@ BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx)
 	ON_COMMAND(ID_FILE_SAVE, &CReClass2015App::OnFileSave)
 	ON_COMMAND(ID_FILE_SAVE_AS, &CReClass2015App::OnFileSaveAs)
 	ON_COMMAND(ID_FILE_OPEN, &CReClass2015App::OnFileOpen)
+	ON_COMMAND(ID_FILE_OPEN_PDB, &CReClass2015App::OnOpenPDB)
 	ON_COMMAND(ID_BUTTON_RESET, &CReClass2015App::OnButtonReset)
 	ON_COMMAND(ID_BUTTON_PAUSE, &CReClass2015App::OnButtonPause)
 	ON_COMMAND(ID_BUTTON_RESUME, &CReClass2015App::OnButtonResume)
@@ -47,6 +49,7 @@ BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx)
 	ON_COMMAND(ID_BUTTON_CLEAN, &CReClass2015App::OnButtonClean)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_CLEAN, &CReClass2015App::OnUpdateButtonClean)
 	ON_UPDATE_COMMAND_UI(ID_FILE_SAVE, &CReClass2015App::OnUpdateFileSave)
+	ON_UPDATE_COMMAND_UI(ID_FILE_OPEN_PDB, &CReClass2015App::OnUpdateOpenPDB)
 END_MESSAGE_MAP()
 
 CReClass2015App::CReClass2015App()
@@ -169,6 +172,10 @@ BOOL CReClass2015App::InitInstance()
 
 	//UpdateMemoryMap();
 	//UpdateExports();
+
+	g_hProcess = NULL;
+	g_ProcessID = NULL;
+	g_AttachedProcessAddress = NULL;
 
 	// Initialize the editor
 	if (!Scintilla_RegisterClasses(AfxGetApp()->m_hInstance))
@@ -1610,9 +1617,28 @@ void CReClass2015App::OnButtonGenerate()
 void CReClass2015App::OnButtonPlugins()
 {
 	//TODO: Work out some sort of plugin system
-	GetMainWnd( )->MessageBox( _T( "Comming Soon!" ) );
+	GetMainWnd( )->MessageBox( _T( "Coming Soon!" ) );
 	//CDialogPlugins plugin_dlg;
 	//plugin_dlg.DoModal( );
+}
+
+void CReClass2015App::OnOpenPDB()
+{
+	PrintOut(_T("OnOpenPDB() called"));
+
+	TCHAR Filters[] = _T("PDB (*.pdb)|*.pdb|All Files (*.*)|*.*||");
+	CFileDialog fileDlg(TRUE, _T("pdb"), _T(""), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, Filters, NULL);
+	if (fileDlg.DoModal() != IDOK)
+		return;
+
+	CString pathName = fileDlg.GetPathName();
+
+	pdb.LoadFile(pathName);
+}
+
+void CReClass2015App::OnUpdateOpenPDB(CCmdUI *pCmdUI)
+{
+	pCmdUI->Enable((g_ProcessID != NULL));
 }
 
 void CReClass2015App::DeleteClass(CNodeClass* pClass)
@@ -1628,6 +1654,7 @@ void CReClass2015App::DeleteClass(CNodeClass* pClass)
 		MessageBox(GetMainWnd()->GetSafeHwnd(), msg, _T("Error"), MB_OK);
 		return;
 	}
+
 	for (UINT i = 0; i < Classes.size(); i++)
 	{
 		if (Classes[i] == pClass)

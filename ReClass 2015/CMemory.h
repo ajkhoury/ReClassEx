@@ -8,6 +8,7 @@ public:
 		MemorySize = 0;
 		pMemory = 0;
 	}
+
 	~CMemory()
 	{
 		if (pMemory)

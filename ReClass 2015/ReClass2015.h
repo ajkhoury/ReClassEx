@@ -7,6 +7,8 @@
 #include "resource.h"       // main symbols
 // Console
 #include "DialogConsole.h"
+// PDB's
+#include "PDBReader.h"
 
 class CReClass2015App : public CWinAppEx
 {
@@ -18,6 +20,7 @@ public:
 	CString Footer;
 	CString Notes;
 	CString ParserInput;
+
 	std::vector<CNodeClass*> Classes;
 
 	CString CurrentFilePath;
@@ -82,4 +85,7 @@ public:
 	afx_msg void OnUpdateButtonModules(CCmdUI *pCmdUI);
 	afx_msg void OnFileSave( );
 	afx_msg void OnUpdateFileSave(CCmdUI *pCmdUI);
+	afx_msg void OnOpenPDB();
+	afx_msg void OnUpdateOpenPDB(CCmdUI *pCmdUI);
+
 };

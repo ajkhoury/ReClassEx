@@ -2,6 +2,7 @@
 
 #include "Debug.h"
 #include "bits.h"
+#include "PDBReader.h"
 
 #define TXOFFSET 16
 
@@ -568,6 +569,18 @@ public:
 						x = AddText(View, x, y, crOffset, HS_NONE, _T("*->%s "), a);
 						if (gbRTTI)
 							x = ResolveRTTI(uintVal, x, View, y);
+
+						//
+						// Print out info from PDB at address
+						//
+						if (pdb.IsInitialized())
+						{
+							CString nameOut;
+							if (pdb.GetSymbolStringWithVA(uintVal, nameOut))
+							{
+								x = AddText(View, x, y, crOffset, HS_EDIT, _T("%s "), nameOut);
+							}
+						}
 					}
 				}
 

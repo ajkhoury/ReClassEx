@@ -5,6 +5,7 @@
 HANDLE g_hProcess = NULL;
 DWORD g_ProcessID = NULL;
 size_t g_AttachedProcessAddress = NULL;
+DWORD g_AttachedProcessSize = NULL;
 
 std::vector<MemMapInfo> MemMap;
 std::vector<MemMapInfo> MemMapCode;
@@ -540,7 +541,10 @@ bool UpdateMemoryMap(void)
 							wchar_t filename[MAX_PATH];
 							GetModuleFileNameExW(g_hProcess, NULL, filename, MAX_PATH);
 							if (_wcsicmp(filename, wcsFullDllName) == 0)
+							{
 								g_AttachedProcessAddress = (size_t)ModuleBase;
+								g_AttachedProcessSize = ModuleSize;
+							}
 						}
 					} 
 				}
