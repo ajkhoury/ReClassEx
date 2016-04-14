@@ -315,6 +315,7 @@
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="nt_ddk.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="PDBReader.h" />
     <ClInclude Include="ReClass2015.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SDK.h" />
@@ -334,6 +335,7 @@
     <ClCompile Include="DialogPlugins.cpp" />
     <ClCompile Include="DialogTypes.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="PDBReader.cpp" />
     <ClCompile Include="ReClass2015.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

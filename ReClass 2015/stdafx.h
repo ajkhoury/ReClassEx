@@ -32,12 +32,16 @@
 #include <memory>
 #include <map>
 
-// Include BeaEngine disassembler 
+//
+// BeaEngine disassembler 
+//
 #define BEA_ENGINE_STATIC
 #define BEA_USE_STDCALL
 #include "..\\beaengine\\beaengine\\headers\\BeaEngine.h"
 
-// Include Scintilla parser
+//
+// Scintilla parser
+//
 #define PLAT_WIN 1
 #include "..\\scintilla\\include\\SciLexer.h"
 #include "..\\scintilla\\include\\Scintilla.h"
@@ -62,18 +66,24 @@ struct SScintillaColors {
 	COLORREF	rgb;
 };
 
-// Include TinyXml parser
+//
+// TinyXml parser
+//
 //#include "tinyxml2_unicode.h"
 #include "tinyxml2.h"
 using namespace tinyxml2;
 
-// Include SQL parser
+//
+// SQL parser
+// Not even needed
 #include "..\\SQLite\\CppSQLite3.h"
 
+//
 // Utilities
+//
 #include "Utils.h"
 
-// Classes
+// Memory Class. Probably not needed
 #include "CMemory.h"
 
 struct MemMapInfo
@@ -161,7 +171,7 @@ extern CString tdQuat;
 extern CString tdMatrix;
 extern CString tdPChar;
 
-#pragma region Plugin Stuff
+#pragma region Plugins
 typedef struct _RECLASS_PLUGIN_INFO
 {
 	wchar_t Name[ 260 ];
@@ -186,16 +196,6 @@ extern std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
 #define WM_PROCESSMENU (WM_USER+WM_MAXITEMS)
 #define WM_CHANGECLASSMENU (WM_USER+WM_MAXITEMS+WM_MAXITEMS)
 #define WM_DELETECLASSMENU (WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS)
-
-#define PrintOut(fmt, ...) { \
-do { \
-	static TCHAR s_logbuf[1024]; \
-	if (fmt) { \
-		_sntprintf(s_logbuf, 1024, fmt, ##__VA_ARGS__); \
-		theApp.Console->SendMessage((WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS+1), (WPARAM)s_logbuf, 0); \
-	} \
-} while (0);\
-}
 
 #define	NONE -1
 #define	HS_NONE -1
@@ -328,6 +328,9 @@ __inline const TCHAR* NodeTypeToString(NodeType type)
 	return pszNodeTypes[type];
 }
 
+//
+// Global functions
+//
 bool PauseResumeThreadList(bool bResumeThread);
 
 bool UpdateMemoryMap();
@@ -348,16 +351,40 @@ BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote =
 CStringA ReadMemoryStringA(size_t address, SIZE_T max = 40);
 CStringW ReadMemoryStringW(size_t address, SIZE_T max = 40);
 
+//
+// All node type classes
+//
 #include "Classes.h"
-
 #ifdef _WIN64
 #define CNodeHex CNodeHex64
 #else
 #define CNodeHex CNodeHex32
 #endif
-
+// Global node index
 extern DWORD NodeCreateIndex;
 
+//
+// More Global functions
+//
 __int64 StrToNum(const TCHAR *udata, int udatalen, int base);
 int SplitString(const CString& input, const CString& delimiter, CStringArray& results);
 size_t ConvertStrToAddress(CString str);
+
+//
+// Main Application
+//
+#include "ReClass2015.h"
+extern CReClass2015App theApp;
+
+//
+// Global preprocessor directive for printing to the Console
+//
+#define PrintOut(fmt, ...) { \
+do { \
+	static TCHAR s_logbuf[1024]; \
+	if (fmt) { \
+		_sntprintf(s_logbuf, 1024, fmt, ##__VA_ARGS__); \
+		theApp.Console->SendMessage((WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS+1), (WPARAM)s_logbuf, 0); \
+	} \
+} while (0);\
+}

@@ -190,7 +190,6 @@ bool PauseResumeThreadList(bool bResumeThread)
 	threads = process->Threads;
 	numberOfThreads = process->NumberOfThreads;
 
-	// Look for new threads and update existing ones.
 	for (ULONG i = 0; i < numberOfThreads; i++)
 	{
 		PSYSTEM_THREAD_INFORMATION thread = &threads[i];
