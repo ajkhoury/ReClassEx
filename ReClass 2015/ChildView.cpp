@@ -142,9 +142,11 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_COMMAND(ID_MODIFY_SHOW, &CChildView::OnModifyShow)
 	ON_COMMAND(ID_MODIFY_HIDE, &CChildView::OnModifyHide)
 
+	ON_UPDATE_COMMAND_UI(ID_ADD_ADD4, &CChildView::OnUpdateAddAdd4)
 	ON_UPDATE_COMMAND_UI(ID_ADD_ADD8, &CChildView::OnUpdateAddAdd8)
 	ON_UPDATE_COMMAND_UI(ID_ADD_ADD64, &CChildView::OnUpdateAddAdd64)
 	ON_UPDATE_COMMAND_UI(ID_ADD_ADD1024, &CChildView::OnUpdateAddAdd1024)
+	ON_UPDATE_COMMAND_UI(ID_ADD_ADD2048, &CChildView::OnUpdateAddAdd2048)
 	ON_UPDATE_COMMAND_UI(ID_INSERT_INSERT4, &CChildView::OnUpdateInsertInsert4)
 	ON_UPDATE_COMMAND_UI(ID_INSERT_INSERT8, &CChildView::OnUpdateInsertInsert8)
 	ON_UPDATE_COMMAND_UI(ID_INSERT_INSERT64, &CChildView::OnUpdateInsertInsert64)
@@ -1704,7 +1706,7 @@ void CChildView::OnModifyShow()
 
 void CChildView::OnUpdateModifyShow(CCmdUI *pCmdUI)
 {
-	pCmdUI->Enable(TRUE);
+	StandardTypeUpdate(pCmdUI);
 }
 
 void CChildView::OnModifyHide()

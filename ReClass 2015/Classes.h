@@ -1801,7 +1801,7 @@ public:
 
 			delete pwszConverted;
 		}
-	};
+	}
 
 	virtual int GetMemorySize(void) { return memsize; }
 
