@@ -1,14 +1,15 @@
 #pragma once
 
+//
+// WinAPI, MFC, & STD Includes
+//
+
 // Disable warnings for type casting from HANDLE to DWORD and vice versa
 #pragma warning(disable : 4312 4311 4302 4099) 
 
 #define WIN32_LEAN_AND_MEAN
 #include "targetver.h"
 
-//
-// MFC 
-//
 #include <afx.h>
 
 // turns off MFC's hiding of some common and often safely ignored warning messages
@@ -28,9 +29,6 @@
 
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 
-//
-// WinAPI and STD
-//
 #include <vector>
 #include <Shlwapi.h>
 #include <Psapi.h>
@@ -38,12 +36,14 @@
 #include <memory>
 #include <map>
 
+
 //
 // BeaEngine disassembler 
 //
 #define BEA_ENGINE_STATIC
 #define BEA_USE_STDCALL
 #include "..\\beaengine\\beaengine\\headers\\BeaEngine.h"
+
 
 //
 // Scintilla parser
@@ -72,6 +72,7 @@ struct SScintillaColors {
 	COLORREF	rgb;
 };
 
+
 //
 // TinyXml parser
 //
@@ -79,15 +80,18 @@ struct SScintillaColors {
 #include "tinyxml2.h"
 using namespace tinyxml2;
 
+
 //
 // SQL parser
-// Not even needed
+// Not even needed until importing is done
 #include "..\\SQLite\\CppSQLite3.h"
+
 
 //
 // Utilities
 //
 #include "Utils.h"
+
 
 //
 // Globals
@@ -165,7 +169,7 @@ extern CString tdPChar;
 extern CString tdPWChar;
 
 //
-// Hotspot and Item IDs
+// Hotspot, Node, & Item IDs
 //
 #define WM_MAXITEMS 128
 
@@ -264,6 +268,7 @@ __inline const TCHAR* NodeTypeToString(NodeType type)
 	return pszNodeTypes[type];
 }
 
+
 //
 // Global functions
 //
@@ -330,6 +335,7 @@ struct HotSpot
 #else
 #define CNodeHex CNodeHex32
 #endif
+
 
 //
 // Plugins
