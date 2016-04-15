@@ -9,7 +9,7 @@ Cleaned up the code a bit and added some new features. Also got rid of a ton of 
 New features include:
 - Up and down arrow hotkeys to switch nodes
 - Delete hotkey to delete selected nodes
-- Delete button to delete selected nodes
+- Delete icon to delete selected nodes
 - Right click quick modify menu
 - Hex 64 type
 - Insert 2048 bytes
