@@ -115,7 +115,7 @@ void PDBReader::ReadName(IDiaSymbol *pSymbol, CString& outString)
 		{
 			CString append;
 			append.Format(_T("%s(%s)"), bstrUndName, bstrName);
-			outString += bstrName;
+			outString += append;
 			//wprintf(L"%s(%s)", bstrUndName, bstrName);
 		}
 
@@ -210,13 +210,13 @@ void PDBReader::ReadBound(IDiaSymbol *pSymbol, CString& outString)
 
 	if (pSymbol->get_symTag(&dwTag) != S_OK) 
 	{
-		PrintOut(_T("ERROR - PrintBound() get_symTag"));
+		PrintOut(_T("[PDBReader::ReadBound] ERROR - PrintBound() get_symTag"));
 		return;
 	}
 
 	if (pSymbol->get_locationType(&dwKind) != S_OK) 
 	{
-		PrintOut(_T("ERROR - PrintBound() get_locationType"));
+		PrintOut(_T("[PDBReader::ReadBound] ERROR - PrintBound() get_locationType"));
 		return;
 	}
 
@@ -249,7 +249,7 @@ void PDBReader::ReadLocation(IDiaSymbol *pSymbol, CString& outString)
 	if (pSymbol->get_locationType(&dwLocType) != S_OK) 
 	{
 		// It must be a symbol in optimized code
-		PrintOut(_T("Symbol in optimized code!"));
+		PrintOut(_T("[PDBReader::ReadLocation] Symbol in optimized code!"));
 		return;
 	}
 
@@ -395,7 +395,7 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 
 	if (pSymbol->get_symTag(&dwTag) != S_OK)
 	{
-		PrintOut(_T("ERROR - can't retrieve the symbol's SymTag"));
+		PrintOut(_T("[PDBReader::ReadType] ERROR - can't retrieve the symbol's SymTag"));
 		return;
 	}
 
@@ -447,7 +447,7 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 	case SymTagPointerType:
 		if (pSymbol->get_type(&pBaseType) != S_OK)
 		{
-			PrintOut(_T("ERROR - SymTagPointerType get_type"));
+			PrintOut(_T("[PDBReader::ReadType] ERROR - SymTagPointerType get_type"));
 			if (bstrName != NULL)
 				SysFreeString(bstrName);
 			return;
@@ -486,61 +486,62 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 		break;
 
 	case SymTagArrayType:
+	{
 		if (pSymbol->get_type(&pBaseType) == S_OK)
 		{
 			ReadType(pBaseType, outString);
-			if (pSymbol->get_rank(&dwRank) == S_OK) 
+			if (pSymbol->get_rank(&dwRank) == S_OK)
 			{
-				if (SUCCEEDED(pSymbol->findChildren(SymTagDimension, NULL, nsNone, &pEnumSym)) && (pEnumSym != NULL)) 
+				if (SUCCEEDED(pSymbol->findChildren(SymTagDimension, NULL, nsNone, &pEnumSym)) && (pEnumSym != NULL))
 				{
-					while (SUCCEEDED(pEnumSym->Next(1, &pSym, &celt)) && (celt == 1)) 
+					while (SUCCEEDED(pEnumSym->Next(1, &pSym, &celt)) && (celt == 1))
 					{
 						outString += _T("[");
-			
+
 						IDiaSymbol *pBound;
-						if (pSym->get_lowerBound(&pBound) == S_OK) 
+						if (pSym->get_lowerBound(&pBound) == S_OK)
 						{
 							ReadBound(pBound, outString);
 							outString += _T("..");
 							pBound->Release();
 						}
-			
+
 						pBound = NULL;
-						if (pSym->get_upperBound(&pBound) == S_OK) 
+						if (pSym->get_upperBound(&pBound) == S_OK)
 						{
 							ReadBound(pBound, outString);
 							pBound->Release();
 						}
-			
+
 						pSym->Release();
 						pSym = NULL;
-			
+
 						outString += _T("]");
 					}
-			
+
 					pEnumSym->Release();
 				}
-			}		
+			}
 			else if (SUCCEEDED(pSymbol->findChildren(SymTagCustomType, NULL, nsNone, &pEnumSym)) &&
-				(pEnumSym != NULL) && (pEnumSym->get_Count(&lCount) == S_OK) && (lCount > 0)) 
+				(pEnumSym != NULL) && (pEnumSym->get_Count(&lCount) == S_OK) && (lCount > 0))
 			{
-				while (SUCCEEDED(pEnumSym->Next(1, &pSym, &celt)) && (celt == 1)) 
+				while (SUCCEEDED(pEnumSym->Next(1, &pSym, &celt)) && (celt == 1))
 				{
 					outString += _T("[");
 					ReadType(pSym, outString);
 					outString += _T("]");
-			
+
 					pSym->Release();
 				}
-			
+
 				pEnumSym->Release();
 			}
-			else 
+			else
 			{
 				DWORD dwCountElems;
 				ULONGLONG ulLenArray;
 				ULONGLONG ulLenElem;
-			
+
 				if (pSymbol->get_count(&dwCountElems) == S_OK)
 				{
 					CString append;
@@ -548,7 +549,7 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 					outString += append;
 					//wprintf(L"[%d]", dwCountElems);
 				}
-				else if ((pSymbol->get_length(&ulLenArray) == S_OK) && (pBaseType->get_length(&ulLenElem) == S_OK)) 
+				else if ((pSymbol->get_length(&ulLenArray) == S_OK) && (pBaseType->get_length(&ulLenElem) == S_OK))
 				{
 					CString append;
 					if (ulLenElem == 0)
@@ -575,7 +576,8 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 				SysFreeString(bstrName);
 			return;
 		}
-		break;
+	}
+	break;
 
 	case SymTagBaseType:
 	{
@@ -672,8 +674,10 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 	break;
 
 	case SymTagTypedef:
+	{
 		ReadName(pSymbol, outString);
-		break;
+	}
+	break;
 
 	case SymTagCustomType:
 	{
@@ -748,7 +752,7 @@ void PDBReader::ReadData(IDiaSymbol *pSymbol, CString& outString)
 	DWORD dwDataKind;
 	if (pSymbol->get_dataKind(&dwDataKind) != S_OK)
 	{
-		PrintOut(_T("ERROR - PrintData() get_dataKind"));
+		PrintOut(_T("[PDBReader::ReadData] ERROR - PrintData() get_dataKind"));
 		return;
 	}
 
@@ -819,7 +823,7 @@ void PDBReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 
 	if (pSymbol->get_symTag(&dwSymTag) != S_OK) 
 	{
-		PrintOut(_T("ERROR - PrintSymbol get_symTag() failed"));
+		PrintOut(_T("[PDBReader::ReadSymbol] ERROR - PrintSymbol get_symTag() failed"));
 		return;
 	}
 
@@ -836,7 +840,7 @@ void PDBReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 		break;
 
 	case SymTagData:
-		ReadData(pSymbol, outString);
+		//ReadData(pSymbol, outString);
 		break;
 
 	case SymTagFunction:
@@ -977,7 +981,7 @@ bool PDBReader::GetSymbolStringWithVA(size_t dwVA, CString& outString)
 	IDiaSymbol *pSymbol;
 	LONG lDisplacement;
 
-	if (dwVA == 0x25A938A4420)
+	if (dwVA == 0x7FF6AB662DE8)
 	{
 		PrintOut(_T("Test!"));
 	}
