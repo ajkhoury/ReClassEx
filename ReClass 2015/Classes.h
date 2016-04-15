@@ -6,6 +6,7 @@
 
 #define TXOFFSET 16
 
+// Global node index
 extern DWORD NodeCreateIndex;
 
 // forward declarations
@@ -29,6 +30,7 @@ class CNodeWORD;
 class CNodeByte;
 class CNodeText;
 class CNodeCharPtr;
+class CNodeWCharPtr;
 class CNodeUnicode;
 class CNodeFloat;
 class CNodeDouble;
@@ -1692,6 +1694,7 @@ public:
 	}
 };
 
+// TODO: Fix WCharPtr node type
 class CNodeWCharPtr : public CNodeBase
 {
 public:

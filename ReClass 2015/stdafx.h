@@ -110,9 +110,6 @@ extern std::vector<struct AddressName> CustomNames;
 
 extern std::vector<HICON> Icons;
 
-// Global node index
-extern DWORD NodeCreateIndex;
-
 extern COLORREF crBackground;
 extern COLORREF crSelect;
 extern COLORREF crHidden;
