@@ -100,9 +100,11 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_WM_MOUSEMOVE()
 	ON_WM_TIMER()
 
+	ON_COMMAND(ID_ADD_ADD4, &CChildView::OnAddAdd4)
 	ON_COMMAND(ID_ADD_ADD8, &CChildView::OnAddAdd8)
 	ON_COMMAND(ID_ADD_ADD64, &CChildView::OnAddAdd64)
 	ON_COMMAND(ID_ADD_ADD1024, &CChildView::OnAddAdd1024)
+	ON_COMMAND(ID_ADD_ADD2048, &CChildView::OnAddAdd2048)
 	ON_COMMAND(ID_TYPE_HEX64, &CChildView::OnTypeHex64)
 	ON_COMMAND(ID_TYPE_HEX32, &CChildView::OnTypeHex32)
 	ON_COMMAND(ID_TYPE_INT64, &CChildView::OnTypeInt64)
@@ -1147,6 +1149,21 @@ void CChildView::InsertBytes(CNodeClass* pClass, UINT idx, DWORD Length)
 	theApp.CalcAllOffsets();
 }
 
+void CChildView::OnAddAdd4( )
+{
+	if (Selected[0].object->GetType() == nt_class)
+		AddBytes((CNodeClass*)Selected[0].object, 4);
+	else
+		AddBytes((CNodeClass*)Selected[0].object->pParent, 4);
+	Invalidate(FALSE);
+}
+void CChildView::OnUpdateAddAdd4( CCmdUI * pCmdUI )
+{ 
+	if (Selected.size() == 1 && (Selected[0].object->pParent || (Selected[0].object->GetType() == nt_class)))
+		pCmdUI->Enable(TRUE);
+	else
+		pCmdUI->Enable(FALSE);
+}
 void CChildView::OnAddAdd8()
 {
 	if (Selected[0].object->GetType() == nt_class)
@@ -1192,7 +1209,21 @@ void CChildView::OnUpdateAddAdd1024(CCmdUI *pCmdUI)
 	else
 		pCmdUI->Enable(FALSE);
 }
-
+void CChildView::OnAddAdd2048()
+{
+	if (Selected[0].object->GetType() == nt_class)
+		AddBytes((CNodeClass*)Selected[0].object, 2048);
+	else
+		AddBytes((CNodeClass*)Selected[0].object->pParent, 2048);
+	Invalidate(FALSE);
+}
+void CChildView::OnUpdateAddAdd2048(CCmdUI *pCmdUI)
+{
+	if (Selected.size() == 1 && (Selected[0].object->pParent || (Selected[0].object->GetType() == nt_class)))
+		pCmdUI->Enable(TRUE);
+	else
+		pCmdUI->Enable(FALSE);
+}
 void CChildView::OnInsertInsert4()
 {
 	InsertBytes((CNodeClass*)Selected[0].object->pParent, FindNodeIndex(Selected[0].object), 4);

@@ -92,6 +92,9 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 
+	afx_msg void OnAddAdd4();
+	afx_msg void OnUpdateAddAdd4(CCmdUI *pCmdUI);
+
 	afx_msg void OnAddAdd8();
 	afx_msg void OnUpdateAddAdd8(CCmdUI *pCmdUI);
 
@@ -100,6 +103,9 @@ public:
 
 	afx_msg void OnAddAdd1024();
 	afx_msg void OnUpdateAddAdd1024(CCmdUI *pCmdUI);
+
+	afx_msg void OnAddAdd2048();
+	afx_msg void OnUpdateAddAdd2048(CCmdUI *pCmdUI);
 
 	afx_msg void OnInsertInsert4();
 	afx_msg void OnUpdateInsertInsert4(CCmdUI *pCmdUI);
