@@ -16,9 +16,9 @@ bool PDBReader::LoadDataFromPdb(const wchar_t* szFilename)
 	DWORD dwMachType = 0;
 	
 	HRESULT hr = CoInitialize(NULL);
-
+	
 	// Obtain access to the provider
-	hr = CoCreateInstance(__uuidof(DiaSource), NULL, CLSCTX_INPROC_SERVER, __uuidof(IDiaDataSource), (void **)&m_pSource);
+	hr = CoCreateInstance(__uuidof(DiaSource), NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_pSource));
 	if (FAILED(hr)) 
 	{
 		PrintOut(_T("[LoadDataFromPdb] CoCreateInstance failed - HRESULT = %08X"), hr);
