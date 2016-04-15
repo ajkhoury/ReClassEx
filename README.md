@@ -6,7 +6,7 @@ ReClass 2015
 
 Cleaned up the code a bit and added some new features. Also got rid of a ton of bugs still crawling around.
 
-##New Features##
+## New Features
 - Up and down arrow hotkeys to switch nodes
 - Delete hotkey to delete selected nodes
 - Delete icon to delete selected nodes
@@ -31,13 +31,13 @@ Cleaned up the code a bit and added some new features. Also got rid of a ton of 
 
 ![Alt text](/Images/reclass2.png?raw=true "ReClass")
 
-# How to build
+## How to build
 
 See wiki for instructions on how to compile:
 
 [Reclass Wiki](https://github.com/dude719/Reclass-2015/wiki)
 
-# Authors
+## Authors
 - DrUnKeN ChEeTaH
 - P47R!CK
 - DogMatt
