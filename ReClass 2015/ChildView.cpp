@@ -1078,15 +1078,23 @@ void CChildView::AddBytes(CNodeClass* pClass, DWORD Length)
 	if (!pClass)
 		return;
 
+	// Ghetto fix for adding 4 bytes in 64 bit
+	if (Length == 4)
+	{
+		CNodeBase* pNode = new CNodeHex32;
+		pNode->pParent = pClass;
+		pClass->Nodes.push_back(pNode);
+		theApp.CalcAllOffsets();
+		return;
+	}
+
 #ifdef _WIN64
 	for (UINT i = 0; i < Length / 8; i++)
 	{
 		CNodeBase* pNode;
 		if (pClass->GetType() == nt_vtable)
-			pNode = new CNodeFunctionPtr;
-		else
-			pNode = new CNodeHex64;
-
+			 pNode = new CNodeFunctionPtr;
+		else pNode = new CNodeHex64;
 		pNode->pParent = pClass;
 		pClass->Nodes.push_back(pNode);
 	}
@@ -1112,7 +1120,7 @@ void CChildView::InsertBytes(CNodeClass* pClass, UINT idx, DWORD Length)
 	if (!pClass || idx == MAX_NODES)
 		return;
 
-	// Ghetto fix
+	// Ghetto fix for adding 4 bytes in 64 bit
 	if (Length == 4)
 	{
 		CNodeBase* pNode = new CNodeHex32;
