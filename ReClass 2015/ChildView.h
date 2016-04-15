@@ -197,6 +197,9 @@ public:
 	afx_msg void OnTypePChar();
 	afx_msg void OnUpdateTypePChar(CCmdUI *pCmdUI);
 
+	afx_msg void OnTypePWChar();
+	afx_msg void OnUpdateTypePWChar(CCmdUI *pCmdUI);
+
 	afx_msg void OnTypeVtable();
 	afx_msg void OnUpdateTypeVtable(CCmdUI *pCmdUI);
 

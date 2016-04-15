@@ -36,6 +36,7 @@ void CDialogTypes::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_MATRIX, m_Matrix);
 	DDX_Control(pDX, IDC_EDIT_HEX, m_Hex);
 	DDX_Control(pDX, IDC_EDIT_PCHAR, m_PChar);
+	DDX_Control(pDX, IDC_EDIT_PWCHAR, m_PWChar);
 }
 
 
@@ -64,10 +65,10 @@ BOOL CDialogTypes::OnInitDialog()
 	m_Quat.SetWindowText(tdQuat);
 	m_Matrix.SetWindowText(tdMatrix);
 	m_PChar.SetWindowText(tdPChar);
+	m_PWChar.SetWindowText(tdPWChar);
 
 	return TRUE;
 }
-
 
 void CDialogTypes::OnOK()
 {
@@ -87,6 +88,7 @@ void CDialogTypes::OnOK()
 	m_Quat.GetWindowText(tdQuat);
 	m_Matrix.GetWindowText(tdMatrix);
 	m_PChar.GetWindowText(tdPChar);
+	m_PWChar.GetWindowText(tdPWChar);
 
 	CDialogEx::OnOK();
 }

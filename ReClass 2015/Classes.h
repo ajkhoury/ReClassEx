@@ -1622,7 +1622,8 @@ public:
 class CNodeCharPtr : public CNodeBase
 {
 public:
-	CNodeCharPtr() {
+	CNodeCharPtr() 
+	{
 		nodeType = nt_pchar;
 		Name = "PChar";
 	}
@@ -1682,6 +1683,79 @@ public:
 			size_t dw = pMemory[0];
 			CStringA sc = ReadMemoryStringA(dw, 64);
 			tx = AddText(View, tx, y, crChar, 1, "%s", sc.GetBuffer());
+		}
+
+		tx = AddText(View, tx, y, crChar, HS_NONE, _T("' ")) + FontWidth;
+
+		tx = AddComment(View, tx, y);
+		return y += FontHeight;
+	}
+};
+
+class CNodeWCharPtr : public CNodeBase
+{
+public:
+	CNodeWCharPtr() 
+	{
+		nodeType = nt_pwchar;
+		Name = "PWChar";
+	}
+
+	CNodeBase* pNode;
+	CMemory Memory;
+
+	virtual void Update(HotSpot& Spot)
+	{
+		StandardUpdate(Spot);
+		__int64 v = _ttoi64(Spot.Text);
+		if (Spot.ID == 0)
+			WriteMemory((LPVOID)Spot.Address, &v, 8);
+	}
+
+	virtual int GetMemorySize()
+	{
+		return sizeof(size_t);
+	}
+
+	virtual int Draw(ViewInfo& View, int x, int y)
+	{
+		if (bHidden)
+			return DrawHidden(View, x, y);
+
+		size_t* pMemory = (size_t*)&View.pData[offset];
+
+		AddSelection(View, 0, y, FontHeight);
+		AddDelete(View, x, y);
+		AddTypeDrop(View, x, y);
+		//AddAdd(View, x, y);
+
+		int tx = x + TXOFFSET;
+		tx = AddIcon(View, tx, y, ICON_INTEGER, HS_NONE, HS_NONE);
+		tx = AddAddressOffset(View, tx, y);
+		tx = AddText(View, tx, y, crType, HS_NONE, _T("PWCHAR "));
+		tx = AddText(View, tx, y, crName, HS_NAME, Name);
+
+		//tx = AddText(View,tx,y,crName,HS_NONE," = ");
+		//tx = AddText(View,tx,y,crValue,0,"%lli",pMemory[0]) + FontWidth;
+		//tx = AddComment(View,tx,y);
+
+		/*
+		int tx = x + 16;
+		tx = AddIcon(View,tx,y,ICON_TEXT,HS_NONE,HS_NONE);
+		tx = AddAddressOffset(View,tx,y);
+		tx = AddText(View,tx,y,crType,HS_NONE,"Text ");
+		tx = AddText(View,tx,y,crName,69,"%s",Name);
+		tx = AddText(View,tx,y,crIndex,HS_NONE,"[");
+		tx = AddText(View,tx,y,crIndex,0,"%i",memsize);
+		tx = AddText(View,tx,y,crIndex,HS_NONE,"]");
+		*/
+
+		tx = AddText(View, tx, y, crChar, HS_NONE, _T(" = '"));
+		if (VALID(pMemory))
+		{
+			size_t dw = pMemory[0];
+			CStringW sc = ReadMemoryStringW(dw, 64);
+			tx = AddText(View, tx, y, crChar, 1, "%ls", sc.GetBuffer());
 		}
 
 		tx = AddText(View, tx, y, crChar, HS_NONE, _T("' ")) + FontWidth;

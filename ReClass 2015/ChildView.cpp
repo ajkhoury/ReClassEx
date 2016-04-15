@@ -126,6 +126,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_COMMAND(ID_TYPE_CUSTOM, &CChildView::OnTypeCustom)
 	ON_COMMAND(ID_TYPE_TEXT, &CChildView::OnTypeText)
 	ON_COMMAND(ID_TYPE_PCHAR, &CChildView::OnTypePChar)
+	ON_COMMAND(ID_TYPE_PWCHAR, &CChildView::OnTypePWChar)
 	ON_COMMAND(ID_TYPE_UNICODE, &CChildView::OnTypeUnicode)
 	ON_COMMAND(ID_INSERT_INSERT4, &CChildView::OnInsertInsert4)
 	ON_COMMAND(ID_INSERT_INSERT8, &CChildView::OnInsertInsert8)
@@ -166,6 +167,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_BYTE, &CChildView::OnUpdateTypeByte)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_TEXT, &CChildView::OnUpdateTypeText)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_PCHAR, &CChildView::OnUpdateTypePChar)
+	ON_UPDATE_COMMAND_UI(ID_TYPE_PWCHAR, &CChildView::OnUpdateTypePWChar)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_UNICODE, &CChildView::OnUpdateTypeUnicode)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_DOUBLE, &CChildView::OnUpdateTypeDouble)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_FLOAT, &CChildView::OnUpdateTypeFloat)
@@ -1599,6 +1601,16 @@ void CChildView::OnUpdateTypeText(CCmdUI *pCmdUI)
 void CChildView::OnTypePChar()
 {
 	ReplaceSelectedWithType(nt_pchar);
+}
+
+void CChildView::OnTypePWChar( )
+{
+	ReplaceSelectedWithType(nt_pwchar);
+}
+
+void CChildView::OnUpdateTypePWChar(CCmdUI *pCmdUI)
+{
+	StandardTypeUpdate(pCmdUI);
 }
 
 void CChildView::OnUpdateTypePChar(CCmdUI *pCmdUI)
