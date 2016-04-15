@@ -6,7 +6,7 @@ ReClass 2015
 
 Cleaned up the code a bit and added some new features. Also got rid of a ton of bugs still crawling around.
 
-New features include:
+##New Features##
 - Up and down arrow hotkeys to switch nodes
 - Delete hotkey to delete selected nodes
 - Delete icon to delete selected nodes
