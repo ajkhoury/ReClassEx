@@ -589,13 +589,11 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 
 		switch (dwInfo)
 		{
-		case btULong:
 		case btUInt:
 		{
 			outString += _T("unsigned ");
 			//wprintf(L"unsigned ");	
 		} // Fall through
-		case btLong:
 		case btInt:
 		{
 			switch (ulLen)
@@ -652,7 +650,7 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 
 			case 8:
 			{
-				outString += _T("float");
+				outString += _T("double");
 				//wprintf(L"double");
 			}
 			break;
@@ -697,7 +695,6 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 		}
 
 		// print custom data
-
 		if ((pSymbol->get_dataBytes(cbData, &cbData, NULL) == S_OK) && (cbData != 0))
 		{
 			outString += _T(", Data: ");
@@ -757,12 +754,13 @@ void PDBReader::ReadData(IDiaSymbol *pSymbol, CString& outString)
 
 	outString += _T(", ");
 	outString += SafeDRef(rgDataKind, dwDataKind);
+	outString += _T(", ");
 	//wprintf(L", %s", SafeDRef(rgDataKind, dwDataKind));
 	ReadSymbolType(pSymbol, outString);
 
-	outString += _T(", ");
+	//outString += _T(", ");
 	//wprintf(L", ");
-	ReadName(pSymbol, outString);
+	//ReadName(pSymbol, outString);
 }
 
 ////////////////////////////////////////////////////////////
@@ -838,7 +836,7 @@ void PDBReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 		break;
 
 	case SymTagData:
-		//ReadData(pSymbol, outString);
+		ReadData(pSymbol, outString);
 		break;
 
 	case SymTagFunction:
