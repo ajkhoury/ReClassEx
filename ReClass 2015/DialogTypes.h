@@ -32,6 +32,7 @@ public:
 	CEdit m_Quat;
 	CEdit m_Matrix;
 	CEdit m_PChar;
+	CEdit m_PWChar;
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	CEdit m_Hex;

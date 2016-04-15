@@ -326,6 +326,7 @@ void CReClass2015App::OnButtonReset()
 	tdQuat = _T("D3DXQUATERNION");
 	tdMatrix = _T("D3DMATRIX");
 	tdPChar = _T("PCHAR");
+	tdPWChar = _T("PWCHAR");
 
 	CurrentFilePath = "";
 }
@@ -918,6 +919,7 @@ CNodeBase* CReClass2015App::CreateNewNode(NodeType Type)
 	if (Type == nt_custom) return new CNodeCustom;
 	if (Type == nt_text) return new CNodeText;
 	if (Type == nt_pchar) return new CNodeCharPtr;
+	if (Type == nt_pwchar) return new CNodeWCharPtr;
 	if (Type == nt_unicode) return new CNodeUnicode;
 
 	if (Type == nt_vtable) return new CNodeVTable;
@@ -962,6 +964,7 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 	settings->SetAttribute("tdQuat", CW2A(tdQuat));
 	settings->SetAttribute("tdMatrix", CW2A(tdMatrix));
 	settings->SetAttribute("tdPChar", CW2A(tdPChar));
+	settings->SetAttribute("tdPWChar", CW2A(tdPWChar));
 #else
 	settings->SetAttribute("tdHex",	  tdHex);
 	settings->SetAttribute("tdInt64", tdInt64);
@@ -978,6 +981,7 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 	settings->SetAttribute("tdQuat",  tdQuat);
 	settings->SetAttribute("tdMatrix",tdMatrix);
 	settings->SetAttribute("tdPChar", tdPChar);
+	settings->SetAttribute("tdPWChar", tdPWChar);
 #endif
 	root->LinkEndChild(settings);
 
@@ -1224,6 +1228,7 @@ void CReClass2015App::OnFileOpen()
 		tdQuat	 = CA2W(pElem->Attribute("tdQuat"));
 		tdMatrix = CA2W(pElem->Attribute("tdMatrix"));
 		tdPChar  = CA2W(pElem->Attribute("tdPChar"));
+		tdPWChar = CA2W( pElem->Attribute("tdPWChar"));
 	}
 
 	pElem = hRoot.FirstChildElement("Header").ToElement();
@@ -1514,6 +1519,11 @@ void CReClass2015App::OnButtonGenerate()
 			{
 				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdPChar, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
+			}
+			if ( Type == nt_pwchar )
+			{
+				t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), tdPWChar, pNode->Name, pNode->offset, pNode->Comment );
+				var.push_back( t );
 			}
 			if (Type == nt_text)
 			{

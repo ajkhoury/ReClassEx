@@ -70,6 +70,7 @@ CString tdVec3(_T("Vector3"));
 CString tdQuat(_T("Vector4"));
 CString tdMatrix(_T("matrix3x4_t"));
 CString tdPChar(_T("char *"));
+CString tdPWChar(_T("wchar_t *"));
 
 std::vector<HICON> Icons;
 
@@ -137,10 +138,10 @@ CStringA ReadMemoryStringA(size_t address, SIZE_T max)
 
 CStringW ReadMemoryStringW( size_t address, SIZE_T max )
 {
-	auto buffer = std::make_unique<wchar_t[ ]>( ( max / sizeof( wchar_t ) ) + 1 );
+	auto buffer = std::make_unique<wchar_t[ ]>( max + 1 );
 	SIZE_T bytesRead;
 
-	if ( ReadMemory( (PVOID) address, buffer.get( ), max, &bytesRead ) != 0 )
+	if ( ReadMemory( (PVOID) address, buffer.get( ), max * sizeof( wchar_t ), &bytesRead ) != 0 )
 	{
 		bytesRead /= sizeof( wchar_t );
 		
