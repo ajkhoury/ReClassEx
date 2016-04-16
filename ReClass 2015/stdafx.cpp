@@ -150,7 +150,9 @@ CStringA ReadMemoryStringA(size_t address, SIZE_T max)
 
 		return CStringA(buffer.get());
 	} else {
-		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s"), Utils::GetLastErrorString().GetString());
+#ifdef _DEBUG
+		PrintOut( _T( "[ReadMemoryString]: Failed to read memory, GetLastError() = %s" ), Utils::GetLastErrorString( ).GetString( ) );
+#endif
 		return CStringA( ".." );
 	}
 }
@@ -174,7 +176,9 @@ CStringW ReadMemoryStringW( size_t address, SIZE_T max )
 
 		return CStringW( buffer.get( ) );
 	} else {
+#ifdef _DEBUG
 		PrintOut( _T( "[ReadMemoryString]: Failed to read memory, GetLastError() = %s" ), Utils::GetLastErrorString( ).GetString( ) );
+#endif
 		return CStringW( L".." );
 	}
 }
