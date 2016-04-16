@@ -14,7 +14,7 @@ public:
 	virtual ~CDialogPlugins();
 
 // Dialog Data
-	enum { IDD = IDD_DIALOGPLUGINS };
+	enum { IDD = IDD_DIALOG_PLUGINS };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
