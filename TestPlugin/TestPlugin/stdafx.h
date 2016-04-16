@@ -11,3 +11,5 @@
 #include <fstream>
 #include <sstream>
 #include <memory>
+
+#include "ReClassAPI.h"

@@ -226,19 +226,21 @@ BOOL CReClass2015App::InitInstance()
 				FreeLibrary( plugin_base );
 				continue;
 			}
-			
+
 			RECLASS_PLUGIN_INFO plugin_info;
 			ZeroMemory( &plugin_info, sizeof RECLASS_PLUGIN_INFO );
-			plugin_info.ModuleBase = plugin_base;
-			if ( pfnPluginInit( GetModuleHandle(NULL), &plugin_info ) ) 
-			{
-				LoadedPlugins.push_back( plugin_info );
-			} 
-			else 
-			{
-				FreeLibrary(plugin_base);
-			}
 
+			if ( pfnPluginInit( &plugin_info ) )
+			{
+				PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), file_data.cFileName, plugin_info.Name, plugin_info.Version, plugin_info.About );
+				LoadedPlugins.emplace( plugin_base, plugin_info );
+			} else {
+				CString message{ };
+				message.Format( _T( "Failed to load plugin %s" ), file_data.cFileName );
+				PrintOut( message );
+				GetMainWnd( )->MessageBox( message );
+				FreeLibrary( plugin_base );
+			}
 		} while ( FindNextFile( findfile_tree, &file_data ) );
 	}
 
@@ -289,7 +291,7 @@ int CReClass2015App::ExitInstance()
 	WriteProfileInt(_T("Display"), _T("gbFilterProcesses"), gbFilterProcesses);
 
 	for ( auto plugin : LoadedPlugins )
-		FreeLibrary( plugin.ModuleBase );
+		FreeLibrary( plugin.first );
 
 	return CWinAppEx::ExitInstance();
 }

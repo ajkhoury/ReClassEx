@@ -135,7 +135,8 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>BeaEngine_s_stdcall.lib;SciLexer.lib;SQLite_Static_Library.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
       <AdditionalManifestDependencies>"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'"</AdditionalManifestDependencies>
-      <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>

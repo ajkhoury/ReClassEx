@@ -74,12 +74,13 @@ CString tdPWChar(_T("wchar_t *"));
 
 std::vector<HICON> Icons;
 
-std::vector<RECLASS_PLUGIN_INFO> LoadedPlugins;
+#pragma region Plugins
+std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
 
 MEMORY_OPERATION g_PluginOverideMemoryWrite = nullptr;
 MEMORY_OPERATION g_PluginOverideMemoryRead = nullptr;
 
-BOOL WINAPI ReClassOverrideMemoryOperations( MEMORY_OPERATION write, MEMORY_OPERATION read, BOOL force )
+BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION write, MEMORY_OPERATION read, BOOL force )
 { 
 	if ( write == nullptr || read == nullptr )
 		return FALSE;
@@ -91,6 +92,24 @@ BOOL WINAPI ReClassOverrideMemoryOperations( MEMORY_OPERATION write, MEMORY_OPER
 		return TRUE;
 	}
 }
+
+void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... )
+{
+	wchar_t buffer[ 6048 ];
+	ZeroMemory( &buffer, sizeof( buffer ) );
+	
+	va_list va;
+	va_start( va, format );
+	vswprintf_s( buffer, format, va );
+	theApp.Console->SendMessage((WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS+1), (WPARAM)buffer, 0);
+	va_end( va );
+}
+
+RECLASS_EXPORT const HANDLE ReClassGetProcessHandle( )
+{
+	return g_hProcess;
+}
+#pragma endregion
 
 BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read)
 {
