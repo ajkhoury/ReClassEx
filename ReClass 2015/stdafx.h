@@ -254,6 +254,7 @@ enum NodeType
 	nt_pwchar,
 	nt_bits
 };
+
 #define ISHEXTYPE(type) (type == nt_hex64 || type == nt_hex32 || type == nt_hex16 || type == nt_hex8 || type == nt_bits)
 
 __inline const TCHAR* NodeTypeToString(NodeType type)
@@ -326,6 +327,7 @@ struct HotSpot
 	class CNodeBase* object;
 };
 
+
 // All node type classes
 #include "Classes.h"
 #ifdef _WIN64
@@ -333,6 +335,7 @@ struct HotSpot
 #else
 #define CNodeHex CNodeHex32
 #endif
+
 
 //
 // Plugins
@@ -356,9 +359,9 @@ typedef struct _RECLASS_PLUGIN_INFO
 BOOL PLUGIN_CC PluginInit(LPRECLASS_PLUGIN_INFO lpRCInfo);
 
 //Exported Functions Below
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideMemoryOperations(MEMORY_OPERATION write, MEMORY_OPERATION read, BOOL force = FALSE);
+RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION write, MEMORY_OPERATION read, BOOL force );
 RECLASS_EXPORT void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
-RECLASS_EXPORT const HANDLE ReClassGetProcessHandle( );
+RECLASS_EXPORT HANDLE PLUGIN_CC ReClassGetProcessHandle( );
 
 extern std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
 #pragma endregion
@@ -385,7 +388,7 @@ do { \
 	static TCHAR s_logbuf[1024]; \
 	if (fmt) { \
 		_sntprintf(s_logbuf, 1024, fmt, ##__VA_ARGS__); \
-		theApp.Console->SendMessage((WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS+1), (WPARAM)s_logbuf, 0); \
+		theApp.Console->PrintText(s_logbuf); \
 	} \
 } while (0);\
 }

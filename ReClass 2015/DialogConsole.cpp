@@ -72,7 +72,6 @@ void CDialogConsole::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CDialogConsole, CDialogEx)
 	ON_WM_SIZE()
-	ON_MESSAGE(WM_PRINT_TEXT_MESSAGE, &CDialogConsole::PrintText)
 END_MESSAGE_MAP()
 
 BOOL CDialogConsole::Create(UINT nIDTemplate, CWnd* pParentWnd)
@@ -80,37 +79,23 @@ BOOL CDialogConsole::Create(UINT nIDTemplate, CWnd* pParentWnd)
 	return CDialogEx::Create(nIDTemplate, pParentWnd);
 }
 
-LRESULT CDialogConsole::PrintText(WPARAM wParam, LPARAM lParam)
+void CDialogConsole::PrintText( const TCHAR * message )
 {
-	if (wParam == NULL) return FALSE;
-
 	// Make temporarily editable
-	SendEditor(SCI_SETREADONLY, FALSE);
+	SendEditor( SCI_SETREADONLY, FALSE );
 
-	LPTSTR pString = (LPTSTR)wParam;
+	m_strConsoleText += _T( "> " );
+	m_strConsoleText += message;
+	m_strConsoleText += _T( "\r\n" );
 
-	m_strConsoleText += _T("> ");
-	m_strConsoleText += pString;
-	m_strConsoleText += "\r\n";
-
-	int length = m_strConsoleText.GetLength();
-	char* pText = (char*)malloc(length + 1);
-
-	#ifdef UNICODE
-	size_t converted = 0;
-	wcstombs_s(&converted, pText, length + 1, m_strConsoleText.GetBuffer(), length + 1);
-	#else
-	strcpy_s(pText, length + 1, m_strConsoleText.GetBuffer());
-	#endif
-
-	SendEditor(SCI_SETTEXT, 0, (LPARAM)pText);
-
-	delete[] pText;
+#ifdef UNICODE
+	SendEditor( SCI_SETTEXT, 0, (LPARAM) CW2A( m_strConsoleText ).m_psz );
+#else
+	SendEditor( SCI_SETTEXT, 0, (LPARAM) m_strConsoleText.GetBuffer( ) );
+#endif
 
 	// Make read only
-	SendEditor(SCI_SETREADONLY, TRUE);
-
-	return TRUE;
+	SendEditor( SCI_SETREADONLY, TRUE );
 }
 
 BOOL CDialogConsole::OnInitDialog()

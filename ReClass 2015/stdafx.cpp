@@ -101,14 +101,22 @@ void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... )
 	va_list va;
 	va_start( va, format );
 	vswprintf_s( buffer, format, va );
-	theApp.Console->SendMessage((WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS+1), (WPARAM)buffer, 0);
+	
+#ifndef UNICODE
+	theApp.Console->PrintText( CW2A( buffer ) );
+#else
+	theApp.Console->PrintText( buffer );
+#endif
+
 	va_end( va );
 }
 
-RECLASS_EXPORT const HANDLE ReClassGetProcessHandle( )
+HANDLE PLUGIN_CC ReClassGetProcessHandle( )
 {
 	return g_hProcess;
 }
+
+
 #pragma endregion
 
 BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read)

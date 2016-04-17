@@ -3,8 +3,6 @@
 #include "afxwin.h"
 #include "Resource.h"
 
-#define WM_PRINT_TEXT_MESSAGE     (WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS+1)
-
 // CDialogConsole dialog
 
 class CDialogConsole : public CDialogEx
@@ -46,7 +44,8 @@ public:
 	virtual void OnCancel();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 
-	LRESULT PrintText(WPARAM wParam, LPARAM lParam);
+	void PrintText( const TCHAR * message );
+
 	BOOL IsInitialized() { return m_bInited; }
 
 	CString m_strWindowTitle;
