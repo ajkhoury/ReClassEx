@@ -9,15 +9,6 @@
 #pragma comment(lib, "ReClass.lib")
 #endif
 
-typedef BOOL( WINAPI *MEMORY_OPERATION )( LPVOID, LPVOID, SIZE_T, PSIZE_T );
-
-typedef struct _RECLASS_PLUGIN_INFO
-{
-	wchar_t Name[ 260 ];
-	wchar_t About[ 2048 ];
-	wchar_t Version[ 260 ];
-} RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
-
 #ifdef PLUGIN_EXPORT
 #ifdef __cplusplus
 #define PLUGIN_API extern "C" __declspec(dllexport)
@@ -33,6 +24,16 @@ typedef struct _RECLASS_PLUGIN_INFO
 
 #define PLUGIN_CC __stdcall
 
+typedef BOOL( PLUGIN_CC *MEMORY_OPERATION )( LPVOID, LPVOID, SIZE_T, PSIZE_T );
+typedef BOOL( PLUGIN_CC *HANDLE_OPERATION )( DWORD, BOOL, DWORD );
+
+typedef struct _RECLASS_PLUGIN_INFO
+{
+	wchar_t Name[ 260 ];
+	wchar_t About[ 2048 ];
+	wchar_t Version[ 260 ];
+} RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
+
 PLUGIN_API BOOL PLUGIN_CC PluginInit( OUT LPRECLASS_PLUGIN_INFO lpRCInfo );
 
 /*
@@ -40,7 +41,12 @@ PLUGIN_API BOOL PLUGIN_CC PluginInit( OUT LPRECLASS_PLUGIN_INFO lpRCInfo );
 *	returns false if a plugin has already registered it or one of the paramaters was null
 *	returns true if succeeded or if force flag is set
 */
-RECLASS_API BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION write, MEMORY_OPERATION read, BOOL force = FALSE );
+RECLASS_API BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet = FALSE );
+
+/*
+ *	Register overides for the opening of handles for various process/thread operations
+ */
+RECLASS_API BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION HandleProcess, HANDLE_OPERATION HandleThread, BOOL bForceSet = FALSE );
 
 /*
 *	Print text to the ReClass console window
@@ -50,4 +56,4 @@ RECLASS_API void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
 /*
  *	Get thecurrent attached process handle, null if not attached
  */
-RECLASS_API const HANDLE ReClassGetProcessHandle( );
+RECLASS_API LPHANDLE PLUGIN_CC ReClassGetProcessHandle( );

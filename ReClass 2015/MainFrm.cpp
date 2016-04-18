@@ -465,6 +465,7 @@ static const char* CommonProcesses[] =
 	"CCLibrary.exe", "pia_tray.exe", "rubyw.exe", "netsession_win.exe", "NvBackend.exe", "TeamViewer_Service.exe",
 	"DisplayFusionHookAppWIN6032.exe", "DisplayFusionHookAppWIN6064.exe", "GameScannerService.exe", "AdobeUpdateService.exe",
 	"steamwebhelper.exe", "c2c_service.exe", "Sync Server.exe", "NvNetworkService.exe", "Creative Cloud.exe", "foobar2000.exe",
+	"code.exe"
 };
 
 void CMainFrame::OnButtonSelectProcess()

@@ -79,18 +79,35 @@ std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
 
 MEMORY_OPERATION g_PluginOverideMemoryWrite = nullptr;
 MEMORY_OPERATION g_PluginOverideMemoryRead = nullptr;
+HANDLE_OPERATION g_PluginOverideHandleProcess = nullptr;
+HANDLE_OPERATION g_PluginOverideHandleThread = nullptr;
 
-BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION write, MEMORY_OPERATION read, BOOL force )
+BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet )
 { 
-	if ( write == nullptr || read == nullptr )
+	if ( MemWrite == nullptr || MemRead == nullptr )
 		return FALSE;
-	if ( g_PluginOverideMemoryRead != nullptr && g_PluginOverideMemoryWrite != nullptr && !force )
+	if ( g_PluginOverideMemoryRead != nullptr && g_PluginOverideMemoryWrite != nullptr && !bForceSet )
 		return FALSE;
 	else {
-		g_PluginOverideMemoryRead = read;
-		g_PluginOverideMemoryWrite = write;
+		g_PluginOverideMemoryWrite = MemWrite;
+		g_PluginOverideMemoryRead = MemRead;
 		return TRUE;
 	}
+}
+
+BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION HandleProcess, HANDLE_OPERATION HandleThread, BOOL bForceSet )
+{
+	if ( HandleProcess == nullptr || HandleThread == nullptr )
+		return FALSE;
+	if ( g_PluginOverideHandleProcess != nullptr && g_PluginOverideHandleThread != nullptr && !bForceSet )
+		return FALSE;
+	else
+	{
+		g_PluginOverideHandleProcess = HandleProcess;
+		g_PluginOverideHandleThread = HandleThread;
+		return TRUE;
+	}
+	return FALSE;
 }
 
 void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... )
@@ -101,22 +118,19 @@ void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... )
 	va_list va;
 	va_start( va, format );
 	vswprintf_s( buffer, format, va );
-	
+	va_end( va );
+
 #ifndef UNICODE
 	theApp.Console->PrintText( CW2A( buffer ) );
 #else
 	theApp.Console->PrintText( buffer );
 #endif
-
-	va_end( va );
 }
 
-HANDLE PLUGIN_CC ReClassGetProcessHandle( )
+LPHANDLE PLUGIN_CC ReClassGetProcessHandle( )
 {
-	return g_hProcess;
+	return &g_hProcess;
 }
-
-
 #pragma endregion
 
 BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read)

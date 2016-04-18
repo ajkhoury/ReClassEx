@@ -819,7 +819,7 @@ void CReClass2015App::OnButtonNewClass()
 
 void CReClass2015App::OnButtonSearch()
 {
-	GetMainWnd( )->MessageBoxW( _T( "Coming Soon!" ), _T( "ReClass2015" ) );
+	GetMainWnd( )->MessageBox( _T( "Coming Soon!" ), _T( "ReClass2015" ) );
 }
 
 void CReClass2015App::OnUpdateButtonSearch(CCmdUI *pCmdUI)

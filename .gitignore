@@ -32,3 +32,6 @@ ReClass.sdf
 ReClass.opensdf
 Reclass2015.rar
 *.ipch
+*.exp
+*.iobj
+*.ipdb
