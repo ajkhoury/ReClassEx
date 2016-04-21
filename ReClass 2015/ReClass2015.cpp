@@ -87,6 +87,24 @@ BOOL CReClass2015App::InitInstance()
 	ttParams.m_bVislManagerTheme = TRUE;
 	theApp.GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL, RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
 
+	//Typedefs
+	tdHex = GetProfileString( _T( "Typedefs" ), _T( "tdHex" ), _T( "char" ) );
+	tdInt64 = GetProfileString( _T( "Typedefs" ), _T( "tdInt64" ), _T( "__int64" ) );
+	tdInt32 = GetProfileString( _T( "Typedefs" ), _T( "tdInt32" ), _T( "__int32" ) );
+	tdInt16 = GetProfileString( _T( "Typedefs" ), _T( "tdInt16" ), _T( "__int16" ) );
+	tdInt8 = GetProfileString( _T( "Typedefs" ), _T( "tdInt8" ), _T( "__int8" ) );
+	tdDWORD = GetProfileString( _T( "Typedefs" ), _T( "tdDWORD" ), _T( "DWORD" ) );
+	tdWORD = GetProfileString( _T( "Typedefs" ), _T( "tdWORD" ), _T( "WORD" ) );
+	tdBYTE = GetProfileString( _T( "Typedefs" ), _T( "tdBYTE" ), _T( "unsigned char" ) );
+	tdFloat = GetProfileString( _T( "Typedefs" ), _T( "tdFloat" ), _T( "float" ) );
+	tdDouble = GetProfileString( _T( "Typedefs" ), _T( "tdDouble" ), _T( "double" ) );
+	tdVec2 = GetProfileString( _T( "Typedefs" ), _T( "tdVec2" ), _T( "Vector2" ) );
+	tdVec3 = GetProfileString( _T( "Typedefs" ), _T( "tdVec3" ), _T( "Vector3" ) );
+	tdQuat = GetProfileString( _T( "Typedefs" ), _T( "tdQuat" ), _T( "Vector4" ) );
+	tdMatrix = GetProfileString( _T( "Typedefs" ), _T( "tdMatrix" ), _T( "matrix3x4_t" ) );
+	tdPChar = GetProfileString( _T( "Typedefs" ), _T( "tdPChar" ), _T( "char *" ) );
+	tdPWChar = GetProfileString( _T( "Typedefs" ), _T( "tdPWChar" ), _T( "wchar_t *" ) );
+
 	crBackground = GetProfileInt(_T("Colors"), _T("crBackground"), crBackground);
 	crSelect = GetProfileInt(_T("Colors"), _T("crSelect"), crSelect);
 	crHidden = GetProfileInt(_T("Colors"), _T("crHidden"), crHidden);
@@ -264,6 +282,23 @@ int CReClass2015App::ExitInstance()
 	// Release Scintilla
 	Scintilla_ReleaseResources();
 
+	WriteProfileString( _T( "Typedefs" ), _T( "tdHex" ), tdHex );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdInt64" ), tdInt64 );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdInt32" ), tdInt32 );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdInt16" ), tdInt16 );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdInt8" ), tdInt8 );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdDWORD" ), tdDWORD );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdWORD" ), tdWORD );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdBYTE" ), tdBYTE );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdFloat" ), tdFloat );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdDouble" ), tdDouble );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdVec2" ), tdVec2 );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdVec3" ), tdVec3 );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdQuat" ), tdQuat );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdMatrix" ), tdMatrix );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdPChar" ), tdPChar );
+	WriteProfileString( _T( "Typedefs" ), _T( "tdPWChar" ), tdPWChar );
+
 	WriteProfileInt(_T("Colors"), _T("crBackground"), crBackground);
 	WriteProfileInt(_T("Colors"), _T("crSelect"), crSelect);
 	WriteProfileInt(_T("Colors"), _T("crHidden"), crHidden);
@@ -316,20 +351,6 @@ void CReClass2015App::OnButtonReset()
 	Footer = _T("");
 	Notes = _T("");
 
-	tdHex = _T("char");
-	tdInt32 = _T("__int32");
-	tdInt16 = _T("__int16");
-	tdInt8 = _T("__int8");
-	tdDWORD = _T("DWORD");
-	tdWORD = _T("WORD");
-	tdBYTE = _T("BYTE");
-	tdVec2 = _T("D3DVECTOR2");
-	tdVec3 = _T("D3DVECTOR3");
-	tdQuat = _T("D3DXQUATERNION");
-	tdMatrix = _T("D3DMATRIX");
-	tdPChar = _T("PCHAR");
-	tdPWChar = _T("PWCHAR");
-
 	CurrentFilePath = "";
 }
 
@@ -373,6 +394,7 @@ void CReClass2015App::CalcOffsets(CNodeClass* pClass)
 		offset += pClass->Nodes[i]->GetMemorySize();
 	}
 }
+
 void CReClass2015App::CalcAllOffsets()
 {
 	for (UINT i = 0; i < Classes.size(); i++)
@@ -1213,25 +1235,6 @@ void CReClass2015App::OnFileOpen()
 		return; // Not a Reclass file
 
 	hRoot = XMLHandle(pElem);
-
-	pElem = hRoot.FirstChildElement("TypeDef").ToElement();
-	if (pElem)
-	{
-		tdHex	 = CA2W(pElem->Attribute("tdHex"));
-		tdInt64  = CA2W(pElem->Attribute("tdInt64"));
-		tdInt32  = CA2W(pElem->Attribute("tdInt32"));
-		tdInt16  = CA2W(pElem->Attribute("tdInt16"));
-		tdInt8	 = CA2W(pElem->Attribute("tdInt8"));
-		tdDWORD  = CA2W(pElem->Attribute("tdDWORD"));
-		tdWORD	 = CA2W(pElem->Attribute("tdWORD"));
-		tdBYTE	 = CA2W(pElem->Attribute("tdBYTE"));
-		tdVec2	 = CA2W(pElem->Attribute("tdVec2"));
-		tdVec3	 = CA2W(pElem->Attribute("tdVec3"));
-		tdQuat	 = CA2W(pElem->Attribute("tdQuat"));
-		tdMatrix = CA2W(pElem->Attribute("tdMatrix"));
-		tdPChar  = CA2W(pElem->Attribute("tdPChar"));
-		tdPWChar = CA2W( pElem->Attribute("tdPWChar"));
-	}
 
 	pElem = hRoot.FirstChildElement("Header").ToElement();
 	if (pElem)

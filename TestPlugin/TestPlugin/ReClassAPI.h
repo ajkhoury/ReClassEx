@@ -25,7 +25,7 @@
 #define PLUGIN_CC __stdcall
 
 typedef BOOL( PLUGIN_CC *MEMORY_OPERATION )( LPVOID, LPVOID, SIZE_T, PSIZE_T );
-typedef BOOL( PLUGIN_CC *HANDLE_OPERATION )( DWORD, BOOL, DWORD );
+typedef HANDLE( PLUGIN_CC *HANDLE_OPERATION )( DWORD, BOOL, DWORD );
 
 typedef struct _RECLASS_PLUGIN_INFO
 {
@@ -45,6 +45,8 @@ RECLASS_API BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION Mem
 
 /*
  *	Register overides for the opening of handles for various process/thread operations
+ *	returns false if a plugin has already registered it or one of the paramaters was null
+ *	returns true if succeeded or if force flag is set
  */
 RECLASS_API BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION HandleProcess, HANDLE_OPERATION HandleThread, BOOL bForceSet = FALSE );
 
@@ -54,6 +56,6 @@ RECLASS_API BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION Han
 RECLASS_API void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
 
 /*
- *	Get thecurrent attached process handle, null if not attached
+ *	Get the current attached process handle, null if not attached
  */
 RECLASS_API LPHANDLE PLUGIN_CC ReClassGetProcessHandle( );

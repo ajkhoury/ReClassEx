@@ -291,6 +291,9 @@ BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote =
 CStringA ReadMemoryStringA(size_t address, SIZE_T max = 40);
 CStringW ReadMemoryStringW(size_t address, SIZE_T max = 40);
 
+HANDLE ReClassOpenProcess( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwProcessID );
+HANDLE ReClassOpenThread( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwThreadID );
+
 __int64 StrToNum(const TCHAR *udata, int udatalen, int base);
 int SplitString(const CString& input, const CString& delimiter, CStringArray& results);
 size_t ConvertStrToAddress(CString str);
@@ -345,7 +348,7 @@ struct HotSpot
 #define PLUGIN_CC __stdcall
 
 typedef BOOL( PLUGIN_CC *MEMORY_OPERATION )( LPVOID, LPVOID, SIZE_T, PSIZE_T );
-typedef BOOL( PLUGIN_CC *HANDLE_OPERATION )( DWORD, BOOL, DWORD );
+typedef HANDLE( PLUGIN_CC *HANDLE_OPERATION )( DWORD, BOOL, DWORD );
 
 extern MEMORY_OPERATION g_PluginOverideMemoryWrite;
 extern MEMORY_OPERATION g_PluginOverideMemoryRead;

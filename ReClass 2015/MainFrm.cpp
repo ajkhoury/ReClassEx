@@ -373,7 +373,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 			UINT idx = nID - WM_PROCESSMENU;
 			
 			g_ProcessID = ProcMenuItems[idx].ProcessId;
-			g_hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, g_ProcessID);
+			g_hProcess = ReClassOpenProcess(PROCESS_ALL_ACCESS, false, g_ProcessID);
 
 			// Update memory map
 			UpdateMemoryMap();
@@ -546,7 +546,7 @@ void CMainFrame::OnButtonSelectProcess()
 						}
 					}
 
-					hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, (DWORD)infoP->UniqueProcessId);
+					hProcess = ReClassOpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, (DWORD)infoP->UniqueProcessId);
 					if (hProcess)
 					{
 						#ifdef _WIN64

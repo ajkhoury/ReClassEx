@@ -55,22 +55,22 @@ bool gbTop = true;
 bool gbClassBrowser = true;
 bool gbFilterProcesses = false;
 
-CString tdHex(_T("char"));
-CString tdInt64(_T("__int64"));
-CString tdInt32(_T("__int32"));
-CString tdInt16(_T("__int16"));
-CString tdInt8(_T("__int8"));
-CString tdDWORD(_T("DWORD"));
-CString tdWORD(_T("WORD"));
-CString tdBYTE(_T("unsigned char"));
-CString tdFloat(_T("float"));
-CString tdDouble(_T("double"));
-CString tdVec2(_T("Vector2"));
-CString tdVec3(_T("Vector3"));
-CString tdQuat(_T("Vector4"));
-CString tdMatrix(_T("matrix3x4_t"));
-CString tdPChar(_T("char *"));
-CString tdPWChar(_T("wchar_t *"));
+CString tdHex{ };
+CString tdInt64{ };
+CString tdInt32{ };
+CString tdInt16{ };
+CString tdInt8{ };
+CString tdDWORD{ };
+CString tdWORD{ };
+CString tdBYTE{ };
+CString tdFloat{ };
+CString tdDouble{ };
+CString tdVec2{ };
+CString tdVec3{ };
+CString tdQuat{ };
+CString tdMatrix{ };
+CString tdPChar{ };
+CString tdPWChar{ };
 
 std::vector<HICON> Icons;
 
@@ -153,6 +153,20 @@ BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote )
 	BOOL ret = WriteProcessMemory( g_hProcess, (void*)Address, Buffer, Size, num_wrote );
 	VirtualProtectEx(g_hProcess, (void*)Address, Size, OldProtect, NULL);
 	return ret;
+}
+
+HANDLE ReClassOpenProcess( DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessID )
+{
+	if ( g_PluginOverideHandleProcess != nullptr )
+		return g_PluginOverideHandleProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
+	return OpenProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
+}
+
+HANDLE ReClassOpenThread( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwThreadID )
+{ 
+	if ( g_PluginOverideHandleThread != nullptr )
+		return g_PluginOverideHandleThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
+	return OpenThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
 }
 
 CStringA ReadMemoryStringA(size_t address, SIZE_T max)
@@ -267,7 +281,7 @@ bool PauseResumeThreadList(bool bResumeThread)
 		DWORD thId = (DWORD)thread->ClientId.UniqueThread;
 		if (!thId) continue;
 		
-		HANDLE hThread = OpenThread(THREAD_SUSPEND_RESUME, FALSE, thId);
+		HANDLE hThread = ReClassOpenThread(THREAD_SUSPEND_RESUME, FALSE, thId);
 		
 		if (bResumeThread) {
 			ResumeThread(hThread);
