@@ -1,0 +1,1931 @@
+// dia2.idl - Debug Information Access (DIA) interface description
+//-----------------------------------------------------------------
+//
+// Copyright 1999-2000 Microsoft Corporation.  All Rights Reserved.
+//
+//---------------------------------------------------------------
+import "objidl.idl";
+import "oaidl.idl";
+import "propidl.idl";
+
+import "cvconst.h";
+
+enum NameSearchOptions
+{
+    nsNone = 0,
+
+    nsfCaseSensitive = 0x1,         // apply a case sensitive match
+    nsfCaseInsensitive = 0x2,       // apply a case insensitive match
+    nsfFNameExt = 0x4,              // treat names as paths and apply a filename.ext match
+    nsfRegularExpression = 0x8,     // regular expression
+    nsfUndecoratedName = 0x10,      // applies only to symbols that have both undecorated and decorated names
+
+    // predefined names for backward source compatibility
+
+    nsCaseSensitive = nsfCaseSensitive,             // apply a case sensitive match
+    nsCaseInsensitive = nsfCaseInsensitive,         // apply a case insensitive match
+    nsFNameExt = nsfCaseInsensitive | nsfFNameExt,  // treat names as paths and apply a filename.ext match
+    nsRegularExpression = nsfRegularExpression | nsfCaseSensitive,      // regular expression (using only '*' and '?')
+    nsCaseInRegularExpression = nsfRegularExpression | nsfCaseInsensitive,  // case insensitive regular expression
+};
+
+
+// the following are error HRESULTS returned by an IDiaDataSource they
+// are based on the FACILITY_VISUALCPP (0x6d) defined in delayimp.h
+
+enum 
+{
+    E_PDB_OK=((HRESULT) (((unsigned long)(1)<<31) | ((unsigned long)(((LONG)0x6d))<<16) | ((unsigned long)(1))) ),
+    E_PDB_USAGE                 ,
+    E_PDB_OUT_OF_MEMORY         , // not used, use E_OUTOFMEMORY
+    E_PDB_FILE_SYSTEM           ,
+    E_PDB_NOT_FOUND             ,
+    E_PDB_INVALID_SIG           ,
+    E_PDB_INVALID_AGE           ,
+    E_PDB_PRECOMP_REQUIRED      ,
+    E_PDB_OUT_OF_TI             ,
+    E_PDB_NOT_IMPLEMENTED       ,   // use E_NOTIMPL
+    E_PDB_V1_PDB                ,
+    E_PDB_FORMAT                ,
+    E_PDB_LIMIT                 ,
+    E_PDB_CORRUPT               ,
+    E_PDB_TI16                  ,
+    E_PDB_ACCESS_DENIED         ,  // use E_ACCESSDENIED
+    E_PDB_ILLEGAL_TYPE_EDIT     ,
+    E_PDB_INVALID_EXECUTABLE    ,
+    E_PDB_DBG_NOT_FOUND         ,
+    E_PDB_NO_DEBUG_INFO         ,
+    E_PDB_INVALID_EXE_TIMESTAMP ,
+    E_PDB_RESERVED              ,
+    E_PDB_DEBUG_INFO_NOT_IN_PDB ,
+    E_PDB_SYMSRV_BAD_CACHE_PATH ,
+    E_PDB_SYMSRV_CACHE_FULL     ,
+    E_PDB_OBJECT_DISPOSED       ,
+    E_PDB_MAX
+};
+
+#define PROPERTY_RW(type, name, prid, help)           \
+        [propget, helpstring(help), id(prid)]         \
+        HRESULT name([out, retval] type * pRetVal);   \
+                                                      \
+        [propput, helpstring(help), id(prid)]         \
+        HRESULT name([in] type NewVal)
+
+#define PROPERTY_ARRAY_RW(type, itype, name, prid, help)           \
+        [propget, helpstring(help), id(prid)]         \
+        HRESULT name([in] itype index, [out, retval] type * pRetVal);   \
+                                                      \
+        [propput, helpstring(help), id(prid)]         \
+        HRESULT name([in] itype index, [in] type NewVal)
+
+#define PROPERTY_RO(type, name, prid, help)           \
+        [propget, helpstring(help), id(prid)]         \
+        HRESULT name([out, retval] type * pRetVal) 
+
+#define PROPERTY_ARRAY_RO(type, itype, name, prid, help)           \
+        [propget, helpstring(help), id(prid)]         \
+        HRESULT name([in] itype index, [out, retval] type * pRetVal)
+
+// type of callback arg to IDiaDataSource::loadDataForExe
+typedef void (__cdecl *PfnPDBDebugDirV)(BOOL, /*const struct _IMAGE_DEBUG_DIRECTORY * */ void*);
+
+
+interface IDiaSession;
+interface IDiaEnumTables;
+
+interface IDiaSymbol;
+interface IDiaSourceFile;
+interface IDiaLineNumber;
+interface IDiaInputAssemblyFile;
+interface IDiaInjectedSource;
+interface IDiaSegment;
+interface IDiaSectionContrib;
+interface IDiaFrameData;
+interface IDiaLVarInstance;
+interface IDiaStackWalkHelper;
+interface IDiaStackFrame;
+interface IDiaLoadCallback;
+interface IDiaLoadCallback2;
+interface IDiaReadExeAtOffsetCallback;
+interface IDiaReadExeAtRVACallback;
+
+[
+    object,
+    uuid(C32ADB82-73F4-421b-95D5-A4706EDF5DBE),
+    local,
+    helpstring("IDiaLoadCallback interface."),
+    pointer_default(unique)
+]
+interface IDiaLoadCallback: IUnknown
+{
+    HRESULT NotifyDebugDir(
+                [in] BOOL fExecutable, 
+                [in] DWORD cbData,
+                [in, size_is(cbData)] BYTE *pbData); // really a const struct _IMAGE_DEBUG_DIRECTORY *
+
+    HRESULT NotifyOpenDBG(
+                [in] LPCOLESTR dbgPath, 
+                [in] HRESULT resultCode);
+
+    HRESULT NotifyOpenPDB(
+                [in] LPCOLESTR pdbPath, 
+                [in] HRESULT resultCode);
+
+    HRESULT RestrictRegistryAccess();         // return hr != S_OK to prevent querying the registry for symbol search paths
+    HRESULT RestrictSymbolServerAccess();     // return hr != S_OK to prevent accessing a symbol server
+}
+
+[
+    object,
+    uuid(4688a074-5a4d-4486-aea8-7b90711d9f7c),
+    local,
+    helpstring("IDiaLoadCallback interface."),
+    pointer_default(unique)
+]
+interface IDiaLoadCallback2: IDiaLoadCallback
+{
+    HRESULT RestrictOriginalPathAccess();     // return hr != S_OK to prevent looking up PDB specified in the debug directory
+    HRESULT RestrictReferencePathAccess();    // return hr != S_OK to prevent looking up for PDB where the EXE is located.
+    HRESULT RestrictDBGAccess();              // return hr != S_OK to prevent looking up debug information from DBG files.
+    HRESULT RestrictSystemRootAccess();       // return hr != S_OK to prevent looking up PDBs in system root
+}
+
+[
+    object,
+    uuid(587A461C-B80B-4f54-9194-5032589A6319),
+    local,
+    helpstring("IDiaReadExeAtOffsetCallback interface."),
+    pointer_default(unique)
+]
+interface IDiaReadExeAtOffsetCallback: IUnknown
+{    
+    HRESULT ReadExecutableAt(
+                [in] DWORDLONG fileOffset, 
+                [in] DWORD cbData,
+                [out] DWORD *pcbData,
+                [out, size_is(cbData)] BYTE *pbData);
+
+}
+
+[
+    object,
+    uuid(8E3F80CA-7517-432a-BA07-285134AAEA8E),
+    local,
+    helpstring("IDiaReadExeAtRVACallback interface."),
+    pointer_default(unique)
+]
+interface IDiaReadExeAtRVACallback: IUnknown
+{    
+    HRESULT ReadExecutableAtRVA(
+                [in] DWORD relativeVirtualAddress, 
+                [in] DWORD cbData,
+                [out] DWORD *pcbData,
+                [out, size_is(cbData)] BYTE *pbData);
+}
+
+[
+    object,
+    uuid(79F1BB5F-B66E-48e5-B6A9-1545C323CA3D),
+    local,
+    helpstring("IDiaDataSource Interface"),
+    pointer_default(unique)
+]
+interface IDiaDataSource: IUnknown
+{
+    PROPERTY_RO( BSTR, lastError, 1, "Text for last load error." );
+
+    //
+    // loadDataFromPdb
+    //
+   HRESULT loadDataFromPdb(
+               [in] LPCOLESTR pdbPath );
+
+    //
+    // loadAndValidateDataFromPdb
+    //
+   HRESULT loadAndValidateDataFromPdb(
+               [in] LPCOLESTR pdbPath,
+               [in] GUID* pcsig70,
+               [in] DWORD sig,
+               [in] DWORD age );
+
+    //
+    // loadDataForExe
+    //
+    HRESULT loadDataForExe(
+               [in] LPCOLESTR executable,
+               [in] LPCOLESTR searchPath,
+               [in] IUnknown* pCallback );
+
+    //
+    // loadDataFromIStream
+    //
+    HRESULT loadDataFromIStream(
+                [in] IStream *pIStream );
+
+
+    HRESULT openSession( 
+                [out] IDiaSession** ppSession 
+                );
+
+    //
+    // loadDataFromCodeViewInfo
+    //
+    HRESULT loadDataFromCodeViewInfo(
+                [in] LPCOLESTR executable,
+                [in] LPCOLESTR searchPath,
+                [in] DWORD     cbCvInfo,
+                [in, size_is(cbCvInfo)]
+                     BYTE*     pbCvInfo,
+                [in] IUnknown* pCallback );
+
+    //
+    // loadDataFromMiscInfo
+    //
+    HRESULT loadDataFromMiscInfo(
+                [in] LPCOLESTR executable,
+                [in] LPCOLESTR searchPath,
+                [in] DWORD     timeStampExe,
+                [in] DWORD     timeStampDbg,
+                [in] DWORD     sizeOfExe,
+                [in] DWORD     cbMiscInfo,
+                [in, size_is(cbMiscInfo)]
+                     BYTE*     pbMiscInfo,
+                [in] IUnknown* pCallback );
+}
+
+[
+    object,
+    uuid(CAB72C48-443B-48f5-9B0B-42F0820AB29A),
+    local,
+    helpstring("IDiaEnumSymbols Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumSymbols: IUnknown
+{
+    PROPERTY_RO( IUnknown*, _NewEnum, DISPID_NEWENUM, "IEnumVARIANT version of IDiaEnumSymbols." );
+    PROPERTY_RO( LONG, Count, 1, "Number of symbols." );
+
+    [id(0), helpstring("Return the symbol for the given index.")]
+    HRESULT Item([in] DWORD index, [out, retval]IDiaSymbol **symbol);
+
+    HRESULT Next(
+        [in] ULONG celt,          
+        [out] IDiaSymbol ** rgelt,   
+        [out] ULONG * pceltFetched 
+    );
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IDiaEnumSymbols **ppenum);
+}
+
+[
+    object,
+    uuid(624B7D9C-24EA-4421-9D06-3B577471C1FA),
+    local,
+    helpstring("IDiaEnumSymbolsByAddr Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumSymbolsByAddr: IUnknown
+{
+    //
+    // Item(ByXxx) re-positions the enumerator to the item found
+    //
+    [helpstring("Return the symbol for the given address.")]
+    HRESULT symbolByAddr(
+        [in] DWORD isect, 
+        [in] DWORD offset, 
+        [out, retval]IDiaSymbol** ppSymbol);
+
+    [helpstring("Return the symbol for the given relative virtual address.")]
+    HRESULT symbolByRVA(
+        [in] DWORD relativeVirtualAddress, 
+        [out, retval]IDiaSymbol** ppSymbol);
+
+    [helpstring("Return the symbol for the given virtual address.")]
+    HRESULT symbolByVA(
+        [in] ULONGLONG virtualAddress, 
+        [out, retval]IDiaSymbol** ppSymbol);
+
+    HRESULT Next(
+        [in] ULONG celt,          
+        [out] IDiaSymbol ** rgelt,   
+        [out] ULONG * pceltFetched 
+    );
+
+    HRESULT Prev(
+        [in] ULONG celt,          
+        [out] IDiaSymbol ** rgelt,   
+        [out] ULONG * pceltFetched 
+    );
+
+    HRESULT Clone(
+        [out] IDiaEnumSymbolsByAddr **ppenum);
+}
+
+[
+    object,
+    uuid(10F3DBD9-664F-4469-B808-9471C7A50538),
+    local,
+    helpstring("IDiaEnumSourceFiles Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumSourceFiles: IUnknown
+{
+    PROPERTY_RO( IUnknown*, _NewEnum, DISPID_NEWENUM, "IEnumVARIANT version of IDiaEnumSourceFiles." );
+    PROPERTY_RO( LONG, Count, 1, "Number of source files." );
+
+    [id(0), helpstring("Return the source file for the given index.")]
+    HRESULT Item([in] DWORD index, [out, retval]IDiaSourceFile **sourceFile);
+
+    HRESULT Next(
+        [in] ULONG celt,          
+        [out] IDiaSourceFile ** rgelt,   
+        [out] ULONG * pceltFetched 
+    );
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IDiaEnumSourceFiles **ppenum);
+}
+
+[
+    object,
+    uuid(1C7FF653-51F7-457E-8419-B20F57EF7E4D),
+    local,
+    helpstring("IDiaEnumInputAssemblyFiles Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumInputAssemblyFiles: IUnknown
+{
+    PROPERTY_RO( IUnknown*, _NewEnum, DISPID_NEWENUM, "IEnumVARIANT version of IDiaEnumInputAssemblyFiles." );
+    PROPERTY_RO( LONG, Count, 1, "Number of input assembly files." );
+
+    [id(0), helpstring("Return the source file for the given index.")]
+    HRESULT Item([in] DWORD index, [out, retval]IDiaInputAssemblyFile **file);
+
+    HRESULT Next(
+        [in] ULONG celt,          
+        [out] IDiaInputAssemblyFile ** rgelt,
+        [out] ULONG * pceltFetched 
+    );
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IDiaEnumInputAssemblyFiles **ppenum);
+}
+
+[
+    object,
+    uuid(FE30E878-54AC-44f1-81BA-39DE940F6052),
+    local,
+    helpstring("IDiaEnumLineNumbers Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumLineNumbers: IUnknown
+{
+    PROPERTY_RO( IUnknown*, _NewEnum, DISPID_NEWENUM, "IEnumVARIANT version of IDiaEnumLineNumbers." );
+    PROPERTY_RO( LONG, Count, 1, "Number of line numbers." );
+
+    [id(0), helpstring("Return the line number for the given index.")]
+    HRESULT Item([in] DWORD index, [out, retval]IDiaLineNumber **lineNumber);
+
+    HRESULT Next(
+        [in] ULONG celt,          
+        [out] IDiaLineNumber ** rgelt,   
+        [out] ULONG * pceltFetched 
+    );
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IDiaEnumLineNumbers **ppenum);
+}
+
+[
+    object,
+    uuid(D5612573-6925-4468-8883-98CDEC8C384A),
+    local,
+    helpstring("IDiaEnumInjectedSources Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumInjectedSources: IUnknown
+{
+    PROPERTY_RO( IUnknown*, _NewEnum, DISPID_NEWENUM, "IEnumVARIANT version of IDiaEnumInjectedSources." );
+    PROPERTY_RO( LONG, Count, 1, "Number of injected source files." );
+
+    [id(0), helpstring("Return the injected source for the given index.")]
+    HRESULT Item([in] DWORD index, [out, retval]IDiaInjectedSource **injectedSource);
+
+    HRESULT Next(
+        [in] ULONG celt,          
+        [out] IDiaInjectedSource ** rgelt,   
+        [out] ULONG * pceltFetched 
+    );
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IDiaEnumInjectedSources **ppenum);
+}
+
+[
+    object,
+    uuid(E8368CA9-01D1-419d-AC0C-E31235DBDA9F),
+    local,
+    helpstring("IDiaEnumSegments Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumSegments: IUnknown
+{
+    PROPERTY_RO( IUnknown*, _NewEnum, DISPID_NEWENUM, "IEnumVARIANT version of IDiaEnumSegments." );
+    PROPERTY_RO( LONG, Count, 1, "Number of segments." );
+
+    [id(0), helpstring("Return the segment for the given index.")]
+    HRESULT Item([in] DWORD index, [out, retval]IDiaSegment **segment);
+
+    HRESULT Next(
+        [in] ULONG celt,          
+        [out] IDiaSegment ** rgelt,   
+        [out] ULONG * pceltFetched 
+    );
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IDiaEnumSegments **ppenum);
+}
+
+[
+    object,
+    uuid(1994DEB2-2C82-4b1d-A57F-AFF424D54A68),
+    local,
+    helpstring("IDiaEnumSectionContribs Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumSectionContribs: IUnknown
+{
+    PROPERTY_RO( IUnknown*, _NewEnum, DISPID_NEWENUM, "IEnumVARIANT version of IDiaEnumSectionContribs." );
+    PROPERTY_RO( LONG, Count, 1, "Number of section contributions." );
+
+    [id(0), helpstring("Return the section contribution for the given index.")]
+    HRESULT Item([in] DWORD index, [out, retval]IDiaSectionContrib **section);
+
+    HRESULT Next(
+        [in] ULONG celt,          
+        [out] IDiaSectionContrib ** rgelt,   
+        [out] ULONG * pceltFetched 
+    );
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IDiaEnumSectionContribs **ppenum);
+}
+
+[
+    object,
+    uuid(9FC77A4B-3C1C-44ed-A798-6C1DEEA53E1F),
+    local,
+    helpstring("IDiaEnumFrameData Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumFrameData: IUnknown
+{
+    PROPERTY_RO( IUnknown*, _NewEnum, DISPID_NEWENUM, "IEnumVARIANT version of IDiaEnumFrameData." );
+    PROPERTY_RO( LONG, Count, 1, "Number of frames." );
+
+    [id(0), helpstring("Return the frame for the given index.")]
+    HRESULT Item([in] DWORD index, [out, retval]IDiaFrameData **frame);
+
+    HRESULT Next(
+        [in] ULONG celt,          
+        [out] IDiaFrameData ** rgelt,   
+        [out] ULONG * pceltFetched 
+    );
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IDiaEnumFrameData **ppenum);
+
+    //
+    // The following two by-address lookups do not reposition the enumeration
+    //
+    [helpstring("Return the frame for the given relative virtual address.")]
+    HRESULT frameByRVA(
+        [in] DWORD relativeVirtualAddress, 
+        [out, retval]IDiaFrameData **frame);
+
+    [helpstring("Return the frame for the given virtual address.")]
+    HRESULT frameByVA(
+        [in] ULONGLONG virtualAddress, 
+        [out, retval]IDiaFrameData **frame);
+}
+
+[
+    object,
+    uuid(486943E8-D187-4a6b-A3C4-291259FFF60D),
+    local,
+    helpstring("IDiaEnumDebugStreamData Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumDebugStreamData: IUnknown
+{
+    PROPERTY_RO( IUnknown*, _NewEnum, DISPID_NEWENUM, "IEnumVARIANT version of IDiaEnumDebugStreamData." );
+    PROPERTY_RO( LONG, Count, 1, "Number of elements in the stream." );
+    PROPERTY_RO( BSTR, name, 2, "Stream name." );
+
+    [id(0), helpstring("Return the element for the given index.")]
+    HRESULT Item(
+            [in] DWORD index, 
+            [in] DWORD cbData,
+            [out] DWORD *pcbData,
+            [out, size_is(cbData)] BYTE *pbData
+            );
+
+    HRESULT Next(
+        [in] ULONG celt,          
+        [in] DWORD cbData,
+        [out] DWORD *pcbData,
+        [out, size_is(cbData)] BYTE *pbData,
+        [out] ULONG * pceltFetched 
+    );
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IDiaEnumDebugStreamData **ppenum);
+}
+
+[
+    object,
+    uuid(08CBB41E-47A6-4f87-92F1-1C9C87CED044),
+    local,
+    helpstring("IDiaEnumDebugStreams Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumDebugStreams: IUnknown
+{
+    PROPERTY_RO( IUnknown*, _NewEnum, DISPID_NEWENUM, "IEnumVARIANT version of IDiaEnumDebugStreams." );
+    PROPERTY_RO( LONG, Count, 1, "Number of streams." );
+
+    [id(0), helpstring("Return the stream for the given index.")]
+    HRESULT Item([in] VARIANT index, [out, retval]IDiaEnumDebugStreamData **stream);
+
+    HRESULT Next(
+        [in] ULONG celt,          
+        [out] IDiaEnumDebugStreamData ** rgelt,   
+        [out] ULONG * pceltFetched 
+    );
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IDiaEnumDebugStreams **ppenum);
+}
+
+struct DiaAddressMapEntry
+{
+    DWORD rva;
+    DWORD rvaTo;
+};
+
+[
+    object,
+    uuid(B62A2E7A-067A-4ea3-B598-04C09717502C),
+    local,
+    helpstring("IDiaAddressMap Interface"),
+    pointer_default(unique)
+]
+interface IDiaAddressMap: IUnknown
+{
+    PROPERTY_RW( BOOL, addressMapEnabled, 3, "Enable address translations." );
+    PROPERTY_RW( BOOL, relativeVirtualAddressEnabled, 4, "Enable relative virtual address computations.");
+    PROPERTY_RW( DWORD, imageAlign, 5, "Original image alignment." );
+
+    HRESULT set_imageHeaders(
+     [in] DWORD cbData,
+     [in, size_is(cbData)] BYTE *pbData,      // actual type is IMAGE_SECTION_HEADER[]
+     [in] BOOL originalHeaders );            // true: headers are original, that is, they match the debug symbols
+                                             // false: headers are current, that is, they match the image
+
+    HRESULT set_addressMap(
+     [in] DWORD cData,          // number of entries in rva map
+     [in, size_is(cData)] struct DiaAddressMapEntry *pData,      // rva map
+     [in] BOOL imageToSymbols );             // true:  map from image to symbols (omapt)
+                                             // false: map from symbols to image (omapf)
+};
+
+[
+    object,
+    uuid(2F609EE1-D1C8-4E24-8288-3326BADCD211),
+    local,
+    helpstring("IDiaSession Interface"),
+    pointer_default(unique)
+]
+interface IDiaSession: IUnknown
+{
+    PROPERTY_RW( ULONGLONG, loadAddress, 1, "Dll/Exe load address." );
+    PROPERTY_RO( IDiaSymbol*, globalScope, 2, "Global scope (exe) symbol." );
+
+    HRESULT getEnumTables( 
+        [out] IDiaEnumTables** ppEnumTables );
+    HRESULT getSymbolsByAddr( 
+        [out] IDiaEnumSymbolsByAddr** ppEnumbyAddr );
+
+    //
+    // Queries that return sets of symbols
+    //
+    HRESULT findChildren( 
+        [in] IDiaSymbol* parent, 
+        [in] enum SymTagEnum symtag, 
+        [in] LPCOLESTR name,
+        [in] DWORD compareFlags,
+        [out] IDiaEnumSymbols** ppResult );
+    HRESULT findChildrenEx( 
+        [in] IDiaSymbol* parent, 
+        [in] enum SymTagEnum symtag, 
+        [in] LPCOLESTR name,
+        [in] DWORD compareFlags,
+        [out] IDiaEnumSymbols** ppResult );
+    HRESULT findChildrenExByAddr( 
+        [in] IDiaSymbol* parent,     
+        [in] enum SymTagEnum symtag, 
+        [in] LPCOLESTR name,
+        [in] DWORD compareFlags,
+        [in] DWORD isect,
+        [in] DWORD offset,
+        [out] IDiaEnumSymbols** ppResult );
+    HRESULT findChildrenExByVA( 
+        [in] IDiaSymbol* parent,     
+        [in] enum SymTagEnum symtag, 
+        [in] LPCOLESTR name,
+        [in] DWORD compareFlags,
+        [in] ULONGLONG va,
+        [out] IDiaEnumSymbols** ppResult );
+    HRESULT findChildrenExByRVA( 
+        [in] IDiaSymbol* parent,     
+        [in] enum SymTagEnum symtag, 
+        [in] LPCOLESTR name,
+        [in] DWORD compareFlags,
+        [in] DWORD rva,
+        [out] IDiaEnumSymbols** ppResult );
+    HRESULT findSymbolByAddr(
+        [in] DWORD isect,
+        [in] DWORD offset,
+        [in] enum SymTagEnum symtag, 
+        [out] IDiaSymbol** ppSymbol );
+    HRESULT findSymbolByRVA(
+        [in] DWORD rva,
+        [in] enum SymTagEnum symtag, 
+        [out] IDiaSymbol** ppSymbol );
+    HRESULT findSymbolByVA(
+        [in] ULONGLONG va,
+        [in] enum SymTagEnum symtag, 
+        [out] IDiaSymbol** ppSymbol );
+    HRESULT findSymbolByToken(
+        [in] ULONG token,
+        [in] enum SymTagEnum symtag, 
+        [out] IDiaSymbol** ppSymbol );
+    HRESULT symsAreEquiv(
+        [in] IDiaSymbol* symbolA, 
+        [in] IDiaSymbol* symbolB );
+    HRESULT symbolById(
+        [in] DWORD id,
+        [out] IDiaSymbol** ppSymbol );
+    HRESULT findSymbolByRVAEx(
+        [in] DWORD rva,
+        [in] enum SymTagEnum symtag, 
+        [out] IDiaSymbol** ppSymbol,
+        [out] long* displacement );
+    HRESULT findSymbolByVAEx(
+        [in] ULONGLONG va,
+        [in] enum SymTagEnum symtag, 
+        [out] IDiaSymbol** ppSymbol,
+        [out] long* displacement );
+
+    //
+    // Queries that return source file results
+    //
+    HRESULT findFile(
+        [in] IDiaSymbol* pCompiland, 
+        [in] LPCOLESTR name,
+        [in] DWORD compareFlags,
+        [out] IDiaEnumSourceFiles** ppResult );
+    HRESULT findFileById(
+        [in] DWORD uniqueId,
+        [out] IDiaSourceFile** ppResult );
+
+    //
+    // Queries that return line number results
+    //
+    HRESULT findLines( 
+        [in] IDiaSymbol* compiland, 
+        [in] IDiaSourceFile* file, 
+        [out] IDiaEnumLineNumbers** ppResult );
+    HRESULT findLinesByAddr(
+        [in] DWORD seg,
+        [in] DWORD offset,
+        [in] DWORD length,
+        [out] IDiaEnumLineNumbers** ppResult );
+    HRESULT findLinesByRVA(
+        [in] DWORD rva,
+        [in] DWORD length,
+        [out] IDiaEnumLineNumbers** ppResult );
+    HRESULT findLinesByVA(
+        [in] ULONGLONG va,
+        [in] DWORD length,
+        [out] IDiaEnumLineNumbers** ppResult );
+    HRESULT findLinesByLinenum(
+        [in] IDiaSymbol* compiland, 
+        [in] IDiaSourceFile* file,
+        [in] DWORD linenum,
+        [in] DWORD column,
+        [out] IDiaEnumLineNumbers** ppResult );
+
+    //
+    // Queries that return injected source
+    //
+    HRESULT findInjectedSource( 
+        [in] LPCOLESTR srcFile, 
+        [out] IDiaEnumInjectedSources** ppResult );
+
+    HRESULT getEnumDebugStreams( 
+        [out] IDiaEnumDebugStreams** ppEnumDebugStreams);
+
+    //
+    // Queries that return inline frames
+    //
+    HRESULT findInlineFramesByAddr(
+        [in] IDiaSymbol* parent,     
+        [in] DWORD isect, 
+        [in] DWORD offset, 
+        [out] IDiaEnumSymbols** ppResult);
+
+    HRESULT findInlineFramesByRVA(
+        [in] IDiaSymbol* parent,     
+        [in] DWORD rva, 
+        [out] IDiaEnumSymbols** ppResult);
+
+    HRESULT findInlineFramesByVA(
+        [in] IDiaSymbol* parent,     
+        [in] ULONGLONG va, 
+        [out] IDiaEnumSymbols** ppResult);
+
+    //
+    // Queries that return inlinee lines
+    //
+    HRESULT findInlineeLines(
+        [in] IDiaSymbol* parent,     
+        [out] IDiaEnumLineNumbers** ppResult);
+    
+    HRESULT findInlineeLinesByAddr(
+        [in] IDiaSymbol* parent,     
+        [in] DWORD isect,
+        [in] DWORD offset,
+        [in] DWORD length,
+        [out] IDiaEnumLineNumbers** ppResult);
+
+    HRESULT findInlineeLinesByRVA(
+        [in] IDiaSymbol* parent,     
+        [in] DWORD rva,
+        [in] DWORD length,
+        [out] IDiaEnumLineNumbers** ppResult);
+
+    HRESULT findInlineeLinesByVA(
+        [in] IDiaSymbol* parent,     
+        [in] ULONGLONG va,
+        [in] DWORD length,
+        [out] IDiaEnumLineNumbers** ppResult);
+
+    HRESULT findInlineeLinesByLinenum(
+        [in] IDiaSymbol* compiland, 
+        [in] IDiaSourceFile* file,
+        [in] DWORD linenum,
+        [in] DWORD column,
+        [out] IDiaEnumLineNumbers** ppResult);
+
+    //
+    // Query inline instance
+    //
+    HRESULT findInlineesByName(
+        [in] LPCOLESTR name,
+        [in] DWORD option,
+        [out] IDiaEnumSymbols** ppResult);
+
+#if defined(CC_DP_CXX) && CC_DP_CXX
+    // Find Accelerator InlineeLines by line number
+    HRESULT findAcceleratorInlineeLinesByLinenum(
+        [in] IDiaSymbol* parent, 
+        [in] IDiaSourceFile* file,
+        [in] DWORD linenum,
+        [in] DWORD column,
+        [out] IDiaEnumLineNumbers** ppResult);
+
+    // Find symbols corresponding to a Accelerator address taken
+    // variable from its tag value
+    HRESULT findSymbolsForAcceleratorPointerTag(
+        [in] IDiaSymbol *parent,
+        [in] DWORD tagValue,
+        [out] IDiaEnumSymbols** ppResult);
+
+    HRESULT findSymbolsByRVAForAcceleratorPointerTag(
+        [in] IDiaSymbol *parent,
+        [in] DWORD tagValue,
+        [in] DWORD rva,
+        [out] IDiaEnumSymbols** ppResult);
+
+    HRESULT findAcceleratorInlineesByName(
+        [in] LPCOLESTR name,
+        [in] DWORD option,
+        [out] IDiaEnumSymbols** ppResult);
+#endif // CC_DP_CXX
+
+    HRESULT addressForVA(
+        [in] ULONGLONG va,
+        [out] DWORD* pISect,
+        [out] DWORD* pOffset);
+
+    HRESULT addressForRVA(
+        [in] DWORD rva,
+        [out] DWORD* pISect,
+        [out] DWORD* pOffset);
+
+    /////////////////////////////////////
+
+    HRESULT findILOffsetsByAddr(
+        [in] DWORD isect,
+        [in] DWORD offset,
+        [in] DWORD length,
+        [out] IDiaEnumLineNumbers** ppResult);
+
+    HRESULT findILOffsetsByRVA(
+        [in] DWORD rva,
+        [in] DWORD length,
+        [out] IDiaEnumLineNumbers** ppResult);
+
+    HRESULT findILOffsetsByVA(
+        [in] ULONGLONG va,
+        [in] DWORD length,
+        [out] IDiaEnumLineNumbers** ppResult);
+
+    HRESULT findInputAssemblyFiles(
+        [out] IDiaEnumInputAssemblyFiles** ppResult);
+
+    HRESULT findInputAssembly(
+        [in] DWORD index,
+        [out] IDiaInputAssemblyFile** ppResult);
+
+    HRESULT findInputAssemblyById(
+        [in] DWORD uniqueId,
+        [out] IDiaInputAssemblyFile** ppResult);
+
+    HRESULT getFuncMDTokenMapSize(
+        [out] DWORD *pcb);
+
+    HRESULT getFuncMDTokenMap(
+        [in] DWORD cb,
+        [out] DWORD *pcb,
+        [out, size_is(cb)] BYTE *pb);
+
+    HRESULT getTypeMDTokenMapSize(
+        [out] DWORD *pcb);
+
+    HRESULT getTypeMDTokenMap(
+        [in] DWORD cb,
+        [out] DWORD *pcb,
+        [out, size_is(cb)] BYTE *pb);
+
+    /////////////////////////////////////
+
+    HRESULT getNumberOfFunctionFragments_VA(
+        [in] ULONGLONG vaFunc,
+        [in] DWORD cbFunc,
+        [out] DWORD *pNumFragments);
+
+    HRESULT getNumberOfFunctionFragments_RVA(
+        [in] DWORD rvaFunc,
+        [in] DWORD cbFunc,
+        [out] DWORD *pNumFragments);
+
+    HRESULT getFunctionFragments_VA(
+        [in] ULONGLONG vaFunc,
+        [in] DWORD cbFunc,
+        [in] DWORD cFragments,
+        [out, size_is(cFragments)] ULONGLONG *pVaFragment,
+        [out, size_is(cFragments)] DWORD *pLenFragment);
+
+    HRESULT getFunctionFragments_RVA(
+        [in] DWORD rvaFunc,
+        [in] DWORD cbFunc,
+        [in] DWORD cFragments,
+        [out, size_is(cFragments)] DWORD *pRvaFragment,
+        [out, size_is(cFragments)] DWORD *pLenFragment);
+
+    HRESULT getExports(
+        [out] IDiaEnumSymbols** ppResult);
+
+    HRESULT getHeapAllocationSites(
+        [out] IDiaEnumSymbols** ppResult );
+
+    HRESULT findInputAssemblyFile(
+        [in] IDiaSymbol* pSymbol,
+        [out] IDiaInputAssemblyFile** ppResult);
+};
+
+/*
+ *  Table Columns
+ *
+ *  Symbols - a symbol will have values in some subset of the fields
+ */
+[
+    object,
+    uuid(cb787b2f-bd6c-4635-ba52-933126bd2dcd),
+    local,
+    helpstring("IDiaSymbol Interface"),
+    pointer_default(unique)
+]
+interface IDiaSymbol: IUnknown
+{
+    PROPERTY_RO( DWORD, symIndexId, 0, "Unique symbol identifier." );
+    PROPERTY_RO( DWORD, symTag, 1, "Symbol kind tag." );
+    PROPERTY_RO( BSTR, name, 2, "Name" );                     
+    PROPERTY_RO( IDiaSymbol*, lexicalParent, 3, "Lexical parent symbol.");                  
+    PROPERTY_RO( IDiaSymbol*, classParent, 4, ".");
+    PROPERTY_RO( IDiaSymbol*, type, 5, ".");
+    PROPERTY_RO( DWORD, dataKind, 6, ".");
+    PROPERTY_RO( DWORD, locationType, 7, ".");
+    PROPERTY_RO( DWORD, addressSection, 8, ".");
+    PROPERTY_RO( DWORD, addressOffset, 9, ".");
+    PROPERTY_RO( DWORD, relativeVirtualAddress, 10, ".");
+    PROPERTY_RO( ULONGLONG, virtualAddress, 11, ".");
+    PROPERTY_RO( DWORD, registerId, 12, ".");
+    PROPERTY_RO( LONG, offset, 13, ".");
+    PROPERTY_RO( ULONGLONG, length, 14, ".");
+    PROPERTY_RO( DWORD, slot, 15, ".");
+    PROPERTY_RO( BOOL, volatileType, 16, ".");
+    PROPERTY_RO( BOOL, constType, 17, ".");
+    PROPERTY_RO( BOOL, unalignedType, 18, ".");
+    PROPERTY_RO( DWORD, access, 19, ".");
+    PROPERTY_RO( BSTR, libraryName, 20, ".");
+    PROPERTY_RO( DWORD, platform, 21, ".");
+    PROPERTY_RO( DWORD, language, 22, ".");
+    PROPERTY_RO( BOOL, editAndContinueEnabled, 23, ".");
+    PROPERTY_RO( DWORD, frontEndMajor, 24, ".");
+    PROPERTY_RO( DWORD, frontEndMinor, 25, ".");
+    PROPERTY_RO( DWORD, frontEndBuild, 26, ".");
+    PROPERTY_RO( DWORD, backEndMajor, 27, ".");
+    PROPERTY_RO( DWORD, backEndMinor, 28, ".");
+    PROPERTY_RO( DWORD, backEndBuild, 29, ".");
+    PROPERTY_RO( BSTR, sourceFileName, 30, ".");
+    PROPERTY_RO( BSTR, unused, 31, ".");
+    PROPERTY_RO( DWORD, thunkOrdinal, 32, ".");
+    PROPERTY_RO( LONG, thisAdjust, 33, ".");
+    PROPERTY_RO( DWORD, virtualBaseOffset, 34, ".");
+    PROPERTY_RO( BOOL, virtual, 35, ".");
+    PROPERTY_RO( BOOL, intro, 36, ".");
+    PROPERTY_RO( BOOL, pure, 37, ".");
+    PROPERTY_RO( DWORD, callingConvention, 38, ".");
+    PROPERTY_RO( VARIANT, value, 39, ".");
+    PROPERTY_RO( DWORD, baseType, 40, ".");
+    PROPERTY_RO( DWORD, token, 41, ".");
+    PROPERTY_RO( DWORD, timeStamp, 42, ".");
+    PROPERTY_RO( GUID, guid, 43, ".");
+    PROPERTY_RO( BSTR, symbolsFileName, 44, ".");
+    PROPERTY_RO( BOOL, reference, 46, "L-value Reference");
+    PROPERTY_RO( DWORD, count, 47, ".");
+    PROPERTY_RO( DWORD, bitPosition, 49, ".");
+    PROPERTY_RO( IDiaSymbol*, arrayIndexType, 50, ".");
+    PROPERTY_RO( BOOL, packed, 51, ".");
+    PROPERTY_RO( BOOL, constructor, 52, "UDT has constructor or destructor, or func is a constructor");
+    PROPERTY_RO( BOOL, overloadedOperator, 53, ".");
+    PROPERTY_RO( BOOL, nested, 54, ".");
+    PROPERTY_RO( BOOL, hasNestedTypes, 55, ".");
+    PROPERTY_RO( BOOL, hasAssignmentOperator, 56, ".");
+    PROPERTY_RO( BOOL, hasCastOperator, 57, ".");
+    PROPERTY_RO( BOOL, scoped, 58, ".");
+    PROPERTY_RO( BOOL, virtualBaseClass, 59, ".");
+    PROPERTY_RO( BOOL, indirectVirtualBaseClass, 60, ".");
+    PROPERTY_RO( LONG, virtualBasePointerOffset, 61, ".");
+    PROPERTY_RO( IDiaSymbol*, virtualTableShape, 62, ".");
+    PROPERTY_RO( DWORD, lexicalParentId, 64, "Lexical parent symbol.");                  
+    PROPERTY_RO( DWORD, classParentId, 65, ".");
+    PROPERTY_RO( DWORD, typeId, 66, ".");
+    PROPERTY_RO( DWORD, arrayIndexTypeId, 67, ".");
+    PROPERTY_RO( DWORD, virtualTableShapeId, 68, ".");
+    PROPERTY_RO( BOOL, code, 69, "Symbol refers to a code address." );
+    PROPERTY_RO( BOOL, function, 70, "Symbol refers to a function." );
+    PROPERTY_RO( BOOL, managed, 71, "Symbol refers to managed code." );
+    PROPERTY_RO( BOOL, msil, 72, "Symbol refers to MSIL code." );
+    PROPERTY_RO( DWORD, virtualBaseDispIndex, 73, ".");
+    PROPERTY_RO( BSTR, undecoratedName, 74, ".");
+    PROPERTY_RO( DWORD, age, 75, "PDB file age." );
+    PROPERTY_RO( DWORD, signature, 76, "Signature." ); 
+    PROPERTY_RO( BOOL, compilerGenerated, 77, "Symbol or function is compiler generated." );
+    PROPERTY_RO( BOOL, addressTaken, 78, "Symbol is address taken." );
+    PROPERTY_RO( DWORD, rank, 79, "Rank of FORTRAN multi-dimension array." );
+    PROPERTY_RO( IDiaSymbol*, lowerBound, 80, "Lower bound of a FORTRAN array dimension.");
+    PROPERTY_RO( IDiaSymbol*, upperBound, 81, "Upper bound of a FORTRAN array dimension.");
+    PROPERTY_RO( DWORD, lowerBoundId, 82, "Symbol Id of the lower bound of a FORTRAN array dimension.");
+    PROPERTY_RO( DWORD, upperBoundId, 83, "Symbol Id of the upper bound of a FORTRAN array dimension.");
+
+    HRESULT get_dataBytes(
+         [in] DWORD cbData,
+         [out] DWORD *pcbData,
+         [out, size_is(cbData)] BYTE *pbData
+        );
+
+    HRESULT findChildren( 
+        [in] enum SymTagEnum symtag, 
+        [in] LPCOLESTR name,
+        [in] DWORD compareFlags,
+        [out] IDiaEnumSymbols** ppResult );
+
+    HRESULT findChildrenEx( 
+        [in] enum SymTagEnum symtag, 
+        [in] LPCOLESTR name,
+        [in] DWORD compareFlags,
+        [out] IDiaEnumSymbols** ppResult );
+
+    HRESULT findChildrenExByAddr( 
+        [in] enum SymTagEnum symtag, 
+        [in] LPCOLESTR name,
+        [in] DWORD compareFlags,
+        [in] DWORD isect,
+        [in] DWORD offset,
+        [out] IDiaEnumSymbols** ppResult );
+
+    HRESULT findChildrenExByVA( 
+        [in] enum SymTagEnum symtag, 
+        [in] LPCOLESTR name,
+        [in] DWORD compareFlags,
+        [in] ULONGLONG va,
+        [out] IDiaEnumSymbols** ppResult );
+
+    HRESULT findChildrenExByRVA( 
+        [in] enum SymTagEnum symtag, 
+        [in] LPCOLESTR name,
+        [in] DWORD compareFlags,
+        [in] DWORD rva,
+        [out] IDiaEnumSymbols** ppResult );
+
+    PROPERTY_RO( DWORD, targetSection, 84, "Thunk target address section.");
+    PROPERTY_RO( DWORD, targetOffset, 85, "Thunk target address offset.");
+    PROPERTY_RO( DWORD, targetRelativeVirtualAddress, 86, "Thunk target RVA.");
+    PROPERTY_RO( ULONGLONG, targetVirtualAddress, 87, "Thunk target virtual address.");
+    PROPERTY_RO( DWORD, machineType, 88, "Target machine type." );
+    PROPERTY_RO( DWORD, oemId, 89, "Identifier of manufacturer.");
+    PROPERTY_RO( DWORD, oemSymbolId, 90, "Manufacturer defined custom symbol identifier." );
+    HRESULT get_types(
+         [in] DWORD cTypes,
+         [out] DWORD *pcTypes,
+         [out, size_is(cTypes, )] IDiaSymbol**pTypes
+        );
+    HRESULT get_typeIds(
+         [in] DWORD cTypeIds,
+         [out] DWORD *pcTypeIds,
+         [out, size_is(cTypeIds)] DWORD *pdwTypeIds
+       );
+    PROPERTY_RO(IDiaSymbol*, objectPointerType, 91, "Type of method's object pointer.");
+    PROPERTY_RO(DWORD, udtKind, 92, "struct, union, class or interface");
+    HRESULT get_undecoratedNameEx(
+        [in] DWORD undecorateOptions,
+        [out] BSTR* name
+        );
+
+    PROPERTY_RO(BOOL, noReturn, 93, "NoReturn");
+    PROPERTY_RO(BOOL, customCallingConvention, 94, "uses custom calling convention");
+    PROPERTY_RO(BOOL, noInline, 95, "NoInline");
+    PROPERTY_RO(BOOL, optimizedCodeDebugInfo, 96, "has debugging Info for optimized code");
+    PROPERTY_RO(BOOL, notReached, 97, "Unreachable");
+    PROPERTY_RO(BOOL, interruptReturn, 98, "return from interrupt");
+    PROPERTY_RO(BOOL, farReturn, 99, "far return");
+    PROPERTY_RO(BOOL, isStatic, 100, "static function");
+    PROPERTY_RO(BOOL, hasDebugInfo, 101, "hasDebugInfo");
+    PROPERTY_RO(BOOL, isLTCG, 102, "Compiled With LTCG");
+    PROPERTY_RO(BOOL, isDataAligned, 103, "Is it compiled with -Bzalign");
+    PROPERTY_RO(BOOL, hasSecurityChecks, 104, "hasSecurityChecks");
+    PROPERTY_RO(BSTR, compilerName, 105, "compiler name");
+    PROPERTY_RO(BOOL, hasAlloca, 106, "hasAlloca");
+    PROPERTY_RO(BOOL, hasSetJump, 107, "hasSetJump");
+    PROPERTY_RO(BOOL, hasLongJump, 108, "hasLongJump");
+    PROPERTY_RO(BOOL, hasInlAsm, 109, "hasInlineAssembly");
+    PROPERTY_RO(BOOL, hasEH, 110, "hasC++EH");
+    PROPERTY_RO(BOOL, hasSEH, 111, "hasStructuredEH");
+    PROPERTY_RO(BOOL, hasEHa, 112, "hasAsynchronousEH");
+    PROPERTY_RO(BOOL, isNaked, 113, "IsNaked");
+    PROPERTY_RO(BOOL, isAggregated, 114, "isAggregated");
+    PROPERTY_RO(BOOL, isSplitted, 115, "isSplitted");
+    PROPERTY_RO(IDiaSymbol *, container, 116, "container");
+    PROPERTY_RO(BOOL, inlSpec, 117, "WasSpecifiedAsInline");
+    PROPERTY_RO(BOOL, noStackOrdering, 118, "BufferChecksWithoutOrdering");
+    PROPERTY_RO(IDiaSymbol *, virtualBaseTableType, 119, "Type of Virtual Base Offset Table");
+    PROPERTY_RO(BOOL, hasManagedCode, 120, "hasManagedCode");
+    PROPERTY_RO(BOOL, isHotpatchable, 121, "isHotpatchable");
+    PROPERTY_RO(BOOL, isCVTCIL, 122, "isCVTCIL");
+    PROPERTY_RO(BOOL, isMSILNetmodule, 123, "isMSILNetmodule");
+    PROPERTY_RO(BOOL, isCTypes, 124, "isCTypes");
+    PROPERTY_RO(BOOL, isStripped, 125, "isStripped");
+    PROPERTY_RO(DWORD, frontEndQFE, 126, ".");
+    PROPERTY_RO(DWORD, backEndQFE, 127, ".");
+    PROPERTY_RO(BOOL, wasInlined, 128, "WasInlined");
+    PROPERTY_RO(BOOL, strictGSCheck, 129, "StrictGSCheck");
+    PROPERTY_RO(BOOL, isCxxReturnUdt, 130, "return C++ style UDT");
+    PROPERTY_RO(BOOL, isConstructorVirtualBase, 131, "instance constructor of a class with virtual base");
+    PROPERTY_RO(BOOL, RValueReference, 132, "R-value Reference");
+    PROPERTY_RO(IDiaSymbol*, unmodifiedType, 133, "unmodified type");
+    PROPERTY_RO(BOOL, framePointerPresent, 134, "frame pointer present");
+    PROPERTY_RO(BOOL, isSafeBuffers, 135, "isSafeBuffers");
+    PROPERTY_RO(BOOL, intrinsic, 136, "isIntrinsicType");
+    PROPERTY_RO(BOOL, sealed, 137, "can't be base class, or method can't be overridden");
+    PROPERTY_RO(BOOL, hfaFloat, 138, "HFA float");
+    PROPERTY_RO(BOOL, hfaDouble, 139, "HFA double");
+    PROPERTY_RO(DWORD, liveRangeStartAddressSection, 140, "LiveRangeStartAddressSection");
+    PROPERTY_RO(DWORD, liveRangeStartAddressOffset, 141, "LiveRangeStartAddressOffset");
+    PROPERTY_RO(DWORD, liveRangeStartRelativeVirtualAddress, 142, "LiveRangeStartRelativeVirtualAddress");
+    PROPERTY_RO(DWORD, countLiveRanges, 143, "number of live ranges");
+    PROPERTY_RO(ULONGLONG, liveRangeLength, 144, "length of live range");
+    PROPERTY_RO(DWORD, offsetInUdt, 145, "offset into UDT");
+    PROPERTY_RO(DWORD, paramBasePointerRegisterId, 146, "ID of the register holding base pointer to parameters");
+    PROPERTY_RO(DWORD, localBasePointerRegisterId, 147, "ID of the register holding base pointer to locals");
+    PROPERTY_RO(BOOL, isLocationControlFlowDependent, 148, "location is dependent on control flow");
+    PROPERTY_RO(DWORD, stride, 149, "stride");
+    PROPERTY_RO(DWORD, numberOfRows, 150, "number of rows in a matrix");
+    PROPERTY_RO(DWORD, numberOfColumns, 151, "number of columns in a matrix");
+    PROPERTY_RO(BOOL, isMatrixRowMajor, 152, "matrix is row major");
+    HRESULT get_numericProperties(
+         [in] DWORD cnt,
+         [out] DWORD *pcnt,
+         [out, size_is(cnt)] DWORD *pProperties
+       );
+    HRESULT get_modifierValues(
+         [in] DWORD cnt,
+         [out] DWORD *pcnt,
+         [out, size_is(cnt)] WORD *pModifiers
+       );
+    PROPERTY_RO(BOOL, isReturnValue, 153, "this variable holds return value");
+    PROPERTY_RO(BOOL, isOptimizedAway, 154, "this variable is optimized away");
+    PROPERTY_RO(DWORD, builtInKind, 155, "built in type kind");
+    PROPERTY_RO(DWORD, registerType, 156, "register type kind");
+    PROPERTY_RO(DWORD, baseDataSlot, 157, "base data slot");
+    PROPERTY_RO(DWORD, baseDataOffset, 158, "base data offset start");
+    PROPERTY_RO(DWORD, textureSlot, 159, "texture slot start");
+    PROPERTY_RO(DWORD, samplerSlot, 160, "sampler slot start");
+    PROPERTY_RO(DWORD, uavSlot, 161, "UAV slot start");
+    PROPERTY_RO(DWORD, sizeInUdt, 162, "size in UDT");
+    PROPERTY_RO(DWORD, memorySpaceKind, 163, "memory space kind");
+    PROPERTY_RO(DWORD, unmodifiedTypeId, 164, "unmodified type ID");
+    PROPERTY_RO(DWORD, subTypeId, 165, "sub type ID");
+    PROPERTY_RO(IDiaSymbol*, subType, 166, "sub type");
+    PROPERTY_RO(DWORD, numberOfModifiers, 167, "number of modifiers");
+    PROPERTY_RO(DWORD, numberOfRegisterIndices, 168, "number of HLSL register indices");
+    PROPERTY_RO(BOOL, isHLSLData, 169, "is HLSL data");
+    PROPERTY_RO(BOOL, isPointerToDataMember, 170, "is pointer to data member");
+    PROPERTY_RO(BOOL, isPointerToMemberFunction, 171, "is pointer to member function");
+    PROPERTY_RO(BOOL, isSingleInheritance, 172, "is single inheritance");
+    PROPERTY_RO(BOOL, isMultipleInheritance, 173, "is multiple inheritance");
+    PROPERTY_RO(BOOL, isVirtualInheritance, 174, "is virtual inheritance");
+    PROPERTY_RO(BOOL, restrictedType, 175, ".");
+    PROPERTY_RO(BOOL, isPointerBasedOnSymbolValue, 176, "pointer based on value of a symbol");
+    PROPERTY_RO(IDiaSymbol*, baseSymbol, 177, "base symbol for base pointer");
+    PROPERTY_RO(DWORD, baseSymbolId, 178, "ID of base symbol for base pointer");
+    PROPERTY_RO(BSTR, objectFileName, 179, "object file name");
+#if defined(CC_DP_CXX) && CC_DP_CXX
+    PROPERTY_RO(BOOL, isAcceleratorGroupSharedLocal, 180, "is Accelerator group shared local");
+    PROPERTY_RO(BOOL, isAcceleratorPointerTagLiveRange, 181, "is live range of Accelerator pointer tag");
+    PROPERTY_RO(BOOL, isAcceleratorStubFunction, 182, "is Accelerator stub function");
+    PROPERTY_RO(DWORD, numberOfAcceleratorPointerTags, 183, "number of Accelerator pointer tags");
+#endif // CC_DP_CXX
+    PROPERTY_RO(BOOL, isSdl, 184, "compiled with /sdl");
+    PROPERTY_RO(BOOL, isWinRTPointer, 185, "is WinRT pointer");
+    PROPERTY_RO(BOOL, isRefUdt, 186, "is ref class/struct");
+    PROPERTY_RO(BOOL, isValueUdt, 187, "is value class/struct");
+    PROPERTY_RO(BOOL, isInterfaceUdt, 188, "is interface class/struct");
+
+    HRESULT findInlineFramesByAddr(
+        [in] DWORD isect, 
+        [in] DWORD offset, 
+        [out] IDiaEnumSymbols** ppResult);
+
+    HRESULT findInlineFramesByRVA(
+        [in] DWORD rva, 
+        [out] IDiaEnumSymbols** ppResult);
+
+    HRESULT findInlineFramesByVA(
+        [in] ULONGLONG va, 
+        [out] IDiaEnumSymbols** ppResult);
+
+    HRESULT findInlineeLines(
+        [out] IDiaEnumLineNumbers** ppResult);
+
+    HRESULT findInlineeLinesByAddr(
+        [in] DWORD isect,
+        [in] DWORD offset,
+        [in] DWORD length,
+        [out] IDiaEnumLineNumbers** ppResult);
+
+    HRESULT findInlineeLinesByRVA(
+        [in] DWORD rva,
+        [in] DWORD length,
+        [out] IDiaEnumLineNumbers** ppResult);
+
+    HRESULT findInlineeLinesByVA(
+        [in] ULONGLONG va,
+        [in] DWORD length,
+        [out] IDiaEnumLineNumbers** ppResult);
+
+#if defined(CC_DP_CXX) && CC_DP_CXX
+    HRESULT findSymbolsForAcceleratorPointerTag(
+        [in] DWORD tagValue,
+        [out] IDiaEnumSymbols** ppResult);
+
+    HRESULT findSymbolsByRVAForAcceleratorPointerTag(
+        [in] DWORD tagValue,
+        [in] DWORD rva,
+        [out] IDiaEnumSymbols** ppResult);
+
+    HRESULT get_acceleratorPointerTags(
+        [in] DWORD cnt,
+        [out] DWORD *pcnt,
+        [out, size_is(cnt)] DWORD *pPointerTags);
+
+#endif // CC_DP_CXX
+
+    HRESULT getSrcLineOnTypeDefn(
+        [out] IDiaLineNumber** ppResult);
+
+    PROPERTY_RO(BOOL, isPGO, 189, "is PGO enabled");
+    PROPERTY_RO(BOOL, hasValidPGOCounts, 190, "has valid PGO counts");
+    PROPERTY_RO(BOOL, isOptimizedForSpeed, 191, "is the function optimized for speed");
+    PROPERTY_RO(DWORD, PGOEntryCount, 192, "total invocation count in PGO training");
+    PROPERTY_RO(DWORD, PGOEdgeCount, 193, "edge count between a caller/callee and it's parent");
+    PROPERTY_RO(ULONGLONG, PGODynamicInstructionCount, 194, "dynamic instruction count calculated by training");
+    PROPERTY_RO(DWORD, staticSize, 195, "static instruction count");
+    PROPERTY_RO(DWORD, finalLiveStaticSize, 196, "final static size of live function, after inlining");
+    PROPERTY_RO(BSTR, phaseName, 197, "phase this function is a member of for PGO multiphased builds");
+    PROPERTY_RO(BOOL, hasControlFlowCheck, 198, "does this function contain control flow check");
+    PROPERTY_RO(BOOL, constantExport, 199, "export is CONSTANT");
+    PROPERTY_RO(BOOL, dataExport, 200, "export is CONSTANT");
+    PROPERTY_RO(BOOL, privateExport, 201, "export is PRIVATE");
+    PROPERTY_RO(BOOL, noNameExport, 202, "export is NONAME");
+    PROPERTY_RO(BOOL, exportHasExplicitlyAssignedOrdinal, 203, "export has explicitly assigned ordinal");
+    PROPERTY_RO(BOOL, exportIsForwarder, 204, "export is forwarder");
+    PROPERTY_RO(DWORD, ordinal, 205, "export ordinal");
+    PROPERTY_RO(DWORD, frameSize, 206, "frame size");
+    PROPERTY_RO(DWORD, exceptionHandlerAddressSection, 207, "section number of exception handler");
+    PROPERTY_RO(DWORD, exceptionHandlerAddressOffset, 208, "offset of exception handler");
+    PROPERTY_RO(DWORD, exceptionHandlerRelativeVirtualAddress, 209, "relative virtual address of exception handler");
+    PROPERTY_RO(ULONGLONG, exceptionHandlerVirtualAddress, 210, "virtual address of exception handler");
+
+    HRESULT findInputAssemblyFile(
+        [out] IDiaInputAssemblyFile** ppResult);
+
+    PROPERTY_RO(DWORD, characteristics, 211, "characteristics of a COFF group");
+    PROPERTY_RO(IDiaSymbol*, coffGroup, 212, "COFF group this symbol comes from");
+    PROPERTY_RO(DWORD, bindID, 213, "binding register index");
+    PROPERTY_RO(DWORD, bindSpace, 214, "binding space");
+    PROPERTY_RO(DWORD, bindSlot, 215, "binding lower bound");
+};
+
+//
+//  SourceFiles
+//
+[
+    object,
+    uuid(A2EF5353-F5A8-4eb3-90D2-CB526ACB3CDD),
+    local,
+    helpstring("IDiaSourceFile Interface"),
+    pointer_default(unique)
+]
+interface IDiaSourceFile: IUnknown
+{
+    PROPERTY_RO( DWORD, uniqueId, 2, "Unique id for the source file (in this data store)." );
+    PROPERTY_RO( BSTR, fileName, 3, "." );
+    PROPERTY_RO( DWORD, checksumType, 4, "." );
+    PROPERTY_RO( IDiaEnumSymbols*, compilands, 5, "." );
+
+    HRESULT get_checksum(
+         [in] DWORD cbData,
+         [out] DWORD *pcbData,
+         [out, size_is(cbData)] BYTE *pbData
+        );
+};
+
+//
+//  InputAssemblyFiles
+//
+[
+    object,
+    uuid(3BFE56B0-390C-4863-9430-1F3D083B7684),
+    local,
+    helpstring("IDiaInputAssemblyFile Interface"),
+    pointer_default(unique)
+]
+interface IDiaInputAssemblyFile: IUnknown
+{
+    PROPERTY_RO( DWORD, uniqueId, 1, "assembly file ID" );
+    PROPERTY_RO( DWORD, index, 2, "assembly file index");
+    PROPERTY_RO( DWORD, timestamp, 3, "time stamp");
+    PROPERTY_RO( BOOL, pdbAvailableAtILMerge, 4, "PDB is available at IL merge time" );
+    PROPERTY_RO( BSTR, fileName, 5, "assembly file name" );
+
+    HRESULT get_version(
+         [in] DWORD cbData,
+         [out] DWORD *pcbData,
+         [out, size_is(cbData)] BYTE *pbData
+        );         
+};
+
+//
+//  LineNumbers
+//
+[
+    object,
+    uuid(B388EB14-BE4D-421d-A8A1-6CF7AB057086),
+    local,
+    helpstring("IDiaLineNumber Interface"),
+    pointer_default(unique)
+]
+interface IDiaLineNumber: IUnknown
+{
+    PROPERTY_RO( IDiaSymbol*, compiland, 1, "." );
+    PROPERTY_RO( IDiaSourceFile*, sourceFile, 2, "." );
+    PROPERTY_RO( DWORD, lineNumber, 3, "." );
+    PROPERTY_RO( DWORD, lineNumberEnd, 4, "." );
+    PROPERTY_RO( DWORD, columnNumber, 5, "." );
+    PROPERTY_RO( DWORD, columnNumberEnd, 6, "." );
+    PROPERTY_RO( DWORD, addressSection, 7, "." );
+    PROPERTY_RO( DWORD, addressOffset, 8, "." );
+    PROPERTY_RO( DWORD, relativeVirtualAddress, 9, "." );
+    PROPERTY_RO( ULONGLONG, virtualAddress, 10, "." );
+    PROPERTY_RO( DWORD, length, 11, "." );
+    PROPERTY_RO( DWORD, sourceFileId, 12, "." );
+    PROPERTY_RO( BOOL, statement, 13, "." );
+    PROPERTY_RO( DWORD, compilandId, 14, "." );
+};
+
+//
+// SectionContributions
+//
+[
+    object,
+    uuid(0CF4B60E-35B1-4c6c-BDD8-854B9C8E3857),
+    local,
+    helpstring("IDiaSectionContrib Interface"),
+    pointer_default(unique)
+]
+interface IDiaSectionContrib: IUnknown
+{
+    PROPERTY_RO( IDiaSymbol*, compiland, 1, "." );
+    PROPERTY_RO( DWORD, addressSection, 2, "." );
+    PROPERTY_RO( DWORD, addressOffset, 3, "." );
+    PROPERTY_RO( DWORD, relativeVirtualAddress, 4, "." );
+    PROPERTY_RO( ULONGLONG, virtualAddress, 5, "." );
+    PROPERTY_RO( DWORD, length, 6, "." );
+    // 7
+    PROPERTY_RO( BOOL, notPaged, 8, ".");
+    PROPERTY_RO( BOOL, code, 9, ".");
+    PROPERTY_RO( BOOL, initializedData, 10, ".");
+    PROPERTY_RO( BOOL, uninitializedData, 11, ".");
+    PROPERTY_RO( BOOL, remove, 12, ".");
+    PROPERTY_RO( BOOL, comdat, 13, ".");
+    PROPERTY_RO( BOOL, discardable, 14, ".");
+    PROPERTY_RO( BOOL, notCached, 15, ".");
+    PROPERTY_RO( BOOL, share, 16, ".");
+    PROPERTY_RO( BOOL, execute, 17, ".");
+    PROPERTY_RO( BOOL, read, 18, ".");
+    PROPERTY_RO( BOOL, write, 19, ".");
+    PROPERTY_RO( DWORD, dataCrc, 20, "." );
+    PROPERTY_RO( DWORD, relocationsCrc, 21, "." );
+    PROPERTY_RO( DWORD, compilandId, 22, "." );
+    PROPERTY_RO( BOOL, code16bit, 23, ".");
+};
+
+//
+// SegmentMap
+//
+[
+    object,
+    uuid(0775B784-C75B-4449-848B-B7BD3159545B),
+    local,
+    helpstring("IDiaSegment Interface"),
+    pointer_default(unique)
+]
+interface IDiaSegment: IUnknown
+{
+    PROPERTY_RO( DWORD, frame, 1, "Frame." );
+    PROPERTY_RO( DWORD, offset, 2, "Offset in physical section." );
+    PROPERTY_RO( DWORD, length, 3, "Length in bytes of segment." );
+    PROPERTY_RO( BOOL, read, 4, "Read allowed." );
+    PROPERTY_RO( BOOL, write, 5, "Write allowed." );
+    PROPERTY_RO( BOOL, execute, 6, "Execute allowed." );
+    PROPERTY_RO( DWORD, addressSection, 7, "." );
+    PROPERTY_RO( DWORD, relativeVirtualAddress, 8, "." );
+    PROPERTY_RO( ULONGLONG, virtualAddress, 9, "." );
+};
+
+//
+// InjectedSource
+//
+[
+    object,
+    uuid(AE605CDC-8105-4a23-B710-3259F1E26112),
+    local,
+    helpstring("IDiaInjectedSource Interface"),
+    pointer_default(unique)
+]
+interface IDiaInjectedSource: IUnknown
+{
+    PROPERTY_RO( DWORD, crc, 1, "CRC of source bytes." );
+    PROPERTY_RO( ULONGLONG, length, 2, "Length of source in bytes." );
+    PROPERTY_RO( BSTR, filename, 3, "Source filename." );
+    PROPERTY_RO( BSTR, objectFilename, 4, "Object filename." );
+    PROPERTY_RO( BSTR, virtualFilename, 5, "Virtual filename." );
+    PROPERTY_RO( DWORD, sourceCompression, 6, "Source compression algorithm." );
+    HRESULT get_source(
+         [in] DWORD cbData,
+         [out] DWORD *pcbData,
+         [out, size_is(cbData)] BYTE *pbData
+        );
+};
+
+//
+// Errors returned by IDiaFrameData::execute
+//
+enum 
+{
+    E_DIA_INPROLOG          // cannot execute stack frame when in prolog
+            =((HRESULT) (((unsigned long)(1)<<31) | ((unsigned long)(((LONG)0x6d))<<16) | ((unsigned long)(100))) ),
+    E_DIA_SYNTAX,           // error parsing frame program
+    E_DIA_FRAME_ACCESS,     // error accessing registers or memory
+    E_DIA_VALUE,            // error in computer a value (e.g., divide by zero)
+};
+
+
+[
+    object,
+    uuid(07C590C1-438D-4F47-BDCD-4397BC81AD75),
+    local,
+    helpstring("IDiaStackWalkFrame Interface"),
+    pointer_default(unique)
+]
+interface IDiaStackWalkFrame: IUnknown
+{
+    PROPERTY_ARRAY_RW( ULONGLONG, DWORD, registerValue, 1, "Register value." ); 
+    HRESULT readMemory(
+        [in] enum MemoryTypeEnum type,
+        [in] ULONGLONG va,
+        [in] DWORD cbData,
+        [out] DWORD *pcbData,
+        [out, size_is(cbData)] BYTE *pbData
+        );
+    HRESULT searchForReturnAddress(
+        [in] IDiaFrameData* frame,
+        [out] ULONGLONG* returnAddress
+        );
+    HRESULT searchForReturnAddressStart(
+        [in] IDiaFrameData* frame,
+        [in] ULONGLONG startAddress,
+        [out] ULONGLONG* returnAddress
+        );
+};
+
+
+[
+    object,
+    uuid(A39184B7-6A36-42de-8EEC-7DF9F3F59F33),
+    local,
+    helpstring("IDiaFrameData Interface"),
+    pointer_default(unique)
+]
+interface IDiaFrameData: IUnknown
+{
+    PROPERTY_RO( DWORD, addressSection, 2, "." );
+    PROPERTY_RO( DWORD, addressOffset, 3, "." );
+    PROPERTY_RO( DWORD, relativeVirtualAddress, 4, "." );
+    PROPERTY_RO( ULONGLONG, virtualAddress, 5, "." );
+    PROPERTY_RO( DWORD, lengthBlock, 6, "." );
+    PROPERTY_RO( DWORD, lengthLocals, 7, "." );
+    PROPERTY_RO( DWORD, lengthParams, 8, "." );
+    PROPERTY_RO( DWORD, maxStack, 9, "." );
+    PROPERTY_RO( DWORD, lengthProlog, 10, "." );
+    PROPERTY_RO( DWORD, lengthSavedRegisters, 11, "." );
+    PROPERTY_RO( BSTR, program, 12, "." );
+    PROPERTY_RO( BOOL, systemExceptionHandling, 13, "." );
+    PROPERTY_RO( BOOL, cplusplusExceptionHandling, 14, "." );
+    PROPERTY_RO( BOOL, functionStart, 15, "." );
+    PROPERTY_RO( BOOL, allocatesBasePointer, 16, "." );
+    PROPERTY_RO( DWORD, type, 17, "." );
+    PROPERTY_RO( IDiaFrameData*, functionParent, 18, "Frame data for enclosing function.");                  
+
+    HRESULT execute( IDiaStackWalkFrame* frame );
+}
+
+//
+// IDiaImageData
+//
+//      Some debug streams (XDATA, PDATA) contain copies of data also stored in the image. The
+//      stream data objects (IDiaEnumDebugStreamData) can be QI'ed for their IDiaImageData.
+[
+    object,
+    uuid(C8E40ED2-A1D9-4221-8692-3CE661184B44),
+    local,
+    helpstring("IDiaImageData Interface"),
+    pointer_default(unique)
+]
+interface IDiaImageData: IUnknown
+{
+    PROPERTY_RO( DWORD, relativeVirtualAddress, 2, "." );
+    PROPERTY_RO( ULONGLONG, virtualAddress, 3, "." );
+    PROPERTY_RO( ULONGLONG, imageBase, 4, "." );
+}
+
+//
+// IDiaTable
+//      Supports enumerating the members of the table
+//
+[
+    object,
+    uuid(4A59FB77-ABAC-469b-A30B-9ECC85BFEF14),
+    local,
+    helpstring("IDiaTable Interface"),
+    pointer_default(unique)
+]
+interface IDiaTable: IEnumUnknown
+{
+    PROPERTY_RO( IUnknown*, _NewEnum, DISPID_NEWENUM, "IEnumVARIANT version of IDiaTable." );
+    PROPERTY_RO( BSTR, name, 1, "Table name." );
+    PROPERTY_RO( LONG, Count, 2, "Number of table entries." );
+
+    [id(0), helpstring("Return the table element for the given index.")]
+    HRESULT Item([in] DWORD index, [out, retval]IUnknown **element); // ### IDispatch?
+
+};
+
+[
+    object,
+    uuid(C65C2B0A-1150-4d7a-AFCC-E05BF3DEE81E),
+    local,
+    helpstring("IDiaEnumTables Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumTables: IUnknown
+{
+    PROPERTY_RO( IUnknown*, _NewEnum, DISPID_NEWENUM, "IEnumVARIANT version of IDiaEnumTables." );
+    PROPERTY_RO( LONG, Count, 1, "Number of tables." );
+
+    [id(0), helpstring("Return the table for the given index or name.")]
+    HRESULT Item([in] VARIANT index, [out, retval]IDiaTable **table);
+
+    HRESULT Next(
+        ULONG celt,          
+        IDiaTable ** rgelt,   
+        ULONG * pceltFetched 
+    );
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IDiaEnumTables **ppenum);
+};
+
+#ifndef MSAGNOSTIC
+[
+    uuid(106173A0-0173-4e5c-84E7-E915422BE997),
+    version(2.0),
+    helpstring("dia 2.0 Type Library")
+]
+#else
+[
+    uuid(7e49f738-1f41-46fd-87c2-badce1ce096c),
+    version(2.0),
+    helpstring("intdia 2.0 Type Library")
+]
+#endif
+
+library Dia2Lib
+{
+
+    importlib("stdole2.tlb");
+    [
+#ifndef MSAGNOSTIC
+        uuid(e6756135-1e65-4d17-8576-610761398c3c),
+#else
+        // I have updated this guid along with the one above for the change to msdia100, 
+        // because mlacey updated this one during the change to msdia90. But when going
+        // through the rest of devdiv, I found no other occurences of this or any of the 
+        // other two MSAGNOSTIC guids related to dia. So I think MSAGNOSTIC may never be 
+        // defined and this may be a dead definition - jgoodwin
+        uuid(18376FFD-465D-478e-A1DE-80183406B0A5),
+#endif
+        helpstring("DiaSource Class")
+    ]
+    coclass DiaSource
+    {
+        [default] interface IDiaDataSource;
+    };
+
+    //
+    // DiaSourceAlt - a DiaDataSource object that does not use the system heap. 
+    //
+    // A process may either make DiaSourceAlt objects or DiaSource objects, but not both.
+    // When using DiaSourceAlt all returned BSTR's are really LPCOLESTR and should not be 
+    // used with other BSTR management routines, in particular they must be released using
+    //      LocalFree( bstr )
+    [
+#ifndef MSAGNOSTIC
+        uuid(91904831-49ca-4766-b95c-25397e2dd6dc),
+#else
+        uuid(16196B2D-012C-47f9-9192-5C4951321D46),
+#endif
+        helpstring("Local Heap DiaSource Class")
+    ]
+    coclass DiaSourceAlt
+    {
+        [default] interface IDiaDataSource;
+    };
+
+
+    // General stack walking API    
+    [
+#ifndef MSAGNOSTIC
+        uuid(ce4a85db-5768-475b-a4e1-c0bca2112a6b),
+#else
+        uuid(FAC603FD-D6FD-4a86-BFD8-7EEA50D31FBD),
+#endif
+        helpstring("General Stackwalk Class")
+    ]
+    coclass DiaStackWalker
+    {
+        [default] interface IDiaStackWalker;
+    };
+};
+
+//
+// DebugInfoTable
+//
+// Each id identifies an underlying table of debug information 
+// 
+
+const LPOLESTR DiaTable_Symbols = L"Symbols";
+const LPOLESTR DiaTable_Sections = L"Sections";
+const LPOLESTR DiaTable_SrcFiles = L"SourceFiles";
+const LPOLESTR DiaTable_LineNums = L"LineNumbers";
+const LPOLESTR DiaTable_SegMap = L"SegmentMap";
+const LPOLESTR DiaTable_Dbg = L"Dbg";
+const LPOLESTR DiaTable_InjSrc = L"InjectedSource";
+const LPOLESTR DiaTable_FrameData = L"FrameData";
+const LPOLESTR DiaTable_InputAssemblyFiles = L"InputAssemblyFiles";
+
+
+// Generic property broweser interface.
+[
+    object,
+    uuid(9d416f9c-e184-45b2-a4f0-ce517f719e9b),
+    local,
+    helpstring("IDiaPropertyStorage Interface"),
+    pointer_default(unique)
+]
+interface IDiaPropertyStorage: IUnknown
+{
+
+    HRESULT ReadMultiple(
+        [in] ULONG cpspec,                                       // Count of properties being read
+        [in, size_is(cpspec)] PROPSPEC const *rgpspec,           // Array of the properties to be read
+        [out, size_is(cpspec)]PROPVARIANT *rgvar                 // Array of PVARIANTs containing
+                                                                 // the property values on return
+    );
+
+    HRESULT ReadPropertyNames(
+        [in] ULONG cpropid,                                      // Number of elements in rgpropid
+        [in, size_is( cpropid )] PROPID const  *rgpropid,        // Property identifiers for
+                                                                 // which names are to be retrieved
+        [in,out, size_is( cpropid )] BSTR *rglpwstrName          // Array of returned string names
+    );
+
+    HRESULT Enum(
+        [out] IEnumSTATPROPSTG **ppenum     //Pointer to output variable
+                                            // that receives the IEnumPROPSPEC
+                                            // interface pointer
+    );
+
+    HRESULT ReadDWORD(
+        [in] PROPID id,            // property to be read
+        [out] DWORD* pValue        // the property value on return
+    );
+
+    HRESULT ReadLONG(
+        [in] PROPID id,            // property to be read
+        [out] LONG* pValue         // the property value on return
+    );
+
+    HRESULT ReadBOOL(
+        [in] PROPID id,            // property to be read
+        [out] BOOL* pValue         // the property value on return
+    );
+
+    HRESULT ReadULONGLONG(
+        [in] PROPID id,            // property to be read
+        [out] ULONGLONG* pValue    // the property value on return
+    );
+
+    HRESULT ReadBSTR(
+        [in] PROPID id,            // property to be read
+        [out] BSTR* pValue         // the property value on return
+    );
+}
+
+[
+    object,
+    uuid(5edbc96d-cdd6-4792-afbe-cc89007d9610),
+    local,
+    helpstring("IDiaStackFrame Interface"),
+    pointer_default(unique)
+]
+interface IDiaStackFrame: IUnknown
+{
+    PROPERTY_RO( DWORD,     type,                       1,  "type" );
+    PROPERTY_RO( ULONGLONG, base,                       2,  "Base of the stack frame" );
+    PROPERTY_RO( DWORD,     size,                       3,  "size of frame in bytes" );
+    PROPERTY_RO( ULONGLONG, returnAddress,              4,  "return address of the frame" );
+    PROPERTY_RO( ULONGLONG, localsBase,                 5,  "base of locals" );
+    PROPERTY_RO( DWORD,     lengthLocals,               6,  "cbLocals" );
+    PROPERTY_RO( DWORD,     lengthParams,               7,  "cbParams" );
+    PROPERTY_RO( DWORD,     lengthProlog,               8,  "cbProlog" );
+    PROPERTY_RO( DWORD,     lengthSavedRegisters,       9,  "cbSavedRegs" );
+    PROPERTY_RO( BOOL,      systemExceptionHandling,    10, "fHasSEH" );
+    PROPERTY_RO( BOOL,      cplusplusExceptionHandling, 11, "fHasEH" );
+    PROPERTY_RO( BOOL,      functionStart,              12, "funcStart" );
+    PROPERTY_RO( BOOL,      allocatesBasePointer,       13, "fUsesBP" );
+    PROPERTY_RO( DWORD,     maxStack,                   14, "maxStack" );
+
+    PROPERTY_ARRAY_RO( ULONGLONG, DWORD, registerValue, 15, "Register value." );
+}
+
+[
+    object,
+    uuid(ec9d461d-ce74-4711-a020-7d8f9a1dd255),
+    local,
+    helpstring("IDiaEnumStackFrames Interface"),
+    pointer_default(unique)
+]
+interface IDiaEnumStackFrames: IUnknown
+{
+    HRESULT Next(
+        [in] ULONG celt,          
+        [out] IDiaStackFrame ** rgelt,
+        [out] ULONG * pceltFetched 
+    );
+
+    HRESULT Reset();
+}
+
+typedef struct {
+    DWORD       ulOffStart;             // offset 1st byte of function code
+    DWORD       cbProcSize;             // # bytes in function
+    DWORD       cdwLocals;              // # bytes in locals/4
+    WORD        cdwParams;              // # bytes in params/4
+    WORD        cdwFlags;               // Following stuff ...
+
+    /*
+    WORD        cbProlog : 8;           // # bytes in prolog
+    WORD        cbRegs   : 3;           // # regs saved
+    WORD        fHasSEH  : 1;           // TRUE if SEH in func
+    WORD        fUseBP   : 1;           // TRUE if EBP has been allocated
+    WORD        reserved : 1;           // reserved for future use
+    WORD        cbFrame  : 2;           // frame type
+    */
+} FPODATA;
+
+[
+    object,
+    uuid(21F81B1B-C5BB-42A3-BC4F-CCBAA75B9F19),
+    local,
+    helpstring("IDiaStackWalkHelper Interface"),
+    pointer_default(unique)
+]
+interface IDiaStackWalkHelper: IUnknown
+{
+    PROPERTY_ARRAY_RW( ULONGLONG, DWORD, registerValue, 1, "Register value." );         
+    HRESULT readMemory(                     // Read memory for DIA
+        [in] enum MemoryTypeEnum type,
+        [in] ULONGLONG va,
+        [in] DWORD cbData,
+        [out] DWORD *pcbData,
+        [out, size_is(cbData)] BYTE *pbData
+        );
+    HRESULT searchForReturnAddress(         // search return address for DIA, return E_NOTIMPL to use DIA default
+        [in] IDiaFrameData* frame,
+        [out] ULONGLONG* returnAddress
+        );
+    HRESULT searchForReturnAddressStart(    // search return address for DIA, return E_NOTIMPL to use DIA default
+        [in] IDiaFrameData* frame,
+        [in] ULONGLONG startAddress,
+        [out] ULONGLONG* returnAddress
+        );
+    HRESULT frameForVA(                     // Get frame data for this address          
+        [in] ULONGLONG va,
+        [out] IDiaFrameData **ppFrame
+        );
+    HRESULT symbolForVA(                    // Get symbol at this address, must be a SymTagFunctionType!
+        [in] ULONGLONG va,
+        [out] IDiaSymbol **ppSymbol
+        );
+    HRESULT pdataForVA(                      // Get PDATA for this address
+        [in]  ULONGLONG va,
+        [in]  DWORD cbData,
+        [out] DWORD *pcbData,
+        [out, size_is(cbData)] BYTE *pbData
+        );
+    HRESULT imageForVA(                      // Get information about an image
+        [in]  ULONGLONG vaContext,           // An address in the image
+        [out] ULONGLONG *pvaImageStart       // Beginning of the image
+        );
+    HRESULT addressForVA(
+        [in] ULONGLONG va,
+        [out] DWORD* pISect,
+        [out] DWORD* pOffset
+        );
+    HRESULT numberOfFunctionFragmentsForVA(
+        [in] ULONGLONG vaFunc,
+        [in] DWORD cbFunc,
+        [out] DWORD* pNumFragments
+        );
+    HRESULT functionFragmentsForVA(
+        [in] ULONGLONG vaFunc,
+        [in] DWORD cbFunc,
+        [in] DWORD cFragments,
+        [out] ULONGLONG *pVaFragment,
+        [out] DWORD *pLenFragment
+        );
+}
+
+[
+    object,
+    uuid(5485216b-a54c-469f-9670-52b24d5229bb),
+    local,
+    helpstring("IDiaStackWalker Interface"),
+    pointer_default(unique)
+]
+interface IDiaStackWalker: IUnknown
+{
+    HRESULT getEnumFrames(                              // Gives you frame enumerator for x86
+        [in]  IDiaStackWalkHelper *pHelper,
+        [out] IDiaEnumStackFrames **ppEnum
+        );
+
+    HRESULT getEnumFrames2(                             // Gives frame enumerator for processor specified by dwMachineId
+        [in]  enum CV_CPU_TYPE_e cpuid,
+        [in]  IDiaStackWalkHelper *pHelper,
+        [out] IDiaEnumStackFrames **ppEnum
+        );
+}
+
+[
+    object,
+    uuid(8222c490-507b-4bef-b3bd-41dca7b5934c),
+    local,
+    helpstring("IDiaStackWalkHelper Interface"),
+    pointer_default(unique)
+]
+interface IDiaStackWalkHelper2 : IDiaStackWalkHelper
+{
+}
+
+[
+    object,
+    uuid(7c185885-a015-4cac-9411-0f4fb39b1f3a),
+    local,
+    helpstring("IDiaStackWalker2 Interface"),
+    pointer_default(unique)
+]
+interface IDiaStackWalker2 : IDiaStackWalker
+{
+}
