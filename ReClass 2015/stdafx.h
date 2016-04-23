@@ -350,25 +350,27 @@ struct HotSpot
 typedef BOOL( PLUGIN_CC *MEMORY_OPERATION )( LPVOID, LPVOID, SIZE_T, PSIZE_T );
 typedef HANDLE( PLUGIN_CC *HANDLE_OPERATION )( DWORD, BOOL, DWORD );
 
-extern MEMORY_OPERATION g_PluginOverideMemoryWrite;
-extern MEMORY_OPERATION g_PluginOverideMemoryRead;
-extern HANDLE_OPERATION g_PluginOverideHandleProcess;
-extern HANDLE_OPERATION g_PluginOverideHandleThread;
+extern MEMORY_OPERATION g_PluginOverrideMemoryWrite;
+extern MEMORY_OPERATION g_PluginOverrideMemoryRead;
+extern HANDLE_OPERATION g_PluginOverrideHandleProcess;
+extern HANDLE_OPERATION g_PluginOverrideHandleThread;
 
 typedef struct _RECLASS_PLUGIN_INFO
 {
 	wchar_t Name[260];
 	wchar_t About[2048];
 	wchar_t Version[260];
+	wchar_t FileName[260];
 } RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
 BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
-
+ 
 //Exported Functions Below
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet = FALSE );
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION HandleProcess, HANDLE_OPERATION HandleThread, BOOL bForceSet = FALSE );
 RECLASS_EXPORT void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
 RECLASS_EXPORT LPHANDLE PLUGIN_CC ReClassGetProcessHandle( );
+RECLASS_EXPORT HWND PLUGIN_CC ReClassMainWindow( );
 
 extern std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
 #pragma endregion

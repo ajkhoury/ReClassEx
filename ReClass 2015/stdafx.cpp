@@ -55,42 +55,42 @@ bool gbTop = true;
 bool gbClassBrowser = true;
 bool gbFilterProcesses = false;
 
-CString tdHex{ };
-CString tdInt64{ };
-CString tdInt32{ };
-CString tdInt16{ };
-CString tdInt8{ };
-CString tdDWORD{ };
-CString tdWORD{ };
-CString tdBYTE{ };
-CString tdFloat{ };
-CString tdDouble{ };
-CString tdVec2{ };
-CString tdVec3{ };
-CString tdQuat{ };
-CString tdMatrix{ };
-CString tdPChar{ };
-CString tdPWChar{ };
+CString tdHex;
+CString tdInt64;
+CString tdInt32;
+CString tdInt16;
+CString tdInt8;
+CString tdDWORD;
+CString tdWORD;
+CString tdBYTE;
+CString tdFloat;
+CString tdDouble;
+CString tdVec2;
+CString tdVec3;
+CString tdQuat;
+CString tdMatrix;
+CString tdPChar;
+CString tdPWChar;
 
 std::vector<HICON> Icons;
 
 #pragma region Plugins
 std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
 
-MEMORY_OPERATION g_PluginOverideMemoryWrite = nullptr;
-MEMORY_OPERATION g_PluginOverideMemoryRead = nullptr;
-HANDLE_OPERATION g_PluginOverideHandleProcess = nullptr;
-HANDLE_OPERATION g_PluginOverideHandleThread = nullptr;
+MEMORY_OPERATION g_PluginOverrideMemoryWrite = nullptr;
+MEMORY_OPERATION g_PluginOverrideMemoryRead = nullptr;
+HANDLE_OPERATION g_PluginOverrideHandleProcess = nullptr;
+HANDLE_OPERATION g_PluginOverrideHandleThread = nullptr;
 
 BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet )
 { 
 	if ( MemWrite == nullptr || MemRead == nullptr )
 		return FALSE;
-	if ( g_PluginOverideMemoryRead != nullptr && g_PluginOverideMemoryWrite != nullptr && !bForceSet )
+	if ( g_PluginOverrideMemoryRead != nullptr && g_PluginOverrideMemoryWrite != nullptr && !bForceSet )
 		return FALSE;
 	else {
-		g_PluginOverideMemoryWrite = MemWrite;
-		g_PluginOverideMemoryRead = MemRead;
+		g_PluginOverrideMemoryWrite = MemWrite;
+		g_PluginOverrideMemoryRead = MemRead;
 		return TRUE;
 	}
 }
@@ -99,12 +99,12 @@ BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION HandleProcess, 
 {
 	if ( HandleProcess == nullptr || HandleThread == nullptr )
 		return FALSE;
-	if ( g_PluginOverideHandleProcess != nullptr && g_PluginOverideHandleThread != nullptr && !bForceSet )
+	if ( g_PluginOverrideHandleProcess != nullptr && g_PluginOverrideHandleThread != nullptr && !bForceSet )
 		return FALSE;
 	else
 	{
-		g_PluginOverideHandleProcess = HandleProcess;
-		g_PluginOverideHandleThread = HandleThread;
+		g_PluginOverrideHandleProcess = HandleProcess;
+		g_PluginOverrideHandleThread = HandleThread;
 		return TRUE;
 	}
 	return FALSE;
@@ -131,12 +131,17 @@ LPHANDLE PLUGIN_CC ReClassGetProcessHandle( )
 {
 	return &g_hProcess;
 }
+
+HWND PLUGIN_CC ReClassMainWindow( )
+{ 
+	return *theApp.GetMainWnd( );
+}
 #pragma endregion
 
 BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read)
 {
-	if ( g_PluginOverideMemoryRead != nullptr )
-		return g_PluginOverideMemoryRead( Address, Buffer, Size, num_read );
+	if ( g_PluginOverrideMemoryRead != nullptr )
+		return g_PluginOverrideMemoryRead( Address, Buffer, Size, num_read );
 
 	BOOL return_val = ReadProcessMemory( g_hProcess, (LPVOID) Address, Buffer, Size, num_read );
 	if ( !return_val ) ZeroMemory( Buffer, Size );
@@ -145,8 +150,8 @@ BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read)
 
 BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote )
 {
-	if ( g_PluginOverideMemoryWrite != nullptr )
-		return g_PluginOverideMemoryWrite( Address, Buffer, Size, num_wrote );
+	if ( g_PluginOverrideMemoryWrite != nullptr )
+		return g_PluginOverrideMemoryWrite( Address, Buffer, Size, num_wrote );
 
 	DWORD OldProtect;
 	VirtualProtectEx(g_hProcess, (void*)Address, Size, PAGE_EXECUTE_READWRITE, &OldProtect);
@@ -157,15 +162,15 @@ BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote )
 
 HANDLE ReClassOpenProcess( DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessID )
 {
-	if ( g_PluginOverideHandleProcess != nullptr )
-		return g_PluginOverideHandleProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
+	if ( g_PluginOverrideHandleProcess != nullptr )
+		return g_PluginOverrideHandleProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
 	return OpenProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
 }
 
 HANDLE ReClassOpenThread( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwThreadID )
 { 
-	if ( g_PluginOverideHandleThread != nullptr )
-		return g_PluginOverideHandleThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
+	if ( g_PluginOverrideHandleThread != nullptr )
+		return g_PluginOverrideHandleThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
 	return OpenThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
 }
 

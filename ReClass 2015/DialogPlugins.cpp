@@ -10,7 +10,8 @@
 
 IMPLEMENT_DYNAMIC(CDialogPlugins, CDialogEx)
 
-CDialogPlugins::CDialogPlugins(CWnd* pParent) : CDialogEx(CDialogPlugins::IDD, pParent)
+CDialogPlugins::CDialogPlugins(CWnd* pParent) 
+	: CDialogEx(CDialogPlugins::IDD, pParent)
 {
 
 }

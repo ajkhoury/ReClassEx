@@ -32,6 +32,7 @@ typedef struct _RECLASS_PLUGIN_INFO
 	wchar_t Name[ 260 ];
 	wchar_t About[ 2048 ];
 	wchar_t Version[ 260 ];
+	wchar_t PluginName[ 260 ];
 } RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
 PLUGIN_API BOOL PLUGIN_CC PluginInit( OUT LPRECLASS_PLUGIN_INFO lpRCInfo );
@@ -59,3 +60,8 @@ RECLASS_API void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
  *	Get the current attached process handle, null if not attached
  */
 RECLASS_API LPHANDLE PLUGIN_CC ReClassGetProcessHandle( );
+
+/*
+ *	Return the main window handle for ReClass
+ */
+RECLASS_API HWND PLUGIN_CC ReClassMainWindow( );

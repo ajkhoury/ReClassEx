@@ -120,6 +120,7 @@ BOOL CReClass2015App::InitInstance()
 	crChar = GetProfileInt(_T("Colors"), _T("crChar"), crChar);
 	crCustom = GetProfileInt(_T("Colors"), _T("crCustom"), crCustom);
 	crHex = GetProfileInt(_T("Colors"), _T("crHex"), crHex);
+
 	gbOffset = GetProfileInt(_T("Display"), _T("gbOffset"), gbOffset) > 0 ? true : false;
 	gbAddress = GetProfileInt(_T("Display"), _T("gbAddress"), gbAddress) > 0 ? true : false;
 	gbText = GetProfileInt(_T("Display"), _T("gbText"), gbText) > 0 ? true : false;
@@ -247,7 +248,8 @@ BOOL CReClass2015App::InitInstance()
 
 			RECLASS_PLUGIN_INFO plugin_info;
 			ZeroMemory( &plugin_info, sizeof RECLASS_PLUGIN_INFO );
-
+			wcscpy_s( plugin_info.FileName, file_data.cFileName );
+			
 			if ( pfnPluginInit( &plugin_info ) )
 			{
 				PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), file_data.cFileName, plugin_info.Name, plugin_info.Version, plugin_info.About );
@@ -314,6 +316,7 @@ int CReClass2015App::ExitInstance()
 	WriteProfileInt(_T("Colors"), _T("crChar"), crChar);
 	WriteProfileInt(_T("Colors"), _T("crCustom"), crCustom);
 	WriteProfileInt(_T("Colors"), _T("crHex"), crHex);
+
 	WriteProfileInt(_T("Display"), _T("gbOffset"), gbOffset);
 	WriteProfileInt(_T("Display"), _T("gbAddress"), gbAddress);
 	WriteProfileInt(_T("Display"), _T("gbText"), gbText);
