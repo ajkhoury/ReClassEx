@@ -360,11 +360,17 @@ typedef struct _RECLASS_PLUGIN_INFO
 	wchar_t Name[260];
 	wchar_t About[2048];
 	wchar_t Version[260];
-	wchar_t FileName[260];
 } RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
+typedef struct _RECLASS_PLUGINS
+{
+	RECLASS_PLUGIN_INFO Info;
+	wchar_t FileName[ 260 ];
+	HMODULE LoadedBase;
+} RECLASS_PLUGINS, *LPRECLASS_PLUGINS;
+
 BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
- 
+
 //Exported Functions Below
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet = FALSE );
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION HandleProcess, HANDLE_OPERATION HandleThread, BOOL bForceSet = FALSE );
@@ -372,7 +378,7 @@ RECLASS_EXPORT void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
 RECLASS_EXPORT LPHANDLE PLUGIN_CC ReClassGetProcessHandle( );
 RECLASS_EXPORT HWND PLUGIN_CC ReClassMainWindow( );
 
-extern std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
+extern std::vector<RECLASS_PLUGINS> LoadedPlugins;
 #pragma endregion
 
 

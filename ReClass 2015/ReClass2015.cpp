@@ -44,6 +44,7 @@ BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_KILL, &CReClass2015App::OnUpdateButtonKill)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_SEARCH, &CReClass2015App::OnUpdateButtonSearch)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_MODULES, &CReClass2015App::OnUpdateButtonModules)
+	ON_UPDATE_COMMAND_UI(ID_RECLASS_PLUGINS, &CReClass2015App::OnUpdateButtonPlugins)
 	ON_COMMAND(ID_BUTTON_GENERATE, &CReClass2015App::OnButtonGenerate)
 	ON_COMMAND(ID_BUTTON_CLEAN, &CReClass2015App::OnButtonClean)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_CLEAN, &CReClass2015App::OnUpdateButtonClean)
@@ -246,14 +247,14 @@ BOOL CReClass2015App::InitInstance()
 				continue;
 			}
 
-			RECLASS_PLUGIN_INFO plugin_info;
-			ZeroMemory( &plugin_info, sizeof RECLASS_PLUGIN_INFO );
-			wcscpy_s( plugin_info.FileName, file_data.cFileName );
+			RECLASS_PLUGINS plugin;
+			ZeroMemory( &plugin, sizeof RECLASS_PLUGINS );
+			wcscpy_s( plugin.FileName, file_data.cFileName );
+			plugin.LoadedBase = plugin_base;
 			
-			if ( pfnPluginInit( &plugin_info ) )
-			{
-				PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), file_data.cFileName, plugin_info.Name, plugin_info.Version, plugin_info.About );
-				LoadedPlugins.emplace( plugin_base, plugin_info );
+			if ( pfnPluginInit( &plugin.Info ) ) {
+				PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), file_data.cFileName, plugin.Info.Name, plugin.Info.Version, plugin.Info.About );
+				LoadedPlugins.push_back( plugin );
 			} else {
 				CString message{ };
 				message.Format( _T( "Failed to load plugin %s" ), file_data.cFileName );
@@ -329,7 +330,7 @@ int CReClass2015App::ExitInstance()
 	WriteProfileInt(_T("Display"), _T("gbFilterProcesses"), gbFilterProcesses);
 
 	for ( auto plugin : LoadedPlugins )
-		FreeLibrary( plugin.first );
+		FreeLibrary( plugin.LoadedBase );
 
 	return CWinAppEx::ExitInstance();
 }
@@ -1611,11 +1612,13 @@ void CReClass2015App::OnButtonGenerate()
 
 		for (UINT i = 0; i < vfun.size(); i++)
 			h += vfun[i];
+
 		if (vfun.size() > 0)
 			h += _T("\r\n");
 
 		for (UINT i = 0; i < var.size(); i++)
 			h += var[i];
+
 		if (var.size() > 0)
 			h += _T("\r\n");
 
@@ -1625,12 +1628,12 @@ void CReClass2015App::OnButtonGenerate()
 			h += _T("\r\n");
 		}
 
-		t.Format(_T("};//Size=0x%0.4X\r\n"), pClass->GetMemorySize());
+		t.Format(_T("}; //Size=0x%0.4X\r\n"), pClass->GetMemorySize());
 		h += t;
 		h += _T("\r\n");
 	}
 
-	h += Footer + _T("\r\n");
+	h += ( Footer + _T( "\r\n" ) );
 
 	dlg.Text = h;
 	dlg.DoModal();
@@ -1638,18 +1641,22 @@ void CReClass2015App::OnButtonGenerate()
 
 void CReClass2015App::OnButtonPlugins()
 {
-	//TODO: Work out some sort of plugin system
-	GetMainWnd( )->MessageBox( _T( "Coming Soon!" ) );
-	//CDialogPlugins plugin_dlg;
-	//plugin_dlg.DoModal( );
+	//GetMainWnd( )->MessageBox( _T( "Coming Soon!" ) );
+	CDialogPlugins plugin_dlg;
+	plugin_dlg.DoModal( );
+}
+
+void CReClass2015App::OnUpdateButtonPlugins( CCmdUI * pCmdUI )
+{ 
+	pCmdUI->Enable(!LoadedPlugins.empty());
 }
 
 void CReClass2015App::OnOpenPDB()
 {
 	PrintOut(_T("OnOpenPDB() called"));
 
-	TCHAR Filters[] = _T("PDB (*.pdb)|*.pdb|All Files (*.*)|*.*||");
-	CFileDialog fileDlg(TRUE, _T("pdb"), _T(""), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, Filters, NULL);
+	CFileDialog fileDlg { TRUE, _T( "pdb" ), _T( "" ), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T( "PDB (*.pdb)|*.pdb|All Files (*.*)|*.*||" ), NULL };
+	
 	if (fileDlg.DoModal() != IDOK)
 		return;
 
@@ -1673,7 +1680,7 @@ void CReClass2015App::DeleteClass(CNodeClass* pClass)
 		PrintOut(_T("Class still has a reference in %s.%s"), pNode->pParent->Name.GetString(), pNode->Name.GetString());
 		CString msg;
 		msg.Format(_T("Class still has a reference in %s.%s"), pNode->pParent->Name.GetString(), pNode->Name.GetString());
-		MessageBox(GetMainWnd()->GetSafeHwnd(), msg, _T("Error"), MB_OK);
+		GetMainWnd( )->MessageBox( msg );
 		return;
 	}
 

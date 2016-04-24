@@ -136,8 +136,7 @@ void CDialogModules::SetSelected()
 		if ( extension_size == -1 ) extension_size = 0;
 		else extension_size = MemMapModule[ nItem ].Name.GetLength( ) - extension_size;
 
-		CString ClassName = MemMapModule[nItem].Name.Left( MemMapModule[nItem].Name.GetLength() - extension_size );
-		ClassName += _T("_base");
+		CString ClassName = MemMapModule[ nItem ].Name.Left( MemMapModule[ nItem ].Name.GetLength( ) - extension_size ) + _T( "_base" );
 
 		CNodeClass* pNewClass = GetClassByName(ClassName);
 		if (!pNewClass)

@@ -75,7 +75,7 @@ CString tdPWChar;
 std::vector<HICON> Icons;
 
 #pragma region Plugins
-std::map<HMODULE, RECLASS_PLUGIN_INFO> LoadedPlugins;
+std::vector<RECLASS_PLUGINS> LoadedPlugins;
 
 MEMORY_OPERATION g_PluginOverrideMemoryWrite = nullptr;
 MEMORY_OPERATION g_PluginOverrideMemoryRead = nullptr;

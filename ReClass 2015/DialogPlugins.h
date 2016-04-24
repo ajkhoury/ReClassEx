@@ -18,6 +18,15 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual BOOL OnInitDialog();
+	virtual void OnGetMinMaxInfo( MINMAXINFO *lpinfo );
 
-	DECLARE_MESSAGE_MAP()
+	DECLARE_MESSAGE_MAP( )
+
+	afx_msg void OnRightClickList( NMHDR * pNotifyStruct, LRESULT * result );
+private:
+	void RefreshPlugins( );
+
+	CRect m_OriginalSize;
+	CListCtrl m_PluginsList;
 };
