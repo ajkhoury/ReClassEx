@@ -26,8 +26,11 @@ Cleaned up the code a bit and added some new features. Also got rid of a ton of 
 - Added Console dialog with syntax highlighting
 - Added ability to load PDB file and display PDB Symbols 
 
-
 ![Alt text](/Images/reclass2.png?raw=true "ReClass")
+
+## Current Release Download
+
+[DOWNLOAD](https://github.com/dude719/Reclass-2015/releases)
 
 ## How to build
 
