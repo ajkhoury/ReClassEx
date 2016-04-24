@@ -10,20 +10,25 @@ class CDialogPlugins : public CDialogEx
 	DECLARE_DYNAMIC(CDialogPlugins)
 
 public:
-	CDialogPlugins(CWnd* pParent = NULL);   // standard constructor
-	virtual ~CDialogPlugins();
+	// standard constructor
+	CDialogPlugins( CWnd* pParent = NULL ) : CDialogEx( CDialogPlugins::IDD, pParent ) { } 
+	// virtual deconstructor
+	virtual ~CDialogPlugins( ) { }
 
-// Dialog Data
+	// Dialog Data
 	enum { IDD = IDD_DIALOG_PLUGINS };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual void DoDataExchange(CDataExchange *pDX);    // DDX/DDV support
 	virtual BOOL OnInitDialog();
 	virtual void OnGetMinMaxInfo( MINMAXINFO *lpinfo );
+	virtual void OnContextMenu( CWnd *pWnd, CPoint pos );
 
 	DECLARE_MESSAGE_MAP( )
 
-	afx_msg void OnRightClickList( NMHDR * pNotifyStruct, LRESULT * result );
+	afx_msg void OnPopupMenuSettings( );
+	afx_msg void OnPopupMenuAbout( );
+	afx_msg void OnRightClickPluginList( NMHDR * pNotifyStruct, LRESULT * result );
 private:
 	void RefreshPlugins( );
 
