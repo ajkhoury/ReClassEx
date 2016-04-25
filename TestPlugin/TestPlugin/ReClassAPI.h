@@ -32,7 +32,6 @@ typedef struct _RECLASS_PLUGIN_INFO
 	wchar_t Name[ 260 ];
 	wchar_t About[ 2048 ];
 	wchar_t Version[ 260 ];
-	wchar_t PluginName[ 260 ];
 } RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
 PLUGIN_API BOOL PLUGIN_CC PluginInit( OUT LPRECLASS_PLUGIN_INFO lpRCInfo );

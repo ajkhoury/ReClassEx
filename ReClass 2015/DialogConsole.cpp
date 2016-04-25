@@ -7,7 +7,6 @@
 #include "afxdialogex.h"
 
 // Console keywords
-/*
 static const char g_ConsoleKeyWords[] =
 
 // Standard
@@ -33,7 +32,7 @@ static const char g_ConsoleKeyWords[] =
 "interface __leave naked noinline __noop noreturn "
 "nothrow novtable nullptr safecast __stdcall "
 "__try __except __finally __unaligned uuid __uuidof "
-"__virtual_inheritance";*/
+"__virtual_inheritance";
 
 // Default color scheme
 static SScintillaColors g_rgbSyntaxConsole[] =
@@ -137,7 +136,7 @@ void CDialogConsole::InitialiseEditor()
 	}
 
 	// CPP lexer
-	SendEditor(SCI_SETLEXER, SCLEX_CONTAINER);
+	SendEditor(SCI_SETLEXER, SCLEX_CPP);
 
 	// Set number of style bits to use
 	SendEditor(SCI_SETSTYLEBITS, 5);
@@ -146,7 +145,7 @@ void CDialogConsole::InitialiseEditor()
 	SendEditor(SCI_SETTABWIDTH, 4);
 
 	// Use CPP keywords
-	//SendEditor(SCI_SETKEYWORDS, 0, (LPARAM)g_ConsoleKeyWords); //TEMP: No need for keywords in the console?
+	SendEditor(SCI_SETKEYWORDS, 0, (LPARAM)g_ConsoleKeyWords);
 
 	// Set up the global default style. These attributes are used wherever no explicit choices are made.
 	SetStyle(STYLE_DEFAULT, black, white, 10, _T("Courier New"));

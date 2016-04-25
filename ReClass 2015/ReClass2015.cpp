@@ -272,6 +272,7 @@ int CReClass2015App::ExitInstance()
 {
 	if (m_hMDIMenu != NULL)
 		FreeResource(m_hMDIMenu);
+
 	if (m_hMDIAccel != NULL)
 		FreeResource(m_hMDIAccel);
 

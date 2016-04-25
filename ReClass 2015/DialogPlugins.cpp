@@ -7,15 +7,12 @@
 #include "afxdialogex.h"
 
 // CDialogPlugins dialog
-
 IMPLEMENT_DYNAMIC(CDialogPlugins, CDialogEx)
 
 // CDialogPlugins message handlers
-
 BEGIN_MESSAGE_MAP(CDialogPlugins, CDialogEx)
-	ON_COMMAND(IDR_PLUGIN_MENU_SETTINGS, &CDialogPlugins::OnPopupMenuSettings)
-	ON_COMMAND(IDR_PLUGIN_MENU_ABOUT, &CDialogPlugins::OnPopupMenuAbout)
-	ON_WM_GETMINMAXINFO()
+	ON_COMMAND(MENU_SETTINGS, &CDialogPlugins::OnPopupMenuSettings)
+	ON_COMMAND(MENU_ABOUT, &CDialogPlugins::OnPopupMenuAbout)
 	ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
 
@@ -28,9 +25,6 @@ void CDialogPlugins::DoDataExchange(CDataExchange* pDX)
 BOOL CDialogPlugins::OnInitDialog( )
 {
 	CDialogEx::OnInitDialog( );
-	
-	GetWindowRect( &m_OriginalSize );
-	ScreenToClient( &m_OriginalSize );
 
 	m_PluginsList.SetExtendedStyle( LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER );
 
@@ -40,17 +34,6 @@ BOOL CDialogPlugins::OnInitDialog( )
 	RefreshPlugins( );
 
 	return TRUE;
-}
-
-void CDialogPlugins::OnGetMinMaxInfo( MINMAXINFO * lpinfo )
-{
-	CDialogEx::OnGetMinMaxInfo( lpinfo );
-
-	if ( !m_OriginalSize.IsRectNull( ) )
-	{
-		lpinfo->ptMinTrackSize.x = m_OriginalSize.Width( );
-		lpinfo->ptMinTrackSize.y = m_OriginalSize.Height( );
-	}
 }
 
 void CDialogPlugins::OnContextMenu( CWnd *pWnd, CPoint pos )
@@ -63,47 +46,31 @@ void CDialogPlugins::OnContextMenu( CWnd *pWnd, CPoint pos )
 		POSITION selected_pos = m_PluginsList.GetFirstSelectedItemPosition( );
 		if ( selected_pos != nullptr && m_PluginsList.GetNextSelectedItem( selected_pos ) != -1 )
 		{
+			RECLASS_PLUGINS plugin = LoadedPlugins[m_PluginsList.GetSelectionMark()];
+			
+			CString About;
+			About.Format( _T( "&About \"%ls\"" ), plugin.Info.Name );
+
 			CMenu context_menu;
-			context_menu.LoadMenu( IDR_PLUGIN_POPUP_MENU );
-			CMenu *popup_menu = context_menu.GetSubMenu( 0 );
-			popup_menu->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, pos.x, pos.y, this );
+			context_menu.CreatePopupMenu( );
+			context_menu.AppendMenu( MF_STRING, MENU_SETTINGS, _T( "Settings" ) );
+			context_menu.AppendMenu( MF_STRING, MENU_ABOUT, About );
+			context_menu.TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, pos.x, pos.y, this );
 		}
 	}
 }
 
 void CDialogPlugins::OnPopupMenuSettings( )
 { 
-	RECLASS_PLUGINS plugin = LoadedPlugins[m_PluginsList.GetSelectionMark( )];
+	RECLASS_PLUGINS plugin = LoadedPlugins[m_PluginsList.GetSelectionMark()];
 	//TODO: 
 }
 
 void CDialogPlugins::OnPopupMenuAbout( )
 { 
-	RECLASS_PLUGINS plugin = LoadedPlugins[m_PluginsList.GetSelectionMark( )];
-		
-	MessageBoxW( plugin.Info.About );
-}
-
-void CDialogPlugins::OnRightClickPluginList( NMHDR *pNotifyStruct, LRESULT *result )
-{ 
-	LPNMITEMACTIVATE item_active = reinterpret_cast<LPNMITEMACTIVATE>( pNotifyStruct );
-	
-	if ( item_active->iItem != -1 )
-	{
-		CRect list_size;
-		GetWindowRect( &list_size );
-
-		RECLASS_PLUGINS selected_plugin = LoadedPlugins[ item_active->iItem ];
-
-		CString About;
-		About.Format( _T( "About \"%ls\"" ), selected_plugin.Info.Name );
-
-		CMenu context_menu;
-		context_menu.CreatePopupMenu( );
-		context_menu.AppendMenu( MF_STRING, 0, About );
-		context_menu.TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, 
-									 item_active->ptAction.x + list_size.left, item_active->ptAction.y + list_size.top, this );
-	}
+	RECLASS_PLUGINS plugin = LoadedPlugins[m_PluginsList.GetSelectionMark()];
+	//TODO: make cool about dialog maybe??
+	MessageBoxW( plugin.Info.About, plugin.Info.Name, MB_OK | MB_ICONINFORMATION);
 }
 
 void CDialogPlugins::RefreshPlugins( )
@@ -112,7 +79,7 @@ void CDialogPlugins::RefreshPlugins( )
 
 	LVITEM item;
 
-	for ( auto plugin : LoadedPlugins )
+	for ( RECLASS_PLUGINS plugin : LoadedPlugins )
 	{
 		ZeroMemory( &item, sizeof LVITEM );
 
