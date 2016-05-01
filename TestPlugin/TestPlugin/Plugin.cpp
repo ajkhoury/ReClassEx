@@ -11,7 +11,7 @@ BOOL WINAPI PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo )
 	if ( !ReClassOverrideMemoryOperations( WriteCallback, ReadCallback ) ) {
 		ReClassPrintConsole( L"[TestPlugin] Failed to register read/write callbacks, failing PluginInit" );
 		return FALSE;
-	}	
+	}
 
 	g_ReClassProcessAttached = ReClassGetProcessHandle( );
 

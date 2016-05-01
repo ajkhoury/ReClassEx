@@ -163,11 +163,11 @@ void CDialogConsole::InitialiseEditor()
 	for (long i = 0; g_rgbSyntaxConsole[i].iItem != -1; i++)
 		SendEditor(SCI_STYLESETFORE, g_rgbSyntaxConsole[i].iItem, g_rgbSyntaxConsole[i].rgb);
 
-	SendEditor(SCI_SETHSCROLLBAR, false);
+	SendEditor(SCI_SETHSCROLLBAR, TRUE);
 	//SendEditor(SCI_SETVIEWWS, SCWS_VISIBLEALWAYS);
 	SendEditor(SCI_SETMARGINWIDTHN, 0, 32);
 	SendEditor(SCI_SETMARGINWIDTHN, 1, 0);
-
+	
 	// Make read only
 	SendEditor(SCI_SETREADONLY, TRUE);
 }
