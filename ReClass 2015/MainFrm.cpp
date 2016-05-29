@@ -110,7 +110,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// create docking windows
 	if (!CreateDockingWindows())
 	{
-		printf("Failed to create docking windows\n");
+		PrintOut(_T("Failed to create docking windows\n"));
 		return -1;
 	}
 
@@ -209,8 +209,10 @@ void CMainFrame::OnButtonCCustom()
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
-	if(!CMDIFrameWndEx::PreCreateWindow(cs)) return FALSE;
-	if (gbTop) cs.dwExStyle |= WS_EX_TOPMOST;
+	if(!CMDIFrameWndEx::PreCreateWindow(cs)) 
+		return FALSE;
+	if (gbTop) 
+		cs.dwExStyle |= WS_EX_TOPMOST;
 	return TRUE;
 }
 

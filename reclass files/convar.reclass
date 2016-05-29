@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReClass>
+    <!--Reclass 2015-->
+    <TypeDef tdHex="char" tdInt64="__int64" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="unsigned char" tdFloat="float" tdDouble="double" tdVec2="Vector2" tdVec3="Vector3" tdQuat="Vector4" tdMatrix="matrix3x4_t" tdPChar="char *" tdPWChar="wchar_t *"/>
+    <Header Text=""/>
+    <Footer Text=""/>
+    <Notes Text=""/>
+    <Class Name="N00000000" Type="28" Comment="" Offset="1631421296" strOffset="613D8370" Code="">
+        <Node Name="N00000001" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000002" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000003" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000004" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000005" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000006" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000007" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000008" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000009" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000000A" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000000B" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000000C" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000000D" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000000E" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000000F" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000010" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="ConVar" Type="28" Comment="" Offset="1631421256" strOffset="613D8348" Code="">
+        <Node Name="vtable" Type="8" Size="4" bHidden="0" Comment="" Pointer="N00000079"/>
+        <Node Name="m_pNext" Type="8" Size="4" bHidden="0" Comment="" Pointer="ConVar"/>
+        <Node Name="m_bRegistered" Type="17" Size="1" bHidden="0" Comment=""/>
+        <Node Name="N00000025" Type="6" Size="2" bHidden="1" Comment=""/>
+        <Node Name="N00000026" Type="7" Size="1" bHidden="1" Comment=""/>
+        <Node Name="m_pszName" Type="29" Size="4" bHidden="0" Comment=""/>
+        <Node Name="m_pszHelpString" Type="29" Size="4" bHidden="0" Comment=""/>
+        <Node Name="m_nFlags" Type="10" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000018" Type="26" Size="4" bHidden="0" Comment="">
+            <Function Name="" Comment="" bHidden="0"/>
+            <Function Name="" Comment="" bHidden="0"/>
+            <Function Name="" Comment="" bHidden="0"/>
+            <Function Name="" Comment="" bHidden="0"/>
+            <Function Name="" Comment="" bHidden="0"/>
+            <Function Name="" Comment="" bHidden="0"/>
+            <Function Name="" Comment="" bHidden="0"/>
+            <Function Name="" Comment="" bHidden="0"/>
+            <Function Name="" Comment="" bHidden="0"/>
+            <Function Name="" Comment="" bHidden="0"/>
+        </Node>
+        <Node Name="m_pParent" Type="8" Size="4" bHidden="0" Comment="" Pointer="ConVar"/>
+        <Node Name="m_pszDefaultValue" Type="8" Size="4" bHidden="0" Comment="" Pointer="PSTR"/>
+        <Node Name="m_pszString" Type="8" Size="4" bHidden="0" Comment="" Pointer="PSTR"/>
+        <Node Name="m_StringLength" Type="10" Size="4" bHidden="0" Comment=""/>
+        <Node Name="m_fValue" Type="13" Size="4" bHidden="0" Comment=""/>
+        <Node Name="m_nValue" Type="10" Size="4" bHidden="0" Comment=""/>
+        <Node Name="m_bHasMin" Type="17" Size="1" bHidden="0" Comment=""/>
+        <Node Name="N0000004A" Type="6" Size="2" bHidden="1" Comment=""/>
+        <Node Name="N0000004B" Type="7" Size="1" bHidden="1" Comment=""/>
+        <Node Name="m_fMinVal" Type="13" Size="4" bHidden="0" Comment=""/>
+        <Node Name="m_bHasMax" Type="17" Size="1" bHidden="0" Comment=""/>
+        <Node Name="N00000050" Type="6" Size="2" bHidden="1" Comment=""/>
+        <Node Name="N00000051" Type="7" Size="1" bHidden="1" Comment=""/>
+        <Node Name="m_fMaxVal" Type="13" Size="4" bHidden="0" Comment=""/>
+        <Node Name="m_fnChangeCallback" Type="20" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N00000028" Type="28" Comment="" Offset="16384000" strOffset="fa0000" Code="">
+        <Node Name="N00000029" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N00000042" Type="28" Comment="" Offset="16384000" strOffset="fa0000" Code="">
+        <Node Name="N00000043" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N00000060" Type="28" Comment="" Offset="1631421256" strOffset="613D8348" Code="">
+        <Node Name="N00000061" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000062" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000063" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000064" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000065" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000066" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000067" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000068" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000069" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000006A" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000006B" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000006C" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000006D" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000006E" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000006F" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00000070" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="PSTR" Type="28" Comment="" Offset="16384000" strOffset="fa0000" Code="">
+        <Node Name="str" Type="18" Size="64" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N00000076" Type="28" Comment="" Offset="16384000" strOffset="fa0000" Code="">
+        <Node Name="N00000077" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N00000079" Type="28" Comment="" Offset="16384000" strOffset="fa0000" Code="">
+        <Node Name="N0000007A" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+</ReClass>

@@ -192,7 +192,7 @@ CStringA ReadMemoryStringA(size_t address, SIZE_T max)
 		return CStringA(buffer.get());
 	} else {
 #ifdef _DEBUG
-		PrintOut( _T( "[ReadMemoryString]: Failed to read memory, GetLastError() = %s" ), Utils::GetLastErrorString( ).GetString( ) );
+		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s" ), Utils::GetLastErrorString().GetString());
 #endif
 		return CStringA( ".." );
 	}
@@ -965,8 +965,17 @@ size_t ConvertStrToAddress(CString str)
 	//}
 
 	CStringArray chunks;
+	bool bSubtract, bAdd = false;
 	if (SplitString(str, "+", chunks) == 0)
+	{
+		bAdd = true;
 		chunks.Add(str);
+	}
+	else if (SplitString(str, "-", chunks) == 0)
+	{
+		bSubtract = true;
+		chunks.Add(str);
+	}
 
 	size_t Final = 0;
 
@@ -1010,17 +1019,24 @@ size_t ConvertStrToAddress(CString str)
 					break;
 				}
 			}
-		} else {
+		} 
+		else 
+		{
 			curadd = (size_t)_tcstoui64(a.GetBuffer(), NULL, 16);
 		}
 
-		Final += curadd;
+		if (bSubtract)
+			Final -= curadd;
+		else
+			Final += curadd;
 
 		if (bPointer)
 		{
 			if ( ReadMemory( (void*)Final, &Final, sizeof(Final), NULL) == 0)
 			{
+#ifdef _DEBUG
 				PrintOut(_T("[ConvertStrToAddress]: Failed to read memory GetLastError() = %s"), Utils::GetLastErrorString().GetString());
+#endif
 			}
 		}
 	}

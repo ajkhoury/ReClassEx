@@ -52,10 +52,10 @@ static SScintillaColors g_rgbSyntaxConsole[] =
 
 // CDialogConsole dialog
 
-IMPLEMENT_DYNAMIC( CDialogConsole, CDialogEx )
+IMPLEMENT_DYNAMIC(CDialogConsole, CDialogEx)
 
-CDialogConsole::CDialogConsole( CString window_title, CWnd* pParent /*=NULL*/ )
-	: CDialogEx( IDD_DIALOG_CONSOLE, pParent ), m_strWindowTitle( window_title )
+CDialogConsole::CDialogConsole(CString window_title, CWnd* pParent /*=NULL*/)
+	: CDialogEx(IDD_DIALOG_CONSOLE, pParent), m_strWindowTitle(window_title)
 {
 	m_hwndEditWindow = NULL;
 	m_bInited = FALSE;
@@ -79,23 +79,26 @@ BOOL CDialogConsole::Create(UINT nIDTemplate, CWnd* pParentWnd)
 	return CDialogEx::Create(nIDTemplate, pParentWnd);
 }
 
-void CDialogConsole::PrintText( const TCHAR * message )
+void CDialogConsole::PrintText(const TCHAR * message)
 {
 	// Make temporarily editable
-	SendEditor( SCI_SETREADONLY, FALSE );
+	SendEditor(SCI_SETREADONLY, FALSE);
 
-	m_strConsoleText += _T( "> " );
+	m_strConsoleText += _T("> ");
 	m_strConsoleText += message;
-	m_strConsoleText += _T( "\r\n" );
+	m_strConsoleText += _T("\r\n");
 
 #ifdef UNICODE
-	SendEditor( SCI_SETTEXT, 0, (LPARAM) CW2A( m_strConsoleText ).m_psz );
+	SendEditor(SCI_SETTEXT, 0, (LPARAM)CW2A(m_strConsoleText).m_psz);
 #else
-	SendEditor( SCI_SETTEXT, 0, (LPARAM) m_strConsoleText.GetBuffer( ) );
+	SendEditor(SCI_SETTEXT, 0, (LPARAM)m_strConsoleText.GetBuffer());
 #endif
 
+	// Send cursor to end of document
+	SendEditor(SCI_SETSEL, -1, -1);
+
 	// Make read only
-	SendEditor( SCI_SETREADONLY, TRUE );
+	SendEditor(SCI_SETREADONLY, TRUE);
 }
 
 BOOL CDialogConsole::OnInitDialog()
@@ -108,10 +111,9 @@ BOOL CDialogConsole::OnInitDialog()
 	SetWindowText(m_strWindowTitle);
 	// Create the Scintilla editor	
 	InitialiseEditor();
-	
+
 	SizeEditor();
-	SendEditor(SCI_SETSEL, 0, 0);
-	//delete[] pText; // free memory
+	SendEditor(SCI_SETSEL, -1, -1);
 
 	m_bInited = TRUE;
 
@@ -131,7 +133,9 @@ void CDialogConsole::InitialiseEditor()
 	// Did we get the editor window
 	if (!::IsWindow(m_hwndEditWindow))
 	{
-		//PrintOut(_T("Unable to create editor window"));
+		#ifdef _DEBUG
+		PrintOut(_T("Unable to create editor window"));
+		#endif
 		return;
 	}
 
@@ -167,7 +171,7 @@ void CDialogConsole::InitialiseEditor()
 	//SendEditor(SCI_SETVIEWWS, SCWS_VISIBLEALWAYS);
 	SendEditor(SCI_SETMARGINWIDTHN, 0, 32);
 	SendEditor(SCI_SETMARGINWIDTHN, 1, 0);
-	
+
 	// Make read only
 	SendEditor(SCI_SETREADONLY, TRUE);
 }
@@ -185,7 +189,8 @@ void CDialogConsole::SizeEditor()
 		RECT rect;
 		GetClientRect(&rect);
 		CWnd *pWnd = CWnd::FromHandle(m_hwndEditWindow);
-		if (pWnd) pWnd->MoveWindow(&rect);
+		if (pWnd) 
+			pWnd->MoveWindow(&rect);
 	}
 }
 
