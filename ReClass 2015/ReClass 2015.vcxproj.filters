@@ -177,9 +177,6 @@
     <ClInclude Include="Debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DialogClasses.h">
       <Filter>Header Files</Filter>
     </ClInclude>

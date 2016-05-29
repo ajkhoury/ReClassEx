@@ -327,7 +327,6 @@
     <ClInclude Include="DialogTypes.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="nt_ddk.h" />
-    <ClInclude Include="Parser.h" />
     <ClInclude Include="PDBReader.h" />
     <ClInclude Include="ReClass2015.h" />
     <ClInclude Include="Resource.h" />
