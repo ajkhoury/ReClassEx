@@ -981,17 +981,15 @@ bool PDBReader::GetSymbolStringWithVA(size_t dwVA, CString& outString)
 	IDiaSymbol *pSymbol;
 	LONG lDisplacement;
 
+#ifdef _DEBUG
 	if (dwVA == 0x7FF6AB662DE8)
-	{
 		PrintOut(_T("Test!"));
-	}
+#endif
 	
 	size_t dwRVA = dwVA - g_AttachedProcessAddress;
 
 	if (FAILED(m_pSession->findSymbolByRVAEx((DWORD)dwRVA, SymTagNull, &pSymbol, &lDisplacement))) 
-	{
 		return false;
-	}
 
 	ReadSymbol(pSymbol, outString);
 	pSymbol->Release();

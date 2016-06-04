@@ -164,7 +164,7 @@ public:
 
 	bool LoadFile(CString FilePath);
 
-	bool GetSymbolStringWithVA(size_t dwRVA, CString& outString);
+	bool GetSymbolStringWithVA(size_t dwVA, CString& outString);
 
 private:
 	void ReadSymTag(DWORD dwSymTag, CString& outString);

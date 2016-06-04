@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReClass>
+    <!--Reclass 2015-->
+    <TypeDef tdHex="char" tdInt64="__int64" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="unsigned char" tdFloat="float" tdDouble="double" tdVec2="Vector2" tdVec3="Vector3" tdQuat="Vector4" tdMatrix="matrix3x4_t" tdPChar="char *" tdPWChar="wchar_t *"/>
+    <Header Text=""/>
+    <Footer Text=""/>
+    <Notes Text=""/>
+    <Class Name="LDR_DATA_TABLE_ENTRY" Type="28" Comment="" Offset="-1434966448" strOffset="000001EFAA782650" Code="">
+        <Node Name="InLoadOrderLinks" Type="1" Size="16" bHidden="0" Comment="" Instance="LIST_ENTRY"/>
+        <Node Name="InMemoryOrderLinks" Type="1" Size="16" bHidden="0" Comment="" Instance="LIST_ENTRY"/>
+        <Node Name="InInitializationOrderLinks" Type="1" Size="16" bHidden="0" Comment="" Instance="LIST_ENTRY"/>
+        <Node Name="DllBase" Type="8" Size="8" bHidden="0" Comment="" Pointer="DOS_HDR"/>
+        <Node Name="EntryPoint" Type="20" Size="8" bHidden="0" Comment=""/>
+        <Node Name="SizeOfImage" Type="15" Size="4" bHidden="0" Comment=""/>
+        <Node Name="pad0" Type="15" Size="4" bHidden="0" Comment=""/>
+        <Node Name="FullDllName" Type="1" Size="16" bHidden="0" Comment="" Instance="UNICODE_STRING"/>
+        <Node Name="BaseDllName" Type="1" Size="16" bHidden="0" Comment="" Instance="UNICODE_STRING"/>
+        <Node Name="Flags" Type="15" Size="4" bHidden="0" Comment=""/>
+        <Node Name="ObsoleteLoadCount" Type="16" Size="2" bHidden="0" Comment=""/>
+        <Node Name="TlsIndex" Type="16" Size="2" bHidden="0" Comment=""/>
+        <Node Name="HashLinks" Type="1" Size="16" bHidden="0" Comment="" Instance="LIST_ENTRY"/>
+        <Node Name="TimeDateStamp" Type="15" Size="4" bHidden="0" Comment=""/>
+        <Node Name="pad1" Type="15" Size="4" bHidden="0" Comment=""/>
+        <Node Name="EntryPointActivationContext" Type="8" Size="8" bHidden="0" Comment="" Pointer="ACTIVATION_CONTEXT"/>
+        <Node Name="Lock" Type="29" Size="8" bHidden="0" Comment=""/>
+        <Node Name="DdagNode" Type="8" Size="8" bHidden="0" Comment="" Pointer="LDR_DDAG_NODE"/>
+        <Node Name="NodeModuleLink" Type="1" Size="16" bHidden="0" Comment="" Instance="LIST_ENTRY"/>
+        <Node Name="LoadContext" Type="29" Size="8" bHidden="0" Comment=""/>
+        <Node Name="ParentDllBase" Type="8" Size="8" bHidden="0" Comment="" Pointer="DOS_HDR"/>
+        <Node Name="SwitchBackContext" Type="29" Size="8" bHidden="0" Comment=""/>
+        <Node Name="BaseAddressIndexNode" Type="1" Size="24" bHidden="0" Comment="" Instance="RTL_BALANCED_NODE"/>
+        <Node Name="MappingInfoIndexNode" Type="1" Size="24" bHidden="0" Comment="" Instance="RTL_BALANCED_NODE"/>
+        <Node Name="OriginalBase" Type="9" Size="8" bHidden="0" Comment=""/>
+        <Node Name="LoadTime" Type="9" Size="8" bHidden="0" Comment=""/>
+        <Node Name="BaseNameHashValue" Type="15" Size="4" bHidden="0" Comment=""/>
+        <Node Name="LoadReason" Type="15" Size="4" bHidden="0" Comment=""/>
+        <Node Name="ImplicitPathOptions" Type="15" Size="4" bHidden="0" Comment=""/>
+        <Node Name="ReferenceCount" Type="15" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="DOS_HDR" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="N00000051" Type="5" Size="8" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="UNICODE_STRING" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="Length" Type="16" Size="2" bHidden="0" Comment=""/>
+        <Node Name="MaximumLength" Type="16" Size="2" bHidden="0" Comment=""/>
+        <Node Name="pad" Type="15" Size="4" bHidden="0" Comment=""/>
+        <Node Name="Buffer" Type="30" Size="8" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="LIST_ENTRY" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="Flink" Type="8" Size="8" bHidden="0" Comment="" Pointer="LIST_ENTRY"/>
+        <Node Name="Blink" Type="8" Size="8" bHidden="0" Comment="" Pointer="LIST_ENTRY"/>
+    </Class>
+    <Class Name="N00000086" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="N00000087" Type="5" Size="8" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="ACTIVATION_CONTEXT" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="N0000008E" Type="5" Size="8" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="LDR_DDAG_NODE" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="Modules" Type="1" Size="16" bHidden="0" Comment="" Instance="LIST_ENTRY"/>
+        <Node Name="NodeModuleLink" Type="29" Size="8" bHidden="0" Comment=""/>
+        <Node Name="N000000AA" Type="5" Size="8" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N000000A4" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="N000000A5" Type="5" Size="8" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N000000A7" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="N000000A8" Type="5" Size="8" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N000000AD" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="N000000AE" Type="5" Size="8" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N000000B2" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="N000000B3" Type="5" Size="8" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="RTL_BALANCED_NODE" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="Left" Type="8" Size="8" bHidden="0" Comment="" Pointer="RTL_BALANCED_NODE"/>
+        <Node Name="Right" Type="8" Size="8" bHidden="0" Comment="" Pointer="RTL_BALANCED_NODE"/>
+        <Node Name="RTL_BALANCED_NODE" Type="9" Size="8" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N000000B9" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="N000000BA" Type="5" Size="8" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N000000BD" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="N000000BE" Type="5" Size="8" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N000000C2" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
+        <Node Name="N000000C3" Type="5" Size="8" bHidden="0" Comment=""/>
+    </Class>
+</ReClass>

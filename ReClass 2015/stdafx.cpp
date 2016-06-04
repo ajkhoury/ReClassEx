@@ -865,7 +865,7 @@ bool UpdateExports()
 	return 1;
 }
 
-// Unused. Currently using _tcstoui64 as it is a lot faster.
+// TODO: Remove? Unused. Currently using _tcstoui64 as it is a lot faster.
 __int64 StrToNum(const TCHAR *udata, int udatalen, int base)
 {
 	long index;
@@ -875,6 +875,7 @@ __int64 StrToNum(const TCHAR *udata, int udatalen, int base)
 	TCHAR digits[sizeof(numdigits) + 1];
 	TCHAR *dataVal;
 	TCHAR data[512];
+	_tcstoui64(L"w", (wchar_t**)(L"wd"), 10);
 	//copy the data to our variable
 	_tcscpy(data, udata);
 	//convert it to upper case
@@ -965,17 +966,8 @@ size_t ConvertStrToAddress(CString str)
 	//}
 
 	CStringArray chunks;
-	bool bSubtract, bAdd = false;
 	if (SplitString(str, "+", chunks) == 0)
-	{
-		bAdd = true;
 		chunks.Add(str);
-	}
-	else if (SplitString(str, "-", chunks) == 0)
-	{
-		bSubtract = true;
-		chunks.Add(str);
-	}
 
 	size_t Final = 0;
 
@@ -1019,24 +1011,18 @@ size_t ConvertStrToAddress(CString str)
 					break;
 				}
 			}
-		} 
-		else 
-		{
-			curadd = (size_t)_tcstoui64(a.GetBuffer(), NULL, 16);
+		}
+		else {
+			curadd = (size_t)_tcstoui64(a.GetBuffer(), NULL, 16); //StrToNum
 		}
 
-		if (bSubtract)
-			Final -= curadd;
-		else
-			Final += curadd;
+		Final += curadd;
 
 		if (bPointer)
 		{
-			if ( ReadMemory( (void*)Final, &Final, sizeof(Final), NULL) == 0)
+			if (ReadMemory((void*)Final, &Final, sizeof(Final), NULL) == 0)
 			{
-#ifdef _DEBUG
 				PrintOut(_T("[ConvertStrToAddress]: Failed to read memory GetLastError() = %s"), Utils::GetLastErrorString().GetString());
-#endif
 			}
 		}
 	}
