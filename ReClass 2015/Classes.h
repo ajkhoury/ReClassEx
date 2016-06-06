@@ -1068,7 +1068,7 @@ public:
 		return sizeof(size_t);
 	}
 
-	virtual int Draw(ViewInfo& View, int x, int y)
+	int Draw(ViewInfo& View, int x, int y)
 	{
 		if (bHidden)
 			return DrawHidden(View, x, y);
@@ -1085,10 +1085,10 @@ public:
 		x = AddAddressOffset(View, x, y);
 		x = AddText(View, x, y, crVTable, HS_NONE, _T("VTable[%i]"), Nodes.size()) + FontWidth;
 
-		//if (Name.IsEmpty())
-		x = AddText(View, x, y, crName, HS_NONE, _T("%s"), Name) + FontWidth;
-		//else
-		//	x = AddText(View, x, y, crName, HS_NONE, _T("%s_vtable"), pParent->Name) + FontWidth;
+		if (Name.IsEmpty())
+			x = AddText(View, x, y, crName, HS_NONE, _T("%s"), Name) + FontWidth;
+		else
+			x = AddText(View, x, y, crName, HS_NONE, _T("%s_vtable"), pParent->Name) + FontWidth;
 
 		x = AddComment(View, x, y);
 
@@ -1096,7 +1096,7 @@ public:
 		if (bOpen[View.Level])
 		{
 			// vtable stuff
-			DWORD NeededSize = (DWORD)Nodes.size() * sizeof(size_t);
+			DWORD NeededSize = (int)Nodes.size() * sizeof(size_t);
 
 			Memory.SetSize(NeededSize);
 			ViewInfo newView;
@@ -1212,7 +1212,7 @@ public:
 		tx = AddIcon(View, tx, y, ICON_CAMERA, HS_EDIT, HS_CLICK);
 		tx += FontWidth;
 
-		if (pParent->GetType() == nt_vtable)
+		if (Name.IsEmpty())
 			tx = AddText(View, tx, y, crName, HS_NAME, _T("Function_%i"), offset / sizeof(size_t));
 		else
 			tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
