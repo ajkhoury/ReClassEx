@@ -1085,10 +1085,10 @@ public:
 		x = AddAddressOffset(View, x, y);
 		x = AddText(View, x, y, crVTable, HS_NONE, _T("VTable[%i]"), Nodes.size()) + FontWidth;
 
-		if (Name.IsEmpty())
-			x = AddText(View, x, y, crName, HS_NONE, _T("%s"), Name) + FontWidth;
-		else
-			x = AddText(View, x, y, crName, HS_NONE, _T("%s_vtable"), pParent->Name) + FontWidth;
+		//if (Name.IsEmpty())
+		x = AddText(View, x, y, crName, HS_NAME, _T("%s"), Name) + FontWidth;
+		//else
+		//	x = AddText(View, x, y, crName, HS_NONE, _T("%s_vtable"), pParent->Name) + FontWidth;
 
 		x = AddComment(View, x, y);
 

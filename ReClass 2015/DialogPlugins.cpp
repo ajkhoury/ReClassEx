@@ -85,7 +85,7 @@ void CDialogPlugins::RefreshPlugins( )
 
 		item.mask = LVIF_TEXT;
 		item.pszText = plugin.Info.Name;
-		item.cchTextMax = wcslen( plugin.Info.Name ) + 1;
+		item.cchTextMax = (int)wcslen( plugin.Info.Name ) + 1;
 		item.iItem = m_PluginsList.GetItemCount( );
 
 		int pos = m_PluginsList.InsertItem( &item );
