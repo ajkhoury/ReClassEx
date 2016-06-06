@@ -5,7 +5,7 @@
     <Header Text=""/>
     <Footer Text=""/>
     <Notes Text=""/>
-    <Class Name="LDR_DATA_TABLE_ENTRY" Type="28" Comment="" Offset="-1434966448" strOffset="000001EFAA782650" Code="">
+    <Class Name="LDR_DATA_TABLE_ENTRY" Type="28" Comment="" Offset="-592565296" strOffset="00000204DCAE2BD0" Code="">
         <Node Name="InLoadOrderLinks" Type="1" Size="16" bHidden="0" Comment="" Instance="LIST_ENTRY"/>
         <Node Name="InMemoryOrderLinks" Type="1" Size="16" bHidden="0" Comment="" Instance="LIST_ENTRY"/>
         <Node Name="InInitializationOrderLinks" Type="1" Size="16" bHidden="0" Comment="" Instance="LIST_ENTRY"/>
@@ -50,9 +50,6 @@
         <Node Name="Flink" Type="8" Size="8" bHidden="0" Comment="" Pointer="LIST_ENTRY"/>
         <Node Name="Blink" Type="8" Size="8" bHidden="0" Comment="" Pointer="LIST_ENTRY"/>
     </Class>
-    <Class Name="N00000086" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
-        <Node Name="N00000087" Type="5" Size="8" bHidden="0" Comment=""/>
-    </Class>
     <Class Name="ACTIVATION_CONTEXT" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
         <Node Name="N0000008E" Type="5" Size="8" bHidden="0" Comment=""/>
     </Class>
@@ -61,30 +58,9 @@
         <Node Name="NodeModuleLink" Type="29" Size="8" bHidden="0" Comment=""/>
         <Node Name="N000000AA" Type="5" Size="8" bHidden="0" Comment=""/>
     </Class>
-    <Class Name="N000000A4" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
-        <Node Name="N000000A5" Type="5" Size="8" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N000000A7" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
-        <Node Name="N000000A8" Type="5" Size="8" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N000000AD" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
-        <Node Name="N000000AE" Type="5" Size="8" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N000000B2" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
-        <Node Name="N000000B3" Type="5" Size="8" bHidden="0" Comment=""/>
-    </Class>
     <Class Name="RTL_BALANCED_NODE" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
         <Node Name="Left" Type="8" Size="8" bHidden="0" Comment="" Pointer="RTL_BALANCED_NODE"/>
         <Node Name="Right" Type="8" Size="8" bHidden="0" Comment="" Pointer="RTL_BALANCED_NODE"/>
         <Node Name="RTL_BALANCED_NODE" Type="9" Size="8" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N000000B9" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
-        <Node Name="N000000BA" Type="5" Size="8" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N000000BD" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
-        <Node Name="N000000BE" Type="5" Size="8" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N000000C2" Type="28" Comment="" Offset="1296498688" strOffset="7ff74d470000" Code="">
-        <Node Name="N000000C3" Type="5" Size="8" bHidden="0" Comment=""/>
     </Class>
 </ReClass>

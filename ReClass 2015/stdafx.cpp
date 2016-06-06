@@ -962,7 +962,6 @@ size_t ConvertStrToAddress(CString str)
 	//	CString offsetString = remainder.GetBuffer() + foundIdx;
 	//
 	//	//offset = strtoul(Spot.Text,NULL,16);
-	//
 	//}
 
 	CStringArray chunks;
