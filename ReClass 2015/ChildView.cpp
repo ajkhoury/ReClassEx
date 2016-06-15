@@ -741,10 +741,7 @@ stdstring DisassembleCode(unsigned char** StartCodeSection, unsigned char** EndC
 			MyDisasm.VirtualAddr = MyDisasm.VirtualAddr + len;
 			if (MyDisasm.EIP >= (UIntPtr)EndCodeSection)
 				break;
-
-			unsigned char opcode;
-			ReadMemory((LPVOID)(MyDisasm.VirtualAddr - 1), &opcode, sizeof(unsigned char));
-			if (opcode == 0xCC) // INT 3 instruction
+			if (MyDisasm.Instruction.Opcode == 0xCC) // INT 3 instruction
 				break;
 
 			*textHeight += 16;
