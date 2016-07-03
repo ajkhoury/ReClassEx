@@ -131,6 +131,8 @@ BOOL CReClass2015App::InitInstance()
 	gbPointers = GetProfileInt(_T("Display"), _T("gbPointers"), gbPointers) > 0 ? true : false;
 	gbClassBrowser = GetProfileInt(_T("Display"), _T("gbClassBrowser"), gbClassBrowser) > 0 ? true : false;
 	gbFilterProcesses = GetProfileInt(_T("Display"), _T("gbFilterProcesses"), gbFilterProcesses) > 0 ? true : false;
+	gbPrivatePadding = GetProfileInt(_T("Display"), _T("gbPrivatePadding"), gbPrivatePadding) > 0 ? true : false;
+	gbClipboardCopy = GetProfileInt(_T("Display"), _T("gbClipboardCopy"), gbClipboardCopy) > 0 ? true : false;
 
 	// make toggle
 	gbTop = false; //GetProfileInt("Display","gbTop",gbTop) > 0 ? true : false;
@@ -177,11 +179,23 @@ BOOL CReClass2015App::InitInstance()
 	//FontHeight = 16;
 	//FontWidth = 8;
 	//FontHeight = 8;
-
-	Font.CreateFont(16, 8, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T("Terminal"));
+	
+	FontHeight = 16;
 	FontWidth = 8;
-	FontHeight = 14;
 
+	PROCESS_DPI_AWARENESS dpi;
+	GetProcessDpiAwareness( NULL, &dpi );
+	if ( dpi == PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE || dpi == PROCESS_DPI_AWARENESS::PROCESS_SYSTEM_DPI_AWARE )
+	{
+		UINT dpiX, dpiY;
+		HMONITOR monitor = ::MonitorFromWindow( m_pMainWnd->GetSafeHwnd( ), MONITOR_DEFAULTTONEAREST );
+		GetDpiForMonitor( monitor, MONITOR_DPI_TYPE::MDT_EFFECTIVE_DPI, &dpiX, &dpiY );
+		FontWidth = MulDiv( FontWidth, MulDiv( dpiX, 100, 96 ), 100 );
+		FontHeight = MulDiv( FontHeight, MulDiv( dpiY, 100, 96 ), 100 );
+	}
+
+	Font.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T("Terminal"));
+	
 	//FontWidth = 8;
 	//FontHeight = 16;
 	//Font.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Fixedsys");
@@ -202,7 +216,7 @@ BOOL CReClass2015App::InitInstance()
 		AfxMessageBox(_T("Scintilla failed to initiailze"));
 		return FALSE;
 	}
-
+	
 	pFrame->ShowWindow(m_nCmdShow);
 	pFrame->UpdateWindow();
 
@@ -241,7 +255,7 @@ BOOL CReClass2015App::InitInstance()
 			if ( pfnPluginInit == nullptr )
 			{
 				CString message;
-				message.Format( _T( "plugin %s is not a reclass plugin!" ), file_data.cFileName );
+				message.Format( _T( "%s is not a reclass plugin!" ), file_data.cFileName );
 				GetMainWnd( )->MessageBox( message );
 				FreeLibrary( plugin_base );
 				continue;
@@ -329,6 +343,8 @@ int CReClass2015App::ExitInstance()
 	WriteProfileInt(_T("Display"), _T("gbTop"), gbTop);
 	WriteProfileInt(_T("Display"), _T("gbClassBrowser"), gbClassBrowser);
 	WriteProfileInt(_T("Display"), _T("gbFilterProcesses"), gbFilterProcesses);
+	WriteProfileInt(_T("Display"), _T("gbPrivatePadding"), gbPrivatePadding);
+	WriteProfileInt(_T("Display"), _T("gbClipboardCopy"), gbClipboardCopy);
 
 	for ( auto plugin : LoadedPlugins )
 		FreeLibrary( plugin.LoadedBase );
@@ -1399,20 +1415,22 @@ void CReClass2015App::OnButtonGenerate()
 	PrintOut(_T("OnButtonGenerate() called"));
 
 	CDialogEdit dlg;
-	dlg.Title = _T("Headers");
+	dlg.Title = _T("Class Code Generated");
 
-	CString h, t;
+	CString generated_text, t;
 
-	h += _T("// Generated using ReClass 2015\r\n\r\n");
-	h += Header + _T("\r\n\r\n");
+	generated_text += _T("// Generated using ReClass 2015\r\n\r\n");
+	
+	if(!Header.IsEmpty())
+		generated_text += Header + _T("\r\n\r\n");
 
 	for (UINT c = 0; c < Classes.size(); c++)
 	{
 		t.Format(_T("class %s;\r\n"), Classes[c]->Name);
-		h += t;
+		generated_text += t;
 	}
 
-	h += _T("\r\n");
+	generated_text += _T("\r\n");
 
 	std::vector<CString> vfun;
 	std::vector<CString> var;
@@ -1448,7 +1466,10 @@ void CReClass2015App::OnButtonGenerate()
 			{
 				if (fill > 0)
 				{
-					t.Format(_T("\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n"), tdHex, fillStart, fill, fillStart);
+					if ( gbPrivatePadding )
+						t.Format( _T( "private:\r\n\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\npublic:\r\n" ), tdHex, fillStart, fill, fillStart );
+					else
+						t.Format(_T("\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n"), tdHex, fillStart, fill, fillStart);
 					var.push_back(t);
 				}
 				fill = 0;
@@ -1604,40 +1625,61 @@ void CReClass2015App::OnButtonGenerate()
 
 		if (fill > 0)
 		{
-			t.Format(_T("%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n"), tdHex, fillStart, fill, fillStart);
+			if ( gbPrivatePadding )
+				t.Format(_T("private:\r\n\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n"), tdHex, fillStart, fill, fillStart); //Maybe add public at the end for user impl of class inline functions?: public:\r\n
+			else
+				t.Format(_T("\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n"), tdHex, fillStart, fill, fillStart);
+
 			var.push_back(t);
 		}
 
 		t.Format(_T("%s\r\n{\r\npublic:\r\n"), ClassName);
-		h += t;
+		generated_text += t;
 
 		for (UINT i = 0; i < vfun.size(); i++)
-			h += vfun[i];
+			generated_text += vfun[i];
 
 		if (vfun.size() > 0)
-			h += _T("\r\n");
+			generated_text += _T("\r\n");
 
 		for (UINT i = 0; i < var.size(); i++)
-			h += var[i];
+			generated_text += var[i];
 
 		if (var.size() > 0)
-			h += _T("\r\n");
+			generated_text += _T("\r\n");
 
 		if (pClass->Code.GetLength() > 0)
 		{
-			h += pClass->Code;
-			h += _T("\r\n");
+			generated_text += pClass->Code;
+			generated_text += _T("\r\n");
 		}
 
-		t.Format(_T("}; //Size=0x%0.4X\r\n"), pClass->GetMemorySize());
-		h += t;
-		h += _T("\r\n");
+		t.Format(_T("}; //Size=0x%0.4X\r\n\r\n"), pClass->GetMemorySize());
+		generated_text += t;
 	}
 
-	h += ( Footer + _T( "\r\n" ) );
+	if (!Footer.IsEmpty())
+		generated_text += (Footer + _T("\r\n"));
 
-	dlg.Text = h;
-	dlg.DoModal();
+	if ( gbClipboardCopy )
+	{
+		::OpenClipboard(NULL);
+		::EmptyClipboard();
+		int string_size = generated_text.GetLength() * sizeof(CString::StrTraits::XCHAR);
+		HGLOBAL memory_blob = ::GlobalAlloc(GMEM_FIXED, string_size);
+		memcpy(memory_blob, generated_text.GetBuffer(), string_size);
+#ifdef UNICODE
+		::SetClipboardData(CF_UNICODETEXT, memory_blob);
+#else
+		::SetClipboardData(CF_TEXT, memory_blob);
+#endif
+		::CloseClipboard();
+
+		GetMainWnd()->MessageBox(_T("Coppied generated code to clipboard..."), _T("ReClass 2015"), MB_OK | MB_ICONINFORMATION);
+	} else {
+		dlg.Text = generated_text;
+		dlg.DoModal();
+	}
 }
 
 void CReClass2015App::OnButtonPlugins()

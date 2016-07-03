@@ -64,6 +64,7 @@ protected:
 
 	BOOL CreateDockingWindows();
 	void SetDockingWindowIcons(BOOL bHiColorIcons);
+
 public:
 	//afx_msg void OnButtonShowclasses();
 	virtual BOOL OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo);
@@ -91,9 +92,7 @@ public:
 	afx_msg void OnCheckCbRtti();
 	afx_msg void OnUpdateCheckCbRtti(CCmdUI *pCmdUI);
 	afx_msg void OnButtonTypedef();
-	//afx_msg void OnButtonSelect();
 	afx_msg void OnButtonSelectProcess();
-	void ClearProcMenuItems();
 	afx_msg void OnButtonEditClass();
 	afx_msg void OnUpdateButtonEditClass(CCmdUI *pCmdUI);
 	afx_msg void OnButtonDeleteClass();
@@ -105,6 +104,10 @@ public:
 	afx_msg void OnUpdateCheckClassBrowser(CCmdUI *pCmdUI);
 	afx_msg void OnCheckFilterProcesses( );
 	afx_msg void OnUpdateCheckFilterProcesses(CCmdUI *pCmdUI);
+	afx_msg void OnCheckPrivatePadding();
+	afx_msg void OnUpdateCheckPrivatePadding(CCmdUI *pCmdUI);
+	afx_msg void OnCheckClipboardCopy();
+	afx_msg void OnUpdateCheckClipboardCopy(CCmdUI *pCmdUI);
 	afx_msg void OnButtonLeft();
 	afx_msg void OnButtonRight();
 	afx_msg void OnCheckFloat();
@@ -115,6 +118,8 @@ public:
 	afx_msg void OnUpdateCheckString(CCmdUI *pCmdUI);
 	afx_msg void OnCheckPointer();
 	afx_msg void OnUpdateCheckPointer(CCmdUI *pCmdUI);
+
+	void ClearProcMenuItems();
 };
 
 

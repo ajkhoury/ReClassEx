@@ -63,6 +63,11 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_STRING, &CMainFrame::OnUpdateCheckString)
 	ON_COMMAND(ID_CHECK_POINTER, &CMainFrame::OnCheckPointer)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_POINTER, &CMainFrame::OnUpdateCheckPointer)
+	ON_COMMAND(ID_CHECK_CLIP_COPY, &CMainFrame::OnCheckClipboardCopy)
+	ON_UPDATE_COMMAND_UI(ID_CHECK_CLIP_COPY, &CMainFrame::OnUpdateCheckClipboardCopy)
+	ON_COMMAND(ID_CHECK_PRIVATE_PADDING, &CMainFrame::OnCheckPrivatePadding)
+	ON_UPDATE_COMMAND_UI(ID_CHECK_PRIVATE_PADDING, &CMainFrame::OnUpdateCheckPrivatePadding)
+	
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -711,6 +716,26 @@ void CMainFrame::OnCheckFilterProcesses()
 void CMainFrame::OnUpdateCheckFilterProcesses(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(gbFilterProcesses);
+}
+
+void CMainFrame::OnCheckPrivatePadding()
+{
+	gbPrivatePadding = !gbPrivatePadding;
+}
+
+void CMainFrame::OnUpdateCheckPrivatePadding(CCmdUI *pCmdUI)
+{ 
+	pCmdUI->SetCheck(gbPrivatePadding);
+}
+
+void CMainFrame::OnCheckClipboardCopy()
+{
+	gbClipboardCopy = !gbClipboardCopy;
+}
+
+void CMainFrame::OnUpdateCheckClipboardCopy(CCmdUI *pCmdUI)
+{ 
+	pCmdUI->SetCheck(gbClipboardCopy);
 }
 
 // Multi monitor support. Thanks timboy67678

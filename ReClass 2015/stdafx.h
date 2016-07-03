@@ -28,6 +28,7 @@
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
+#include <ShellScalingApi.h>
 
 #include <vector>
 //#include <cstdarg>
@@ -147,6 +148,8 @@ extern bool gbPointers;
 extern bool gbTop;
 extern bool gbClassBrowser;
 extern bool gbFilterProcesses;
+extern bool gbPrivatePadding;
+extern bool gbClipboardCopy;
 
 extern CString tdHex;
 extern CString tdInt64;
@@ -286,13 +289,13 @@ CString GetAddressName(size_t Address,bool bHEX);
 CString GetModuleName(size_t Address);
 size_t  GetAddressFromName(CString moduleName);
 
-BOOL ReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read = nullptr);
-BOOL WriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote = nullptr);
-CStringA ReadMemoryStringA(size_t address, SIZE_T max = 40);
-CStringW ReadMemoryStringW(size_t address, SIZE_T max = 40);
-
+BOOL ReClassReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read = nullptr);
+BOOL ReClassWriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote = nullptr);
 HANDLE ReClassOpenProcess( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwProcessID );
 HANDLE ReClassOpenThread( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwThreadID );
+
+CStringA ReadMemoryStringA(size_t address, SIZE_T max = 40);
+CStringW ReadMemoryStringW(size_t address, SIZE_T max = 40);
 
 __int64 StrToNum(const TCHAR *udata, int udatalen, int base);
 int SplitString(const CString& input, const CString& delimiter, CStringArray& results);
