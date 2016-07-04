@@ -173,13 +173,6 @@ BOOL CReClass2015App::InitInstance()
 	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_CHANGE));		Icons.push_back(icon);
 	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_CAMERA));		Icons.push_back(icon);
 
-	//Font.CreatePointFont(80,"Terminal");
-	////Font.CreateFont(16, 8, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Terminal");
-	//FontWidth = 16;
-	//FontHeight = 16;
-	//FontWidth = 8;
-	//FontHeight = 8;
-	
 	FontHeight = 16;
 	FontWidth = 8;
 
@@ -194,17 +187,7 @@ BOOL CReClass2015App::InitInstance()
 		FontHeight = MulDiv( FontHeight, MulDiv( dpiY, 100, 96 ), 100 );
 	}
 
-	Font.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T("Terminal"));
-	
-	//FontWidth = 8;
-	//FontHeight = 16;
-	//Font.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Fixedsys");
-	//FontHeight = 14;
-
-	//SmallFont.CreateFont(12, 8, 0, 0, FW_NORMAL,FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,   DEFAULT_QUALITY, FIXED_PITCH, "Terminal");
-
-	//UpdateMemoryMap();
-	//UpdateExports();
+	gMemoryViewFont.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T("Terminal"));
 
 	g_hProcess = NULL;
 	g_ProcessID = NULL;
