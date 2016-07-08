@@ -1909,7 +1909,7 @@ public:
 			ReClassWriteMemory((LPVOID)(Spot.Address + (Spot.ID * 4)), &v, 4);
 	}
 
-	virtual int GetMemorySize() { return 4 + 4; }
+	virtual int GetMemorySize() { return sizeof(float) * 2; }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -1956,10 +1956,10 @@ public:
 		StandardUpdate(Spot);
 		float v = (float)_ttof(Spot.Text);
 		if (Spot.ID >= 0 && Spot.ID < 3)
-			ReClassWriteMemory((LPVOID)(Spot.Address + (Spot.ID * 4)), &v, 4);
+			ReClassWriteMemory((LPVOID)(Spot.Address + (Spot.ID * sizeof(float))), &v, sizeof(float));
 	}
 
-	virtual int GetMemorySize() { return 12; }
+	virtual int GetMemorySize() { return sizeof(float) * 3; }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -2007,10 +2007,10 @@ public:
 		StandardUpdate(Spot);
 		float v = (float)_ttof(Spot.Text);
 		if (Spot.ID >= 0 && Spot.ID < 4)
-			ReClassWriteMemory((LPVOID)(Spot.Address + (Spot.ID * 4)), &v, 4);
+			ReClassWriteMemory((LPVOID)(Spot.Address + (Spot.ID * sizeof(float))), &v, sizeof(float));
 	}
 
-	virtual int GetMemorySize() { return 16; }
+	virtual int GetMemorySize() { return sizeof(float) * 4; }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -2058,11 +2058,11 @@ public:
 		if (Spot.ID < 16)
 		{
 			float v = (float)_ttof(Spot.Text);
-			ReClassWriteMemory((LPVOID)(Spot.Address + (Spot.ID * 4)), &v, 4);
+			ReClassWriteMemory((LPVOID)(Spot.Address + (Spot.ID * sizeof(float))), &v, sizeof(float));
 		}
 	}
 
-	virtual int GetMemorySize() { return 4 * 4 * 4; }
+	virtual int GetMemorySize() { return 4 * 4 * sizeof(float); }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -2144,10 +2144,6 @@ public:
 		Current = 0;
 	}
 
-	CNodeBase* pNode;
-	DWORD Total;
-	DWORD Current;
-
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
@@ -2224,14 +2220,17 @@ public:
 		};
 		return y;
 	}
+
+public:
+	CNodeBase* pNode;
+	DWORD Total;
+	DWORD Current;
 };
 
 class CNodeClassInstance : public CNodeBase
 {
 public:
 	CNodeClassInstance() { nodeType = nt_instance; }
-
-	CNodeClass* pNode;
 
 	virtual void Update(HotSpot& Spot) { StandardUpdate(Spot); }
 
@@ -2272,6 +2271,9 @@ public:
 
 		return y;
 	}
+
+public:
+	CNodeClass* pNode;
 };
 
 class CNodeCustom : public CNodeBase
@@ -2283,8 +2285,6 @@ public:
 		Name = _T("Custom");
 		memsize = sizeof(size_t);
 	}
-
-	int memsize;
 
 	virtual void Update(HotSpot& Spot)
 	{
@@ -2316,5 +2316,8 @@ public:
 		tx = AddComment(View, tx, y);
 		return y += FontHeight;
 	}
+
+public:
+	DWORD memsize;
 };
 
