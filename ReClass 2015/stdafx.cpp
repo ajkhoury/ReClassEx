@@ -289,18 +289,23 @@ bool PauseResumeThreadList(bool bResumeThread)
 	for (ULONG i = 0; i < numberOfThreads; i++)
 	{
 		PSYSTEM_THREAD_INFORMATION thread = &threads[i];
-		if (!thread) continue;
+		if (!thread) 
+			continue;
 		DWORD thId = (DWORD)thread->ClientId.UniqueThread;
-		if (!thId) continue;
+		if (!thId) 
+			continue;
 
 		HANDLE hThread = ReClassOpenThread(THREAD_SUSPEND_RESUME, FALSE, thId);
 
-		if (bResumeThread) {
+		if (bResumeThread) 
+		{
 			ResumeThread(hThread);
 		}
-		else {
+		else 
+		{
 			SuspendThread(hThread);
 		}
+
 		CloseHandle(hThread);
 	}
 
@@ -323,7 +328,8 @@ size_t GetBase()
 
 bool IsCode(size_t Address)
 {
-	for (UINT i = 0; i < MemMapCode.size(); i++) {
+	for (UINT i = 0; i < MemMapCode.size(); i++) 
+	{
 		if (Address >= MemMapCode[i].Start && Address <= MemMapCode[i].End)
 			return true;
 	}
@@ -332,7 +338,8 @@ bool IsCode(size_t Address)
 
 bool IsData(size_t Address)
 {
-	for (UINT i = 0; i < MemMapData.size(); i++) {
+	for (UINT i = 0; i < MemMapData.size(); i++) 
+	{
 		if (Address >= MemMapData[i].Start && Address <= MemMapData[i].End)
 			return true;
 	}
@@ -362,72 +369,78 @@ bool IsModule(size_t Address)
 CString GetAddressName(size_t Address, bool bHEX)
 {
 	CString txt;
+
 	for (UINT i = 0; i < CustomNames.size(); i++)
 	{
 		if (Address == CustomNames[i].Address)
 		{
 #ifdef _WIN64
-			txt.Format(_T("%s.%I64X"), CustomNames[i].Name, Address);
+			txt.Format(_T("%s.%IX"), CustomNames[i].Name, Address);
 #else
 			txt.Format(_T("%s.%X"), CustomNames[i].Name, Address);
 #endif
 			return txt;
 		}
-}
+	}
+
 	for (UINT i = 0; i < Exports.size(); i++)
 	{
 		if (Address == Exports[i].Address)
 		{
 #ifdef _WIN64
-			txt.Format(_T("%s.%I64X"), Exports[i].Name, Address);
+			txt.Format(_T("%s.%IX"), Exports[i].Name, Address);
 #else
 			txt.Format(_T("%s.%X"), Exports[i].Name, Address);
 #endif
 			return txt;
 		}
 	}
+
 	for (UINT i = 0; i < MemMapCode.size(); i++)
 	{
 		if (Address >= MemMapCode[i].Start && Address <= MemMapCode[i].End)
 		{
 #ifdef _WIN64
-			txt.Format(_T("<CODE>%s.%I64X"), MemMapCode[i].Name, Address);
+			txt.Format(_T("<CODE>%s.%IX"), MemMapCode[i].Name, Address);
 #else
 			txt.Format(_T("<CODE>%s.%X"), MemMapCode[i].Name, Address);
 #endif
 			return txt;
 		}
 	}
+
 	for (UINT i = 0; i < MemMapData.size(); i++)
 	{
 		if (Address >= MemMapData[i].Start && Address <= MemMapData[i].End)
 		{
 #ifdef _WIN64
-			txt.Format(_T("<DATA>%s.%I64X"), MemMapData[i].Name, Address);
+			txt.Format(_T("<DATA>%s.%IX"), MemMapData[i].Name, Address);
 #else
 			txt.Format(_T("<DATA>%s.%X"), MemMapData[i].Name, Address);
 #endif
 			return txt;
 		}
 	}
+
 	for (UINT i = 0; i < MemMapModule.size(); i++)
 	{
 		if (Address >= MemMapModule[i].Start && Address <= MemMapModule[i].End)
 		{
 #ifdef _WIN64
-			txt.Format(_T("%s.%I64X"), MemMapModule[i].Name, Address);
+			txt.Format(_T("%s.%IX"), MemMapModule[i].Name, Address);
 #else
 			txt.Format(_T("%s.%X"), MemMapModule[i].Name, Address);
 #endif
 			return txt;
 		}
 	}
+
 	for (UINT i = 0; i < MemMap.size(); i++)
 	{
 		if (Address >= MemMap[i].Start && Address <= MemMap[i].End)
 		{
 #ifdef _WIN64
-			txt.Format(_T("%I64X"), Address);
+			txt.Format(_T("%IX"), Address);
 #else
 			txt.Format(_T("%X"), Address);
 #endif
@@ -438,7 +451,7 @@ CString GetAddressName(size_t Address, bool bHEX)
 	if (bHEX)
 	{
 #ifdef _WIN64
-		txt.Format(_T("%I64X"), Address);
+		txt.Format(_T("%IX"), Address);
 #else
 		txt.Format(_T("%X"), Address);
 #endif
@@ -450,7 +463,8 @@ CString GetAddressName(size_t Address, bool bHEX)
 
 CString GetModuleName(size_t Address)
 {
-	for (unsigned int i = 0; i < MemMapModule.size(); i++) {
+	for (unsigned int i = 0; i < MemMapModule.size(); i++) 
+	{
 		if (Address >= MemMapModule[i].Start && Address <= MemMapModule[i].End)
 			return MemMapModule[i].Name;
 	}
@@ -460,8 +474,10 @@ CString GetModuleName(size_t Address)
 size_t GetAddressFromName(CString moduleName)
 {
 	size_t moduleAddress = 0;
-	for (unsigned int i = 0; i < MemMapModule.size(); i++) {
-		if (MemMapModule[i].Name == moduleName) {
+	for (unsigned int i = 0; i < MemMapModule.size(); i++) 
+	{
+		if (MemMapModule[i].Name == moduleName) 
+		{
 			moduleAddress = MemMapModule[i].Start;
 			break;
 		}
@@ -678,7 +694,7 @@ bool UpdateMemoryMap(void)
 						Mem.Name = wcsModule;
 						MemMapCode.push_back(Mem);
 					}
-					if (txt == ".data" || txt == "data" || txt == ".rdata" || txt == ".idata")
+					else if (txt == ".data" || txt == "data" || txt == ".rdata" || txt == ".idata")
 					{
 						Mem.Start = (size_t)ModuleBase + sections[i].VirtualAddress;
 						Mem.End = Mem.Start + sections[i].Misc.VirtualSize;
@@ -686,7 +702,8 @@ bool UpdateMemoryMap(void)
 						MemMapData.push_back(Mem);
 					}
 				}
-				delete sections;
+				// Free sections
+				free(sections);
 			}
 
 		} while (pLdrListHead != pLdrCurrentNode);
@@ -855,7 +872,8 @@ bool UpdateExports()
 
 				}
 			}
-		} while (pLdrListHead != pLdrCurrentNode);
+		} 
+		while (pLdrListHead != pLdrCurrentNode);
 	}
 	else
 	{
@@ -915,12 +933,10 @@ int SplitString(const CString& input, const CString& delimiter, CStringArray& re
 	CArray<INT, int> positions;
 
 	newPos = input.Find(delimiter, 0);
-
 	if (newPos < 0)
 		return 0;
 
 	int numFound = 0;
-
 	while (newPos > iPos)
 	{
 		numFound++;
@@ -933,7 +949,9 @@ int SplitString(const CString& input, const CString& delimiter, CStringArray& re
 	{
 		CString s;
 		if (i == 0)
+		{
 			s = input.Mid(i, positions[i]);
+		}
 		else
 		{
 			int offset = positions[i - 1] + sizeS2;
@@ -945,8 +963,11 @@ int SplitString(const CString& input, const CString& delimiter, CStringArray& re
 					s = input.Mid(positions[i - 1] + sizeS2, positions[i] - positions[i - 1] - sizeS2);
 			}
 		}
+
 		if (s.GetLength() > 0)
+		{
 			results.Add(s);
+		}
 	}
 	return numFound;
 }
@@ -990,7 +1011,9 @@ size_t ConvertStrToAddress(CString str)
 		bool bMod = false;
 
 		if (a.Find(_T(".exe")) != -1 || a.Find(_T(".dll")) != -1)
+		{
 			bMod = true;
+		}
 
 		if (a[0] == _T('*'))
 		{
@@ -1019,7 +1042,8 @@ size_t ConvertStrToAddress(CString str)
 				}
 			}
 		}
-		else {
+		else 
+		{
 			curadd = (size_t)_tcstoui64(a.GetBuffer(), NULL, 16); //StrToNum
 		}
 
