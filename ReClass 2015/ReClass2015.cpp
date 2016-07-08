@@ -276,7 +276,8 @@ int CReClass2015App::ExitInstance()
 	if (m_hMDIAccel != NULL)
 		FreeResource(m_hMDIAccel);
 
-	if (Console) {
+	if (Console) 
+	{
 		Console->EndDialog(0);
 		delete Console;
 	}
@@ -516,9 +517,8 @@ void CReClass2015App::OnAppAbout()
 
 void CReClass2015App::PreLoadState()
 {
-	BOOL bNameValid;
 	CString strName;
-	bNameValid = strName.LoadString(IDS_EDIT_MENU);
+	BOOL bNameValid = strName.LoadString(IDS_EDIT_MENU);
 	ASSERT(bNameValid);
 	GetContextMenuManager()->AddMenu(strName, IDR_POPUP_EDIT);
 }
@@ -536,20 +536,19 @@ class ImportNode
 public:
 	CString Name;
 	CString Comment;
-	enum NodeType type;
+	NodeType type;
 	int length;
 	int ref;
 	std::vector<ImportNode> Nodes;
 };
 
-class ImportLink
+struct ImportLink
 {
-public:
 	CNodeBase* pNode;
 	CString Name;
 };
 
-// TODO: Fix this
+// TODO: Finish this
 void CReClass2015App::OnFileImport()
 {
 	return;
