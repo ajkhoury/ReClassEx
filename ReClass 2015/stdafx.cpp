@@ -83,24 +83,28 @@ MEMORY_OPERATION g_PluginOverrideMemoryRead = nullptr;
 HANDLE_OPERATION g_PluginOverrideHandleProcess = nullptr;
 HANDLE_OPERATION g_PluginOverrideHandleThread = nullptr;
 
-BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet )
-{ 
-	if ( MemWrite == nullptr || MemRead == nullptr )
+BOOL PLUGIN_CC ReClassOverrideMemoryOperations(MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet)
+{
+	if (MemWrite == nullptr || MemRead == nullptr)
 		return FALSE;
-	if ( g_PluginOverrideMemoryRead != nullptr && g_PluginOverrideMemoryWrite != nullptr && !bForceSet )
+
+	if (g_PluginOverrideMemoryRead != nullptr && g_PluginOverrideMemoryWrite != nullptr && !bForceSet)
+	{
 		return FALSE;
-	else {
+	}
+	else
+	{
 		g_PluginOverrideMemoryWrite = MemWrite;
 		g_PluginOverrideMemoryRead = MemRead;
 		return TRUE;
 	}
 }
 
-BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION HandleProcess, HANDLE_OPERATION HandleThread, BOOL bForceSet )
+BOOL PLUGIN_CC ReClassOverrideHandleOperations(HANDLE_OPERATION HandleProcess, HANDLE_OPERATION HandleThread, BOOL bForceSet)
 {
-	if ( HandleProcess == nullptr || HandleThread == nullptr )
+	if (HandleProcess == nullptr || HandleThread == nullptr)
 		return FALSE;
-	if ( g_PluginOverrideHandleProcess != nullptr && g_PluginOverrideHandleThread != nullptr && !bForceSet )
+	if (g_PluginOverrideHandleProcess != nullptr && g_PluginOverrideHandleThread != nullptr && !bForceSet)
 		return FALSE;
 	else
 	{
@@ -111,117 +115,119 @@ BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION HandleProcess, 
 	return FALSE;
 }
 
-void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... )
+void PLUGIN_CC ReClassPrintConsole(const wchar_t *format, ...)
 {
-	wchar_t buffer[ 6048 ];
-	ZeroMemory( &buffer, sizeof( buffer ) );
-	
+	wchar_t buffer[6048];
+	ZeroMemory(&buffer, sizeof(buffer));
+
 	va_list va;
-	va_start( va, format );
-	vswprintf_s( buffer, format, va );
-	va_end( va );
+	va_start(va, format);
+	vswprintf_s(buffer, format, va);
+	va_end(va);
 
 #ifndef UNICODE
-	theApp.Console->PrintText( CW2A( buffer ) );
+	theApp.Console->PrintText(CW2A(buffer));
 #else
-	theApp.Console->PrintText( buffer );
+	theApp.Console->PrintText(buffer);
 #endif
 }
 
-LPHANDLE PLUGIN_CC ReClassGetProcessHandle( )
+LPHANDLE PLUGIN_CC ReClassGetProcessHandle()
 {
 	return &g_hProcess;
 }
 
-HWND PLUGIN_CC ReClassMainWindow( )
-{ 
-	return *theApp.GetMainWnd( );
+HWND PLUGIN_CC ReClassMainWindow()
+{
+	return *theApp.GetMainWnd();
 }
 #pragma endregion
 
 BOOL ReClassReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read)
 {
-	if ( g_PluginOverrideMemoryRead != nullptr )
-		return g_PluginOverrideMemoryRead( Address, Buffer, Size, num_read );
+	if (g_PluginOverrideMemoryRead != nullptr)
+		return g_PluginOverrideMemoryRead(Address, Buffer, Size, num_read);
 
-	BOOL return_val = ReadProcessMemory( g_hProcess, (LPVOID) Address, Buffer, Size, num_read );
-	if ( !return_val ) ZeroMemory( Buffer, Size );
+	BOOL return_val = ReadProcessMemory(g_hProcess, (LPVOID)Address, Buffer, Size, num_read);
+	if (!return_val) ZeroMemory(Buffer, Size);
 	return return_val;
 }
 
-BOOL ReClassWriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote )
+BOOL ReClassWriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote)
 {
-	if ( g_PluginOverrideMemoryWrite != nullptr )
-		return g_PluginOverrideMemoryWrite( Address, Buffer, Size, num_wrote );
+	if (g_PluginOverrideMemoryWrite != nullptr)
+		return g_PluginOverrideMemoryWrite(Address, Buffer, Size, num_wrote);
 
 	DWORD OldProtect;
 	VirtualProtectEx(g_hProcess, (void*)Address, Size, PAGE_EXECUTE_READWRITE, &OldProtect);
-	BOOL ret = WriteProcessMemory( g_hProcess, (void*)Address, Buffer, Size, num_wrote );
+	BOOL ret = WriteProcessMemory(g_hProcess, (void*)Address, Buffer, Size, num_wrote);
 	VirtualProtectEx(g_hProcess, (void*)Address, Size, OldProtect, NULL);
 	return ret;
 }
 
-HANDLE ReClassOpenProcess( DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessID )
+HANDLE ReClassOpenProcess(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessID)
 {
-	if ( g_PluginOverrideHandleProcess != nullptr )
-		return g_PluginOverrideHandleProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
-	return OpenProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
+	if (g_PluginOverrideHandleProcess != nullptr)
+		return g_PluginOverrideHandleProcess(dwDesiredAccess, bInheritHandle, dwProcessID);
+	return OpenProcess(dwDesiredAccess, bInheritHandle, dwProcessID);
 }
 
-HANDLE ReClassOpenThread( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwThreadID )
-{ 
-	if ( g_PluginOverrideHandleThread != nullptr )
-		return g_PluginOverrideHandleThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
-	return OpenThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
+HANDLE ReClassOpenThread(DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwThreadID)
+{
+	if (g_PluginOverrideHandleThread != nullptr)
+		return g_PluginOverrideHandleThread(dwDesiredAccessFlags, bInheritHandle, dwThreadID);
+	return OpenThread(dwDesiredAccessFlags, bInheritHandle, dwThreadID);
 }
 
 CStringA ReadMemoryStringA(size_t address, SIZE_T max)
 {
-	auto buffer = std::make_unique<char[]>( max + 1 );
+	auto buffer = std::make_unique<char[]>(max + 1);
 	SIZE_T bytesRead;
-	
-	if ( ReClassReadMemory( (PVOID) address, buffer.get( ), max, &bytesRead ) != 0 )
+
+	if (ReClassReadMemory((PVOID)address, buffer.get(), max, &bytesRead) != 0)
 	{
 		for (int i = 0; i < bytesRead; i++)
 		{
-			if ( !( isprint( buffer[ i ] ) ) && buffer[ i ] != '\0' )
+			if (!(isprint(buffer[i])) && buffer[i] != '\0')
 				buffer[i] = '.';
 		}
 
 		buffer[bytesRead] = '\0';
 
 		return CStringA(buffer.get());
-	} else {
+	}
+	else {
 #ifdef _DEBUG
-		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s" ), Utils::GetLastErrorString().GetString());
+		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s"), Utils::GetLastErrorString().GetString());
 #endif
-		return CStringA( ".." );
+		return CStringA("..");
 	}
 }
 
-CStringW ReadMemoryStringW( size_t address, SIZE_T max )
+CStringW ReadMemoryStringW(size_t address, SIZE_T max)
 {
-	auto buffer = std::make_unique<wchar_t[ ]>( max + 1 );
+	auto buffer = std::make_unique<wchar_t[]>(max + 1);
 	SIZE_T bytesRead;
 
-	if ( ReClassReadMemory( (PVOID) address, buffer.get( ), max * sizeof( wchar_t ), &bytesRead ) != 0 )
+	if (ReClassReadMemory((PVOID)address, buffer.get(), max * sizeof(wchar_t), &bytesRead) != 0)
 	{
-		bytesRead /= sizeof( wchar_t );
-		
-		for ( int i = 0; i < bytesRead; i++ )
-		{
-			if ( !( iswprint( buffer[ i ] ) ) && buffer[ i ] != '\0' )
-				buffer[ i ] = '.';
-		}
-		
-		buffer[ bytesRead ] = '\0';
+		bytesRead /= sizeof(wchar_t);
 
-		return CStringW( buffer.get( ) );
-	} else {
+		for (int i = 0; i < bytesRead; i++)
+		{
+			if (!(iswprint(buffer[i])) && buffer[i] != '\0')
+				buffer[i] = '.';
+		}
+
+		buffer[bytesRead] = '\0';
+
+		return CStringW(buffer.get());
+	}
+	else {
 #ifdef _DEBUG
-		PrintOut( _T( "[ReadMemoryString]: Failed to read memory, GetLastError() = %s" ), Utils::GetLastErrorString( ).GetString( ) );
+		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s"), Utils::GetLastErrorString().GetString());
 #endif
-		return CStringW( L".." );
+		return CStringW(L"..");
 	}
 }
 
@@ -229,7 +235,7 @@ bool PauseResumeThreadList(bool bResumeThread)
 {
 	if (g_hProcess == NULL)
 		return 0;
-	
+
 	NTSTATUS status;
 	PVOID SystemProcessInfo;
 	ULONG bufferSize = 0x4000;
@@ -248,7 +254,7 @@ bool PauseResumeThreadList(bool bResumeThread)
 		{
 			if (SystemProcessInfo)
 				HeapFree(hHeap, 0, SystemProcessInfo);
-			SystemProcessInfo = HeapAlloc(hHeap, HEAP_ZERO_MEMORY | HEAP_GENERATE_EXCEPTIONS, bufferSize*2);
+			SystemProcessInfo = HeapAlloc(hHeap, HEAP_ZERO_MEMORY | HEAP_GENERATE_EXCEPTIONS, bufferSize * 2);
 		}
 		else
 			break;
@@ -286,12 +292,13 @@ bool PauseResumeThreadList(bool bResumeThread)
 		if (!thread) continue;
 		DWORD thId = (DWORD)thread->ClientId.UniqueThread;
 		if (!thId) continue;
-		
+
 		HANDLE hThread = ReClassOpenThread(THREAD_SUSPEND_RESUME, FALSE, thId);
-		
+
 		if (bResumeThread) {
 			ResumeThread(hThread);
-		} else {
+		}
+		else {
 			SuspendThread(hThread);
 		}
 		CloseHandle(hThread);
@@ -307,11 +314,11 @@ size_t GetBase()
 {
 	if (MemMap.size() > 1)
 		return g_AttachedProcessAddress;
-	#ifdef _WIN64
+#ifdef _WIN64
 	return 0x140000000;
-	#else
+#else
 	return 0x400000;
-	#endif
+#endif
 }
 
 bool IsCode(size_t Address)
@@ -359,23 +366,23 @@ CString GetAddressName(size_t Address, bool bHEX)
 	{
 		if (Address == CustomNames[i].Address)
 		{
-			#ifdef _WIN64
+#ifdef _WIN64
 			txt.Format(_T("%s.%I64X"), CustomNames[i].Name, Address);
-			#else
+#else
 			txt.Format(_T("%s.%X"), CustomNames[i].Name, Address);
-			#endif
+#endif
 			return txt;
 		}
-	}
+}
 	for (UINT i = 0; i < Exports.size(); i++)
 	{
 		if (Address == Exports[i].Address)
 		{
-			#ifdef _WIN64
+#ifdef _WIN64
 			txt.Format(_T("%s.%I64X"), Exports[i].Name, Address);
-			#else
+#else
 			txt.Format(_T("%s.%X"), Exports[i].Name, Address);
-			#endif
+#endif
 			return txt;
 		}
 	}
@@ -383,11 +390,11 @@ CString GetAddressName(size_t Address, bool bHEX)
 	{
 		if (Address >= MemMapCode[i].Start && Address <= MemMapCode[i].End)
 		{
-			#ifdef _WIN64
+#ifdef _WIN64
 			txt.Format(_T("<CODE>%s.%I64X"), MemMapCode[i].Name, Address);
-			#else
+#else
 			txt.Format(_T("<CODE>%s.%X"), MemMapCode[i].Name, Address);
-			#endif
+#endif
 			return txt;
 		}
 	}
@@ -395,11 +402,11 @@ CString GetAddressName(size_t Address, bool bHEX)
 	{
 		if (Address >= MemMapData[i].Start && Address <= MemMapData[i].End)
 		{
-			#ifdef _WIN64
+#ifdef _WIN64
 			txt.Format(_T("<DATA>%s.%I64X"), MemMapData[i].Name, Address);
-			#else
+#else
 			txt.Format(_T("<DATA>%s.%X"), MemMapData[i].Name, Address);
-			#endif
+#endif
 			return txt;
 		}
 	}
@@ -407,11 +414,11 @@ CString GetAddressName(size_t Address, bool bHEX)
 	{
 		if (Address >= MemMapModule[i].Start && Address <= MemMapModule[i].End)
 		{
-			#ifdef _WIN64
+#ifdef _WIN64
 			txt.Format(_T("%s.%I64X"), MemMapModule[i].Name, Address);
-			#else
+#else
 			txt.Format(_T("%s.%X"), MemMapModule[i].Name, Address);
-			#endif
+#endif
 			return txt;
 		}
 	}
@@ -419,22 +426,22 @@ CString GetAddressName(size_t Address, bool bHEX)
 	{
 		if (Address >= MemMap[i].Start && Address <= MemMap[i].End)
 		{
-			#ifdef _WIN64
+#ifdef _WIN64
 			txt.Format(_T("%I64X"), Address);
-			#else
+#else
 			txt.Format(_T("%X"), Address);
-			#endif
+#endif
 			return txt;
 		}
 	}
 
 	if (bHEX)
 	{
-		#ifdef _WIN64
+#ifdef _WIN64
 		txt.Format(_T("%I64X"), Address);
-		#else
+#else
 		txt.Format(_T("%X"), Address);
-		#endif
+#endif
 	}
 
 
@@ -483,18 +490,18 @@ bool UpdateMemoryMap(void)
 
 	if (g_hProcess == NULL)
 	{
-		#ifdef _DEBUG
+#ifdef _DEBUG
 		PrintOut(_T("[UpdateMemoryMap]: Process handle NULL!"));
-		#endif
+#endif
 		return 0;
 	}
 
 	if (!IsProcHandleValid(g_hProcess))
 	{
 		g_hProcess = NULL;
-		#ifdef _DEBUG
+#ifdef _DEBUG
 		PrintOut(_T("[UpdateMemoryMap]: Process handle invalid!"));
-		#endif
+#endif
 		return 0;
 	}
 
@@ -544,9 +551,9 @@ bool UpdateMemoryMap(void)
 		ProcessInfo = (PPROCESS_BASIC_INFORMATION)HeapAlloc(hHeap, HEAP_ZERO_MEMORY | HEAP_GENERATE_EXCEPTIONS, dwSizeNeeded);
 		if (!ProcessInfo)
 		{
-			#ifdef _DEBUG
+#ifdef _DEBUG
 			PrintOut(_T("[UpdateMemoryMap]: Couldn't allocate heap buffer!"));
-			#endif
+#endif
 			return 0;
 		}
 
@@ -555,13 +562,13 @@ bool UpdateMemoryMap(void)
 
 	// Did we successfully get basic info on process
 	if (NT_SUCCESS(status))
-	{	
+	{
 		// Check for PEB
 		if (!ProcessInfo->PebBaseAddress)
 		{
-			#ifdef _DEBUG
+#ifdef _DEBUG
 			PrintOut(_T("[UpdateMemoryMap]: PEB is null! Aborting UpdateExports!"));
-			#endif
+#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
 			return 0;
@@ -569,11 +576,11 @@ bool UpdateMemoryMap(void)
 
 		// Read Process Environment Block (PEB)
 		SIZE_T dwBytesRead = 0;
-		if ( ReClassReadMemory(  ProcessInfo->PebBaseAddress, &Peb, sizeof(PEB), &dwBytesRead) == 0)
+		if (ReClassReadMemory(ProcessInfo->PebBaseAddress, &Peb, sizeof(PEB), &dwBytesRead) == 0)
 		{
-			#ifdef _DEBUG
+#ifdef _DEBUG
 			PrintOut(_T("[UpdateMemoryMap]: Failed to read PEB! Aborting UpdateExports!"));
-			#endif
+#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
 			return 0;
@@ -581,11 +588,11 @@ bool UpdateMemoryMap(void)
 
 		// Get Ldr
 		dwBytesRead = 0;
-		if ( ReClassReadMemory( Peb.Ldr, &LdrData, sizeof(LdrData), &dwBytesRead) == 0)
+		if (ReClassReadMemory(Peb.Ldr, &LdrData, sizeof(LdrData), &dwBytesRead) == 0)
 		{
-			#ifdef _DEBUG
+#ifdef _DEBUG
 			PrintOut(_T("[UpdateMemoryMap]: Failed to read PEB Ldr Data! Aborting UpdateExports!"));
-			#endif
+#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
 			return 0;
@@ -597,11 +604,11 @@ bool UpdateMemoryMap(void)
 		{
 			LDR_DATA_TABLE_ENTRY lstEntry = { 0 };
 			dwBytesRead = 0;
-			if (! ReClassReadMemory( (void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
+			if (!ReClassReadMemory((void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
 			{
-				#ifdef _DEBUG
+#ifdef _DEBUG
 				PrintOut(_T("[UpdateMemoryMap]: Could not read list entry from LDR list. Error = %s"), Utils::GetLastErrorString().GetString());
-				#endif
+#endif
 				if (ProcessInfo)
 					HeapFree(hHeap, 0, ProcessInfo);
 				return 0;
@@ -618,7 +625,7 @@ bool UpdateMemoryMap(void)
 				if (lstEntry.FullDllName.Length > 0)
 				{
 					dwBytesRead = 0;
-					if ( ReClassReadMemory( (LPVOID)lstEntry.FullDllName.Buffer, &wcsFullDllName, lstEntry.FullDllName.Length, &dwBytesRead))
+					if (ReClassReadMemory((LPVOID)lstEntry.FullDllName.Buffer, &wcsFullDllName, lstEntry.FullDllName.Length, &dwBytesRead))
 					{
 						wcsModule = wcsrchr(wcsFullDllName, L'\\');
 						if (!wcsModule)
@@ -635,7 +642,7 @@ bool UpdateMemoryMap(void)
 								g_AttachedProcessSize = ModuleSize;
 							}
 						}
-					} 
+					}
 				}
 
 				// module info
@@ -654,11 +661,11 @@ bool UpdateMemoryMap(void)
 				IMAGE_DOS_HEADER DosHdr;
 				IMAGE_NT_HEADERS NtHdr;
 
-				ReClassReadMemory( ModuleBase, &DosHdr, sizeof(IMAGE_DOS_HEADER), NULL);
-				ReClassReadMemory( ModuleBase + DosHdr.e_lfanew, &NtHdr, sizeof(IMAGE_NT_HEADERS), NULL);
+				ReClassReadMemory(ModuleBase, &DosHdr, sizeof(IMAGE_DOS_HEADER), NULL);
+				ReClassReadMemory(ModuleBase + DosHdr.e_lfanew, &NtHdr, sizeof(IMAGE_NT_HEADERS), NULL);
 				DWORD sectionsSize = (DWORD)NtHdr.FileHeader.NumberOfSections * sizeof(IMAGE_SECTION_HEADER);
 				PIMAGE_SECTION_HEADER sections = (PIMAGE_SECTION_HEADER)malloc(sectionsSize);
-				ReClassReadMemory( ModuleBase + DosHdr.e_lfanew + sizeof(IMAGE_NT_HEADERS), sections, sectionsSize, NULL);
+				ReClassReadMemory(ModuleBase + DosHdr.e_lfanew + sizeof(IMAGE_NT_HEADERS), sections, sectionsSize, NULL);
 				for (int i = 0; i < NtHdr.FileHeader.NumberOfSections; i++)
 				{
 					CString txt;
@@ -686,9 +693,9 @@ bool UpdateMemoryMap(void)
 	}
 	else
 	{
-		#ifdef _DEBUG
+#ifdef _DEBUG
 		PrintOut(_T("[UpdateExports]: NtQueryInformationProcess failed! Aborting..."));
-		#endif
+#endif
 		if (ProcessInfo)
 			HeapFree(hHeap, 0, ProcessInfo);
 		return 0;
@@ -699,7 +706,7 @@ bool UpdateMemoryMap(void)
 
 	for (UINT i = 0; i < MemMap.size(); i++)
 	{
-		if (IsModule(MemMap[i].Start)) 
+		if (IsModule(MemMap[i].Start))
 			MemMap[i].Name = GetModuleName(MemMap[i].Start);
 	}
 
@@ -734,9 +741,9 @@ bool UpdateExports()
 		ProcessInfo = (PPROCESS_BASIC_INFORMATION)HeapAlloc(hHeap, HEAP_ZERO_MEMORY | HEAP_GENERATE_EXCEPTIONS, dwSizeNeeded);
 		if (!ProcessInfo)
 		{
-			#ifdef _DEBUG
+#ifdef _DEBUG
 			PrintOut(_T("[UpdateExports]: Couldn't allocate heap buffer!"));
-			#endif
+#endif
 			return 0;
 		}
 
@@ -745,13 +752,13 @@ bool UpdateExports()
 
 	// Did we successfully get basic info on process
 	if (NT_SUCCESS(status))
-	{	
+	{
 		// Check for PEB
 		if (!ProcessInfo->PebBaseAddress)
 		{
-			#ifdef _DEBUG
+#ifdef _DEBUG
 			PrintOut(_T("[UpdateExports]: PEB is null! Aborting..."));
-			#endif
+#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
 			return 0;
@@ -759,11 +766,11 @@ bool UpdateExports()
 
 		// Read Process Environment Block (PEB)
 		SIZE_T dwBytesRead = 0;
-		if ( ReClassReadMemory( ProcessInfo->PebBaseAddress, &Peb, sizeof(PEB), &dwBytesRead) == 0)
+		if (ReClassReadMemory(ProcessInfo->PebBaseAddress, &Peb, sizeof(PEB), &dwBytesRead) == 0)
 		{
-			#ifdef _DEBUG
+#ifdef _DEBUG
 			PrintOut(_T("[UpdateExports]: Failed to read PEB! Aborting UpdateExports."));
-			#endif
+#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
 			return 0;
@@ -771,11 +778,11 @@ bool UpdateExports()
 
 		// Get Ldr
 		dwBytesRead = 0;
-		if ( ReClassReadMemory( Peb.Ldr, &LdrData, sizeof(LdrData), &dwBytesRead) == 0)
+		if (ReClassReadMemory(Peb.Ldr, &LdrData, sizeof(LdrData), &dwBytesRead) == 0)
 		{
-			#ifdef _DEBUG
+#ifdef _DEBUG
 			PrintOut(_T("[UpdateExports]: Failed to read PEB Ldr Data! Aborting UpdateExports."));
-			#endif
+#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
 			return 0;
@@ -787,11 +794,11 @@ bool UpdateExports()
 		{
 			LDR_DATA_TABLE_ENTRY lstEntry = { 0 };
 			dwBytesRead = 0;
-			if (! ReClassReadMemory( (void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
+			if (!ReClassReadMemory((void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
 			{
-				#ifdef _DEBUG
+#ifdef _DEBUG
 				PrintOut(_T("[UpdateExports]: Could not read list entry from LDR list. Error = %s"), Utils::GetLastErrorString().GetString());
-				#endif
+#endif
 				if (ProcessInfo)
 					HeapFree(hHeap, 0, ProcessInfo);
 				return 0;
@@ -800,43 +807,43 @@ bool UpdateExports()
 			pLdrCurrentNode = lstEntry.InLoadOrderLinks.Flink;
 
 			if (lstEntry.DllBase != nullptr && lstEntry.SizeOfImage != 0)
-			{						
+			{
 				unsigned char* ModuleHandle = (unsigned char*)lstEntry.DllBase;
 				wchar_t wcsDllName[MAX_PATH] = { 0 };
 				wchar_t ModuleName[MAX_PATH] = { 0 };
 				if (lstEntry.BaseDllName.Length > 0)
-				{		
+				{
 					dwBytesRead = 0;
-					if ( ReClassReadMemory( (LPVOID)lstEntry.BaseDllName.Buffer, &wcsDllName, lstEntry.BaseDllName.Length, &dwBytesRead))
+					if (ReClassReadMemory((LPVOID)lstEntry.BaseDllName.Buffer, &wcsDllName, lstEntry.BaseDllName.Length, &dwBytesRead))
 					{
 						wcscpy_s(ModuleName, wcsDllName);
 					}
-				}			
+				}
 
 				IMAGE_DOS_HEADER DosHdr;
 				IMAGE_NT_HEADERS NtHdr;
 
-				ReClassReadMemory( ModuleHandle, &DosHdr, sizeof(DosHdr), NULL);
-				ReClassReadMemory( ModuleHandle + DosHdr.e_lfanew, &NtHdr, sizeof(IMAGE_NT_HEADERS), NULL);
+				ReClassReadMemory(ModuleHandle, &DosHdr, sizeof(DosHdr), NULL);
+				ReClassReadMemory(ModuleHandle + DosHdr.e_lfanew, &NtHdr, sizeof(IMAGE_NT_HEADERS), NULL);
 				if (NtHdr.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress != 0)
 				{
 					IMAGE_EXPORT_DIRECTORY ExpDir;
-					ReClassReadMemory( (LPVOID)(ModuleHandle + NtHdr.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress), &ExpDir, sizeof(ExpDir), NULL);
-					PVOID pName		= (PVOID)(ModuleHandle + ExpDir.AddressOfNames);
-					PVOID pOrd		= (PVOID)(ModuleHandle + ExpDir.AddressOfNameOrdinals);
-					PVOID pAddress	= (PVOID)(ModuleHandle + ExpDir.AddressOfFunctions);
+					ReClassReadMemory((LPVOID)(ModuleHandle + NtHdr.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress), &ExpDir, sizeof(ExpDir), NULL);
+					PVOID pName = (PVOID)(ModuleHandle + ExpDir.AddressOfNames);
+					PVOID pOrd = (PVOID)(ModuleHandle + ExpDir.AddressOfNameOrdinals);
+					PVOID pAddress = (PVOID)(ModuleHandle + ExpDir.AddressOfFunctions);
 
 					ULONG aNames[MAX_EXPORTS];
 					WORD aOrds[MAX_EXPORTS];
 					ULONG aAddresses[MAX_EXPORTS];
-					ReClassReadMemory( (LPVOID)pName, aNames, ExpDir.NumberOfNames * sizeof(aNames[0]), NULL);
-					ReClassReadMemory( (LPVOID)pOrd, aOrds, ExpDir.NumberOfNames * sizeof(aOrds[0]), NULL);
-					ReClassReadMemory( (LPVOID)pAddress, aAddresses, ExpDir.NumberOfFunctions * sizeof(aAddresses[0]), NULL);
+					ReClassReadMemory((LPVOID)pName, aNames, ExpDir.NumberOfNames * sizeof(aNames[0]), NULL);
+					ReClassReadMemory((LPVOID)pOrd, aOrds, ExpDir.NumberOfNames * sizeof(aOrds[0]), NULL);
+					ReClassReadMemory((LPVOID)pAddress, aAddresses, ExpDir.NumberOfFunctions * sizeof(aAddresses[0]), NULL);
 
 					for (DWORD i = 0; i < ExpDir.NumberOfNames; i++)
 					{
 						char ExportName[256];
-						ReClassReadMemory( (LPVOID)(ModuleHandle + aNames[i]), ExportName, 256, NULL);
+						ReClassReadMemory((LPVOID)(ModuleHandle + aNames[i]), ExportName, 256, NULL);
 						DWORD_PTR Address = (DWORD_PTR)ModuleHandle + aAddresses[aOrds[i]];
 
 						AddressName Entry;
@@ -852,9 +859,9 @@ bool UpdateExports()
 	}
 	else
 	{
-		#ifdef _DEBUG
+#ifdef _DEBUG
 		PrintOut(_T("[UpdateExports]: NtQueryInformationProcess failed! Aborting..."));
-		#endif
+#endif
 		if (ProcessInfo)
 			HeapFree(hHeap, 0, ProcessInfo);
 		return 0;

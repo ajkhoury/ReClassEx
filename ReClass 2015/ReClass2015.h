@@ -33,7 +33,7 @@ public:
 
 	CNodeBase* CreateNewNode(NodeType Type);
 	bool IsNodeValid(CNodeBase* pCheckNode);
-	CNodeBase* isNodeRef(CNodeBase* pTestNode);
+	CNodeBase* IsNodeRef(CNodeBase* pTestNode);
 	void DeleteClass(CNodeClass* pClass);
 
 	void CalcOffsets(CNodeClass* pClass);

@@ -15,10 +15,10 @@
 //ReclassSDK* ReclassSDK::m_pReclassSDK;
 
 // The one and only CReClass2015App object
-CReClass2015App theApp; 
+CReClass2015App theApp;
 
 // CReClass2015App
-BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx) 
+BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx)
 	ON_COMMAND(ID_APP_ABOUT, &CReClass2015App::OnAppAbout)
 	ON_COMMAND(ID_FILE_NEW, &CReClass2015App::OnFileNew)
 	//ON_COMMAND(ID_FILE_IMPORT, &CReClass2015App::OnFileImport)
@@ -26,7 +26,7 @@ BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx)
 	ON_COMMAND(ID_BUTTON_NEWCLASS, &CReClass2015App::OnButtonNewClass)
 	ON_COMMAND(ID_BUTTON_NOTES, &CReClass2015App::OnButtonNotes)
 	ON_COMMAND(ID_BUTTON_SEARCH, &CReClass2015App::OnButtonSearch)
-	ON_COMMAND(ID_BUTTON_CONSOLE, &CReClass2015App::OnButtonConsole) 
+	ON_COMMAND(ID_BUTTON_CONSOLE, &CReClass2015App::OnButtonConsole)
 	ON_COMMAND(ID_BUTTON_MODULES, &CReClass2015App::OnButtonModules)
 	ON_COMMAND(ID_BUTTON_PARSER, &CReClass2015App::OnButtonParser)
 	ON_COMMAND(ID_BUTTON_HEADER, &CReClass2015App::OnButtonHeader)
@@ -89,22 +89,22 @@ BOOL CReClass2015App::InitInstance()
 	theApp.GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL, RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
 
 	//Typedefs
-	tdHex = GetProfileString( _T( "Typedefs" ), _T( "tdHex" ), _T( "char" ) );
-	tdInt64 = GetProfileString( _T( "Typedefs" ), _T( "tdInt64" ), _T( "__int64" ) );
-	tdInt32 = GetProfileString( _T( "Typedefs" ), _T( "tdInt32" ), _T( "__int32" ) );
-	tdInt16 = GetProfileString( _T( "Typedefs" ), _T( "tdInt16" ), _T( "__int16" ) );
-	tdInt8 = GetProfileString( _T( "Typedefs" ), _T( "tdInt8" ), _T( "__int8" ) );
-	tdDWORD = GetProfileString( _T( "Typedefs" ), _T( "tdDWORD" ), _T( "DWORD" ) );
-	tdWORD = GetProfileString( _T( "Typedefs" ), _T( "tdWORD" ), _T( "WORD" ) );
-	tdBYTE = GetProfileString( _T( "Typedefs" ), _T( "tdBYTE" ), _T( "unsigned char" ) );
-	tdFloat = GetProfileString( _T( "Typedefs" ), _T( "tdFloat" ), _T( "float" ) );
-	tdDouble = GetProfileString( _T( "Typedefs" ), _T( "tdDouble" ), _T( "double" ) );
-	tdVec2 = GetProfileString( _T( "Typedefs" ), _T( "tdVec2" ), _T( "Vector2" ) );
-	tdVec3 = GetProfileString( _T( "Typedefs" ), _T( "tdVec3" ), _T( "Vector3" ) );
-	tdQuat = GetProfileString( _T( "Typedefs" ), _T( "tdQuat" ), _T( "Vector4" ) );
-	tdMatrix = GetProfileString( _T( "Typedefs" ), _T( "tdMatrix" ), _T( "matrix3x4_t" ) );
-	tdPChar = GetProfileString( _T( "Typedefs" ), _T( "tdPChar" ), _T( "char *" ) );
-	tdPWChar = GetProfileString( _T( "Typedefs" ), _T( "tdPWChar" ), _T( "wchar_t *" ) );
+	tdHex = GetProfileString(_T("Typedefs"), _T("tdHex"), _T("char"));
+	tdInt64 = GetProfileString(_T("Typedefs"), _T("tdInt64"), _T("__int64"));
+	tdInt32 = GetProfileString(_T("Typedefs"), _T("tdInt32"), _T("__int32"));
+	tdInt16 = GetProfileString(_T("Typedefs"), _T("tdInt16"), _T("__int16"));
+	tdInt8 = GetProfileString(_T("Typedefs"), _T("tdInt8"), _T("__int8"));
+	tdDWORD = GetProfileString(_T("Typedefs"), _T("tdDWORD"), _T("DWORD"));
+	tdWORD = GetProfileString(_T("Typedefs"), _T("tdWORD"), _T("WORD"));
+	tdBYTE = GetProfileString(_T("Typedefs"), _T("tdBYTE"), _T("unsigned char"));
+	tdFloat = GetProfileString(_T("Typedefs"), _T("tdFloat"), _T("float"));
+	tdDouble = GetProfileString(_T("Typedefs"), _T("tdDouble"), _T("double"));
+	tdVec2 = GetProfileString(_T("Typedefs"), _T("tdVec2"), _T("Vector2"));
+	tdVec3 = GetProfileString(_T("Typedefs"), _T("tdVec3"), _T("Vector3"));
+	tdQuat = GetProfileString(_T("Typedefs"), _T("tdQuat"), _T("Vector4"));
+	tdMatrix = GetProfileString(_T("Typedefs"), _T("tdMatrix"), _T("matrix3x4_t"));
+	tdPChar = GetProfileString(_T("Typedefs"), _T("tdPChar"), _T("char *"));
+	tdPWChar = GetProfileString(_T("Typedefs"), _T("tdPWChar"), _T("wchar_t *"));
 
 	crBackground = GetProfileInt(_T("Colors"), _T("crBackground"), crBackground);
 	crSelect = GetProfileInt(_T("Colors"), _T("crSelect"), crSelect);
@@ -177,14 +177,14 @@ BOOL CReClass2015App::InitInstance()
 	FontWidth = 8;
 
 	PROCESS_DPI_AWARENESS dpi;
-	GetProcessDpiAwareness( NULL, &dpi );
-	if ( dpi == PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE || dpi == PROCESS_DPI_AWARENESS::PROCESS_SYSTEM_DPI_AWARE )
+	HRESULT res =  GetProcessDpiAwareness(NULL, &dpi);
+	if (SUCCEEDED(res) && (dpi == PROCESS_PER_MONITOR_DPI_AWARE || dpi == PROCESS_SYSTEM_DPI_AWARE))
 	{
 		UINT dpiX, dpiY;
-		HMONITOR monitor = ::MonitorFromWindow( m_pMainWnd->GetSafeHwnd( ), MONITOR_DEFAULTTONEAREST );
-		GetDpiForMonitor( monitor, MONITOR_DPI_TYPE::MDT_EFFECTIVE_DPI, &dpiX, &dpiY );
-		FontWidth = MulDiv( FontWidth, MulDiv( dpiX, 100, 96 ), 100 );
-		FontHeight = MulDiv( FontHeight, MulDiv( dpiY, 100, 96 ), 100 );
+		HMONITOR monitor = MonitorFromWindow(m_pMainWnd->GetSafeHwnd(), MONITOR_DEFAULTTONEAREST);
+		GetDpiForMonitor(monitor, MONITOR_DPI_TYPE::MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
+		FontWidth = MulDiv(FontWidth, MulDiv(dpiX, 100, 96), 100);
+		FontHeight = MulDiv(FontHeight, MulDiv(dpiY, 100, 96), 100);
 	}
 
 	gMemoryViewFont.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T("Terminal"));
@@ -199,67 +199,70 @@ BOOL CReClass2015App::InitInstance()
 		AfxMessageBox(_T("Scintilla failed to initiailze"));
 		return FALSE;
 	}
-	
+
 	pFrame->ShowWindow(m_nCmdShow);
 	pFrame->UpdateWindow();
 
 	Utils::SetDebugPrivilege(TRUE);
 
-	Console = new CDialogConsole( _T( "Console" ) );
-	
+	Console = new CDialogConsole(_T("Console"));
+
 	if (Console->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
 		Console->ShowWindow(SW_HIDE);
 
-	CreateDirectory( _T( "plugins" ), NULL );
+	CreateDirectory(_T("plugins"), NULL);
 
 	WIN32_FIND_DATA file_data;
-	ZeroMemory( &file_data, sizeof( WIN32_FIND_DATA ) );
-	
+	ZeroMemory(&file_data, sizeof(WIN32_FIND_DATA));
+
 #ifdef _WIN64
-	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin64" ), &file_data );
+	HANDLE findfile_tree = FindFirstFile(_T("plugins\\*.rc-plugin64"), &file_data);
 #else
-	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin" ), &file_data );
+	HANDLE findfile_tree = FindFirstFile(_T("plugins\\*.rc-plugin"), &file_data);
 #endif
 
-	if ( findfile_tree != INVALID_HANDLE_VALUE )
+	if (findfile_tree != INVALID_HANDLE_VALUE)
 	{
 		do
 		{
-			HMODULE plugin_base = LoadLibrary( CString( _T( "plugins\\" ) ) + file_data.cFileName );
-			if ( plugin_base == NULL )
+			HMODULE plugin_base = LoadLibrary(CString(_T("plugins\\")) + file_data.cFileName);
+			if (plugin_base == NULL)
 			{
 				CString message;
-				message.Format( _T( "plugin %s was not able to be loaded!" ), file_data.cFileName );
-				GetMainWnd( )->MessageBox( message );
+				message.Format(_T("plugin %s was not able to be loaded!"), file_data.cFileName);
+				GetMainWnd()->MessageBox(message);
 				continue;
 			}
 
-			auto pfnPluginInit = reinterpret_cast<decltype( &PluginInit )>( GetProcAddress( plugin_base, "PluginInit" ) );
-			if ( pfnPluginInit == nullptr )
+			auto pfnPluginInit = reinterpret_cast<decltype(&PluginInit)>(GetProcAddress(plugin_base, "PluginInit"));
+			if (pfnPluginInit == nullptr)
 			{
 				CString message;
-				message.Format( _T( "%s is not a reclass plugin!" ), file_data.cFileName );
-				GetMainWnd( )->MessageBox( message );
-				FreeLibrary( plugin_base );
+				message.Format(_T("%s is not a reclass plugin!"), file_data.cFileName);
+				GetMainWnd()->MessageBox(message);
+				FreeLibrary(plugin_base);
 				continue;
 			}
 
 			RECLASS_PLUGINS plugin;
-			ZeroMemory( &plugin, sizeof RECLASS_PLUGINS );
-			wcscpy_s( plugin.FileName, file_data.cFileName );
+			ZeroMemory(&plugin, sizeof RECLASS_PLUGINS);
+			wcscpy_s(plugin.FileName, file_data.cFileName);
 			plugin.LoadedBase = plugin_base;
-			
-			if ( pfnPluginInit( &plugin.Info ) ) {
-				PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), file_data.cFileName, plugin.Info.Name, plugin.Info.Version, plugin.Info.About );
-				LoadedPlugins.push_back( plugin );
-			} else {
-				CString message{ };
-				message.Format( _T( "Failed to load plugin %s" ), file_data.cFileName );
-				PrintOut( message );
-				GetMainWnd( )->MessageBox( message );
-				FreeLibrary( plugin_base );
+
+			if (pfnPluginInit(&plugin.Info)) 
+			{
+				PrintOut(_T("Loaded plugin %s (%ls version %ls) - %ls"), file_data.cFileName, plugin.Info.Name, plugin.Info.Version, plugin.Info.About);
+				LoadedPlugins.push_back(plugin);
 			}
-		} while ( FindNextFile( findfile_tree, &file_data ) );
+			else 
+			{
+				CString message{};
+				message.Format(_T("Failed to load plugin %s"), file_data.cFileName);
+				PrintOut(message);
+				GetMainWnd()->MessageBox(message);
+				FreeLibrary(plugin_base);
+			}
+		} while (FindNextFile(findfile_tree, &file_data));
 	}
 
 	return TRUE;
@@ -283,22 +286,22 @@ int CReClass2015App::ExitInstance()
 	// Release Scintilla
 	Scintilla_ReleaseResources();
 
-	WriteProfileString( _T( "Typedefs" ), _T( "tdHex" ), tdHex );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdInt64" ), tdInt64 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdInt32" ), tdInt32 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdInt16" ), tdInt16 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdInt8" ), tdInt8 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdDWORD" ), tdDWORD );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdWORD" ), tdWORD );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdBYTE" ), tdBYTE );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdFloat" ), tdFloat );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdDouble" ), tdDouble );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdVec2" ), tdVec2 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdVec3" ), tdVec3 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdQuat" ), tdQuat );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdMatrix" ), tdMatrix );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdPChar" ), tdPChar );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdPWChar" ), tdPWChar );
+	WriteProfileString(_T("Typedefs"), _T("tdHex"), tdHex);
+	WriteProfileString(_T("Typedefs"), _T("tdInt64"), tdInt64);
+	WriteProfileString(_T("Typedefs"), _T("tdInt32"), tdInt32);
+	WriteProfileString(_T("Typedefs"), _T("tdInt16"), tdInt16);
+	WriteProfileString(_T("Typedefs"), _T("tdInt8"), tdInt8);
+	WriteProfileString(_T("Typedefs"), _T("tdDWORD"), tdDWORD);
+	WriteProfileString(_T("Typedefs"), _T("tdWORD"), tdWORD);
+	WriteProfileString(_T("Typedefs"), _T("tdBYTE"), tdBYTE);
+	WriteProfileString(_T("Typedefs"), _T("tdFloat"), tdFloat);
+	WriteProfileString(_T("Typedefs"), _T("tdDouble"), tdDouble);
+	WriteProfileString(_T("Typedefs"), _T("tdVec2"), tdVec2);
+	WriteProfileString(_T("Typedefs"), _T("tdVec3"), tdVec3);
+	WriteProfileString(_T("Typedefs"), _T("tdQuat"), tdQuat);
+	WriteProfileString(_T("Typedefs"), _T("tdMatrix"), tdMatrix);
+	WriteProfileString(_T("Typedefs"), _T("tdPChar"), tdPChar);
+	WriteProfileString(_T("Typedefs"), _T("tdPWChar"), tdPWChar);
 
 	WriteProfileInt(_T("Colors"), _T("crBackground"), crBackground);
 	WriteProfileInt(_T("Colors"), _T("crSelect"), crSelect);
@@ -329,8 +332,8 @@ int CReClass2015App::ExitInstance()
 	WriteProfileInt(_T("Display"), _T("gbPrivatePadding"), gbPrivatePadding);
 	WriteProfileInt(_T("Display"), _T("gbClipboardCopy"), gbClipboardCopy);
 
-	for ( auto plugin : LoadedPlugins )
-		FreeLibrary( plugin.LoadedBase );
+	for (auto plugin : LoadedPlugins)
+		FreeLibrary(plugin.LoadedBase);
 
 	return CWinAppEx::ExitInstance();
 }
@@ -543,7 +546,7 @@ class ImportLink
 {
 public:
 	CNodeBase* pNode;
-	CString Name; 
+	CString Name;
 };
 
 // TODO: Fix this
@@ -789,7 +792,7 @@ bool CReClass2015App::IsNodeValid(CNodeBase* pCheckNode)
 		for (UINT n = 0; n < Classes[i]->Nodes.size(); n++)
 		{
 			CNodeBase* pNode = Classes[i]->Nodes[n];
-			if (pNode == pCheckNode) 
+			if (pNode == pCheckNode)
 				return true;
 
 			NodeType nt = pNode->GetType();
@@ -845,7 +848,7 @@ void CReClass2015App::OnButtonNewClass()
 
 void CReClass2015App::OnButtonSearch()
 {
-	GetMainWnd( )->MessageBox( _T( "Coming Soon!" ), _T( "ReClass2015" ) );
+	GetMainWnd()->MessageBox(_T("Coming Soon!"), _T("ReClass2015"));
 }
 
 void CReClass2015App::OnUpdateButtonSearch(CCmdUI *pCmdUI)
@@ -866,9 +869,9 @@ void CReClass2015App::OnButtonModules()
 	dlg.DoModal();
 }
 
-void CReClass2015App::OnUpdateButtonModules( CCmdUI * pCmdU )
-{ 
-	pCmdU->Enable( g_hProcess != NULL );
+void CReClass2015App::OnUpdateButtonModules(CCmdUI * pCmdU)
+{
+	pCmdU->Enable(g_hProcess != NULL);
 }
 
 void CReClass2015App::OnButtonNotes()
@@ -994,20 +997,20 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 	settings->SetAttribute("tdPChar", CW2A(tdPChar));
 	settings->SetAttribute("tdPWChar", CW2A(tdPWChar));
 #else
-	settings->SetAttribute("tdHex",	  tdHex);
+	settings->SetAttribute("tdHex", tdHex);
 	settings->SetAttribute("tdInt64", tdInt64);
 	settings->SetAttribute("tdInt32", tdInt32);
 	settings->SetAttribute("tdInt16", tdInt16);
-	settings->SetAttribute("tdInt8",  tdInt8);
+	settings->SetAttribute("tdInt8", tdInt8);
 	settings->SetAttribute("tdDWORD", tdDWORD);
-	settings->SetAttribute("tdWORD",  tdWORD);
-	settings->SetAttribute("tdBYTE",  tdBYTE);
+	settings->SetAttribute("tdWORD", tdWORD);
+	settings->SetAttribute("tdBYTE", tdBYTE);
 	settings->SetAttribute("tdFloat", tdFloat);
-	settings->SetAttribute("tdDouble",tdDouble);
-	settings->SetAttribute("tdVec2",  tdVec2);
-	settings->SetAttribute("tdVec3",  tdVec3);
-	settings->SetAttribute("tdQuat",  tdQuat);
-	settings->SetAttribute("tdMatrix",tdMatrix);
+	settings->SetAttribute("tdDouble", tdDouble);
+	settings->SetAttribute("tdVec2", tdVec2);
+	settings->SetAttribute("tdVec3", tdVec3);
+	settings->SetAttribute("tdQuat", tdQuat);
+	settings->SetAttribute("tdMatrix", tdMatrix);
 	settings->SetAttribute("tdPChar", tdPChar);
 	settings->SetAttribute("tdPWChar", tdPWChar);
 #endif
@@ -1141,7 +1144,7 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 					CStringA strFunctionNodeComment = pNodefun->Comment;
 #endif
 
-					XMLElement *fun = doc.NewElement("Function");			
+					XMLElement *fun = doc.NewElement("Function");
 					fun->SetAttribute("Name", strFunctionNodeName);
 					fun->SetAttribute("Comment", strFunctionNodeComment);
 					fun->SetAttribute("bHidden", pNodefun->bHidden);
@@ -1403,8 +1406,8 @@ void CReClass2015App::OnButtonGenerate()
 	CString generated_text, t;
 
 	generated_text += _T("// Generated using ReClass 2015\r\n\r\n");
-	
-	if(!Header.IsEmpty())
+
+	if (!Header.IsEmpty())
 		generated_text += Header + _T("\r\n\r\n");
 
 	for (UINT c = 0; c < Classes.size(); c++)
@@ -1449,8 +1452,8 @@ void CReClass2015App::OnButtonGenerate()
 			{
 				if (fill > 0)
 				{
-					if ( gbPrivatePadding )
-						t.Format( _T( "private:\r\n\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\npublic:\r\n" ), tdHex, fillStart, fill, fillStart );
+					if (gbPrivatePadding)
+						t.Format(_T("private:\r\n\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\npublic:\r\n"), tdHex, fillStart, fill, fillStart);
 					else
 						t.Format(_T("\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n"), tdHex, fillStart, fill, fillStart);
 					var.push_back(t);
@@ -1534,10 +1537,10 @@ void CReClass2015App::OnButtonGenerate()
 				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdPChar, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
-			if ( Type == nt_pwchar )
+			if (Type == nt_pwchar)
 			{
-				t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), tdPWChar, pNode->Name, pNode->offset, pNode->Comment );
-				var.push_back( t );
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdPWChar, pNode->Name, pNode->offset, pNode->Comment);
+				var.push_back(t);
 			}
 			if (Type == nt_text)
 			{
@@ -1608,7 +1611,7 @@ void CReClass2015App::OnButtonGenerate()
 
 		if (fill > 0)
 		{
-			if ( gbPrivatePadding )
+			if (gbPrivatePadding)
 				t.Format(_T("private:\r\n\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n"), tdHex, fillStart, fill, fillStart); //Maybe add public at the end for user impl of class inline functions?: public:\r\n
 			else
 				t.Format(_T("\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n"), tdHex, fillStart, fill, fillStart);
@@ -1642,24 +1645,28 @@ void CReClass2015App::OnButtonGenerate()
 	}
 
 	if (!Footer.IsEmpty())
+	{
 		generated_text += (Footer + _T("\r\n"));
+	}
 
-	if ( gbClipboardCopy )
+	if (gbClipboardCopy)
 	{
 		::OpenClipboard(NULL);
 		::EmptyClipboard();
 		int string_size = generated_text.GetLength() * sizeof(CString::StrTraits::XCHAR);
-		HGLOBAL memory_blob = ::GlobalAlloc(GMEM_FIXED, string_size);
+		HGLOBAL memory_blob = GlobalAlloc(GMEM_FIXED, string_size);
 		memcpy(memory_blob, generated_text.GetBuffer(), string_size);
 #ifdef UNICODE
-		::SetClipboardData(CF_UNICODETEXT, memory_blob);
+		SetClipboardData(CF_UNICODETEXT, memory_blob);
 #else
-		::SetClipboardData(CF_TEXT, memory_blob);
+		SetClipboardData(CF_TEXT, memory_blob);
 #endif
-		::CloseClipboard();
+		CloseClipboard();
 
 		GetMainWnd()->MessageBox(_T("Coppied generated code to clipboard..."), _T("ReClass 2015"), MB_OK | MB_ICONINFORMATION);
-	} else {
+	}
+	else 
+	{
 		dlg.Text = generated_text;
 		dlg.DoModal();
 	}
@@ -1669,11 +1676,11 @@ void CReClass2015App::OnButtonPlugins()
 {
 	//GetMainWnd( )->MessageBox( _T( "Coming Soon!" ) );
 	CDialogPlugins plugin_dlg;
-	plugin_dlg.DoModal( );
+	plugin_dlg.DoModal();
 }
 
-void CReClass2015App::OnUpdateButtonPlugins( CCmdUI * pCmdUI )
-{ 
+void CReClass2015App::OnUpdateButtonPlugins(CCmdUI * pCmdUI)
+{
 	pCmdUI->Enable(!LoadedPlugins.empty());
 }
 
@@ -1681,8 +1688,8 @@ void CReClass2015App::OnOpenPDB()
 {
 	PrintOut(_T("OnOpenPDB() called"));
 
-	CFileDialog fileDlg { TRUE, _T( "pdb" ), _T( "" ), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T( "PDB (*.pdb)|*.pdb|All Files (*.*)|*.*||" ), NULL };
-	
+	CFileDialog fileDlg{ TRUE, _T("pdb"), _T(""), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T("PDB (*.pdb)|*.pdb|All Files (*.*)|*.*||"), NULL };
+
 	if (fileDlg.DoModal() != IDOK)
 		return;
 
@@ -1700,13 +1707,13 @@ void CReClass2015App::DeleteClass(CNodeClass* pClass)
 {
 	PrintOut(_T("DeleteClass(\"%s\") called"), pClass->Name.GetString());
 
-	CNodeBase* pNode = isNodeRef(pClass);
+	CNodeBase* pNode = IsNodeRef(pClass);
 	if (pNode)
 	{
 		PrintOut(_T("Class still has a reference in %s.%s"), pNode->pParent->Name.GetString(), pNode->Name.GetString());
 		CString msg;
 		msg.Format(_T("Class still has a reference in %s.%s"), pNode->pParent->Name.GetString(), pNode->Name.GetString());
-		GetMainWnd( )->MessageBox( msg );
+		GetMainWnd()->MessageBox(msg);
 		return;
 	}
 
@@ -1720,7 +1727,7 @@ void CReClass2015App::DeleteClass(CNodeClass* pClass)
 	}
 }
 
-CNodeBase* CReClass2015App::isNodeRef(CNodeBase* pTestNode)
+CNodeBase* CReClass2015App::IsNodeRef(CNodeBase* pTestNode)
 {
 	for (UINT c = 0; c < Classes.size(); c++)
 	{
@@ -1737,13 +1744,13 @@ CNodeBase* CReClass2015App::isNodeRef(CNodeBase* pTestNode)
 				if (pInstance->pNode == pTestNode)
 					return pInstance;
 			}
-			if (pNode->GetType() == nt_pointer)
+			else if (pNode->GetType() == nt_pointer)
 			{
 				CNodePtr* pInstance = (CNodePtr*)pNode;
 				if (pInstance->pNode == pTestNode)
 					return pInstance;
 			}
-			if (pNode->GetType() == nt_array)
+			else if (pNode->GetType() == nt_array)
 			{
 				CNodeArray* pInstance = (CNodeArray*)pNode;
 				if (pInstance->pNode == pTestNode)
@@ -1767,8 +1774,9 @@ void CReClass2015App::OnButtonClean()
 	std::vector<CNodeClass*> toCheck;
 	for (UINT i = 0; i < Classes.size(); i++)
 	{
-		if (isNodeRef(Classes[i]) == NULL)
+		if (!IsNodeRef(Classes[i])) {
 			toCheck.push_back(Classes[i]);
+		}
 	}
 
 	int count = 0;
@@ -1779,14 +1787,13 @@ void CReClass2015App::OnButtonClean()
 		for (UINT n = 0; n < pClass->Nodes.size(); n++)
 		{
 			CNodeBase* pNode = pClass->Nodes[n];
-			NodeType Type = pNode->GetType();
-
-			if (Type == nt_hex64 || Type == nt_hex32 || Type == nt_hex16 || Type == nt_hex8)
+			if (ISHEXTYPE(pNode->GetType()))
 				continue;
 
 			bCanDelete = false;
 			break;
 		}
+
 		if (bCanDelete)
 		{
 			count++;
@@ -1795,7 +1802,8 @@ void CReClass2015App::OnButtonClean()
 	}
 
 	PrintOut(_T("Unused Classes removed: %i"), count);
-	CString msg; msg.Format(_T("Unused Classes removed: %i"), count);
+	CString msg;
+	msg.Format(_T("Unused Classes removed: %i"), count);
 	MessageBox(this->GetMainWnd()->GetSafeHwnd(), msg, _T("Cleaner"), MB_OK);
 }
 void CReClass2015App::OnUpdateButtonClean(CCmdUI *pCmdUI)

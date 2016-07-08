@@ -134,7 +134,7 @@
       </IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>Shcore.lib;BeaEngine_s_stdcall.lib;SciLexer.lib;SQLite_Static_Library.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>BeaEngine_s_stdcall.lib;SciLexer.lib;SQLite_Static_Library.lib;Psapi.lib;comctl32.lib;Shcore.lib</AdditionalDependencies>
       <AdditionalManifestDependencies>"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'"</AdditionalManifestDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
@@ -174,7 +174,7 @@
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>crt.lib</IgnoreSpecificDefaultLibraries>
-      <AdditionalDependencies>BeaEngine_s_stdcalld.lib;SciLexerd.lib;SQLite_Static_Libraryd.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>BeaEngine_s_stdcalld.lib;SciLexerd.lib;SQLite_Static_Libraryd.lib;Psapi.lib;comctl32.lib;Shcore.lib</AdditionalDependencies>
       <AdditionalManifestDependencies>"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'";%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
       <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>..\DIA SDK\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
