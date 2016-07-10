@@ -264,11 +264,7 @@ void CChildView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 					if (HotSpots[0].object == firstSelected->object) // stop from crashing
 						continue;
 
-#if _WIN64
-					__int64 nextAddress = HotSpots[i].Address + firstSelected->object->GetMemorySize();
-#else
-					int nextAddress = HotSpots[i].Address + firstSelected->object->GetMemorySize();
-#endif	
+					size_t nextAddress = HotSpots[i].Address + firstSelected->object->GetMemorySize();
 
 					UINT newIndex = 0;
 					for (int j = 0; HotSpots[i + j].Address != nextAddress; j++)
@@ -356,16 +352,12 @@ void CChildView::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 BOOL TransparentBlt(CImage* pSrcImage, CImage* pDstImage, int xDest, int yDest, int nDestWidth, int nDestHeight)
 {
-	HDC hDstDC = NULL;
-	BOOL bResult;
+	BOOL bResult = FALSE;
 
 	if (pSrcImage == NULL || pDstImage == NULL)
 		return FALSE;
-
-	// Obtain a DC to the destination image
-	hDstDC = pDstImage->GetDC();
 	// Perform the blit
-	bResult = pSrcImage->TransparentBlt(hDstDC, xDest, yDest, nDestWidth, nDestHeight);
+	bResult = pSrcImage->TransparentBlt(pDstImage->GetDC(), xDest, yDest, nDestWidth, nDestHeight);
 	// Release the destination DC
 	pDstImage->ReleaseDC();
 
@@ -521,8 +513,10 @@ void CChildView::OnRButtonDown(UINT nFlags, CPoint point)
 		{
 			CNodeBase* pHitObject = (CNodeBase*)HotSpots[i].object;
 			if (HotSpots[i].Type == HS_CLICK)
+			{
 				pHitObject->Update(HotSpots[i]);
-			if (HotSpots[i].Type == HS_SELECT)
+			}
+			else if (HotSpots[i].Type == HS_SELECT)
 			{
 				if (nFlags == MK_RBUTTON)
 				{
@@ -581,8 +575,10 @@ void CChildView::OnPaint()
 	View.HotSpots = &HotSpots;
 	View.bMultiSelected = (Selected.size() > 1) ? true : false;
 
+	if (m_Scroll.IsWindowVisible())
+		View.client->right -= SB_WIDTH;
+
 	int ypos = m_Scroll.GetScrollPos() * FontHeight;
-	if (m_Scroll.IsWindowVisible()) View.client->right -= SB_WIDTH;
 
 	int DrawMax = m_pClass->Draw(View, 0, -ypos) + ypos;
 
@@ -602,6 +598,7 @@ void CChildView::OnPaint()
 		}
 		m_pClass->RequestPosition = -1;
 	}
+
 	if (client.Height() < DrawMax)
 	{
 		SCROLLINFO si;
@@ -646,11 +643,11 @@ void CChildView::OnPaint()
 
 void CChildView::OnSize(UINT nType, int cx, int cy)
 {
-	CWnd::OnSize(nType, cx, cy);
 	CRect client;
 	GetClientRect(&client);
 	m_Scroll.SetWindowPos(NULL, client.right - SB_WIDTH, 0, SB_WIDTH, client.Height(), SWP_NOZORDER);
 	m_Edit.ShowWindow(SW_HIDE);
+	CWnd::OnSize(nType, cx, cy);
 }
 
 void CChildView::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
@@ -681,68 +678,62 @@ BOOL CChildView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	return CWnd::OnMouseWheel(nFlags, zDelta, pt);
 }
 
-#ifndef UNICODE  
-typedef std::string stdstring;
-#else
-typedef std::wstring stdstring;
-#endif
+typedef std::basic_string<TCHAR> tstring;
 // CString object causes crashes here sometimes for some unknown reason. Using STL std::string in lieu of CString.
-stdstring DisassembleCode(unsigned char** StartCodeSection, unsigned char** EndCodeSection, size_t Virtual_Address, int* textHeight)
+tstring DisassembleCode(unsigned char** StartCodeSection, DWORD codeSize, size_t virtualAddress, int* textHeight)
 {
-	char szOut[8192] = { '\0' };
+	std::string strOut;
 
-	DISASM MyDisasm;
-	memset(&MyDisasm, 0, sizeof(DISASM));
-
-	MyDisasm.EIP = (UIntPtr)StartCodeSection;
-
-	MyDisasm.VirtualAddr = (UInt64)Virtual_Address;
+	DISASM disasm;
+	memset(&disasm, 0, sizeof(DISASM));
+	disasm.EIP = (UIntPtr)StartCodeSection;
+	disasm.VirtualAddr = (UInt64)virtualAddress;
 #ifdef _WIN64
-	MyDisasm.Archi = 64;
+	disasm.Archi = 64;
 #else
-	MyDisasm.Archi = 0;
+	disasm.Archi = 0;
 #endif
-	MyDisasm.Options = PrefixedNumeral;
+	disasm.Options = PrefixedNumeral;
 
-#ifdef _WIN64
-	int securityCount = 0;
-#endif
+	UIntPtr EndCodeSection = (UIntPtr)((UIntPtr)StartCodeSection + codeSize);
 
-	bool Error = 0;
-	while (!Error)
+
+	bool error = false;
+	while (!error)
 	{
-#ifdef _WIN64
-		securityCount++;
-		if (securityCount >= 100)
-			break;
-#endif
-
-		MyDisasm.SecurityBlock = (UInt32)(EndCodeSection - (UIntPtr)MyDisasm.EIP);
-
-		int len = Disasm(&MyDisasm);
-		if (len == OUT_OF_BLOCK)
+		disasm.SecurityBlock = (UInt32)(EndCodeSection - (UIntPtr)disasm.EIP);
+		int len = Disasm(&disasm);
+		if (len == OUT_OF_BLOCK || len == UNKNOWN_OPCODE)
 		{
-			Error = 1;
-		}
-		else if (len == UNKNOWN_OPCODE)
-		{
-			Error = 1;
+			error = true;
 		}
 		else
 		{
-			char szInstruction[96];
-			sprintf_s(szInstruction, "%p  ", (void*)MyDisasm.VirtualAddr);
-			strcat_s(szInstruction, MyDisasm.CompleteInstr);
-			strcat_s(szInstruction, "\r\n");
+			char szCompleteInstruction[256];
 
-			strcat_s(szOut, szInstruction);
+			// Get virtual address of instruction
+			char strAddr[16];
+			sprintf_s(strAddr, "%p", (void*)disasm.VirtualAddr);
 
-			MyDisasm.EIP = MyDisasm.EIP + len;
-			MyDisasm.VirtualAddr = MyDisasm.VirtualAddr + len;
-			if (MyDisasm.EIP >= (UIntPtr)EndCodeSection)
+			// Get bytes of instruction
+			char strBytes[64] = { 0 };
+			for (int i = 0; i < len; i++)
+			{
+				char strByte[4];
+				sprintf_s(strByte, "%.2X", *(unsigned char*)(disasm.EIP + i));
+				strcat_s(strBytes, strByte);
+			}
+
+			sprintf_s(szCompleteInstruction, "%-9s %-15s %s\r\n", strAddr, strBytes, disasm.CompleteInstr);
+			strOut += szCompleteInstruction;
+
+			disasm.EIP = disasm.EIP + len;
+			disasm.VirtualAddr = disasm.VirtualAddr + len;
+
+			if ((disasm.EIP >= (UIntPtr)EndCodeSection) || (disasm.Instruction.Opcode == 0xCC))
+			{
 				break;
-			if (MyDisasm.Instruction.Opcode == 0xCC) // INT 3 instruction
-				break;
+			}
 
 			*textHeight += 16;
 		}
@@ -753,12 +744,12 @@ stdstring DisassembleCode(unsigned char** StartCodeSection, unsigned char** EndC
 #ifdef UNICODE
 	wchar_t Ret[8192];
 	size_t converted = 0;
-	mbstowcs_s(&converted, Ret, &szOut[0], 8192);
+	mbstowcs_s(&converted, Ret, strOut.c_str(), strOut.size());
 #else
-	char* Ret = &szOut[0];
+	const char* Ret = strOut.c_str();
 #endif
 
-	return stdstring(Ret);
+	return tstring(Ret);
 }
 
 bool bTracking = false;
@@ -801,7 +792,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 
 						int textHeight = 0;
 						// CString object causes crashes here sometimes for an unknown reason (too lazy to figure out why). Using STL std::string in lieu of CString.
-						stdstring d = DisassembleCode(&code, (unsigned char**)((&code) + 1024), addr, &textHeight);
+						tstring d = DisassembleCode(&code, 1024, addr, &textHeight);
 
 						delete[] code;
 

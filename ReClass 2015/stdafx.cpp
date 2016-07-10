@@ -208,7 +208,6 @@ CStringW ReadMemoryStringW(size_t address, SIZE_T max)
 {
 	auto buffer = std::make_unique<wchar_t[]>(max + 1);
 	SIZE_T bytesRead;
-
 	if (ReClassReadMemory((PVOID)address, buffer.get(), max * sizeof(wchar_t), &bytesRead) != 0)
 	{
 		bytesRead /= sizeof(wchar_t);
@@ -223,10 +222,11 @@ CStringW ReadMemoryStringW(size_t address, SIZE_T max)
 
 		return CStringW(buffer.get());
 	}
-	else {
-#ifdef _DEBUG
+	else 
+	{
+		#ifdef _DEBUG
 		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s"), Utils::GetLastErrorString().GetString());
-#endif
+		#endif
 		return CStringW(L"..");
 	}
 }

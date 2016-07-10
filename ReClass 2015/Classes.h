@@ -636,7 +636,7 @@ public:
 			Comment = Spot.Text;
 	}
 
-	CStringA GetStringFromMemoryA(unsigned char* pMemory, int Length)
+	CStringA GetStringFromMemoryA(char* pMemory, int Length)
 	{
 		CStringA ascii;
 		for (int i = 0; i < Length; i++)
@@ -646,7 +646,7 @@ public:
 		return ascii;
 	}
 
-	CStringW GetStringFromMemoryW(unsigned char* pMemory, int Length)
+	CStringW GetStringFromMemoryW(wchar_t* pMemory, int Length)
 	{
 		CStringW widechar;
 		for (int i = 0; i < Length; i += sizeof(wchar_t)) 
@@ -797,7 +797,7 @@ public:
 
 		if (gbText)
 		{
-			CStringA str = GetStringFromMemoryA(pMemory, 8) + " ";
+			CStringA str = GetStringFromMemoryA((char*)pMemory, 8) + " ";
 			tx = AddText(View, tx, y, crChar, HS_NONE, "%s", str.GetBuffer());
 		}
 
@@ -835,7 +835,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		unsigned char* pMemory = (unsigned char *)&View.pData[offset];
+		unsigned char* pMemory = (unsigned char*)&View.pData[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -847,7 +847,7 @@ public:
 		if (gbText)
 		{
 			// TODO these are the dots, do alignment instead of 4
-			CStringA str = GetStringFromMemoryA(pMemory, 4);
+			CStringA str = GetStringFromMemoryA((char*)pMemory, 4);
 			str += "     ";
 			tx = AddText(View, tx, y, crChar, HS_NONE, "%s", str);
 		}
@@ -895,7 +895,7 @@ public:
 
 		if (gbText)
 		{
-			CStringA str = GetStringFromMemoryA(pMemory, 2);
+			CStringA str = GetStringFromMemoryA((char*)pMemory, 2);
 			str += "       ";
 			tx = AddText(View, tx, y, crChar, HS_NONE, "%s", str.GetBuffer());
 		}
@@ -939,7 +939,7 @@ public:
 
 		if (gbText)
 		{
-			CStringA str = GetStringFromMemoryA(pMemory, 1);
+			CStringA str = GetStringFromMemoryA((char*)pMemory, 1);
 			str += "        ";
 			tx = AddText(View, tx, y, crChar, HS_NONE, "%s", str.GetBuffer());
 		}
@@ -1255,10 +1255,10 @@ public:
 		StandardUpdate(Spot);
 		__int64 v = _ttoi64(Spot.Text);
 		if (Spot.ID == 0)
-			ReClassWriteMemory((LPVOID)Spot.Address, &v, 8);
+			ReClassWriteMemory((LPVOID)Spot.Address, &v, sizeof(__int64));
 	}
 
-	virtual int GetMemorySize() { return 8; }
+	virtual int GetMemorySize() { return sizeof(__int64); }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -1292,10 +1292,10 @@ public:
 		StandardUpdate(Spot);
 		__int32 v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
-			ReClassWriteMemory((LPVOID)Spot.Address, &v, 4);
+			ReClassWriteMemory((LPVOID)Spot.Address, &v, sizeof(long));
 	}
 
-	virtual int GetMemorySize() { return 4; }
+	virtual int GetMemorySize() { return sizeof(long); }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -1330,10 +1330,10 @@ public:
 		StandardUpdate(Spot);
 		__int16 v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
-			ReClassWriteMemory((LPVOID)Spot.Address, &v, 2);
+			ReClassWriteMemory((LPVOID)Spot.Address, &v, sizeof(short));
 	}
 
-	virtual int GetMemorySize() { return 2; }
+	virtual int GetMemorySize() { return sizeof(short); }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -1369,10 +1369,10 @@ public:
 		StandardUpdate(Spot);
 		__int8 v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
-			ReClassWriteMemory((LPVOID)Spot.Address, &v, 1);
+			ReClassWriteMemory((LPVOID)Spot.Address, &v, sizeof(char));
 	}
 
-	virtual int GetMemorySize() { return 1; }
+	virtual int GetMemorySize() { return sizeof(char); }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -1408,10 +1408,10 @@ public:
 		StandardUpdate(Spot);
 		DWORD v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
-			ReClassWriteMemory((LPVOID)Spot.Address, &v, 4);
+			ReClassWriteMemory((LPVOID)Spot.Address, &v, sizeof(unsigned long));
 	}
 
-	virtual int GetMemorySize() { return 4; }
+	virtual int GetMemorySize() { return sizeof(unsigned long); }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -1447,11 +1447,11 @@ public:
 		StandardUpdate(Spot);
 		WORD v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
-			ReClassWriteMemory((LPVOID)Spot.Address, &v, 2);
+			ReClassWriteMemory((LPVOID)Spot.Address, &v, sizeof(unsigned short));
 
 	}
 
-	virtual int GetMemorySize() { return 2; }
+	virtual int GetMemorySize() { return sizeof(unsigned short); }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -1487,10 +1487,10 @@ public:
 		StandardUpdate(Spot);
 		unsigned char v = _ttoi(Spot.Text);
 		if (Spot.ID == 0)
-			ReClassWriteMemory((LPVOID)Spot.Address, &v, 1);
+			ReClassWriteMemory((LPVOID)Spot.Address, &v, sizeof(unsigned char));
 	}
 
-	virtual int GetMemorySize() { return 1; }
+	virtual int GetMemorySize() { return sizeof(unsigned char); }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -1529,10 +1529,11 @@ public:
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-		if (Spot.ID == 0)
+		if (Spot.ID == 0) 
+		{
 			memsize = _ttoi(Spot.Text);
-
-		if (Spot.ID == 1)
+		}
+		else if (Spot.ID == 1)
 		{
 			DWORD Length = Spot.Text.GetLength() + 1;
 			if (Length > memsize)
@@ -1553,7 +1554,8 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		unsigned char* pMemory = (unsigned char*)&View.pData[offset];
+		char* pMemory = (char*)&View.pData[offset];
+
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1593,9 +1595,13 @@ public:
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
-		__int64 v = _ttoi64(Spot.Text);
+#ifdef _WIN64
+		size_t ptr = _ttoi64(Spot.Text);
+#else
+		size_t ptr = _ttoi(Spot.Text);
+#endif
 		if (Spot.ID == 0)
-			ReClassWriteMemory((LPVOID)Spot.Address, &v, 8);
+			ReClassWriteMemory((LPVOID)Spot.Address, &ptr, sizeof(size_t));
 	}
 
 	virtual int GetMemorySize()
@@ -1664,15 +1670,12 @@ public:
 		Name = "PWChar";
 	}
 
-	CNodeBase* pNode;
-	CMemory Memory;
-
 	virtual void Update(HotSpot& Spot)
 	{
 		StandardUpdate(Spot);
 		__int64 v = _ttoi64(Spot.Text);
 		if (Spot.ID == 0)
-			ReClassWriteMemory((LPVOID)Spot.Address, &v, 8);
+			ReClassWriteMemory((LPVOID)Spot.Address, &v, sizeof(size_t));
 	}
 
 	virtual int GetMemorySize()
@@ -1716,8 +1719,7 @@ public:
 		tx = AddText(View, tx, y, crChar, HS_NONE, _T(" = '"));
 		if (VALID(pMemory))
 		{
-			size_t dw = pMemory[0];
-			CStringW sc = ReadMemoryStringW(dw, 128);
+			CStringW sc = ReadMemoryStringW((size_t)pMemory[0], 128);
 			tx = AddText(View, tx, y, crChar, 1, "%ls", sc.GetBuffer());
 		}
 
@@ -1726,6 +1728,10 @@ public:
 
 		return y += FontHeight;
 	}
+
+public:
+	CNodeBase* pNode;
+	CMemory Memory;
 };
 
 class CNodeUnicode : public CNodeBase
@@ -1774,7 +1780,7 @@ public:
 		if (bHidden)
 			return DrawHidden(View, x, y);
 
-		unsigned char* pMemory = (unsigned char*)&((unsigned char*)View.pData)[offset];
+		wchar_t* pMemory = (wchar_t*)&((unsigned char*)View.pData)[offset];
 		AddSelection(View, 0, y, FontHeight);
 		AddDelete(View, x, y);
 		AddTypeDrop(View, x, y);
@@ -1789,10 +1795,13 @@ public:
 		tx = AddText(View, tx, y, crIndex, HS_EDIT, _T("%i"), memsize / sizeof(wchar_t));
 		tx = AddText(View, tx, y, crIndex, HS_NONE, _T("]"));
 
-		CStringW str = GetStringFromMemoryW(pMemory, memsize);
-		tx = AddText(View, tx, y, crChar, HS_NONE, _T(" = '"));
-		tx = AddText(View, tx, y, crChar, HS_OPENCLOSE, _T("%ls"), str); // ls cause its unicode
-		tx = AddText(View, tx, y, crChar, HS_NONE, _T("' ")) + FontWidth;
+		if (VALID(pMemory))
+		{
+			CStringW str = GetStringFromMemoryW(pMemory, memsize);
+			tx = AddText(View, tx, y, crChar, HS_NONE, _T(" = '"));
+			tx = AddText(View, tx, y, crChar, HS_OPENCLOSE, _T("%ls"), str); // ls cause its unicode
+			tx = AddText(View, tx, y, crChar, HS_NONE, _T("' ")) + FontWidth;
+		}
 
 		tx = AddComment(View, tx, y);
 		return y += FontHeight;
@@ -1815,7 +1824,7 @@ public:
 			ReClassWriteMemory((LPVOID)Spot.Address, &v, 4);
 	}
 
-	virtual int GetMemorySize() { return 4; }
+	virtual int GetMemorySize() { return sizeof(float); }
 
 	virtual int Draw(ViewInfo& View, int x, int y)
 	{
@@ -1862,7 +1871,7 @@ public:
 	virtual int GetMemorySize(void)
 	{
 		// doubles are always 64 bits ffs
-		return 8;
+		return sizeof(double);
 	}
 
 	virtual int Draw(ViewInfo& View, int x, int y)

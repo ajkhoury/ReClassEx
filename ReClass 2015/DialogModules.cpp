@@ -12,10 +12,12 @@ IMPLEMENT_DYNAMIC(CDialogModules, CDialogEx)
 
 CDialogModules::CDialogModules(CWnd* pParent) 
 	: CDialogEx(CDialogModules::IDD, pParent)
-{}
+{
+}
 
 CDialogModules::~CDialogModules()
-{}
+{
+}
 
 void CDialogModules::DoDataExchange(CDataExchange* pDX)
 {
@@ -42,6 +44,7 @@ void CDialogModules::OnGetMinMaxInfo( MINMAXINFO *lpinfo )
 
 BEGIN_MESSAGE_MAP(CDialogModules, CDialogEx)
 	ON_NOTIFY(NM_DBLCLK, IDC_MODULELIST, OnDblclkListControl)
+	ON_NOTIFY(LVN_COLUMNCLICK, IDC_MODULELIST, OnColumnClick)
 	ON_EN_CHANGE(IDC_MODULENAME, &CDialogModules::OnEnChangeModuleName)
 	ON_WM_GETMINMAXINFO()
 	ON_WM_SIZE()
@@ -97,7 +100,7 @@ BOOL CDialogModules::OnInitDialog()
 	return TRUE;
 }
 
-__inline int FindModuleByName(const TCHAR* szName)
+__inline int CDialogModules::FindModuleByName(const TCHAR* szName)
 {
 	for (int id = 0; id < MemMapModule.size(); id++)
 	{
@@ -108,7 +111,7 @@ __inline int FindModuleByName(const TCHAR* szName)
 	return -1;
 };
 
-__inline CNodeClass* GetClassByName(const TCHAR* szClassName)
+__inline CNodeClass* CDialogModules::GetClassByName(const TCHAR* szClassName)
 {
 	CNodeClass* pClass = 0;
 	for (unsigned int i = 0; i < theApp.Classes.size(); i++) {
@@ -171,6 +174,24 @@ void CDialogModules::SetSelected()
 		pChild->SetWindowText(ClassName);
 		pFrame->UpdateFrameTitleForDocument(ClassName);
 	}
+}
+
+//int (CALLBACK *PFNLVCOMPARE)(LPARAM, LPARAM, LPARAM);
+int CALLBACK CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamData)
+{
+	CListCtrl* pListCtrl = reinterpret_cast<CListCtrl*>(lParamData);
+
+	return 0;
+}
+
+void CDialogModules::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
+	const int iColumn = pNMListView->iSubItem;
+
+	m_ModuleViewList.SortItems(CompareFunction, reinterpret_cast<DWORD>(this));
+
+	*pResult = 0;
 }
 
 void CDialogModules::OnDblclkListControl(NMHDR* pNMHDR, LRESULT* pResult)
