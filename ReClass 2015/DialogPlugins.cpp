@@ -28,7 +28,7 @@ BOOL CDialogPlugins::OnInitDialog( )
 
 	m_PluginsList.SetExtendedStyle( LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER );
 
-	m_PluginsList.InsertColumn( 0, _T( "Plugins" ), LVCFMT_CENTER, 300 ); //TODO: Correct sizes?
+	m_PluginsList.InsertColumn( 0, _T( "Plugins" ), LVCFMT_CENTER, 300 );
 	m_PluginsList.InsertColumn( 1, _T( "Version" ), LVCFMT_CENTER, 120 );
 	
 	RefreshPlugins( );

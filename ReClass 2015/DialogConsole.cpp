@@ -63,6 +63,7 @@ CDialogConsole::CDialogConsole(CString window_title, CWnd* pParent /*=NULL*/)
 
 CDialogConsole::~CDialogConsole()
 {
+	EndDialog(0);
 }
 
 void CDialogConsole::DoDataExchange(CDataExchange* pDX)
