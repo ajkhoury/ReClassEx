@@ -1697,7 +1697,7 @@ void CReClass2015App::DeleteClass(CNodeClass* pClass)
 {
 	PrintOut(_T("DeleteClass(\"%s\") called"), pClass->Name.GetString());
 
-	CNodeBase* pNode = isNodeRef(pClass);
+	CNodeBase* pNode = IsNodeRef(pClass);
 	if (pNode)
 	{
 		PrintOut(_T("Class still has a reference in %s.%s"), pNode->pParent->Name.GetString(), pNode->Name.GetString());
@@ -1717,7 +1717,7 @@ void CReClass2015App::DeleteClass(CNodeClass* pClass)
 	}
 }
 
-CNodeBase* CReClass2015App::isNodeRef(CNodeBase* pTestNode)
+CNodeBase* CReClass2015App::IsNodeRef(CNodeBase* pTestNode)
 {
 	for (UINT c = 0; c < Classes.size(); c++)
 	{
@@ -1764,7 +1764,7 @@ void CReClass2015App::OnButtonClean()
 	std::vector<CNodeClass*> toCheck;
 	for (UINT i = 0; i < Classes.size(); i++)
 	{
-		if (isNodeRef(Classes[i]) == NULL)
+		if (IsNodeRef(Classes[i]) == NULL)
 			toCheck.push_back(Classes[i]);
 	}
 
