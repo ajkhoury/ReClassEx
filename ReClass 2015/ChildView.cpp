@@ -223,13 +223,13 @@ int CChildView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//m_Edit.CreateEx(WS_EX_WINDOWEDGE, _T("EDIT"),  _T(" "), WS_CHILD | WS_TABSTOP, rect, this, 1);
 	m_Edit.Create(WS_CHILD | WS_TABSTOP, rect, this, 1);
 	m_Edit.ShowWindow(SW_HIDE);
-	m_Edit.SetFont(&gMemoryViewFont);
+	m_Edit.SetFont(&g_MemoryViewFont);
 
 	m_Scroll.Create(SBS_VERT, rect, this, 0);
 	m_Scroll.ShowScrollBar();
 
 	m_ToolTip.Create(ES_MULTILINE | WS_BORDER, rect, this, 1);
-	m_ToolTip.SetFont(&gMemoryViewFont);
+	m_ToolTip.SetFont(&g_MemoryViewFont);
 	m_ToolTip.EnableWindow(FALSE);
 
 	SetTimer(1, 250, NULL);
@@ -563,7 +563,7 @@ void CChildView::OnPaint()
 	if (!m_pClass)
 		return;
 
-	dc.SelectObject(&gMemoryViewFont);
+	dc.SelectObject(&g_MemoryViewFont);
 
 	HotSpots.clear();
 

@@ -187,7 +187,7 @@ BOOL CReClass2015App::InitInstance()
 		FontHeight = MulDiv( FontHeight, MulDiv( dpiY, 100, 96 ), 100 );
 	}
 
-	gMemoryViewFont.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T("Terminal"));
+	g_MemoryViewFont.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T("Terminal"));
 
 	g_hProcess = NULL;
 	g_ProcessID = NULL;
@@ -273,10 +273,8 @@ int CReClass2015App::ExitInstance()
 	if (m_hMDIAccel != NULL)
 		FreeResource(m_hMDIAccel);
 
-	if (Console) {
-		Console->EndDialog(0);
+	if (Console) 
 		delete Console;
-	}
 
 	AfxOleTerm(FALSE);
 
@@ -341,7 +339,7 @@ void CReClass2015App::OnButtonReset()
 	g_ProcessID = 0;
 	g_AttachedProcessAddress = NULL;
 
-	CMDIFrameWnd* pFrame = (CMDIFrameWnd*)AfxGetApp()->m_pMainWnd;
+	CMDIFrameWnd* pFrame = static_cast<CMDIFrameWnd*>(AfxGetApp()->m_pMainWnd);
 	CMDIChildWnd* wnd = pFrame->MDIGetActive();
 
 	while (wnd)
@@ -1397,9 +1395,6 @@ void CReClass2015App::OnButtonGenerate()
 {
 	PrintOut(_T("OnButtonGenerate() called"));
 
-	CDialogEdit dlg;
-	dlg.Title = _T("Class Code Generated");
-
 	CString generated_text, t;
 
 	generated_text += _T("// Generated using ReClass 2015\r\n\r\n");
@@ -1660,6 +1655,8 @@ void CReClass2015App::OnButtonGenerate()
 
 		GetMainWnd()->MessageBox(_T("Coppied generated code to clipboard..."), _T("ReClass 2015"), MB_OK | MB_ICONINFORMATION);
 	} else {
+		CDialogEdit dlg;
+		dlg.Title = _T( "Class Code Generated" );
 		dlg.Text = generated_text;
 		dlg.DoModal();
 	}

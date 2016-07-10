@@ -130,8 +130,7 @@ extern COLORREF crChar;
 extern COLORREF crCustom;
 extern COLORREF crHex;
 
-extern CFont gMemoryViewFont;
-//extern CFont SmallFont;
+extern CFont g_MemoryViewFont;
 extern int FontWidth;
 extern int FontHeight;
 

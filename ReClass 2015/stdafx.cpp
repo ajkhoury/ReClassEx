@@ -35,7 +35,7 @@ COLORREF crBits = RGB(0, 0, 255);
 COLORREF crCustom = RGB(64, 128, 64);
 COLORREF crHex = RGB(0, 0, 0);
 
-CFont gMemoryViewFont;
+CFont g_MemoryViewFont;
 
 int FontWidth;
 int FontHeight;
