@@ -1032,9 +1032,12 @@ size_t ConvertStrToAddress(CString str)
 
 		if (bPointer)
 		{
-			if (!ReClassReadMemory((void*)Final, &Final, sizeof(Final), NULL)) {
+			if (!ReClassReadMemory((void*)Final, &Final, sizeof(Final), NULL)) 
+			{
 				// Causing memory leaks when Final doesnt point to a valid address.
+				#ifdef _DEBUG
 				// PrintOut(_T("[ConvertStrToAddress]: Failed to read memory GetLastError() = %s"), Utils::GetLastErrorString().GetString());
+				#endif
 			}
 		}
 	}
