@@ -974,25 +974,6 @@ int SplitString(const CString& input, const CString& delimiter, CStringArray& re
 
 size_t ConvertStrToAddress(CString str)
 {
-	//int foundIdx = -1;
-	//if ((foundIdx = Spot.Text.FindOneOf(_T("+-"))) != -1)
-	//{
-	//	CString moduleName = Spot.Text.Left(foundIdx);
-	//	foundIdx = Spot.Text.GetLength() - foundIdx;
-	//	CString remainder = Spot.Text.Right(foundIdx);
-	//	foundIdx = 0;
-	//	while (1)
-	//	{
-	//		if (isspace(remainder[foundIdx]) || remainder[foundIdx] == _T('+'))
-	//			foundIdx++;
-	//		else
-	//			break;
-	//	}
-	//	CString offsetString = remainder.GetBuffer() + foundIdx;
-	//
-	//	//offset = strtoul(Spot.Text,NULL,16);
-	//}
-
 	CStringArray chunks;
 	if (SplitString(str, "+", chunks) == 0)
 		chunks.Add(str);
@@ -1051,9 +1032,9 @@ size_t ConvertStrToAddress(CString str)
 
 		if (bPointer)
 		{
-			if (ReClassReadMemory((void*)Final, &Final, sizeof(Final), NULL) == 0)
-			{
-				PrintOut(_T("[ConvertStrToAddress]: Failed to read memory GetLastError() = %s"), Utils::GetLastErrorString().GetString());
+			if (!ReClassReadMemory((void*)Final, &Final, sizeof(Final), NULL)) {
+				// Causing memory leaks when Final doesnt point to a valid address.
+				// PrintOut(_T("[ConvertStrToAddress]: Failed to read memory GetLastError() = %s"), Utils::GetLastErrorString().GetString());
 			}
 		}
 	}
