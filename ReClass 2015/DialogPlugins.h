@@ -29,6 +29,8 @@ protected:
 	afx_msg void OnPopupMenuAbout( );
 
 private:
+	RECLASS_PLUGINS& GetSelectedPlugin() { return LoadedPlugins[m_PluginsList.GetSelectionMark()]; }
+
 	void RefreshPlugins( );
 
 	CListCtrl m_PluginsList;

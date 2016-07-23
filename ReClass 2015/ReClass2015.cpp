@@ -244,12 +244,19 @@ BOOL CReClass2015App::InitInstance()
 				continue;
 			}
 
+			auto pfSettingDlgProc = reinterpret_cast<DLGPROC>( GetProcAddress( plugin_base, "PluginSettingsDlg" ) );
+
 			RECLASS_PLUGINS plugin;
 			ZeroMemory( &plugin, sizeof RECLASS_PLUGINS );
 			wcscpy_s( plugin.FileName, file_data.cFileName );
 			plugin.LoadedBase = plugin_base;
+			plugin.SettingsDlg = pfSettingDlgProc;
 			
-			if ( pfnPluginInit( &plugin.Info ) ) {
+			if ( pfnPluginInit( &plugin.Info ) ) 
+			{
+				if ( plugin.Info.DialogID == -1 )
+					plugin.SettingsDlg = nullptr;
+
 				PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), file_data.cFileName, plugin.Info.Name, plugin.Info.Version, plugin.Info.About );
 				LoadedPlugins.push_back( plugin );
 			} else {
@@ -261,7 +268,6 @@ BOOL CReClass2015App::InitInstance()
 			}
 		} while ( FindNextFile( findfile_tree, &file_data ) );
 	}
-
 	return TRUE;
 }
 

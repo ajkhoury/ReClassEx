@@ -46,14 +46,17 @@ void CDialogPlugins::OnContextMenu( CWnd *pWnd, CPoint pos )
 		POSITION selected_pos = m_PluginsList.GetFirstSelectedItemPosition( );
 		if ( selected_pos != nullptr && m_PluginsList.GetNextSelectedItem( selected_pos ) != -1 )
 		{
-			RECLASS_PLUGINS plugin = LoadedPlugins[m_PluginsList.GetSelectionMark()];
-			
+			RECLASS_PLUGINS plugin = GetSelectedPlugin( );
+
 			CString About;
 			About.Format( _T( "&About \"%ls\"" ), plugin.Info.Name );
 
 			CMenu context_menu;
 			context_menu.CreatePopupMenu( );
-			context_menu.AppendMenu( MF_STRING, MENU_SETTINGS, _T( "Settings" ) );
+			
+			if( plugin.SettingsDlg != nullptr )
+				context_menu.AppendMenu( MF_STRING, MENU_SETTINGS, _T( "Settings" ) );
+
 			context_menu.AppendMenu( MF_STRING, MENU_ABOUT, About );
 			context_menu.TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, pos.x, pos.y, this );
 		}
@@ -62,15 +65,17 @@ void CDialogPlugins::OnContextMenu( CWnd *pWnd, CPoint pos )
 
 void CDialogPlugins::OnPopupMenuSettings( )
 { 
-	RECLASS_PLUGINS plugin = LoadedPlugins[m_PluginsList.GetSelectionMark()];
-	//TODO: 
+	RECLASS_PLUGINS plugin = GetSelectedPlugin();
+	DialogBox(plugin.LoadedBase, MAKEINTRESOURCE(plugin.Info.DialogID), GetSafeHwnd(), plugin.SettingsDlg);
 }
 
 void CDialogPlugins::OnPopupMenuAbout( )
 { 
-	RECLASS_PLUGINS plugin = LoadedPlugins[m_PluginsList.GetSelectionMark()];
+	RECLASS_PLUGINS plugin = GetSelectedPlugin();
 	//TODO: make cool about dialog maybe??
-	MessageBoxW( plugin.Info.About, plugin.Info.Name, MB_OK | MB_ICONINFORMATION);
+	CString title;
+	title.Format(_T("%s - About"), plugin.Info.Name);
+	MessageBoxW( plugin.Info.About, title, MB_OK | MB_ICONINFORMATION);
 }
 
 void CDialogPlugins::RefreshPlugins( )
@@ -85,7 +90,7 @@ void CDialogPlugins::RefreshPlugins( )
 
 		item.mask = LVIF_TEXT;
 		item.pszText = plugin.Info.Name;
-		item.cchTextMax = (int)wcslen( plugin.Info.Name ) + 1;
+		item.cchTextMax = (int) wcslen( plugin.Info.Name ) + 1;
 		item.iItem = m_PluginsList.GetItemCount( );
 
 		int pos = m_PluginsList.InsertItem( &item );

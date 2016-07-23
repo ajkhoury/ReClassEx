@@ -12,4 +12,5 @@
 #include <sstream>
 #include <memory>
 
+#include "resource.h"
 #include "ReClassAPI.h"

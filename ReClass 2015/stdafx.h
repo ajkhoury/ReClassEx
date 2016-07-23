@@ -359,9 +359,12 @@ extern HANDLE_OPERATION g_PluginOverrideHandleThread;
 
 typedef struct _RECLASS_PLUGIN_INFO
 {
+	_RECLASS_PLUGIN_INFO( ) :DialogID( -1 ) { }
+
 	wchar_t Name[260];
 	wchar_t About[2048];
 	wchar_t Version[260];
+	int DialogID;
 } RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
 typedef struct _RECLASS_PLUGINS
@@ -369,6 +372,7 @@ typedef struct _RECLASS_PLUGINS
 	RECLASS_PLUGIN_INFO Info;
 	wchar_t FileName[ 260 ];
 	HMODULE LoadedBase;
+	DLGPROC SettingsDlg;
 } RECLASS_PLUGINS, *LPRECLASS_PLUGINS;
 
 BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );

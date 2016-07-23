@@ -29,12 +29,17 @@ typedef HANDLE( PLUGIN_CC *HANDLE_OPERATION )( DWORD, BOOL, DWORD );
 
 typedef struct _RECLASS_PLUGIN_INFO
 {
+#ifdef __cplusplus
+	_RECLASS_PLUGIN_INFO( ) : DialogID( -1 ) { }
+#endif
 	wchar_t Name[ 260 ];
 	wchar_t About[ 2048 ];
 	wchar_t Version[ 260 ];
+	int DialogID;
 } RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
 PLUGIN_API BOOL PLUGIN_CC PluginInit( OUT LPRECLASS_PLUGIN_INFO lpRCInfo );
+PLUGIN_API INT_PTR CALLBACK PluginSettingsDlg( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam );
 
 /*
 *	Register overides for the read/write memory operations
