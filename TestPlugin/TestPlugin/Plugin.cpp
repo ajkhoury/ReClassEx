@@ -2,7 +2,7 @@
 
 LPHANDLE g_ReClassProcessAttached = nullptr;
 
-BOOL WINAPI PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo )
+BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo )
 {
 	wcscpy_s( lpRCInfo->Name, L"Test Plugin Name" );
 	wcscpy_s( lpRCInfo->Version, L"1.0.0.2" );
@@ -17,6 +17,14 @@ BOOL WINAPI PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo )
 	g_ReClassProcessAttached = ReClassGetProcessHandle( );
 
 	return TRUE;
+}
+
+void PLUGIN_CC PluginStateChange( bool state )
+{
+	if (!state)
+		ReClassPrintConsole(L"[TestPlugin] Disabled!");
+	else
+		ReClassPrintConsole(L"[TestPlugin] Enabled!");
 }
 
 INT_PTR CALLBACK PluginSettingsDlg( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )

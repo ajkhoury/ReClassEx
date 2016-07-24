@@ -212,62 +212,8 @@ BOOL CReClass2015App::InitInstance()
 
 	CreateDirectory( _T( "plugins" ), NULL );
 
-	WIN32_FIND_DATA file_data;
-	ZeroMemory( &file_data, sizeof( WIN32_FIND_DATA ) );
+	LoadPlugins( );
 	
-#ifdef _WIN64
-	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin64" ), &file_data );
-#else
-	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin" ), &file_data );
-#endif
-
-	if ( findfile_tree != INVALID_HANDLE_VALUE )
-	{
-		do
-		{
-			HMODULE plugin_base = LoadLibrary( CString( _T( "plugins\\" ) ) + file_data.cFileName );
-			if ( plugin_base == NULL )
-			{
-				CString message;
-				message.Format( _T( "plugin %s was not able to be loaded!" ), file_data.cFileName );
-				GetMainWnd( )->MessageBox( message );
-				continue;
-			}
-
-			auto pfnPluginInit = reinterpret_cast<decltype( &PluginInit )>( GetProcAddress( plugin_base, "PluginInit" ) );
-			if ( pfnPluginInit == nullptr )
-			{
-				CString message;
-				message.Format( _T( "%s is not a reclass plugin!" ), file_data.cFileName );
-				GetMainWnd( )->MessageBox( message );
-				FreeLibrary( plugin_base );
-				continue;
-			}
-
-			auto pfSettingDlgProc = reinterpret_cast<DLGPROC>( GetProcAddress( plugin_base, "PluginSettingsDlg" ) );
-
-			RECLASS_PLUGINS plugin;
-			ZeroMemory( &plugin, sizeof RECLASS_PLUGINS );
-			wcscpy_s( plugin.FileName, file_data.cFileName );
-			plugin.LoadedBase = plugin_base;
-			plugin.SettingsDlg = pfSettingDlgProc;
-			
-			if ( pfnPluginInit( &plugin.Info ) ) 
-			{
-				if ( plugin.Info.DialogID == -1 )
-					plugin.SettingsDlg = nullptr;
-
-				PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), file_data.cFileName, plugin.Info.Name, plugin.Info.Version, plugin.Info.About );
-				LoadedPlugins.push_back( plugin );
-			} else {
-				CString message{ };
-				message.Format( _T( "Failed to load plugin %s" ), file_data.cFileName );
-				PrintOut( message );
-				GetMainWnd( )->MessageBox( message );
-				FreeLibrary( plugin_base );
-			}
-		} while ( FindNextFile( findfile_tree, &file_data ) );
-	}
 	return TRUE;
 }
 
