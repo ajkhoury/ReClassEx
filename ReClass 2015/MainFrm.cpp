@@ -67,7 +67,6 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_CLIP_COPY, &CMainFrame::OnUpdateCheckClipboardCopy)
 	ON_COMMAND(ID_CHECK_PRIVATE_PADDING, &CMainFrame::OnCheckPrivatePadding)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_PRIVATE_PADDING, &CMainFrame::OnUpdateCheckPrivatePadding)
-	
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction

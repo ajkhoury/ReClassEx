@@ -120,7 +120,7 @@ void LoadPlugins( )
 			auto pfnPluginStateChange = reinterpret_cast<decltype(&PluginStateChange)>(GetProcAddress(plugin_base, "PluginStateChange"));
 			if (pfnPluginInit == nullptr)
 			{
-				message.Format(_T("%s doesnt have exported state change function! Unable to disable plugin, stop reclass and delete the plugin to disable it"), file_data.cFileName);
+				message.Format(_T("%s doesnt have exported state change function! Unable to disable plugin on request, stop reclass and delete the plugin to disable it"), file_data.cFileName);
 				PrintOut(message);
 			}
 
@@ -144,7 +144,8 @@ void LoadPlugins( )
 				if (plugin.Info.DialogID == -1)
 					plugin.SettingDlgFnc = nullptr;
 				PrintOut(_T("Loaded plugin %s (%ls version %ls) - %ls"), file_data.cFileName, plugin.Info.Name, plugin.Info.Version, plugin.Info.About);
-				plugin.StateChangeFnc( plugin.State );
+				if (plugin.StateChangeFnc != nullptr) 
+					plugin.StateChangeFnc(plugin.State);
 				LoadedPlugins.push_back( plugin );
 			} else {
 				message.Format( _T( "Failed to load plugin %s" ), file_data.cFileName );
