@@ -363,7 +363,7 @@ extern HANDLE_OPERATION g_PluginOverrideHandleThread;
 
 typedef struct _RECLASS_PLUGIN_INFO
 {
-	_RECLASS_PLUGIN_INFO( ) :DialogID( -1 ) { }
+	_RECLASS_PLUGIN_INFO( ) : DialogID( -1 ) { }
 
 	wchar_t Name[260];
 	wchar_t About[2048];
