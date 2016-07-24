@@ -6,6 +6,7 @@ HANDLE g_hProcess = NULL;
 DWORD g_ProcessID = NULL;
 size_t g_AttachedProcessAddress = NULL;
 DWORD g_AttachedProcessSize = NULL;
+CString g_ProcessName;
 
 std::vector<MemMapInfo> MemMap;
 std::vector<MemMapInfo> MemMapCode;

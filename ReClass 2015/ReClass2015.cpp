@@ -831,17 +831,8 @@ void CReClass2015App::OnButtonNotes()
 
 void CReClass2015App::OnButtonParser()
 {
-	//LoadPlugin(GetFilePath("\\Plugins\\TestPlugin.dll" ));
 	CDialogClasses dlg;
 	dlg.DoModal();
-
-	//CDialogEdit dlg;
-	//dlg.Title = "Parser";
-	//dlg.Text = "";
-	//dlg.DoModal( );
-
-	//Parse( dlg.Text );
-	//Notes = ;
 }
 
 void CReClass2015App::OnButtonHeader()
@@ -1614,7 +1605,6 @@ void CReClass2015App::OnButtonGenerate()
 
 void CReClass2015App::OnButtonPlugins()
 {
-	//GetMainWnd( )->MessageBox( _T( "Coming Soon!" ) );
 	CDialogPlugins plugin_dlg;
 	plugin_dlg.DoModal( );
 }
@@ -1628,7 +1618,11 @@ void CReClass2015App::OnOpenPDB()
 {
 	PrintOut(_T("OnOpenPDB() called"));
 
-	CFileDialog fileDlg { TRUE, _T( "pdb" ), _T( "" ), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T( "PDB (*.pdb)|*.pdb|All Files (*.*)|*.*||" ), NULL };
+	CString concat_name = g_ProcessName;
+	if(concat_name.ReverseFind('.') != -1)
+		concat_name.Truncate(concat_name.ReverseFind('.'));
+
+	CFileDialog fileDlg { TRUE, _T( "pdb" ), concat_name, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T( "PDB (*.pdb)|*.pdb|All Files (*.*)|*.*||" ), NULL };
 	
 	if (fileDlg.DoModal() != IDOK)
 		return;

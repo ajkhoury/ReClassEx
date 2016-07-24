@@ -21,6 +21,7 @@ class CProcessMenuInfo
 public:
 	DWORD ProcessId;
 	CBitmap* pBitmap;
+	CString Procname;
 };
 
 class CMainFrame : public CMDIFrameWndEx

@@ -380,6 +380,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 			
 			g_ProcessID = ProcMenuItems[idx].ProcessId;
 			g_hProcess = ReClassOpenProcess(PROCESS_ALL_ACCESS, false, g_ProcessID);
+			g_ProcessName = ProcMenuItems[idx].Procname;
 
 			// Update memory map
 			UpdateMemoryMap();
@@ -571,6 +572,7 @@ void CMainFrame::OnButtonSelectProcess()
 							CProcessMenuInfo Item;
 							Item.ProcessId = (DWORD)infoP->UniqueProcessId;
 							Item.pBitmap = pBitmap;
+							Item.Procname = pName;
 
 							CClientDC clDC(this);
 							CDC dc; dc.CreateCompatibleDC(&clDC);
@@ -585,11 +587,11 @@ void CMainFrame::OnButtonSelectProcess()
 							dc.DeleteDC();
 
 							DWORD MsgID = (DWORD)(WM_PROCESSMENU + ProcMenuItems.size());
+							
+							CString procWithID;
+							procWithID.Format(_T("%hs (%i)"), pName, (DWORD)infoP->UniqueProcessId); 
 
-							CString proccessString;
-							proccessString.Format(_T("%hs (%i)"), pName, (DWORD)infoP->UniqueProcessId); 
-
-							menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID, proccessString.GetBuffer());
+							menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID, procWithID);
 							menu.SetMenuItemBitmaps(MsgID, MF_BYCOMMAND, pBitmap, pBitmap);
 
 							ProcMenuItems.push_back(Item);

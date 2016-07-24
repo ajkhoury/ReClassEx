@@ -102,6 +102,7 @@ extern HANDLE g_hProcess;
 extern DWORD  g_ProcessID;
 extern size_t g_AttachedProcessAddress;
 extern DWORD  g_AttachedProcessSize;
+extern CString g_ProcessName;
 
 extern std::vector<struct MemMapInfo> MemMap;
 extern std::vector<struct MemMapInfo> MemMapCode;
