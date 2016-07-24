@@ -118,7 +118,7 @@ void LoadPlugins( )
 			}
 			
 			auto pfnPluginStateChange = reinterpret_cast<decltype(&PluginStateChange)>(GetProcAddress(plugin_base, "PluginStateChange"));
-			if (pfnPluginInit == nullptr)
+			if (pfnPluginStateChange == nullptr)
 			{
 				message.Format(_T("%s doesnt have exported state change function! Unable to disable plugin on request, stop reclass and delete the plugin to disable it"), file_data.cFileName);
 				PrintOut(message);
