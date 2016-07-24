@@ -345,6 +345,7 @@ struct HotSpot
 // Plugins
 // NOTE: Plugins disable and enabled state are dependant on the implementation inside the plugin
 // All we do is send a state change to plugins for them to disable or enable their functionality
+// Also decided to change folder creation so that its up to the user to create the folder if they want/have plugins
 //
 #pragma region Plugins
 void LoadPlugins( );

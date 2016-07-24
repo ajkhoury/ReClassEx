@@ -210,8 +210,6 @@ BOOL CReClass2015App::InitInstance()
 	if (Console->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
 		Console->ShowWindow(SW_HIDE);
 
-	CreateDirectory( _T( "plugins" ), NULL );
-
 	LoadPlugins( );
 	
 	return TRUE;
