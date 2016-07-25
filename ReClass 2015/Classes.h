@@ -120,11 +120,12 @@ public:
 
 	int AddText(ViewInfo& View, int x, int y, DWORD color, int HitID, const wchar_t *fmt, ...)
 	{
-		va_list va_alist;
-		static wchar_t wcsbuf[1024];
-		if (fmt == NULL)
+		if ( fmt == NULL )
 			return x;
 
+		wchar_t wcsbuf[1024];
+
+		va_list va_alist;
 		va_start(va_alist, fmt);
 		_vsnwprintf(wcsbuf, sizeof(wcsbuf), fmt, va_alist);
 		va_end(va_alist);
@@ -156,24 +157,26 @@ public:
 
 	int AddText(ViewInfo& View, int x, int y, DWORD color, int HitID, const char* fmt, ...)
 	{
+		char buffer[ 1024 ] = { 0 };
+		TCHAR finalBuffer[ 1024 ] = { 0 };
+
 		va_list va_alist;
 		size_t converted;
-
-		static char buffer[1024];
-		static TCHAR finalBuffer[1024];
 
 		if (fmt == NULL)
 			return x;
 
 		va_start(va_alist, fmt);
-		_vsnprintf(buffer, 1024, fmt, va_alist);
+		_vsnprintf_s(buffer, 1024, fmt, va_alist);
 		va_end(va_alist);
 
 		#ifdef UNICODE
 		mbstowcs_s(&converted, finalBuffer, buffer, 1024);
+		#else
+		memcpy(&finalBuffer, buffer, 1024);
 		#endif
 
-		int width = static_cast<int>(_tcslen(finalBuffer)) * FontWidth;
+		int width = static_cast<int>(strlen(buffer)) * FontWidth;
 
 		if ((y >= -FontHeight) && (y + FontHeight <= View.client->bottom + FontHeight))
 		{
@@ -185,7 +188,7 @@ public:
 				else
 					pos.SetRect(x, y, x + FontWidth * 2, y + FontHeight);
 
-				AddHotSpot(View, pos, CString(finalBuffer), HitID, HS_EDIT);
+				AddHotSpot(View, pos, finalBuffer, HitID, HS_EDIT);
 			} 
 
 			pos.SetRect(x, y, 0, 0);
@@ -1544,8 +1547,6 @@ public:
 
 	virtual int GetMemorySize() 
 	{ 
-		if (memsize >= 1024)
-			memsize = 1024;
 		return memsize; 
 	}
 
@@ -1570,12 +1571,89 @@ public:
 		tx = AddText(View, tx, y, crIndex, HS_EDIT, _T("%i"), GetMemorySize());
 		tx = AddText(View, tx, y, crIndex, HS_NONE, _T("]"));
 
-		CStringA str = GetStringFromMemoryA(pMemory, GetMemorySize());
-		tx = AddText(View, tx, y, crChar, HS_NONE, _T(" = '"));
-		tx = AddText(View, tx, y, crChar, 1, "%s", str.GetBuffer());
-		tx = AddText(View, tx, y, crChar, HS_NONE, _T("' ")) + FontWidth;
+		if ( VALID( pMemory ) )
+		{
+			CStringA str = GetStringFromMemoryA( pMemory, GetMemorySize( ) );
+			tx = AddText( View, tx, y, crChar, HS_NONE, _T( " = '" ) );
+			tx = AddText( View, tx, y, crChar, 1, "%.150s", str.GetBuffer( ) );
+			tx = AddText( View, tx, y, crChar, HS_NONE, _T( "' " ) ) + FontWidth;
+		}
 
 		tx = AddComment(View, tx, y);
+		return y += FontHeight;
+	}
+
+public:
+	DWORD memsize;
+};
+
+class CNodeUnicode : public CNodeBase
+{
+public:
+	CNodeUnicode( )
+	{
+		nodeType = nt_unicode;
+		Name = "Unicode";
+		memsize = 8 * sizeof( wchar_t );
+	}
+
+	virtual void Update( HotSpot& Spot )
+	{
+		StandardUpdate( Spot );
+		if ( Spot.ID == 0 )
+		{
+			memsize = _ttoi( Spot.Text ) * sizeof( wchar_t );
+		} else if ( Spot.ID == 1 )
+		{
+			DWORD Length = Spot.Text.GetLength( );
+			if ( Length > ( memsize / sizeof( wchar_t ) ) )
+				Length = ( memsize / sizeof( wchar_t ) );
+			// Has to be done this way in order to make it compatible in mbs and unicode mode
+			TCHAR* pSource = Spot.Text.GetBuffer( );
+			wchar_t* pwszConverted = new wchar_t[ Length + 1 ];
+			for ( UINT i = 0; i <= Length; i++ )
+				pwszConverted[ i ] = (wchar_t) pSource[ i ];
+
+			ReClassWriteMemory( (LPVOID) Spot.Address, pwszConverted, Length );
+
+			delete pwszConverted;
+		}
+	}
+
+	virtual int GetMemorySize( void )
+	{
+		return memsize;
+	}
+
+	virtual int Draw( ViewInfo& View, int x, int y )
+	{
+		if ( bHidden )
+			return DrawHidden( View, x, y );
+
+		wchar_t* pMemory = ( wchar_t* )&( (unsigned char*) View.pData )[ offset ];
+		AddSelection( View, 0, y, FontHeight );
+		AddDelete( View, x, y );
+		AddTypeDrop( View, x, y );
+		//AddAdd(View,x,y);
+
+		int tx = x + TXOFFSET;
+		tx = AddIcon( View, tx, y, ICON_TEXT, HS_NONE, HS_NONE );
+		tx = AddAddressOffset( View, tx, y );
+		tx = AddText( View, tx, y, crType, HS_NONE, _T( "Unicode " ) );
+		tx = AddText( View, tx, y, crName, HS_NAME, _T( "%s" ), Name );
+		tx = AddText( View, tx, y, crIndex, HS_NONE, _T( "[" ) );
+		tx = AddText( View, tx, y, crIndex, HS_EDIT, _T( "%i" ), memsize / sizeof( wchar_t ) );
+		tx = AddText( View, tx, y, crIndex, HS_NONE, _T( "]" ) );
+
+		if ( VALID( pMemory ) )
+		{
+			CStringW str = GetStringFromMemoryW( pMemory, memsize );
+			tx = AddText( View, tx, y, crChar, HS_NONE, _T( " = '" ) );
+			tx = AddText( View, tx, y, crChar, HS_OPENCLOSE, _T( "%.150ls" ), str ); // ls cause its unicode
+			tx = AddText( View, tx, y, crChar, HS_NONE, _T( "' " ) ) + FontWidth;
+		}
+
+		tx = AddComment( View, tx, y );
 		return y += FontHeight;
 	}
 
@@ -1732,83 +1810,6 @@ public:
 public:
 	CNodeBase* pNode;
 	CMemory Memory;
-};
-
-class CNodeUnicode : public CNodeBase
-{
-public:
-	CNodeUnicode()
-	{
-		nodeType = nt_unicode;
-		Name = "Unicode";
-		memsize = 8 * sizeof(wchar_t);
-	}
-
-	virtual void Update(HotSpot& Spot)
-	{
-		StandardUpdate(Spot);
-		if (Spot.ID == 0)
-		{
-			memsize = _ttoi(Spot.Text) * sizeof(wchar_t);
-		}
-		else if (Spot.ID == 1)
-		{
-			DWORD Length = Spot.Text.GetLength();
-			if (Length > (memsize / sizeof(wchar_t)))
-				Length = (memsize / sizeof(wchar_t));
-			// Has to be done this way in order to make it compatible in mbs and unicode mode
-			TCHAR* pSource = Spot.Text.GetBuffer(); 
-			wchar_t* pwszConverted = new wchar_t[Length + 1];
-			for (UINT i = 0; i <= Length; i++)
-				pwszConverted[i] = (wchar_t)pSource[i];
-
-			ReClassWriteMemory((LPVOID)Spot.Address, pwszConverted, Length);
-
-			delete pwszConverted;
-		}
-	}
-
-	virtual int GetMemorySize(void) 
-	{ 
-		if (memsize >= 1024)
-			memsize = 1024;
-		return memsize;
-	}
-
-	virtual int Draw(ViewInfo& View, int x, int y)
-	{
-		if (bHidden)
-			return DrawHidden(View, x, y);
-
-		wchar_t* pMemory = (wchar_t*)&((unsigned char*)View.pData)[offset];
-		AddSelection(View, 0, y, FontHeight);
-		AddDelete(View, x, y);
-		AddTypeDrop(View, x, y);
-		//AddAdd(View,x,y);
-
-		int tx = x + TXOFFSET;
-		tx = AddIcon(View, tx, y, ICON_TEXT, HS_NONE, HS_NONE);
-		tx = AddAddressOffset(View, tx, y);
-		tx = AddText(View, tx, y, crType, HS_NONE, _T("Unicode "));
-		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
-		tx = AddText(View, tx, y, crIndex, HS_NONE, _T("["));
-		tx = AddText(View, tx, y, crIndex, HS_EDIT, _T("%i"), memsize / sizeof(wchar_t));
-		tx = AddText(View, tx, y, crIndex, HS_NONE, _T("]"));
-
-		if (VALID(pMemory))
-		{
-			CStringW str = GetStringFromMemoryW(pMemory, memsize);
-			tx = AddText(View, tx, y, crChar, HS_NONE, _T(" = '"));
-			tx = AddText(View, tx, y, crChar, HS_OPENCLOSE, _T("%ls"), str); // ls cause its unicode
-			tx = AddText(View, tx, y, crChar, HS_NONE, _T("' ")) + FontWidth;
-		}
-
-		tx = AddComment(View, tx, y);
-		return y += FontHeight;
-	}
-
-public:
-	DWORD memsize;
 };
 
 class CNodeFloat : public CNodeBase

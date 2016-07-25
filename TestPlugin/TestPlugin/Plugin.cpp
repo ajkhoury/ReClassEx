@@ -2,11 +2,12 @@
 
 LPHANDLE g_ReClassProcessAttached = nullptr;
 
-BOOL WINAPI PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo )
+BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo )
 {
 	wcscpy_s( lpRCInfo->Name, L"Test Plugin Name" );
 	wcscpy_s( lpRCInfo->Version, L"1.0.0.2" );
 	wcscpy_s( lpRCInfo->About, L"This plugin is a test plugin" );
+	lpRCInfo->DialogID = IDD_SETTINGS_DLG;
 
 	if ( !ReClassOverrideMemoryOperations( WriteCallback, ReadCallback ) ) {
 		ReClassPrintConsole( L"[TestPlugin] Failed to register read/write callbacks, failing PluginInit" );
@@ -16,6 +17,27 @@ BOOL WINAPI PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo )
 	g_ReClassProcessAttached = ReClassGetProcessHandle( );
 
 	return TRUE;
+}
+
+void PLUGIN_CC PluginStateChange( bool state )
+{
+	if (!state)
+		ReClassPrintConsole(L"[TestPlugin] Disabled!");
+	else
+		ReClassPrintConsole(L"[TestPlugin] Enabled!");
+}
+
+INT_PTR CALLBACK PluginSettingsDlg( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
+{
+	switch ( Msg )
+	{
+	case WM_INITDIALOG:
+		return TRUE;
+	case WM_CLOSE:
+		EndDialog( hWnd, 0 );
+		break;
+	}
+	return FALSE;
 }
 
 BOOL WINAPI WriteCallback( LPVOID write_address, LPVOID buffer_ptr, SIZE_T write_size, PSIZE_T num_write )

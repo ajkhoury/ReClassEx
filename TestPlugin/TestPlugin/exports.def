@@ -1,3 +1,5 @@
 LIBRARY
 EXPORTS
 	PluginInit
+	PluginStateChange
+	PluginSettingsDlg

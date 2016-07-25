@@ -210,58 +210,8 @@ BOOL CReClass2015App::InitInstance()
 	if (Console->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
 		Console->ShowWindow(SW_HIDE);
 
-	CreateDirectory( _T( "plugins" ), NULL );
-
-	WIN32_FIND_DATA file_data;
-	ZeroMemory( &file_data, sizeof( WIN32_FIND_DATA ) );
+	LoadPlugins( );
 	
-#ifdef _WIN64
-	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin64" ), &file_data );
-#else
-	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin" ), &file_data );
-#endif
-
-	if ( findfile_tree != INVALID_HANDLE_VALUE )
-	{
-		do
-		{
-			HMODULE plugin_base = LoadLibrary( CString( _T( "plugins\\" ) ) + file_data.cFileName );
-			if ( plugin_base == NULL )
-			{
-				CString message;
-				message.Format( _T( "plugin %s was not able to be loaded!" ), file_data.cFileName );
-				GetMainWnd( )->MessageBox( message );
-				continue;
-			}
-
-			auto pfnPluginInit = reinterpret_cast<decltype( &PluginInit )>( GetProcAddress( plugin_base, "PluginInit" ) );
-			if ( pfnPluginInit == nullptr )
-			{
-				CString message;
-				message.Format( _T( "%s is not a reclass plugin!" ), file_data.cFileName );
-				GetMainWnd( )->MessageBox( message );
-				FreeLibrary( plugin_base );
-				continue;
-			}
-
-			RECLASS_PLUGINS plugin;
-			ZeroMemory( &plugin, sizeof RECLASS_PLUGINS );
-			wcscpy_s( plugin.FileName, file_data.cFileName );
-			plugin.LoadedBase = plugin_base;
-			
-			if ( pfnPluginInit( &plugin.Info ) ) {
-				PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), file_data.cFileName, plugin.Info.Name, plugin.Info.Version, plugin.Info.About );
-				LoadedPlugins.push_back( plugin );
-			} else {
-				CString message{ };
-				message.Format( _T( "Failed to load plugin %s" ), file_data.cFileName );
-				PrintOut( message );
-				GetMainWnd( )->MessageBox( message );
-				FreeLibrary( plugin_base );
-			}
-		} while ( FindNextFile( findfile_tree, &file_data ) );
-	}
-
 	return TRUE;
 }
 
@@ -881,17 +831,8 @@ void CReClass2015App::OnButtonNotes()
 
 void CReClass2015App::OnButtonParser()
 {
-	//LoadPlugin(GetFilePath("\\Plugins\\TestPlugin.dll" ));
 	CDialogClasses dlg;
 	dlg.DoModal();
-
-	//CDialogEdit dlg;
-	//dlg.Title = "Parser";
-	//dlg.Text = "";
-	//dlg.DoModal( );
-
-	//Parse( dlg.Text );
-	//Notes = ;
 }
 
 void CReClass2015App::OnButtonHeader()
@@ -1639,7 +1580,7 @@ void CReClass2015App::OnButtonGenerate()
 	if (!Footer.IsEmpty())
 		generated_text += (Footer + _T("\r\n"));
 
-	if ( gbClipboardCopy )
+	if (gbClipboardCopy)
 	{
 		::OpenClipboard(NULL);
 		::EmptyClipboard();
@@ -1652,7 +1593,6 @@ void CReClass2015App::OnButtonGenerate()
 		::SetClipboardData(CF_TEXT, memory_blob);
 #endif
 		::CloseClipboard();
-
 		GetMainWnd()->MessageBox(_T("Coppied generated code to clipboard..."), _T("ReClass 2015"), MB_OK | MB_ICONINFORMATION);
 	} else {
 		CDialogEdit dlg;
@@ -1664,7 +1604,6 @@ void CReClass2015App::OnButtonGenerate()
 
 void CReClass2015App::OnButtonPlugins()
 {
-	//GetMainWnd( )->MessageBox( _T( "Coming Soon!" ) );
 	CDialogPlugins plugin_dlg;
 	plugin_dlg.DoModal( );
 }
@@ -1678,7 +1617,11 @@ void CReClass2015App::OnOpenPDB()
 {
 	PrintOut(_T("OnOpenPDB() called"));
 
-	CFileDialog fileDlg { TRUE, _T( "pdb" ), _T( "" ), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T( "PDB (*.pdb)|*.pdb|All Files (*.*)|*.*||" ), NULL };
+	CString concat_name = g_ProcessName;
+	if(concat_name.ReverseFind('.') != -1)
+		concat_name.Truncate(concat_name.ReverseFind('.'));
+
+	CFileDialog fileDlg { TRUE, _T( "pdb" ), concat_name, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T( "PDB (*.pdb)|*.pdb|All Files (*.*)|*.*||" ), NULL };
 	
 	if (fileDlg.DoModal() != IDOK)
 		return;

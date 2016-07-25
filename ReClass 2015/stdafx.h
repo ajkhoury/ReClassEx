@@ -102,6 +102,7 @@ extern HANDLE g_hProcess;
 extern DWORD  g_ProcessID;
 extern size_t g_AttachedProcessAddress;
 extern DWORD  g_AttachedProcessSize;
+extern CString g_ProcessName;
 
 extern std::vector<struct MemMapInfo> MemMap;
 extern std::vector<struct MemMapInfo> MemMapCode;
@@ -341,11 +342,15 @@ struct HotSpot
 #define CNodeHex CNodeHex32
 #endif
 
-
 //
 // Plugins
+// NOTE: Plugins disable and enabled state are dependant on the implementation inside the plugin
+// All we do is send a state change to plugins for them to disable or enable their functionality
+// Also decided to change folder creation so that its up to the user to create the folder if they want/have plugins
 //
 #pragma region Plugins
+void LoadPlugins( );
+
 #define RECLASS_EXPORT __declspec(dllexport) 
 #define PLUGIN_CC __stdcall
 
@@ -359,19 +364,27 @@ extern HANDLE_OPERATION g_PluginOverrideHandleThread;
 
 typedef struct _RECLASS_PLUGIN_INFO
 {
+	_RECLASS_PLUGIN_INFO( ) : DialogID( -1 ) { }
+
 	wchar_t Name[260];
 	wchar_t About[2048];
 	wchar_t Version[260];
+	int DialogID;
 } RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
+
+BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
+void PLUGIN_CC PluginStateChange( bool state );
 
 typedef struct _RECLASS_PLUGINS
 {
 	RECLASS_PLUGIN_INFO Info;
 	wchar_t FileName[ 260 ];
+	bool State;
 	HMODULE LoadedBase;
+	decltype( &PluginInit ) InitFnc;
+	decltype( &PluginStateChange ) StateChangeFnc;
+	DLGPROC SettingDlgFnc;
 } RECLASS_PLUGINS, *LPRECLASS_PLUGINS;
-
-BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
 
 //Exported Functions Below
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet = FALSE );

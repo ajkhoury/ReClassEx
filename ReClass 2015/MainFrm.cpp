@@ -67,7 +67,6 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_CLIP_COPY, &CMainFrame::OnUpdateCheckClipboardCopy)
 	ON_COMMAND(ID_CHECK_PRIVATE_PADDING, &CMainFrame::OnCheckPrivatePadding)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_PRIVATE_PADDING, &CMainFrame::OnUpdateCheckPrivatePadding)
-	
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -381,6 +380,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 			
 			g_ProcessID = ProcMenuItems[idx].ProcessId;
 			g_hProcess = ReClassOpenProcess(PROCESS_ALL_ACCESS, false, g_ProcessID);
+			g_ProcessName = ProcMenuItems[idx].Procname;
 
 			// Update memory map
 			UpdateMemoryMap();
@@ -554,6 +554,7 @@ void CMainFrame::OnButtonSelectProcess()
 					}
 
 					hProcess = ReClassOpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, (DWORD)infoP->UniqueProcessId);
+					
 					if (hProcess)
 					{
 						#ifdef _WIN64
@@ -572,6 +573,7 @@ void CMainFrame::OnButtonSelectProcess()
 							CProcessMenuInfo Item;
 							Item.ProcessId = (DWORD)infoP->UniqueProcessId;
 							Item.pBitmap = pBitmap;
+							Item.Procname = pName;
 
 							CClientDC clDC(this);
 							CDC dc; dc.CreateCompatibleDC(&clDC);
@@ -586,11 +588,11 @@ void CMainFrame::OnButtonSelectProcess()
 							dc.DeleteDC();
 
 							DWORD MsgID = (DWORD)(WM_PROCESSMENU + ProcMenuItems.size());
+							
+							CString procWithID;
+							procWithID.Format(_T("%hs (%i)"), pName, (DWORD)infoP->UniqueProcessId); 
 
-							CString proccessString;
-							proccessString.Format(_T("%hs (%i)"), pName, (DWORD)infoP->UniqueProcessId); 
-
-							menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID, proccessString.GetBuffer());
+							menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID, procWithID);
 							menu.SetMenuItemBitmaps(MsgID, MF_BYCOMMAND, pBitmap, pBitmap);
 
 							ProcMenuItems.push_back(Item);
@@ -681,12 +683,14 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 {
 	if (nIDEvent == TIMER_MEMORYMAP_UPDATE)
 		UpdateMemoryMap();
+
 	CMDIFrameWndEx::OnTimer(nIDEvent);
 }
 
 void CMainFrame::OnCheckTopmost()
 {
 	gbTop = !gbTop;
+
 	if (gbTop)
 		SetWindowPos(&wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	else
@@ -745,8 +749,7 @@ void CMainFrame::OnButtonLeft()
 	MONITORINFO mi = { sizeof(MONITORINFO) };
 	::GetWindowRect(GetSafeHwnd(), &rc);
 	hMon = ::MonitorFromRect(&rc, MONITOR_DEFAULTTONEAREST);
-	if (!::GetMonitorInfo(hMon, &mi))
-		MessageBox(_T("Failed to get monitor info!"));
+	::GetMonitorInfo(hMon, &mi);
 	LONG nWidth = mi.rcWork.right - mi.rcWork.left, nHeight = mi.rcWork.bottom - mi.rcWork.top;
 	SetWindowPos(gbTop ? &wndTopMost : &wndNoTopMost, mi.rcMonitor.left, mi.rcMonitor.top, nWidth / 2, nHeight, SWP_NOZORDER);
 }
@@ -757,8 +760,7 @@ void CMainFrame::OnButtonRight()
 	MONITORINFO mi = { sizeof(MONITORINFO) };
 	::GetWindowRect(GetSafeHwnd(), &rc);
 	hMon = ::MonitorFromRect(&rc, MONITOR_DEFAULTTONEAREST);
-	if (!::GetMonitorInfo(hMon, &mi)) 
-		MessageBox(_T("Failed to get monitor info!"));
+	::GetMonitorInfo(hMon, &mi);
 	LONG nWidth = mi.rcWork.right - mi.rcWork.left, nHeight = mi.rcWork.bottom - mi.rcWork.top;
 	SetWindowPos(gbTop ? &wndTopMost : &wndNoTopMost, mi.rcMonitor.left + (nWidth / 2), 0, nWidth / 2, nHeight, SWP_NOZORDER);
 }

@@ -6,6 +6,7 @@ HANDLE g_hProcess = NULL;
 DWORD g_ProcessID = NULL;
 size_t g_AttachedProcessAddress = NULL;
 DWORD g_AttachedProcessSize = NULL;
+CString g_ProcessName;
 
 std::vector<MemMapInfo> MemMap;
 std::vector<MemMapInfo> MemMapCode;
@@ -82,6 +83,79 @@ MEMORY_OPERATION g_PluginOverrideMemoryWrite = nullptr;
 MEMORY_OPERATION g_PluginOverrideMemoryRead = nullptr;
 HANDLE_OPERATION g_PluginOverrideHandleProcess = nullptr;
 HANDLE_OPERATION g_PluginOverrideHandleThread = nullptr;
+
+void LoadPlugins( )
+{ 
+	WIN32_FIND_DATA file_data;
+	ZeroMemory( &file_data, sizeof( WIN32_FIND_DATA ) );
+
+#ifdef _WIN64
+	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin64" ), &file_data );
+#else
+	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin" ), &file_data );
+#endif
+
+	if ( findfile_tree != INVALID_HANDLE_VALUE )
+	{
+		CString message{ };
+
+		do
+		{
+			HMODULE plugin_base = LoadLibrary( CString( _T( "plugins\\" ) ) + file_data.cFileName );
+			if ( plugin_base == NULL )
+			{
+				message.Format( _T( "plugin %s was not able to be loaded!" ), file_data.cFileName );
+				PrintOut( message );
+				continue;
+			}
+
+			auto pfnPluginInit = reinterpret_cast<decltype(&PluginInit)>(GetProcAddress(plugin_base, "PluginInit"));
+			if (pfnPluginInit == nullptr)
+			{
+				message.Format( _T( "%s is not a reclass plugin!" ), file_data.cFileName );
+				PrintOut( message );
+				FreeLibrary( plugin_base );
+				continue;
+			}
+			
+			auto pfnPluginStateChange = reinterpret_cast<decltype(&PluginStateChange)>(GetProcAddress(plugin_base, "PluginStateChange"));
+			if (pfnPluginStateChange == nullptr)
+			{
+				message.Format(_T("%s doesnt have exported state change function! Unable to disable plugin on request, stop reclass and delete the plugin to disable it"), file_data.cFileName);
+				PrintOut(message);
+			}
+
+			auto pfnPluginSettingDlgProc = reinterpret_cast<DLGPROC>(GetProcAddress(plugin_base, "PluginSettingsDlg"));
+
+			RECLASS_PLUGINS plugin;
+			ZeroMemory(&plugin, sizeof RECLASS_PLUGINS);
+			wcscpy_s(plugin.FileName, file_data.cFileName);
+			plugin.LoadedBase = plugin_base;
+			plugin.InitFnc = pfnPluginInit;
+			plugin.SettingDlgFnc = pfnPluginSettingDlgProc;
+			plugin.StateChangeFnc = pfnPluginStateChange;
+
+			if (pfnPluginInit(&plugin.Info))
+			{
+			#ifdef UNICODE
+				plugin.State = theApp.GetProfileInt(L"PluginState", plugin.Info.Name, 1) == 1;
+			#else
+				plugin.State = theApp.GetProfileInt("PluginState", CW2A(plugin.Info.Name), 1) == 1;
+			#endif
+				if (plugin.Info.DialogID == -1)
+					plugin.SettingDlgFnc = nullptr;
+				PrintOut(_T("Loaded plugin %s (%ls version %ls) - %ls"), file_data.cFileName, plugin.Info.Name, plugin.Info.Version, plugin.Info.About);
+				if (plugin.StateChangeFnc != nullptr) 
+					plugin.StateChangeFnc(plugin.State);
+				LoadedPlugins.push_back( plugin );
+			} else {
+				message.Format( _T( "Failed to load plugin %s" ), file_data.cFileName );
+				PrintOut( message );
+				FreeLibrary( plugin_base );
+			}
+		} while ( FindNextFile( findfile_tree, &file_data ) );
+	}
+}
 
 BOOL PLUGIN_CC ReClassOverrideMemoryOperations(MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet)
 {
