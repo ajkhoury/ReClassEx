@@ -1110,7 +1110,7 @@ size_t ConvertStrToAddress(CString str)
 			{
 				// Causing memory leaks when Final doesnt point to a valid address.
 				#ifdef _DEBUG
-				// PrintOut(_T("[ConvertStrToAddress]: Failed to read memory GetLastError() = %s"), Utils::GetLastErrorString().GetString());
+				// PrintOut(_T("[ConvertStrToAddress]: Failed to read memory. Error: %s"), Utils::GetLastErrorString().GetString());
 				#endif
 			}
 		}
