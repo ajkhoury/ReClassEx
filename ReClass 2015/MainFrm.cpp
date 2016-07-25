@@ -531,6 +531,7 @@ void CMainFrame::OnButtonSelectProcess()
 					char pName[256];
 					memset(pName, 0, sizeof(pName));
 					WideCharToMultiByte(0, 0, infoP->ImageName.Buffer, infoP->ImageName.Length, pName, 256, NULL, NULL);
+					
 					// Are we filtering out processes
 					if (gbFilterProcesses)
 					{
@@ -610,8 +611,6 @@ void CMainFrame::OnButtonSelectProcess()
 	}
 
 	menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this);
-	
-	return;
 }
 
 void CMainFrame::ClearProcMenuItems()

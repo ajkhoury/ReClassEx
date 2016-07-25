@@ -61,8 +61,8 @@ void CDialogModules::BuildList()
 		SHGetFileInfo(MemMapModule[i].Path, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
 		m_ImageList.Add(sfi.hIcon);
 
-		CString name = moduleInfo.Name, upercase_name = CString(moduleInfo.Name).MakeUpper();
-		if ( m_Filter.GetLength( ) != 0 && upercase_name.Find( m_Filter.MakeUpper( ) ) == -1 )
+		CString name = moduleInfo.Name, uppercase_name = CString(moduleInfo.Name).MakeUpper();
+		if ( m_Filter.GetLength( ) != 0 && uppercase_name.Find( m_Filter.MakeUpper( ) ) == -1 )
 			continue;
 
 		TCHAR strStart[64];
@@ -83,7 +83,7 @@ BOOL CDialogModules::OnInitDialog()
 	GetWindowRect( &m_OriginalSize );
 	ScreenToClient( &m_OriginalSize );
 
-	m_ImageList.Create(GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), ILC_COLOR32, 1, 1);
+	m_ImageList.Create(15, 15, ILC_COLOR32, 1, 1);
 	m_ImageList.SetBkColor(RGB(255, 255, 255));
 
 	m_ModuleViewList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);
