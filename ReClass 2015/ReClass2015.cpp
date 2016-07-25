@@ -1580,7 +1580,7 @@ void CReClass2015App::OnButtonGenerate()
 	if (!Footer.IsEmpty())
 		generated_text += (Footer + _T("\r\n"));
 
-	if ( gbClipboardCopy )
+	if (gbClipboardCopy)
 	{
 		::OpenClipboard(NULL);
 		::EmptyClipboard();
@@ -1593,7 +1593,6 @@ void CReClass2015App::OnButtonGenerate()
 		::SetClipboardData(CF_TEXT, memory_blob);
 #endif
 		::CloseClipboard();
-
 		GetMainWnd()->MessageBox(_T("Coppied generated code to clipboard..."), _T("ReClass 2015"), MB_OK | MB_ICONINFORMATION);
 	} else {
 		CDialogEdit dlg;

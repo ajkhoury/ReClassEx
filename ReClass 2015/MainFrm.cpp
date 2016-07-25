@@ -554,6 +554,7 @@ void CMainFrame::OnButtonSelectProcess()
 					}
 
 					hProcess = ReClassOpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, (DWORD)infoP->UniqueProcessId);
+					
 					if (hProcess)
 					{
 						#ifdef _WIN64
@@ -682,12 +683,14 @@ void CMainFrame::OnTimer(UINT_PTR nIDEvent)
 {
 	if (nIDEvent == TIMER_MEMORYMAP_UPDATE)
 		UpdateMemoryMap();
+
 	CMDIFrameWndEx::OnTimer(nIDEvent);
 }
 
 void CMainFrame::OnCheckTopmost()
 {
 	gbTop = !gbTop;
+
 	if (gbTop)
 		SetWindowPos(&wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
 	else
@@ -746,8 +749,7 @@ void CMainFrame::OnButtonLeft()
 	MONITORINFO mi = { sizeof(MONITORINFO) };
 	::GetWindowRect(GetSafeHwnd(), &rc);
 	hMon = ::MonitorFromRect(&rc, MONITOR_DEFAULTTONEAREST);
-	if (!::GetMonitorInfo(hMon, &mi))
-		MessageBox(_T("Failed to get monitor info!"));
+	::GetMonitorInfo(hMon, &mi);
 	LONG nWidth = mi.rcWork.right - mi.rcWork.left, nHeight = mi.rcWork.bottom - mi.rcWork.top;
 	SetWindowPos(gbTop ? &wndTopMost : &wndNoTopMost, mi.rcMonitor.left, mi.rcMonitor.top, nWidth / 2, nHeight, SWP_NOZORDER);
 }
@@ -758,8 +760,7 @@ void CMainFrame::OnButtonRight()
 	MONITORINFO mi = { sizeof(MONITORINFO) };
 	::GetWindowRect(GetSafeHwnd(), &rc);
 	hMon = ::MonitorFromRect(&rc, MONITOR_DEFAULTTONEAREST);
-	if (!::GetMonitorInfo(hMon, &mi)) 
-		MessageBox(_T("Failed to get monitor info!"));
+	::GetMonitorInfo(hMon, &mi);
 	LONG nWidth = mi.rcWork.right - mi.rcWork.left, nHeight = mi.rcWork.bottom - mi.rcWork.top;
 	SetWindowPos(gbTop ? &wndTopMost : &wndNoTopMost, mi.rcMonitor.left + (nWidth / 2), 0, nWidth / 2, nHeight, SWP_NOZORDER);
 }

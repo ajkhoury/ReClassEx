@@ -78,12 +78,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.rc-plugin</TargetExt>
-    <OutDir>$(SolutionDir)plugins\</OutDir>
+    <OutDir>$(SolutionDir)..\bin\plugins\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.rc-plugin64</TargetExt>
-    <OutDir>$(SolutionDir)plugins\</OutDir>
+    <OutDir>$(SolutionDir)..\bin\plugins\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

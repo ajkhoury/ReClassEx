@@ -292,7 +292,7 @@ namespace Utils
 	static OSType GetOperatingSystemType()
 	{
 		const OSType types[] = { Windows10, Windows8, Windows7, WinVista, WinXP, Win2000 };
-		for (int i = 0; i < 6; ++i)
+		for (int i = 0; i < _countof(types); ++i)
 			if (IsWindowsVersionOrLater(types[i]))
 				return types[i];
 		return UnknownOS;

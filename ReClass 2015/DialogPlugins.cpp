@@ -57,7 +57,7 @@ void CDialogPlugins::OnContextMenu(CWnd *pWnd, CPoint pos)
 			context_menu.CreatePopupMenu();
 			if(plugin.SettingDlgFnc != nullptr)
 				context_menu.AppendMenu(MF_STRING, MENU_SETTINGS, _T("Settings"));
-			if(plugin.StateChangeFnc != nullptr )
+			if(plugin.StateChangeFnc != nullptr)
 				context_menu.AppendMenu(MF_STRING, MENU_STATECHANGE, plugin.State ? _T("Disable") : _T("Enable"));
 			context_menu.AppendMenu(MF_STRING, MENU_ABOUT, About);
 			context_menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_LEFTBUTTON, pos.x, pos.y, this);
