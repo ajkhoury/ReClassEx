@@ -84,8 +84,8 @@ MEMORY_OPERATION g_PluginOverrideMemoryRead = nullptr;
 HANDLE_OPERATION g_PluginOverrideHandleProcess = nullptr;
 HANDLE_OPERATION g_PluginOverrideHandleThread = nullptr;
 
-void LoadPlugins( )
-{ 
+void LoadPlugins()
+{
 	WIN32_FIND_DATA file_data;
 	ZeroMemory( &file_data, sizeof( WIN32_FIND_DATA ) );
 
@@ -109,7 +109,7 @@ void LoadPlugins( )
 				continue;
 			}
 
-			auto pfnPluginInit = reinterpret_cast<decltype(&PluginInit)>(GetProcAddress(plugin_base, "PluginInit"));
+			auto pfnPluginInit = reinterpret_cast<tPluginInit>(GetProcAddress(plugin_base, "PluginInit"));
 			if (pfnPluginInit == nullptr)
 			{
 				message.Format( _T( "%s is not a reclass plugin!" ), file_data.cFileName );
@@ -118,7 +118,7 @@ void LoadPlugins( )
 				continue;
 			}
 			
-			auto pfnPluginStateChange = reinterpret_cast<decltype(&PluginStateChange)>(GetProcAddress(plugin_base, "PluginStateChange"));
+			auto pfnPluginStateChange = reinterpret_cast<tPluginStateChange>(GetProcAddress(plugin_base, "PluginStateChange"));
 			if (pfnPluginStateChange == nullptr)
 			{
 				message.Format(_T("%s doesnt have exported state change function! Unable to disable plugin on request, stop reclass and delete the plugin to disable it"), file_data.cFileName);
@@ -148,7 +148,9 @@ void LoadPlugins( )
 				if (plugin.StateChangeFnc != nullptr) 
 					plugin.StateChangeFnc(plugin.State);
 				LoadedPlugins.push_back( plugin );
-			} else {
+			}
+			else 
+			{
 				message.Format( _T( "Failed to load plugin %s" ), file_data.cFileName );
 				PrintOut( message );
 				FreeLibrary( plugin_base );
@@ -178,8 +180,9 @@ BOOL PLUGIN_CC ReClassOverrideHandleOperations(HANDLE_OPERATION HandleProcess, H
 {
 	if (HandleProcess == nullptr || HandleThread == nullptr)
 		return FALSE;
-	if (g_PluginOverrideHandleProcess != nullptr && g_PluginOverrideHandleThread != nullptr && !bForceSet)
+	if (g_PluginOverrideHandleProcess != nullptr && g_PluginOverrideHandleThread != nullptr && !bForceSet) {
 		return FALSE;
+	}
 	else
 	{
 		g_PluginOverrideHandleProcess = HandleProcess;

@@ -333,9 +333,9 @@ struct HotSpot
 	class CNodeBase* object;
 };
 
-
 // All node type classes
 #include "Classes.h"
+
 #ifdef _WIN64
 #define CNodeHex CNodeHex64
 #else
@@ -349,7 +349,7 @@ struct HotSpot
 // Also decided to change folder creation so that its up to the user to create the folder if they want/have plugins
 //
 #pragma region Plugins
-void LoadPlugins( );
+void LoadPlugins();
 
 #define RECLASS_EXPORT __declspec(dllexport) 
 #define PLUGIN_CC __stdcall
@@ -372,7 +372,11 @@ typedef struct _RECLASS_PLUGIN_INFO
 	int DialogID;
 } RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
+
+typedef BOOL(PLUGIN_CC *tPluginInit)(LPRECLASS_PLUGIN_INFO lpRCInfo);
 BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
+
+typedef void(PLUGIN_CC *tPluginStateChange)(bool state);
 void PLUGIN_CC PluginStateChange( bool state );
 
 typedef struct _RECLASS_PLUGINS
