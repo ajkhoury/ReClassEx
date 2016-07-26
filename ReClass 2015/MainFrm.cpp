@@ -5,6 +5,7 @@
 #include "Debug.h"
 #include "DialogClasses.h"
 #include "MainFrm.h"
+#include "DialogProcSelect.h"
 
 // CMainFrame
 IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWndEx)
@@ -78,7 +79,7 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
-	ClearProcMenuItems();
+
 }
 
 #include <afxtabctrl.h>
@@ -374,22 +375,6 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 			pChild->m_wndView.m_pClass = pClass;
 			return TRUE;
 		}
-		if (nID >= WM_PROCESSMENU && nID < (WM_PROCESSMENU + WM_MAXITEMS) )
-		{
-			UINT idx = nID - WM_PROCESSMENU;
-			
-			g_ProcessID = ProcMenuItems[idx].ProcessId;
-			g_hProcess = ReClassOpenProcess(PROCESS_ALL_ACCESS, false, g_ProcessID);
-			g_ProcessName = ProcMenuItems[idx].Procname;
-
-			// Update memory map
-			UpdateMemoryMap();
-
-			// Init pdb
-			//pdb.Init();
-
-			return TRUE;
-		}
 		if (nID >= WM_DELETECLASSMENU && nID < (WM_DELETECLASSMENU + WM_MAXITEMS) )
 		{
 			UINT idx = nID - WM_DELETECLASSMENU;
@@ -440,9 +425,7 @@ void CMainFrame::OnUpdateCheckCbRtti(CCmdUI *pCmdUI)
 	if (!gbPointers) 
 	{
 		pCmdUI->Enable(FALSE);
-	}
-	else
-	{
+	}else{
 		pCmdUI->Enable(TRUE);
 		pCmdUI->SetCheck(gbRTTI);
 	}
@@ -455,173 +438,10 @@ void CMainFrame::OnButtonTypedef()
 	dlg.DoModal();
 }
 
-// Annoying processes to filter out that you probably won't be looking in the memory of
-static const char* CommonProcesses[] = 
-{
-	"svchost.exe", "conhost.exe", "wininit.exe", "smss.exe","winint.exe", "wlanext.exe",
-	"spoolsv.exe", "spoolsv.exe","notepad.exe", "explorer.exe", "itunes.exe",
-	"sqlservr.exe", "nvtray.exe", "nvxdsync.exe", "lsass.exe", "jusched.exe",
-	"conhost.exe", "chrome.exe", "firefox.exe", "winamp.exe", "TrustedInstaller.exe",
-	"WinRAR.exe", "calc.exe", "taskhostex.exe", "Taskmgr.exe", "dwm.exe", "SpotifyWebHelper.exe"
-	"plugin-container.exe", "services.exe","devenv.exe", "flux.exe", "skype.exe", "spotify.exe", 
-	"csrss.exe", "taskeng.exe","spotifyhelper.exe", "vcpkgsrv.exe", "msbuild.exe", "cmd.exe", "taskhost.exe",
-	"SettingSyncHost.exe", "SkyDrive.exe", "ctfmon.exe", "RuntimeBroker.exe","BTTray.exe", "BTStackServer.exe", 
-	"Bluetooth Headset Helper.exe", "winlogon.exe", "PnkBstrA.exe", "armsvc.exe", "MSIAfterburner.exe", "vmnat.exe",
-	"vmware-authd.exe", "vmnetdhcp.exe", "pia_manager.exe", "SpotifyWebHelper.exe", "Dropbox.exe", "Viber.exe", "idaq.exe",
-	"idaq64.exe", "CoreSync.exe", "Steam.exe", "SpotifyCrashService.exe", "RzSynapse.exe", "acrotray.exe",
-	"CCLibrary.exe", "pia_tray.exe", "rubyw.exe", "netsession_win.exe", "NvBackend.exe", "TeamViewer_Service.exe",
-	"DisplayFusionHookAppWIN6032.exe", "DisplayFusionHookAppWIN6064.exe", "GameScannerService.exe", "AdobeUpdateService.exe",
-	"steamwebhelper.exe", "c2c_service.exe", "Sync Server.exe", "NvNetworkService.exe", "Creative Cloud.exe", "foobar2000.exe",
-	"code.exe"
-};
-
 void CMainFrame::OnButtonSelectProcess()
 {
-	HANDLE hProcess = 0;
-	void* pBuffer = NULL;
-	ULONG cbBuffer = 0x20000;
-	HANDLE hHeap = NULL;
-	NTSTATUS Status = STATUS_INFO_LENGTH_MISMATCH;
-	bool bHasEnumeratedProcesses = false;
-	PSYSTEM_PROCESS_INFORMATION infoP = NULL;
-
-	CMFCRibbonButton* pButton = NULL;
-	
-	pButton = static_cast<CMFCRibbonButton*>(m_wndRibbonBar.FindByID(ID_BUTTON_SELECTPROCESS));
-
-	CRect pos = pButton->GetRect();
-	ClientToScreen(&pos);
-
-	CMenu menu;
-	menu.CreatePopupMenu();
-
-	ClearProcMenuItems();
-
-	static HMODULE hNtdll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
-	static tNtQuerySystemInformation fnQSI = (tNtQuerySystemInformation)Utils::GetProcAddress(hNtdll, "NtQuerySystemInformation");
-
-	hHeap = GetProcessHeap();
-	Status = STATUS_INFO_LENGTH_MISMATCH;
-
-	while (!bHasEnumeratedProcesses)
-	{
-		pBuffer = HeapAlloc(hHeap, HEAP_ZERO_MEMORY, cbBuffer);
-		if (pBuffer == NULL)
-			return;
-
-		Status = fnQSI(SystemProcessInformation, pBuffer, cbBuffer, &cbBuffer);
-		if (Status == STATUS_INFO_LENGTH_MISMATCH)
-		{
-			HeapFree(hHeap, NULL, pBuffer);
-			cbBuffer *= 2;
-		}
-		else if (!NT_SUCCESS(Status))
-		{
-			HeapFree(hHeap, NULL, pBuffer);
-			return;
-		}
-		else
-		{
-			bHasEnumeratedProcesses = true;
-			infoP = (PSYSTEM_PROCESS_INFORMATION)pBuffer;
-			while (infoP)
-			{	
-				if (infoP->ImageName.Length)
-				{
-					char pName[256];
-					memset(pName, 0, sizeof(pName));
-					WideCharToMultiByte(0, 0, infoP->ImageName.Buffer, infoP->ImageName.Length, pName, 256, NULL, NULL);
-					// Are we filtering out processes
-					if (gbFilterProcesses)
-					{
-						bool skip = false;
-						for (int i = 0; i < sizeof(CommonProcesses) / sizeof(*CommonProcesses); i++) 
-						{
-							if ( _stricmp( pName, CommonProcesses[ i ] ) == 0 || (DWORD)infoP->UniqueProcessId == GetCurrentProcessId( ) )
-							{
-								skip = true;
-								break;
-							}
-						}
-
-						if (skip)
-						{
-							if (!infoP->NextEntryOffset)
-								break;
-							infoP = (PSYSTEM_PROCESS_INFORMATION)((unsigned char*)infoP + infoP->NextEntryOffset);
-							continue;
-						}
-					}
-
-					hProcess = ReClassOpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, (DWORD)infoP->UniqueProcessId);
-					
-					if (hProcess)
-					{
-						#ifdef _WIN64
-						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX64)
-						#else
-						if (Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX86)
-						#endif
-						{
-							TCHAR filename[1024];
-							GetModuleFileNameEx(hProcess, NULL, filename, 1024);
-
-							SHFILEINFO sfi;
-							SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
-
-							CBitmap* pBitmap = new CBitmap();
-							CProcessMenuInfo Item;
-							Item.ProcessId = (DWORD)infoP->UniqueProcessId;
-							Item.pBitmap = pBitmap;
-							Item.Procname = pName;
-
-							CClientDC clDC(this);
-							CDC dc; dc.CreateCompatibleDC(&clDC);
-
-							int size = 16;
-							pBitmap->CreateCompatibleBitmap(&clDC, size, size);
-							CBitmap* pOldBmp = dc.SelectObject(pBitmap);
-
-							dc.FillSolidRect(0, 0, size, size, GetSysColor(COLOR_3DFACE));
-							::DrawIconEx(dc.GetSafeHdc(), 0, 0, sfi.hIcon, size, size, 0, NULL, DI_NORMAL);
-							dc.SelectObject(pOldBmp);
-							dc.DeleteDC();
-
-							DWORD MsgID = (DWORD)(WM_PROCESSMENU + ProcMenuItems.size());
-							
-							CString procWithID;
-							procWithID.Format(_T("%hs (%i)"), pName, (DWORD)infoP->UniqueProcessId); 
-
-							menu.AppendMenu(MF_STRING | MF_ENABLED, MsgID, procWithID);
-							menu.SetMenuItemBitmaps(MsgID, MF_BYCOMMAND, pBitmap, pBitmap);
-
-							ProcMenuItems.push_back(Item);
-						}
-
-						CloseHandle(hProcess);
-					}
-				}
-
-				if (!infoP->NextEntryOffset)
-					break;
-				infoP = (PSYSTEM_PROCESS_INFORMATION)((unsigned char*)infoP + infoP->NextEntryOffset);
-			}
-		}
-	}
-
-	menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this);
-	
-	return;
-}
-
-void CMainFrame::ClearProcMenuItems()
-{
-	for (UINT i = 0; i < ProcMenuItems.size(); i++)
-	{
-		ProcMenuItems[i].pBitmap->DeleteObject();
-		delete ProcMenuItems[i].pBitmap;
-	}
-	ProcMenuItems.clear();
+	CDialogProcSelect proc;
+	proc.DoModal( );
 }
 
 void CMainFrame::OnButtonEditClass()
