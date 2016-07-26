@@ -11,12 +11,12 @@
 IMPLEMENT_DYNAMIC(CDialogModules, CDialogEx)
 
 CDialogModules::CDialogModules(CWnd* pParent) 
-	: CDialogEx(CDialogModules::IDD, pParent)
+	: CDialogEx(CDialogModules::IDD, pParent),
+	m_bSortAscendingName(false),
+	m_bSortAscendingStart(false),
+	m_bSortAscendingEnd(false),
+	m_bSortAscendingSize(false)
 {
-	m_bSortAscendingName	= false;
-	m_bSortAscendingStart	= false;
-	m_bSortAscendingEnd		= false;
-	m_bSortAscendingSize	= false;
 }
 
 CDialogModules::~CDialogModules()
@@ -26,7 +26,7 @@ CDialogModules::~CDialogModules()
 void CDialogModules::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_MODULELIST, m_ModuleViewList);
+	DDX_Control(pDX, IDC_MODULELIST, m_ModuleList);
 	DDX_Control(pDX, IDC_MODULENAME, m_Edit);
 }
 
@@ -47,8 +47,8 @@ void CDialogModules::OnGetMinMaxInfo( MINMAXINFO *lpinfo )
 }
 
 BEGIN_MESSAGE_MAP(CDialogModules, CDialogEx)
-	ON_NOTIFY(NM_DBLCLK, IDC_MODULELIST, OnDblClkListControl)
-	ON_NOTIFY(LVN_COLUMNCLICK, IDC_MODULELIST, OnColumnClick)
+	ON_NOTIFY(NM_DBLCLK, IDC_MODULELIST, CDialogModules::OnDblClkListControl)
+	ON_NOTIFY(LVN_COLUMNCLICK, IDC_MODULELIST, CDialogModules::OnColumnClick)
 	ON_EN_CHANGE(IDC_MODULENAME, &CDialogModules::OnEnChangeModuleName)
 	ON_WM_GETMINMAXINFO()
 	ON_WM_SIZE()
@@ -63,18 +63,20 @@ void CDialogModules::BuildList()
 
 		SHFILEINFO sfi = { 0 };
 		SHGetFileInfo(MemMapModule[i].Path, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
-		m_ImageList.Add(sfi.hIcon);
+		m_ModuleIcons.Add(sfi.hIcon);
 
-		CString name = moduleInfo.Name, uppercase_name = CString(moduleInfo.Name).MakeUpper();
+		CString name = moduleInfo.Name;
+
+		CString uppercase_name = CString(moduleInfo.Name).MakeUpper();
 		if ( m_Filter.GetLength( ) != 0 && uppercase_name.Find( m_Filter.MakeUpper( ) ) == -1 )
 			continue;
 
 		TCHAR strStart[64];
-		_stprintf(strStart, _T("0x%IX"), moduleInfo.Start);
+		_stprintf_s(strStart, _T("0x%IX"), moduleInfo.Start);
 		TCHAR strEnd[64];
-		_stprintf(strEnd, _T("0x%IX"), moduleInfo.End);
+		_stprintf_s(strEnd, _T("0x%IX"), moduleInfo.End);
 		TCHAR strSize[64];
-		_stprintf(strSize, _T("0x%X"), moduleInfo.Size);
+		_stprintf_s(strSize, _T("0x%X"), moduleInfo.Size);
 
 		AddData(i, (LPTSTR)name.GetString(), strStart, strEnd, strSize, static_cast<LPARAM>(moduleInfo.Start));
 	}
@@ -87,17 +89,17 @@ BOOL CDialogModules::OnInitDialog()
 	GetWindowRect( &m_OriginalSize );
 	ScreenToClient( &m_OriginalSize );
 
-	m_ImageList.Create(15, 15, ILC_COLOR32, 1, 1);
-	m_ImageList.SetBkColor(RGB(255, 255, 255));
+	m_ModuleIcons.Create(15, 15, ILC_COLOR32, 1, 1);
+	m_ModuleIcons.SetBkColor(RGB(255, 255, 255));
 
-	m_ModuleViewList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);
+	m_ModuleList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);
 
-	m_ModuleViewList.InsertColumn(COLUMN_MODULE, _T("Module"), LVCFMT_LEFT, 300);
-	m_ModuleViewList.InsertColumn(COLUMN_START, _T("Start"), LVCFMT_LEFT, 80);
-	m_ModuleViewList.InsertColumn(COLUMN_END, _T("End"), LVCFMT_LEFT, 80);
-	m_ModuleViewList.InsertColumn(COLUMN_SIZE, _T("Size"), LVCFMT_LEFT, 80);
+	m_ModuleList.InsertColumn(COLUMN_MODULE, _T("Module"), LVCFMT_LEFT, 300);
+	m_ModuleList.InsertColumn(COLUMN_START, _T("Start"), LVCFMT_LEFT, 80);
+	m_ModuleList.InsertColumn(COLUMN_END, _T("End"), LVCFMT_LEFT, 80);
+	m_ModuleList.InsertColumn(COLUMN_SIZE, _T("Size"), LVCFMT_LEFT, 80);
 
-	m_ModuleViewList.SetImageList(&m_ImageList, LVSIL_SMALL);
+	m_ModuleList.SetImageList(&m_ModuleIcons, LVSIL_SMALL);
 
 	BuildList();
 
@@ -129,12 +131,12 @@ __inline CNodeClass* CDialogModules::GetClassByName(const TCHAR* szClassName)
 
 void CDialogModules::SetSelected()
 {
-	POSITION pos = m_ModuleViewList.GetFirstSelectedItemPosition();
+	POSITION pos = m_ModuleList.GetFirstSelectedItemPosition();
 	while (pos)
 	{
-		int nItem = m_ModuleViewList.GetNextSelectedItem(pos);
+		int nItem = m_ModuleList.GetNextSelectedItem(pos);
 
-		nItem = FindModuleByName(m_ModuleViewList.GetItemText(nItem, 0));
+		nItem = FindModuleByName(m_ModuleList.GetItemText(nItem, 0));
 
 		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
 		CChildFrame* pChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
@@ -181,7 +183,6 @@ void CDialogModules::SetSelected()
 	}
 }
 
-//int (CALLBACK *PFNLVCOMPARE)(LPARAM, LPARAM, LPARAM);
 int CALLBACK CDialogModules::CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
 {
 	COMPARESTRUCT* compare = (COMPARESTRUCT*)lParamSort;
@@ -221,7 +222,7 @@ void CDialogModules::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
 	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
 
 	LPCOMPARESTRUCT compare = new COMPARESTRUCT;
-	compare->pListCtrl = &m_ModuleViewList;
+	compare->pListCtrl = &m_ModuleList;
 	compare->iColumn = pNMListView->iSubItem;
 
 	switch (compare->iColumn)
@@ -247,7 +248,7 @@ void CDialogModules::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
 		break;
 	}
 
-	m_ModuleViewList.SortItemsEx(CompareFunction, (LPARAM)compare);
+	m_ModuleList.SortItemsEx(CompareFunction, (LPARAM)compare);
 
 	delete compare;
 
@@ -275,13 +276,13 @@ int CDialogModules::AddData(int Index, LPTSTR ModuleName, LPTSTR StartAddress, L
 	lvi.cchTextMax = static_cast<int>(_tcslen(ModuleName)) + 1;
 	lvi.iImage = Index;
 	lvi.lParam = lParam;
-	lvi.iItem = m_ModuleViewList.GetItemCount();
+	lvi.iItem = m_ModuleList.GetItemCount();
 
-	int pos = m_ModuleViewList.InsertItem(&lvi);
+	int pos = m_ModuleList.InsertItem(&lvi);
 
-	m_ModuleViewList.SetItemText(pos, COLUMN_START, (LPTSTR)StartAddress);
-	m_ModuleViewList.SetItemText(pos, COLUMN_END, (LPTSTR)EndAddress);
-	m_ModuleViewList.SetItemText(pos, COLUMN_SIZE, (LPTSTR)ModuleSize);
+	m_ModuleList.SetItemText(pos, COLUMN_START, (LPTSTR)StartAddress);
+	m_ModuleList.SetItemText(pos, COLUMN_END, (LPTSTR)EndAddress);
+	m_ModuleList.SetItemText(pos, COLUMN_SIZE, (LPTSTR)ModuleSize);
 
 	return pos;
 }
@@ -289,6 +290,6 @@ int CDialogModules::AddData(int Index, LPTSTR ModuleName, LPTSTR StartAddress, L
 void CDialogModules::OnEnChangeModuleName()
 {
 	m_Edit.GetWindowText(m_Filter);
-	m_ModuleViewList.DeleteAllItems();
+	m_ModuleList.DeleteAllItems();
 	BuildList();
 }

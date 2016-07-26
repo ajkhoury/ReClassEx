@@ -28,10 +28,24 @@ const std::initializer_list<const wchar_t*> CommonProcesses =
 	L"code.exe", L"ReClass.exe", L"ReClass64.exe"
 };
 
+// standard constructor
+CDialogProcSelect::CDialogProcSelect(CWnd* pParent)
+	: CDialogEx(CDialogProcSelect::IDD, pParent), 
+	m_bLoadingProcesses(false),
+	m_bSortAscendingName(false),
+	m_bSortAscendingId(false)
+{
+}
+
+CDialogProcSelect::~CDialogProcSelect()
+{
+}
+
 IMPLEMENT_DYNAMIC( CDialogProcSelect, CDialogEx )
 
 BEGIN_MESSAGE_MAP( CDialogProcSelect, CDialogEx )
-	ON_NOTIFY( NM_DBLCLK, IDC_PROCESS_LIST, CDialogProcSelect::OnDblclkListControl )
+	ON_NOTIFY( NM_DBLCLK, IDC_PROCESS_LIST, CDialogProcSelect::OnDblClkListControl )
+	ON_NOTIFY( LVN_COLUMNCLICK, IDC_PROCESS_LIST, CDialogProcSelect::OnColumnClick )
 	ON_COMMAND( IDC_ATTACH_PROCESS, &CDialogProcSelect::OnAttachButton )
 	ON_COMMAND( IDC_REFRESH_PROCESS, &CDialogProcSelect::OnRefreshButton )
 END_MESSAGE_MAP( )
@@ -68,14 +82,13 @@ void CDialogProcSelect::RefreshRunningProcesses( )
 				 && ( !gbFilterProcesses || std::find_if( CommonProcesses.begin( ), CommonProcesses.end( ),
 														  [proc_info] ( const wchar_t* iter_val ) -> bool { return _wcsicmp( iter_val, proc_info->ImageName.Buffer ) == 0; } ) == CommonProcesses.end( ) ) )
 			{
-				HANDLE hProcess = ReClassOpenProcess( PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD) proc_info->UniqueProcessId );
+				HANDLE hProcess = ReClassOpenProcess( PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD)proc_info->UniqueProcessId);
 
 			#ifdef _WIN64
-				if ( hProcess && Utils::GetProcessPlatform( hProcess ) == Utils::ProcessPlatformX64 )
+				if ( hProcess && Utils::GetProcessPlatform( hProcess ) == Utils::ProcessPlatformX64 ) {
 			#else
-				if ( hProcess && Utils::GetProcessPlatform( hProcess ) == Utils::ProcessPlatformX86 )
+				if ( hProcess && Utils::GetProcessPlatform( hProcess ) == Utils::ProcessPlatformX86 ) {
 			#endif
-				{
 					ProcessInfoStack info;
 					info.ProcessId = (DWORD) proc_info->UniqueProcessId;
 
@@ -88,21 +101,22 @@ void CDialogProcSelect::RefreshRunningProcesses( )
 					LVITEM lvi = { 0 };
 					lvi.mask = LVIF_TEXT | LVIF_IMAGE;
 
-					CString formated_item;
 				#ifdef UNICODE
-					formated_item.Format( _T( "%s (%d)" ), proc_info->ImageName.Buffer, proc_info->UniqueProcessId );
 					info.Procname = proc_info->ImageName.Buffer;
 				#else
-					formated_item.Format( _T( "%S (%d)" ), proc_info->ImageName.Buffer, proc_info->UniqueProcessId);
 					info.Procname = CW2A( proc_info->ImageName.Buffer );
 				#endif
 
-					lvi.pszText = formated_item.GetBuffer( );
-					lvi.cchTextMax = formated_item.GetLength( );
+					lvi.pszText = info.Procname.GetBuffer();
+					lvi.cchTextMax = info.Procname.GetLength();
 					lvi.iImage = proc_index++;;
-					lvi.iItem = m_ProcessList.GetItemCount( );
+					lvi.iItem = m_ProcessList.GetItemCount();
+					int pos = m_ProcessList.InsertItem( &lvi );
 
-					m_ProcessList.InsertItem( &lvi );
+					TCHAR strProcId[64];
+					_stprintf_s(strProcId, _T("%d"), info.ProcessId);
+					m_ProcessList.SetItemText(pos, COLUMN_PROCESSID, (LPTSTR)strProcId);
+
 					m_ProcessInfos.push_back( info );
 				}
 
@@ -130,15 +144,83 @@ BOOL CDialogProcSelect::OnInitDialog( )
 	m_ProcessIcons.Create( 15, 15, ILC_COLOR32, 1, 1 );
 	m_ProcessIcons.SetBkColor( RGB( 255, 255, 255 ) );
 
+	m_ProcessList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);
+
 	m_ProcessList.SetImageList( &m_ProcessIcons, LVSIL_SMALL );
-	m_ProcessList.InsertColumn( 0, _T( "Process" ), LVCFMT_LEFT, 250 );
+	m_ProcessList.InsertColumn(COLUMN_PROCESSNAME, _T( "Process" ), LVCFMT_LEFT, 200 );
+	m_ProcessList.InsertColumn(COLUMN_PROCESSID, _T("ID"), LVCFMT_LEFT, 50);
+	
 
 	RefreshRunningProcesses( );
 
 	return TRUE;
 }
 
-void CDialogProcSelect::OnDblclkListControl( NMHDR* pNMHDR, LRESULT* pResult )
+int CALLBACK CDialogProcSelect::CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
+{
+	COMPARESTRUCT* compare = (COMPARESTRUCT*)lParamSort;
+	if (compare)
+	{
+		CListCtrl* pListCtrl = (CListCtrl*)compare->pListCtrl;
+		int column = compare->iColumn;
+		bool ascending = compare->bAscending;
+
+		int item1 = ascending ? static_cast<int>(lParam1) : static_cast<int>(lParam2);
+		int item2 = ascending ? static_cast<int>(lParam2) : static_cast<int>(lParam1);
+
+		if (column == COLUMN_PROCESSID)
+		{
+			CString strNum1 = pListCtrl->GetItemText(item1, column);
+			CString strNum2 = pListCtrl->GetItemText(item2, column);
+
+			size_t num1 = (size_t)_tcstoui64(strNum1.GetBuffer(), NULL, 16);
+			size_t num2 = (size_t)_tcstoui64(strNum2.GetBuffer(), NULL, 16);
+
+			return num2 - num1;
+		}
+		else if (column == COLUMN_PROCESSNAME)
+		{
+			CString strModuleName1 = pListCtrl->GetItemText(item1, column);
+			CString strModuleName2 = pListCtrl->GetItemText(item2, column);
+
+			return _tcsicmp(strModuleName1.GetBuffer(), strModuleName2.GetBuffer());
+		}
+	}
+
+	return 0;
+}
+
+void CDialogProcSelect::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
+
+	LPCOMPARESTRUCT compare = new COMPARESTRUCT;
+	compare->pListCtrl = &m_ProcessList;
+	compare->iColumn = pNMListView->iSubItem;
+
+	switch (compare->iColumn)
+	{
+	case COLUMN_PROCESSNAME:
+		m_bSortAscendingName = !m_bSortAscendingName;
+		compare->bAscending = m_bSortAscendingName;
+		break;
+	case COLUMN_PROCESSID:
+		m_bSortAscendingId = !m_bSortAscendingId;
+		compare->bAscending = m_bSortAscendingId;
+		break;
+	default:
+		compare->bAscending = false;
+		break;
+	}
+
+	m_ProcessList.SortItemsEx(CompareFunction, (LPARAM)compare);
+
+	delete compare;
+
+	*pResult = 0;
+}
+
+void CDialogProcSelect::OnDblClkListControl( NMHDR* pNMHDR, LRESULT* pResult )
 {
 	OnAttachButton( );
 }
@@ -146,7 +228,8 @@ void CDialogProcSelect::OnDblclkListControl( NMHDR* pNMHDR, LRESULT* pResult )
 void CDialogProcSelect::OnAttachButton( )
 {
 	int selected_index = m_ProcessList.GetSelectionMark( );
-	if ( selected_index == -1 ) return;
+	if ( selected_index == -1 )
+		return;
 	g_ProcessID = m_ProcessInfos[ selected_index ].ProcessId;
 	g_hProcess = ReClassOpenProcess( PROCESS_ALL_ACCESS, FALSE, g_ProcessID );
 	g_ProcessName = m_ProcessInfos[ selected_index ].Procname;
@@ -156,7 +239,8 @@ void CDialogProcSelect::OnAttachButton( )
 
 void CDialogProcSelect::OnRefreshButton( )
 {
-	if ( m_bLoadingProcesses ) return;
+	if ( m_bLoadingProcesses ) 
+		return;
 	RefreshRunningProcesses( );
 }
 

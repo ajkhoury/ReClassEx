@@ -31,7 +31,6 @@ private:
 		COLUMN_SIZE,
 		NUM_OF_COLUMNS
 	};
-	static TCHAR* s_ColumnInfo[4];
 
 	int FindModuleByName(const TCHAR* szName);
 	CNodeClass* GetClassByName(const TCHAR* szClassName);
@@ -44,10 +43,10 @@ private:
 
 	static int CALLBACK CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
 
-public:
-	CImageList				m_ImageList;
+//public:
+	CImageList				m_ModuleIcons;
 	
-	CListCtrl				m_ModuleViewList;
+	CListCtrl				m_ModuleList;
 	bool					m_bSortAscendingName;
 	bool					m_bSortAscendingStart;
 	bool					m_bSortAscendingEnd;

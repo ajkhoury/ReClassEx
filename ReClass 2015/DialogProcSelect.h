@@ -9,6 +9,9 @@ class CDialogProcSelect : public CDialogEx
 {
 	DECLARE_DYNAMIC(CDialogProcSelect)
 public:
+	CDialogProcSelect(CWnd* pParent = NULL);
+	virtual ~CDialogProcSelect();
+
 	// Dialog Data
 	enum { IDD = IDD_DIALOGPROCSELECT };
 
@@ -18,25 +21,9 @@ public:
 		CString Procname; 
 	};
 
-	// standard constructor
-	CDialogProcSelect( CWnd* pParent = NULL )
-		: CDialogEx( CDialogProcSelect::IDD, pParent ), m_bLoadingProcesses( false )
-	{ }
-	
-	virtual ~CDialogProcSelect() { }
-
 	void RefreshRunningProcesses();
 
 protected:
-	//Controls
-	CListCtrl m_ProcessList;
-	CRect m_OriginalSize;
-	CImageList m_ProcessIcons;
-
-	//Misc
-	std::vector<ProcessInfoStack> m_ProcessInfos;
-	volatile bool m_bLoadingProcesses;
-
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual BOOL OnInitDialog();
 
@@ -44,5 +31,34 @@ protected:
 
 	afx_msg void OnAttachButton( );
 	afx_msg void OnRefreshButton( );
-	afx_msg void OnDblclkListControl( NMHDR* pNMHDR, LRESULT* pResult );
+	afx_msg void OnDblClkListControl( NMHDR* pNMHDR, LRESULT* pResult );
+	afx_msg void OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult);
+
+private:
+	enum
+	{
+		COLUMN_PROCESSNAME = 0,
+		COLUMN_PROCESSID,
+		NUM_OF_COLUMNS
+	};
+
+	typedef struct COMPARESTRUCT {
+		CListCtrl* pListCtrl;
+		int iColumn;
+		bool bAscending;
+	} *LPCOMPARESTRUCT;
+
+	static int CALLBACK CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
+
+	//Controls
+	CListCtrl m_ProcessList;
+	bool m_bSortAscendingName;
+	bool m_bSortAscendingId;
+
+	CRect m_OriginalSize;
+	CImageList m_ProcessIcons;
+
+	//Misc
+	std::vector<ProcessInfoStack> m_ProcessInfos;
+	volatile bool m_bLoadingProcesses;
 };
