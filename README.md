@@ -46,5 +46,6 @@ See wiki for instructions on how to compile:
 - [IChooseYou](https://github.com/IChooseYou)
 - [stevemk14ebr](https://github.com/stevemk14ebr)
 - [Timboy67678](https://github.com/Timboy67678)
+- [DarthTon](https://github.com/DarthTon)
 - leveln
 - buddyfavors
