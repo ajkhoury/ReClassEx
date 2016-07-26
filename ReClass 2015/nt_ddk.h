@@ -1061,6 +1061,7 @@ typedef void	(NTAPI *tRtlInitUnicodeString)(PUNICODE_STRING DestinationString, P
 typedef void	(NTAPI *tRtlFreeUnicodeString)(PUNICODE_STRING UnicodeString);
 typedef ULONG	(NTAPI *tRtlNtStatusToDosError)(NTSTATUS Status);
 typedef NTSTATUS(NTAPI *tRtlGetNativeSystemInformation)(SYSTEM_INFORMATION_CLASS SystemInformationClass, PVOID SystemInformation, ULONG SystemInformationLength, PULONG ReturnLength);
+typedef LONG	(NTAPI *tRtlGetVersion)(PRTL_OSVERSIONINFOW lpVersionInformation);
 typedef NTSTATUS(NTAPI *tNtQueryInformationProcess)(HANDLE ProcessHandle, PROCESSINFOCLASS ProcessInformationClass, PVOID ProcessInformation, ULONG ProcessInformationLength, PULONG ReturnLength);
 typedef NTSTATUS(NTAPI *tNtQuerySystemInformation)(ULONG SystemInformationClass, PVOID SystemInformation, ULONG SystemInformationLength, PULONG ReturnLength);
 typedef NTSTATUS(NTAPI *tNtCreateThreadEx)

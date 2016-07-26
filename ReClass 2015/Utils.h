@@ -8,7 +8,7 @@
 namespace Utils
 {
 	// forward declarations
-	static void* GetProcAddress(HMODULE module, const char *proc_name);
+	static void* GetLocalProcAddress(HMODULE module, const char *proc_name);
 	static HMODULE GetLocalModuleHandle(const char* moduleName);
 	static HMODULE GetRemoteModuleHandle(const char* moduleName);
 	static void* GetRemoteProcAddress(HMODULE module, const char *proc_name); 
@@ -144,7 +144,7 @@ namespace Utils
 		return (HMODULE)dwModuleHandle;
 	}
 
-	static void* GetProcAddress(HMODULE module, const char *proc_name)
+	static void* GetLocalProcAddress(HMODULE module, const char *proc_name)
 	{
 		char *modb = (char *)module;
 
@@ -206,7 +206,9 @@ namespace Utils
 				frwd_module = LoadLibraryA(dllName);
 			if (!frwd_module)
 			{
-				//MessageBox(0, _T("GetProcAddress failed to load module using GetModuleHandle and LoadLibrary!"), _T("Reclass 2015"), MB_ICONERROR);
+#ifdef _DEBUG
+				MessageBox(0, _T("Utils::GetProcAddress failed to load module using Utils::GetLocalModuleHandle and LoadLibrary!"), _T("Reclass 2015"), MB_ICONERROR);
+#endif
 				return NULL;
 			}
 
@@ -214,11 +216,11 @@ namespace Utils
 			if (forwardByOrd) // forwarded by ordinal
 			{
 				WORD func_ord = atoi(func_name + 1);
-				address = Utils::GetProcAddress(frwd_module, (const char*)func_ord);
+				address = Utils::GetLocalProcAddress(frwd_module, (const char*)func_ord);
 			}
 			else
 			{
-				address = Utils::GetProcAddress(frwd_module, func_name);
+				address = Utils::GetLocalProcAddress(frwd_module, func_name);
 			}
 
 			free(dll_name);
@@ -238,86 +240,7 @@ namespace Utils
 
 		Windows = 0x4000,   /**< To test whether any version of Windows is running,
 							you can use the expression ((getOperatingSystemType() & Windows) != 0). */
-	};
-
-	static bool IsWindowsVersionOrLater(OSType target)
-	{
-		if (target == Windows10)
-		{
-			typedef LONG(__stdcall* fnRtlGetVersion)(PRTL_OSVERSIONINFOW lpVersionInformation);
-			static fnRtlGetVersion RtlGetVersion = (fnRtlGetVersion)Utils::GetProcAddress((HMODULE)Utils::GetLocalModuleHandle("ntdll.dll"), "RtlGetVersion");
-
-			RTL_OSVERSIONINFOEXW verInfo = { 0 };
-			verInfo.dwOSVersionInfoSize = sizeof(verInfo);
-
-			if (RtlGetVersion != 0 && RtlGetVersion((PRTL_OSVERSIONINFOW)&verInfo) == 0)
-			{
-				return (verInfo.dwMajorVersion == 10);
-			}
-			return false;
-		}
-
-		OSVERSIONINFOEX info;
-		memset(&info, 0, sizeof(OSVERSIONINFOEX));
-		info.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-
-		if (target >= WinVista)
-		{
-			info.dwMajorVersion = 6;
-
-			switch (target)
-			{
-			case WinVista:   info.dwMinorVersion = 0; break;
-			case Windows7:   info.dwMinorVersion = 1; break;
-			case Windows8:	  info.dwMinorVersion = 2; break;
-			default: break;
-			}
-		}
-		else
-		{
-			info.dwMajorVersion = 5;
-			info.dwMinorVersion = target >= WinXP ? 1 : 0;
-		}
-
-		DWORDLONG mask = 0;
-
-		VER_SET_CONDITION(mask, VER_MAJORVERSION, VER_GREATER_EQUAL);
-		VER_SET_CONDITION(mask, VER_MINORVERSION, VER_GREATER_EQUAL);
-		VER_SET_CONDITION(mask, VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
-		VER_SET_CONDITION(mask, VER_SERVICEPACKMINOR, VER_GREATER_EQUAL);
-
-		return VerifyVersionInfo(&info, VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR, mask) != FALSE;
-	}
-
-	static OSType GetOperatingSystemType()
-	{
-		const OSType types[] = { Windows10, Windows8, Windows7, WinVista, WinXP, Win2000 };
-		for (int i = 0; i < _countof(types); ++i)
-			if (IsWindowsVersionOrLater(types[i]))
-				return types[i];
-		return UnknownOS;
-	}
-	
-	static LONG GetProcessorArchitecture()
-	{
-		static LONG volatile nProcessorArchitecture = -1;
-		if (nProcessorArchitecture == -1)
-		{
-			SYSTEM_PROCESSOR_INFORMATION sProcInfo;
-			NTSTATUS nNtStatus;
-
-			tRtlGetNativeSystemInformation fnRtlGetNativeSystemInformation = (tRtlGetNativeSystemInformation)Utils::GetProcAddress((HMODULE)Utils::GetLocalModuleHandle("ntdll.dll"), "RtlGetNativeSystemInformation");
-			nNtStatus = fnRtlGetNativeSystemInformation((SYSTEM_INFORMATION_CLASS)SystemProcessorInformation, &sProcInfo, sizeof(sProcInfo), NULL);
-			if (nNtStatus == STATUS_NOT_IMPLEMENTED)
-			{
-				tNtQuerySystemInformation fnQuerySystemInformation = (tNtQuerySystemInformation)Utils::GetProcAddress(Utils::GetLocalModuleHandle("ntdll.dll"), "NtQuerySystemInformation");
-				nNtStatus = fnQuerySystemInformation((SYSTEM_INFORMATION_CLASS)SystemProcessorInformation, &sProcInfo, sizeof(sProcInfo), NULL);
-			}
-			if (NT_SUCCESS(nNtStatus))
-				InterlockedExchange(&nProcessorArchitecture, (LONG)(sProcInfo.ProcessorArchitecture));
-		}
-		return nProcessorArchitecture;
-	}
+	};	
 
 	enum PlatformType
 	{
@@ -326,75 +249,9 @@ namespace Utils
 		ProcessPlatformX64 = 2
 	};
 
-	static int GetProcessPlatform(HANDLE hProcess)
-	{
-		if (hProcess == (HANDLE)((LONG_PTR)-1))
-		{
-			#if defined(_M_IX86)
-			return 1; // ProcessPlatformX86;
-			#elif defined(_M_X64)
-			return 2; // ProcessPlatformX64
-			#endif
-		}
-		switch (Utils::GetProcessorArchitecture())
-		{
-		case PROCESSOR_ARCHITECTURE_INTEL:
-			return ProcessPlatformX86;
-		case PROCESSOR_ARCHITECTURE_AMD64:
-			//check on 64-bit platforms
-			ULONG_PTR nWow64;
-			NTSTATUS nNtStatus;
-	
-			static HMODULE hNtDll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
-			static tNtQueryInformationProcess fnNTQIP = (tNtQueryInformationProcess)Utils::GetProcAddress(hNtDll, "NtQueryInformationProcess");
-
-			nNtStatus = fnNTQIP(hProcess, ProcessWow64Information, &nWow64, sizeof(nWow64), NULL);
-			if (NT_SUCCESS(nNtStatus))
-			{
-				#ifdef _WIN64
-				return (nWow64 != 0) ? ProcessPlatformX86 : ProcessPlatformX64;		
-				#else
-				return (nWow64 == 0) ? ProcessPlatformX64 : ProcessPlatformX86;
-				#endif
-			}
-			#ifdef _WIN64
-			return ProcessPlatformX64;
-			#else
-			return ProcessPlatformX86;
-			#endif
-			break;
-			//case PROCESSOR_ARCHITECTURE_IA64:
-			//case PROCESSOR_ARCHITECTURE_ALPHA64:
-		}
-		return STATUS_NOT_SUPPORTED;
-	}
-
-	static HANDLE NtCreateThreadEx(HANDLE hProcess, LPVOID lpRemoteThreadStart, LPVOID lpParam, DWORD* threadId)
-	{
-		tNtCreateThreadEx NtCreateThreadEx = (tNtCreateThreadEx)Utils::GetProcAddress(Utils::GetLocalModuleHandle("ntdll.dll"), "NtCreateThreadEx");
-		if (NtCreateThreadEx == NULL) return NULL;
-
-		PS_ATTRIBUTE_LIST attrList;
-		ZeroMemory(&attrList, sizeof(PS_ATTRIBUTE_LIST));
-		CLIENT_ID cid;
-		ZeroMemory(&cid, sizeof(CLIENT_ID));
-		OBJECT_ATTRIBUTES64 thrdAttr;
-		InitializeObjectAttributes64(&thrdAttr, NULL, 0, NULL, NULL);
-
-		attrList.Attributes[0].Attribute = ProcThreadAttributeValue(PsAttributeClientId, TRUE, FALSE, FALSE);
-		attrList.Attributes[0].Size = sizeof(CLIENT_ID);
-		attrList.Attributes[0].ValuePtr = (ULONG_PTR *)&cid;
-
-		attrList.TotalLength = sizeof(PS_ATTRIBUTE_LIST);
-
-		HANDLE hRemoteThread = NULL;
-		HRESULT hRes = 0;
-
-		if (!NT_SUCCESS(NtCreateThreadEx(&hRemoteThread, THREAD_ALL_ACCESS, NULL, hProcess, lpRemoteThreadStart, lpParam, 0, 0, 0x1000, 0x100000, &attrList)))
-			return NULL;
-
-		if (threadId) *threadId = (DWORD)cid.UniqueThread;
-
-		return hRemoteThread;
-	}
+	bool IsWindowsVersionOrLater(OSType target);
+	LONG GetProcessorArchitecture();
+	OSType GetOperatingSystemType();
+	int GetProcessPlatform(HANDLE hProcess);
+	HANDLE NtCreateThreadEx(HANDLE hProcess, LPVOID lpRemoteThreadStart, LPVOID lpParam, DWORD* threadId);
 };

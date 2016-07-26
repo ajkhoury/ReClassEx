@@ -10,7 +10,13 @@ CString g_ProcessName;
 
 namespace ntdll
 {
+	PVOID Base = nullptr;
 	tNtQuerySystemInformation NtQuerySystemInformation = nullptr;
+	tNtQueryInformationProcess NtQueryInformationProcess = nullptr;
+	tRtlGetVersion RtlGetVersion = nullptr;
+	tRtlGetNativeSystemInformation RtlGetNativeSystemInformation = nullptr;
+	tNtCreateThreadEx NtCreateThreadEx = nullptr;
+
 }
 
 std::vector<MemMapInfo> MemMap;
@@ -325,7 +331,7 @@ bool PauseResumeThreadList(bool bResumeThread)
 	DWORD ProcessId = GetProcessId(g_hProcess);
 
 	static HMODULE hNtDll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
-	static tNtQuerySystemInformation fnNTQSI = (tNtQuerySystemInformation)Utils::GetProcAddress(hNtDll, "NtQuerySystemInformation");
+	static tNtQuerySystemInformation fnNTQSI = (tNtQuerySystemInformation)Utils::GetLocalProcAddress(hNtDll, "NtQuerySystemInformation");
 
 	SystemProcessInfo = HeapAlloc(hHeap, HEAP_ZERO_MEMORY | HEAP_GENERATE_EXCEPTIONS, bufferSize);
 
@@ -628,7 +634,7 @@ bool UpdateMemoryMap(void)
 	}
 
 	static HMODULE hNtDll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
-	static tNtQueryInformationProcess NtQueryInformationProcess = (tNtQueryInformationProcess)Utils::GetProcAddress(hNtDll, "NtQueryInformationProcess");
+	static tNtQueryInformationProcess NtQueryInformationProcess = (tNtQueryInformationProcess)Utils::GetLocalProcAddress(hNtDll, "NtQueryInformationProcess");
 
 	PPROCESS_BASIC_INFORMATION ProcessInfo = NULL;
 	PEB Peb;
@@ -819,7 +825,7 @@ bool UpdateExports()
 	//	return;
 
 	static HMODULE hNtDll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
-	static tNtQueryInformationProcess NtQueryInformationProcess = (tNtQueryInformationProcess)Utils::GetProcAddress(hNtDll, "NtQueryInformationProcess");
+	static tNtQueryInformationProcess NtQueryInformationProcess = (tNtQueryInformationProcess)Utils::GetLocalProcAddress(hNtDll, "NtQueryInformationProcess");
 
 	PPROCESS_BASIC_INFORMATION ProcessInfo = NULL;
 	PEB Peb;

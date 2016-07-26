@@ -71,8 +71,13 @@ BOOL CReClass2015App::InitInstance()
 
 	CWinAppEx::InitInstance();
 
-	HMODULE ntdll_base = GetModuleHandle(_T("ntdll.dll"));
-	ntdll::NtQuerySystemInformation = reinterpret_cast<tNtQuerySystemInformation>(GetProcAddress(ntdll_base, "NtQuerySystemInformation"));
+	ntdll::Base = (PVOID)Utils::GetLocalModuleHandle("ntdll.dll");
+	ntdll::NtQuerySystemInformation = reinterpret_cast<tNtQuerySystemInformation>(Utils::GetLocalProcAddress((HMODULE)ntdll::Base, "NtQuerySystemInformation"));
+	ntdll::NtQueryInformationProcess = reinterpret_cast<tNtQueryInformationProcess>(Utils::GetLocalProcAddress((HMODULE)ntdll::Base, "NtQueryInformationProcess"));
+	ntdll::RtlGetVersion = reinterpret_cast<tRtlGetVersion>(Utils::GetLocalProcAddress((HMODULE)ntdll::Base, "RtlGetVersion"));
+	ntdll::RtlGetNativeSystemInformation = reinterpret_cast<tRtlGetNativeSystemInformation>(Utils::GetLocalProcAddress((HMODULE)ntdll::Base, "RtlGetNativeSystemInformation"));
+	ntdll::NtCreateThreadEx = reinterpret_cast<tNtCreateThreadEx>(Utils::GetLocalProcAddress((HMODULE)ntdll::Base, "NtCreateThreadEx"));;
+
 
 	if (!AfxOleInit())
 	{

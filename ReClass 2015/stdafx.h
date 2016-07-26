@@ -108,7 +108,12 @@ extern CString g_ProcessName;
 
 namespace ntdll
 {
+	extern PVOID Base;
 	extern tNtQuerySystemInformation NtQuerySystemInformation;
+	extern tNtQueryInformationProcess NtQueryInformationProcess;
+	extern tRtlGetVersion RtlGetVersion;
+	extern tRtlGetNativeSystemInformation RtlGetNativeSystemInformation;
+	extern tNtCreateThreadEx NtCreateThreadEx;
 }
 
 extern std::vector<struct MemMapInfo> MemMap;
