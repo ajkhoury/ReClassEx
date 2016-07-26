@@ -32,7 +32,7 @@ IMPLEMENT_DYNAMIC( CDialogProcSelect, CDialogEx )
 
 BEGIN_MESSAGE_MAP( CDialogProcSelect, CDialogEx )
 	ON_NOTIFY( NM_DBLCLK, IDC_PROCESS_LIST, CDialogProcSelect::OnDblclkListControl )
-	ON_COMMAND( IDC_ATTACH_PROCESS, &CDialogProcSelect::OnAttatchButton )
+	ON_COMMAND( IDC_ATTACH_PROCESS, &CDialogProcSelect::OnAttachButton )
 	ON_COMMAND( IDC_REFRESH_PROCESS, &CDialogProcSelect::OnRefreshButton )
 END_MESSAGE_MAP( )
 
@@ -140,10 +140,10 @@ BOOL CDialogProcSelect::OnInitDialog( )
 
 void CDialogProcSelect::OnDblclkListControl( NMHDR* pNMHDR, LRESULT* pResult )
 {
-	OnAttatchButton( );
+	OnAttachButton( );
 }
 
-void CDialogProcSelect::OnAttatchButton( )
+void CDialogProcSelect::OnAttachButton( )
 {
 	int selected_index = m_ProcessList.GetSelectionMark( );
 	if ( selected_index == -1 ) return;

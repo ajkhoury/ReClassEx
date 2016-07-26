@@ -13,6 +13,10 @@ IMPLEMENT_DYNAMIC(CDialogModules, CDialogEx)
 CDialogModules::CDialogModules(CWnd* pParent) 
 	: CDialogEx(CDialogModules::IDD, pParent)
 {
+	m_bSortAscendingName	= false;
+	m_bSortAscendingStart	= false;
+	m_bSortAscendingEnd		= false;
+	m_bSortAscendingSize	= false;
 }
 
 CDialogModules::~CDialogModules()
@@ -43,7 +47,7 @@ void CDialogModules::OnGetMinMaxInfo( MINMAXINFO *lpinfo )
 }
 
 BEGIN_MESSAGE_MAP(CDialogModules, CDialogEx)
-	ON_NOTIFY(NM_DBLCLK, IDC_MODULELIST, OnDblclkListControl)
+	ON_NOTIFY(NM_DBLCLK, IDC_MODULELIST, OnDblClkListControl)
 	ON_NOTIFY(LVN_COLUMNCLICK, IDC_MODULELIST, OnColumnClick)
 	ON_EN_CHANGE(IDC_MODULENAME, &CDialogModules::OnEnChangeModuleName)
 	ON_WM_GETMINMAXINFO()
@@ -102,7 +106,7 @@ BOOL CDialogModules::OnInitDialog()
 
 __inline int CDialogModules::FindModuleByName(const TCHAR* szName)
 {
-	for (int id = 0; id < MemMapModule.size(); id++)
+	for (UINT id = 0; id < MemMapModule.size(); id++)
 	{
 		MemMapInfo moduleInfo = MemMapModule[id];
 		if (_tcsicmp(moduleInfo.Name, szName) == 0)
@@ -114,7 +118,7 @@ __inline int CDialogModules::FindModuleByName(const TCHAR* szName)
 __inline CNodeClass* CDialogModules::GetClassByName(const TCHAR* szClassName)
 {
 	CNodeClass* pClass = 0;
-	for (unsigned int i = 0; i < theApp.Classes.size(); i++) {
+	for (UINT i = 0; i < theApp.Classes.size(); i++) {
 		if (theApp.Classes[i]->Name == szClassName) {
 			pClass = theApp.Classes[i];
 			break;
@@ -136,7 +140,8 @@ void CDialogModules::SetSelected()
 		CChildFrame* pChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
 
 		int extension_size = MemMapModule[ nItem ].Name.ReverseFind( '.' );
-		if ( extension_size == -1 ) extension_size = 0;
+		if ( extension_size == -1 ) 
+			extension_size = 0;
 		else extension_size = MemMapModule[ nItem ].Name.GetLength( ) - extension_size;
 
 		CString ClassName = MemMapModule[ nItem ].Name.Left( MemMapModule[ nItem ].Name.GetLength( ) - extension_size ) + _T( "_base" );
@@ -177,9 +182,36 @@ void CDialogModules::SetSelected()
 }
 
 //int (CALLBACK *PFNLVCOMPARE)(LPARAM, LPARAM, LPARAM);
-int CALLBACK CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamData)
+int CALLBACK CDialogModules::CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
 {
-	CListCtrl* pListCtrl = reinterpret_cast<CListCtrl*>(lParamData);
+	COMPARESTRUCT* compare = (COMPARESTRUCT*)lParamSort;
+	if (compare)
+	{
+		CListCtrl* pListCtrl = (CListCtrl*)compare->pListCtrl;
+		int column = compare->iColumn;
+		bool ascending = compare->bAscending;
+
+		int item1 = ascending ? static_cast<int>(lParam1) : static_cast<int>(lParam2);
+		int item2 = ascending ? static_cast<int>(lParam2) : static_cast<int>(lParam1);
+
+		if (column == COLUMN_START || column == COLUMN_END || column == COLUMN_SIZE)
+		{
+			CString strNum1 = pListCtrl->GetItemText(item1, column);
+			CString strNum2 = pListCtrl->GetItemText(item2, column);
+
+			size_t num1 = (size_t)_tcstoui64(strNum1.GetBuffer(), NULL, 16);
+			size_t num2 = (size_t)_tcstoui64(strNum2.GetBuffer(), NULL, 16);
+
+			return num2 - num1;
+		}
+		else if (column == COLUMN_MODULE)
+		{
+			CString strModuleName1 = pListCtrl->GetItemText(item1, column);
+			CString strModuleName2 = pListCtrl->GetItemText(item2, column);
+
+			return _tcsicmp(strModuleName1.GetBuffer(), strModuleName2.GetBuffer());
+		}
+	}
 
 	return 0;
 }
@@ -187,17 +219,44 @@ int CALLBACK CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamData)
 void CDialogModules::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
-	const int iColumn = pNMListView->iSubItem;
 
-	m_ModuleViewList.SortItems(CompareFunction, reinterpret_cast<DWORD>(this));
+	LPCOMPARESTRUCT compare = new COMPARESTRUCT;
+	compare->pListCtrl = &m_ModuleViewList;
+	compare->iColumn = pNMListView->iSubItem;
+
+	switch (compare->iColumn)
+	{
+	case COLUMN_MODULE:
+		m_bSortAscendingName = !m_bSortAscendingName;
+		compare->bAscending = m_bSortAscendingName;
+		break;
+	case COLUMN_START:
+		m_bSortAscendingStart = !m_bSortAscendingStart;
+		compare->bAscending = m_bSortAscendingStart;
+		break;
+	case COLUMN_END:
+		m_bSortAscendingEnd = !m_bSortAscendingEnd;
+		compare->bAscending = m_bSortAscendingEnd;
+		break;
+	case COLUMN_SIZE:
+		m_bSortAscendingSize = !m_bSortAscendingSize;
+		compare->bAscending = m_bSortAscendingSize;
+		break;
+	default:
+		compare->bAscending = false;
+		break;
+	}
+
+	m_ModuleViewList.SortItemsEx(CompareFunction, (LPARAM)compare);
+
+	delete compare;
 
 	*pResult = 0;
 }
 
-void CDialogModules::OnDblclkListControl(NMHDR* pNMHDR, LRESULT* pResult)
+void CDialogModules::OnDblClkListControl(NMHDR* pNMHDR, LRESULT* pResult)
 {
-	SetSelected();
-	CDialogEx::OnOK();
+	OnOK();
 }
 
 void CDialogModules::OnOK()

@@ -42,7 +42,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
-	afx_msg void OnAttatchButton( );
+	afx_msg void OnAttachButton( );
 	afx_msg void OnRefreshButton( );
 	afx_msg void OnDblclkListControl( NMHDR* pNMHDR, LRESULT* pResult );
 };
