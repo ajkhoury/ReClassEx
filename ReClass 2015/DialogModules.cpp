@@ -33,13 +33,13 @@ void CDialogModules::OnSize(UINT nType, int cx, int cy)
 
 void CDialogModules::OnGetMinMaxInfo( MINMAXINFO *lpinfo )
 {
-	CDialogEx::OnGetMinMaxInfo( lpinfo );
-	
 	if ( !m_OriginalSize.IsRectNull( ) )
 	{
 		lpinfo->ptMinTrackSize.x = m_OriginalSize.Width( );
 		lpinfo->ptMinTrackSize.y = m_OriginalSize.Height( );
 	}
+
+	CDialogEx::OnGetMinMaxInfo( lpinfo );
 }
 
 BEGIN_MESSAGE_MAP(CDialogModules, CDialogEx)

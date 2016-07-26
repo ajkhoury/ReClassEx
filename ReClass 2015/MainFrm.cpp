@@ -5,6 +5,7 @@
 #include "Debug.h"
 #include "DialogClasses.h"
 #include "MainFrm.h"
+#include "DialogProcSelect.h"
 
 // CMainFrame
 IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWndEx)
@@ -494,7 +495,6 @@ void CMainFrame::OnButtonSelectProcess()
 
 	CMenu menu;
 	menu.CreatePopupMenu();
-
 	ClearProcMenuItems();
 
 	static HMODULE hNtdll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
@@ -610,6 +610,7 @@ void CMainFrame::OnButtonSelectProcess()
 		}
 	}
 
+	//TODO: Show new dialog here
 	menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this);
 }
 

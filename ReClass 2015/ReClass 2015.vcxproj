@@ -294,6 +294,7 @@
     <None Include="..\Images\text.ico" />
     <None Include="..\Images\unsigned.ico" />
     <None Include="..\Images\vector.ico" />
+    <None Include="ClassDiagram.cd" />
     <None Include="exports.def" />
     <None Include="res\buttons.bmp" />
     <None Include="res\classicon.bmp" />
@@ -324,6 +325,7 @@
     <ClInclude Include="DialogEdit.h" />
     <ClInclude Include="DialogModules.h" />
     <ClInclude Include="DialogPlugins.h" />
+    <ClInclude Include="DialogProcSelect.h" />
     <ClInclude Include="DialogTypes.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="nt_ddk.h" />
@@ -345,6 +347,7 @@
     <ClCompile Include="DialogEdit.cpp" />
     <ClCompile Include="DialogModules.cpp" />
     <ClCompile Include="DialogPlugins.cpp" />
+    <ClCompile Include="DialogProcSelect.cpp" />
     <ClCompile Include="DialogTypes.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="PDBReader.cpp" />

@@ -142,6 +142,7 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="exports.def" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -216,6 +217,9 @@
     <ClInclude Include="PDBReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DialogProcSelect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -258,6 +262,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PDBReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogProcSelect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
