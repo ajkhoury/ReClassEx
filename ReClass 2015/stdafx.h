@@ -6,8 +6,9 @@
 
 // Disable warnings for type casting from HANDLE to DWORD and vice versa
 #pragma warning(disable : 4312 4311 4302 4099) 
-
+#define PSAPI_VERSION 1
 #define WIN32_LEAN_AND_MEAN
+
 #include "targetver.h"
 
 #include <afx.h>
@@ -35,6 +36,7 @@
 #include <Shlwapi.h>
 #include <Psapi.h>
 #include <CommCtrl.h>
+#include <algorithm>
 #include <memory>
 #include <map>
 
@@ -103,6 +105,11 @@ extern DWORD  g_ProcessID;
 extern size_t g_AttachedProcessAddress;
 extern DWORD  g_AttachedProcessSize;
 extern CString g_ProcessName;
+
+namespace ntdll
+{
+	extern tNtQuerySystemInformation NtQuerySystemInformation;
+}
 
 extern std::vector<struct MemMapInfo> MemMap;
 extern std::vector<struct MemMapInfo> MemMapCode;

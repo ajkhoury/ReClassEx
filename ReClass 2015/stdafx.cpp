@@ -8,6 +8,11 @@ size_t g_AttachedProcessAddress = NULL;
 DWORD g_AttachedProcessSize = NULL;
 CString g_ProcessName;
 
+namespace ntdll
+{
+	tNtQuerySystemInformation NtQuerySystemInformation = nullptr;
+}
+
 std::vector<MemMapInfo> MemMap;
 std::vector<MemMapInfo> MemMapCode;
 std::vector<MemMapInfo> MemMapData;

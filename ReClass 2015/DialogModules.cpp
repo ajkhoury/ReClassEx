@@ -54,7 +54,7 @@ END_MESSAGE_MAP()
 void CDialogModules::BuildList()
 {
 	for (UINT i = 0; i < MemMapModule.size(); i++)
-	{		
+	{
 		MemMapInfo moduleInfo = MemMapModule[i];
 
 		SHFILEINFO sfi = { 0 };

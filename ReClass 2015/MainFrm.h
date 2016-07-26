@@ -16,14 +16,6 @@
 
 #define TIMER_MEMORYMAP_UPDATE 0xDEADF00D
 
-class CProcessMenuInfo
-{
-public:
-	DWORD ProcessId;
-	CBitmap* pBitmap;
-	CString Procname;
-};
-
 class CMainFrame : public CMDIFrameWndEx
 {
 	DECLARE_DYNAMIC(CMainFrame)
@@ -49,10 +41,9 @@ public:
 #endif
 
 public:  // control bar embedded members
-	CMFCRibbonBar     m_wndRibbonBar;
+	CMFCRibbonBar m_wndRibbonBar;
 	CMFCRibbonApplicationButton m_MainButton;
 	CMFCToolBarImages m_PanelImages;
-	std::vector<CProcessMenuInfo> ProcMenuItems;
 
 // Generated message map functions
 protected:
@@ -119,8 +110,6 @@ public:
 	afx_msg void OnUpdateCheckString(CCmdUI *pCmdUI);
 	afx_msg void OnCheckPointer();
 	afx_msg void OnUpdateCheckPointer(CCmdUI *pCmdUI);
-
-	void ClearProcMenuItems();
 };
 
 

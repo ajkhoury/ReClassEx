@@ -71,6 +71,9 @@ BOOL CReClass2015App::InitInstance()
 
 	CWinAppEx::InitInstance();
 
+	HMODULE ntdll_base = GetModuleHandle(_T("ntdll.dll"));
+	ntdll::NtQuerySystemInformation = reinterpret_cast<tNtQuerySystemInformation>(GetProcAddress(ntdll_base, "NtQuerySystemInformation"));
+
 	if (!AfxOleInit())
 	{
 		AfxMessageBox(IDP_OLE_INIT_FAILED);
