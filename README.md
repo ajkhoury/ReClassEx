@@ -24,7 +24,8 @@ Cleaned up the code a bit and added some new features. Also got rid of a ton of 
 - Added ability to input module names in address node (e.g. 'reclass.exe+0x40')
 - Added Module list with the ability to create a new class at module start address
 - Added Console dialog with syntax highlighting
-- Added ability to load PDB file and display PDB Symbols 
+- Added ability to load PDB file and display PDB Symbols
+- Process list dialog instead of scroll menu 
 
 ![Alt text](/Images/reclass2.png?raw=true "ReClass")
 
