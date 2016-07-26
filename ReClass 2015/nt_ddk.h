@@ -1064,39 +1064,11 @@ typedef NTSTATUS(NTAPI *tRtlGetNativeSystemInformation)(SYSTEM_INFORMATION_CLASS
 typedef LONG	(NTAPI *tRtlGetVersion)(PRTL_OSVERSIONINFOW lpVersionInformation);
 typedef NTSTATUS(NTAPI *tNtQueryInformationProcess)(HANDLE ProcessHandle, PROCESSINFOCLASS ProcessInformationClass, PVOID ProcessInformation, ULONG ProcessInformationLength, PULONG ReturnLength);
 typedef NTSTATUS(NTAPI *tNtQuerySystemInformation)(ULONG SystemInformationClass, PVOID SystemInformation, ULONG SystemInformationLength, PULONG ReturnLength);
-typedef NTSTATUS(NTAPI *tNtCreateThreadEx)
-	(
-	__out PHANDLE ThreadHandle,
-	__in ACCESS_MASK DesiredAccess,
-	__in_opt POBJECT_ATTRIBUTES64 ObjectAttributes,
-	__in HANDLE ProcessHandle,
-	__in PVOID StartRoutine,
-	__in_opt PVOID Argument,
-	__in ULONG CreateFlags, // THREAD_CREATE_FLAGS_*
-	__in_opt ULONG_PTR ZeroBits,
-	__in_opt SIZE_T StackSize,
-	__in_opt SIZE_T MaximumStackSize,
-	__in_opt PPS_ATTRIBUTE_LIST AttributeList
-	);
+// CreateFlags use THREAD_CREATE_FLAGS_*
+typedef NTSTATUS(NTAPI *tNtCreateThreadEx)(OUT PHANDLE ThreadHandle, IN ACCESS_MASK DesiredAccess, IN OPTIONAL POBJECT_ATTRIBUTES64 ObjectAttributes, IN HANDLE ProcessHandle, IN PVOID StartRoutine, IN OPTIONAL PVOID Argument, IN ULONG CreateFlags, IN OPTIONAL ULONG_PTR ZeroBits, IN OPTIONAL SIZE_T StackSize, IN OPTIONAL SIZE_T MaximumStackSize, IN OPTIONAL PPS_ATTRIBUTE_LIST AttributeList);
+typedef NTSTATUS(NTAPI *tRtlDosApplyFileIsolationRedirection_Ustr)(IN ULONG Flags, IN PUNICODE_STRING OriginalName, IN PUNICODE_STRING Extension, IN OUT PUNICODE_STRING StaticString, IN OUT PUNICODE_STRING DynamicString, IN OUT PUNICODE_STRING *NewName, IN PULONG  NewFlags, IN PSIZE_T FileNameSize, IN PSIZE_T RequiredLength);
 
-typedef NTSTATUS(NTAPI *tRtlDosApplyFileIsolationRedirection_Ustr)
-	(
-	IN ULONG Flags,
-	IN PUNICODE_STRING OriginalName,
-	IN PUNICODE_STRING Extension,
-	IN OUT PUNICODE_STRING StaticString,
-	IN OUT PUNICODE_STRING DynamicString,
-	IN OUT PUNICODE_STRING *NewName,
-	IN PULONG  NewFlags,
-	IN PSIZE_T FileNameSize,
-	IN PSIZE_T RequiredLength
-	);
-
-
-
-
-// Helpful tmeplated PEB and TEB structs etc thanks DarthTon
-
+// Helpful templated PEB and TEB structs etc thanks DarthTon
 enum MEMORY_INFORMATION_CLASS
 {
 	MemoryBasicInformation = 0,

@@ -78,7 +78,6 @@ BOOL CReClass2015App::InitInstance()
 	ntdll::RtlGetNativeSystemInformation = reinterpret_cast<tRtlGetNativeSystemInformation>(Utils::GetLocalProcAddress((HMODULE)ntdll::Base, "RtlGetNativeSystemInformation"));
 	ntdll::NtCreateThreadEx = reinterpret_cast<tNtCreateThreadEx>(Utils::GetLocalProcAddress((HMODULE)ntdll::Base, "NtCreateThreadEx"));;
 
-
 	if (!AfxOleInit())
 	{
 		AfxMessageBox(IDP_OLE_INIT_FAILED);
