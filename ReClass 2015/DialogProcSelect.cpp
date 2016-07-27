@@ -174,7 +174,7 @@ int CALLBACK CDialogProcSelect::CompareFunction(LPARAM lParam1, LPARAM lParam2, 
 			size_t num1 = (size_t)_tcstoui64(strNum1.GetBuffer(), NULL, 16);
 			size_t num2 = (size_t)_tcstoui64(strNum2.GetBuffer(), NULL, 16);
 
-			return num2 - num1;
+			return (int)(num2 - num1);
 		}
 		else if (column == COLUMN_PROCESSNAME)
 		{
@@ -235,6 +235,7 @@ void CDialogProcSelect::OnAttachButton( )
 	
 	if ( proc_info_found != m_ProcessInfos.end( ) )
 	{
+		CloseHandle( g_hProcess ); //Stops leaking handles
 		g_ProcessID = proc_info_found->ProcessId;
 		g_hProcess = ReClassOpenProcess( PROCESS_ALL_ACCESS, FALSE, g_ProcessID );
 		g_ProcessName = proc_info_found->Procname;
