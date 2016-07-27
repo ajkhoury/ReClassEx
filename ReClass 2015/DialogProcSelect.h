@@ -15,14 +15,6 @@ public:
 	// Dialog Data
 	enum { IDD = IDD_DIALOGPROCSELECT };
 
-	struct ProcessInfoStack
-	{ 
-		DWORD ProcessId; 
-		CString Procname; 
-	};
-
-	void RefreshRunningProcesses();
-
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual BOOL OnInitDialog();
@@ -35,6 +27,14 @@ protected:
 	afx_msg void OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult);
 
 private:
+	struct ProcessInfoStack
+	{
+		DWORD ProcessId;
+		CString Procname;
+	};
+
+	void RefreshRunningProcesses();
+
 	enum
 	{
 		COLUMN_PROCESSNAME = 0,
