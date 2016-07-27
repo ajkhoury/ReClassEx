@@ -6,6 +6,7 @@
 #include "DialogClasses.h"
 #include "MainFrm.h"
 #include "DialogProcSelect.h"
+#include "DialogTypes.h"
 
 // CMainFrame
 IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWndEx)
@@ -431,7 +432,6 @@ void CMainFrame::OnUpdateCheckCbRtti(CCmdUI *pCmdUI)
 	}
 }
 
-#include "DialogTypes.h"
 void CMainFrame::OnButtonTypedef()
 {
 	CDialogTypes dlg(this);
@@ -450,9 +450,7 @@ void CMainFrame::OnButtonEditClass()
 	{	
 		CDialogClasses dlg(this);
 		dlg.DoModal();
-	}
-	else 
-	{
+	}else{
 		// TODO: instead of menu popup a window
 		CMFCRibbonBaseElement* pButton = m_wndRibbonBar.FindByID(ID_BUTTON_EDITCLASS);
 

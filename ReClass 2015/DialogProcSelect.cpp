@@ -9,6 +9,7 @@
 // CDialogProcSelect dialog
 
 // Annoying processes to filter out that you probably won't be looking in the memory of
+// Used unicode because its faster to compare process name from UNICODE_STRING buffer without converting to multibyte
 const std::initializer_list<const wchar_t*> CommonProcesses =
 {
 	L"svchost.exe", L"conhost.exe", L"wininit.exe", L"smss.exe", L"winint.exe", L"wlanext.exe",
@@ -33,13 +34,11 @@ CDialogProcSelect::CDialogProcSelect(CWnd* pParent)
 	: CDialogEx(CDialogProcSelect::IDD, pParent), 
 	m_bLoadingProcesses(false),
 	m_bSortAscendingName(false),
-	m_bSortAscendingId(false)
-{
-}
+	m_bSortAscendingId(false) 
+{ }
 
-CDialogProcSelect::~CDialogProcSelect()
-{
-}
+CDialogProcSelect::~CDialogProcSelect() 
+{ }
 
 IMPLEMENT_DYNAMIC( CDialogProcSelect, CDialogEx )
 
@@ -147,10 +146,9 @@ BOOL CDialogProcSelect::OnInitDialog( )
 	m_ProcessList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);
 
 	m_ProcessList.SetImageList( &m_ProcessIcons, LVSIL_SMALL );
-	m_ProcessList.InsertColumn(COLUMN_PROCESSNAME, _T( "Process" ), LVCFMT_LEFT, 200 );
-	m_ProcessList.InsertColumn(COLUMN_PROCESSID, _T("ID"), LVCFMT_LEFT, 50);
+	m_ProcessList.InsertColumn(COLUMN_PROCESSNAME, _T( "Process" ), LVCFMT_LEFT, 214 );
+	m_ProcessList.InsertColumn( COLUMN_PROCESSID, _T( "ID" ), LVCFMT_LEFT, 45 );
 	
-
 	RefreshRunningProcesses( );
 
 	return TRUE;
@@ -176,7 +174,7 @@ int CALLBACK CDialogProcSelect::CompareFunction(LPARAM lParam1, LPARAM lParam2, 
 			size_t num1 = (size_t)_tcstoui64(strNum1.GetBuffer(), NULL, 16);
 			size_t num2 = (size_t)_tcstoui64(strNum2.GetBuffer(), NULL, 16);
 
-			return num2 - num1;
+			return (int)(num2 - num1);
 		}
 		else if (column == COLUMN_PROCESSNAME)
 		{
@@ -228,13 +226,22 @@ void CDialogProcSelect::OnDblClkListControl( NMHDR* pNMHDR, LRESULT* pResult )
 void CDialogProcSelect::OnAttachButton( )
 {
 	int selected_index = m_ProcessList.GetSelectionMark( );
-	if ( selected_index == -1 )
+	if ( selected_index == -1 ) 
 		return;
-	g_ProcessID = m_ProcessInfos[ selected_index ].ProcessId;
-	g_hProcess = ReClassOpenProcess( PROCESS_ALL_ACCESS, FALSE, g_ProcessID );
-	g_ProcessName = m_ProcessInfos[ selected_index ].Procname;
-	UpdateMemoryMap( );
-	EndDialog( 0 );
+
+	CString selected_text = m_ProcessList.GetItemText( selected_index, 0 );
+	auto proc_info_found = std::find_if( m_ProcessInfos.begin( ), m_ProcessInfos.end( ), 
+										 [selected_text] ( const ProcessInfoStack& proc ) -> bool { return proc.Procname == selected_text; } );
+	
+	if ( proc_info_found != m_ProcessInfos.end( ) )
+	{
+		CloseHandle( g_hProcess ); //Stops leaking handles
+		g_ProcessID = proc_info_found->ProcessId;
+		g_hProcess = ReClassOpenProcess( PROCESS_ALL_ACCESS, FALSE, g_ProcessID );
+		g_ProcessName = proc_info_found->Procname;
+		UpdateMemoryMap( );
+		EndDialog( 0 );
+	}
 }
 
 void CDialogProcSelect::OnRefreshButton( )
