@@ -434,13 +434,13 @@ void CMainFrame::OnUpdateCheckCbRtti(CCmdUI *pCmdUI)
 #include "DialogTypes.h"
 void CMainFrame::OnButtonTypedef()
 {
-	CDialogTypes dlg;
+	CDialogTypes dlg(this);
 	dlg.DoModal();
 }
 
 void CMainFrame::OnButtonSelectProcess()
 {
-	CDialogProcSelect proc;
+	CDialogProcSelect proc(this);
 	proc.DoModal( );
 }
 
@@ -448,7 +448,7 @@ void CMainFrame::OnButtonEditClass()
 {
 	if (gbClassBrowser)
 	{	
-		CDialogClasses dlg;
+		CDialogClasses dlg(this);
 		dlg.DoModal();
 	}
 	else 

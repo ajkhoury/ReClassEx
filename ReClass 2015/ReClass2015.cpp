@@ -213,7 +213,6 @@ BOOL CReClass2015App::InitInstance()
 	Utils::SetDebugPrivilege(TRUE);
 
 	Console = new CDialogConsole( _T( "Console" ) );
-	
 	if (Console->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
 		Console->ShowWindow(SW_HIDE);
 
