@@ -99,13 +99,11 @@ void CDialogProcSelect::RefreshRunningProcesses( )
 
 					LVITEM lvi = { 0 };
 					lvi.mask = LVIF_TEXT | LVIF_IMAGE;
-
 				#ifdef UNICODE
 					info.Procname = proc_info->ImageName.Buffer;
 				#else
 					info.Procname = CW2A( proc_info->ImageName.Buffer );
 				#endif
-
 					lvi.pszText = info.Procname.GetBuffer();
 					lvi.cchTextMax = info.Procname.GetLength();
 					lvi.iImage = proc_index++;;
