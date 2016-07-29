@@ -143,14 +143,18 @@ extern COLORREF crChar;
 extern COLORREF crCustom;
 extern COLORREF crHex;
 
-extern CFont g_MemoryViewFont;
-extern int FontWidth;
-extern int FontHeight;
+#define FONT_DEFAULT_WIDTH 8
+#define FONT_DEFAULT_HEIGHT 16
+
+extern CFont g_ViewFont;
+extern int g_FontWidth;
+extern int g_FontHeight;
 
 extern bool gbAddress;
 extern bool gbOffset;
 extern bool gbText;
 extern bool gbRTTI;
+extern bool gbResizingFont;
 
 extern bool gbFloat;
 extern bool gbInt;
@@ -384,12 +388,10 @@ typedef struct _RECLASS_PLUGIN_INFO
 	int DialogID;
 } RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
-
+BOOL PLUGIN_CC PluginInit(LPRECLASS_PLUGIN_INFO lpRCInfo);
+void PLUGIN_CC PluginStateChange(bool state);
 typedef BOOL(PLUGIN_CC *tPluginInit)(LPRECLASS_PLUGIN_INFO lpRCInfo);
-BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
-
 typedef void(PLUGIN_CC *tPluginStateChange)(bool state);
-void PLUGIN_CC PluginStateChange( bool state );
 
 typedef struct _RECLASS_PLUGINS
 {
@@ -397,8 +399,8 @@ typedef struct _RECLASS_PLUGINS
 	wchar_t FileName[ 260 ];
 	bool State;
 	HMODULE LoadedBase;
-	decltype( &PluginInit ) InitFnc;
-	decltype( &PluginStateChange ) StateChangeFnc;
+	tPluginInit InitFnc;
+	tPluginStateChange StateChangeFnc;
 	DLGPROC SettingDlgFnc;
 } RECLASS_PLUGINS, *LPRECLASS_PLUGINS;
 
@@ -408,6 +410,7 @@ RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION 
 RECLASS_EXPORT void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
 RECLASS_EXPORT LPHANDLE PLUGIN_CC ReClassGetProcessHandle( );
 RECLASS_EXPORT HWND PLUGIN_CC ReClassMainWindow( );
+RECLASS_EXPORT CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface( );
 
 extern std::vector<RECLASS_PLUGINS> LoadedPlugins;
 #pragma endregion

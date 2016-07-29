@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ReClass2015.h"
+#include "MainFrm.h"
 
 //Globals
 HANDLE g_hProcess = NULL;
@@ -47,15 +48,16 @@ COLORREF crBits = RGB(0, 0, 255);
 COLORREF crCustom = RGB(64, 128, 64);
 COLORREF crHex = RGB(0, 0, 0);
 
-CFont g_MemoryViewFont;
+CFont g_ViewFont;
 
-int FontWidth;
-int FontHeight;
+int g_FontWidth;
+int g_FontHeight;
 
 bool gbAddress = true;
 bool gbOffset = true;
 bool gbText = true;
 bool gbRTTI = true;
+bool gbResizingFont = true;
 
 bool gbFloat = true;
 bool gbInt = true;
@@ -228,6 +230,11 @@ LPHANDLE PLUGIN_CC ReClassGetProcessHandle()
 HWND PLUGIN_CC ReClassMainWindow()
 {
 	return *theApp.GetMainWnd();
+}
+
+CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface( )
+{
+	return &(static_cast<CMainFrame*>(theApp.m_pMainWnd)->m_wndRibbonBar);
 }
 #pragma endregion
 

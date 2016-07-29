@@ -51,10 +51,10 @@ void myCEdit::OnEnChange()
 {
 	CString text;
 	GetWindowText(text);
-	int  w = (text.GetLength() + 1) * FontWidth; // + 6;
+	int  w = (text.GetLength() + 1) * g_FontWidth; // + 6;
 	if (w > MinWidth)
 	{
-		SetWindowPos(NULL, 0, 0, w, FontHeight, SWP_NOMOVE);
+		SetWindowPos(NULL, 0, 0, w, g_FontHeight, SWP_NOMOVE);
 	}
 }
 
@@ -223,13 +223,13 @@ int CChildView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//m_Edit.CreateEx(WS_EX_WINDOWEDGE, _T("EDIT"),  _T(" "), WS_CHILD | WS_TABSTOP, rect, this, 1);
 	m_Edit.Create(WS_CHILD | WS_TABSTOP, rect, this, 1);
 	m_Edit.ShowWindow(SW_HIDE);
-	m_Edit.SetFont(&g_MemoryViewFont);
+	m_Edit.SetFont(&g_ViewFont);
 
 	m_Scroll.Create(SBS_VERT, rect, this, 0);
 	m_Scroll.ShowScrollBar();
 
 	m_ToolTip.Create(ES_MULTILINE | WS_BORDER, rect, this, 1);
-	m_ToolTip.SetFont(&g_MemoryViewFont);
+	m_ToolTip.SetFont(&g_ViewFont);
 	m_ToolTip.EnableWindow(FALSE);
 
 	SetTimer(1, 250, NULL);
@@ -557,7 +557,7 @@ void CChildView::OnPaint()
 	if (!m_pClass)
 		return;
 
-	dc.SelectObject(&g_MemoryViewFont);
+	dc.SelectObject(&g_ViewFont);
 
 	HotSpots.clear();
 
@@ -578,7 +578,7 @@ void CChildView::OnPaint()
 	if (m_Scroll.IsWindowVisible())
 		View.client->right -= SB_WIDTH;
 
-	int ypos = m_Scroll.GetScrollPos() * FontHeight;
+	int ypos = m_Scroll.GetScrollPos() * g_FontHeight;
 
 	int DrawMax = m_pClass->Draw(View, 0, -ypos) + ypos;
 
@@ -605,8 +605,8 @@ void CChildView::OnPaint()
 		si.cbSize = sizeof(SCROLLINFO);
 		si.fMask = SIF_PAGE | SIF_RANGE;
 		si.nMin = 0;
-		si.nMax = DrawMax / FontHeight;
-		si.nPage = client.Height() / FontHeight;
+		si.nMax = DrawMax / g_FontHeight;
+		si.nPage = client.Height() / g_FontHeight;
 		m_Scroll.SetScrollInfo(&si);
 		m_Scroll.ShowScrollBar(1);
 	}
@@ -670,7 +670,7 @@ BOOL CChildView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	if (m_Scroll.IsWindowVisible())
 	{
-		m_Scroll.SetScrollPos(m_Scroll.GetScrollPos() - zDelta / FontHeight);
+		m_Scroll.SetScrollPos(m_Scroll.GetScrollPos() - zDelta / g_FontHeight);
 		m_Edit.ShowWindow(SW_HIDE);
 		m_ToolTip.ShowWindow(SW_HIDE);
 		Invalidate();
@@ -765,7 +765,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 		msg.Format(_T("%i selected, %i bytes"), Selected.size(), size);
 		m_ToolTip.EnableWindow(FALSE);
 		m_ToolTip.SetWindowText(msg);
-		m_ToolTip.SetWindowPos(NULL, point.x + 16, point.y + 16, msg.GetLength() * FontWidth + 8, FontHeight + 6, SWP_NOZORDER);
+		m_ToolTip.SetWindowPos(NULL, point.x + 16, point.y + 16, msg.GetLength() * g_FontWidth + 8, g_FontHeight + 6, SWP_NOZORDER);
 		m_ToolTip.ShowWindow(SW_SHOW);
 	}
 	else
