@@ -370,8 +370,8 @@ void LoadPlugins();
 #define RECLASS_EXPORT __declspec(dllexport) 
 #define PLUGIN_CC __stdcall
 
-typedef BOOL( PLUGIN_CC *MEMORY_OPERATION )( LPVOID, LPVOID, SIZE_T, PSIZE_T );
-typedef HANDLE( PLUGIN_CC *HANDLE_OPERATION )( DWORD, BOOL, DWORD );
+typedef BOOL(PLUGIN_CC *MEMORY_OPERATION)(LPVOID, LPVOID, SIZE_T, PSIZE_T);
+typedef HANDLE(PLUGIN_CC *HANDLE_OPERATION)(DWORD, BOOL, DWORD);
 
 extern MEMORY_OPERATION g_PluginOverrideMemoryWrite;
 extern MEMORY_OPERATION g_PluginOverrideMemoryRead;
@@ -380,7 +380,7 @@ extern HANDLE_OPERATION g_PluginOverrideHandleThread;
 
 typedef struct _RECLASS_PLUGIN_INFO
 {
-	_RECLASS_PLUGIN_INFO( ) : DialogID( -1 ) { }
+	_RECLASS_PLUGIN_INFO() : DialogID(-1) {}
 
 	wchar_t Name[260];
 	wchar_t About[2048];
@@ -396,7 +396,7 @@ typedef void(PLUGIN_CC *tPluginStateChange)(bool state);
 typedef struct _RECLASS_PLUGINS
 {
 	RECLASS_PLUGIN_INFO Info;
-	wchar_t FileName[ 260 ];
+	wchar_t FileName[260];
 	bool State;
 	HMODULE LoadedBase;
 	tPluginInit InitFnc;
@@ -405,12 +405,12 @@ typedef struct _RECLASS_PLUGINS
 } RECLASS_PLUGINS, *LPRECLASS_PLUGINS;
 
 //Exported Functions Below
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet = FALSE );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION HandleProcess, HANDLE_OPERATION HandleThread, BOOL bForceSet = FALSE );
-RECLASS_EXPORT void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
-RECLASS_EXPORT LPHANDLE PLUGIN_CC ReClassGetProcessHandle( );
-RECLASS_EXPORT HWND PLUGIN_CC ReClassMainWindow( );
-RECLASS_EXPORT CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface( );
+RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideMemoryOperations(MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet = FALSE);
+RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideHandleOperations(HANDLE_OPERATION HandleProcess, HANDLE_OPERATION HandleThread, BOOL bForceSet = FALSE);
+RECLASS_EXPORT void PLUGIN_CC ReClassPrintConsole(const wchar_t *format, ...);
+RECLASS_EXPORT LPHANDLE PLUGIN_CC ReClassGetProcessHandle();
+RECLASS_EXPORT HWND PLUGIN_CC ReClassMainWindow();
+RECLASS_EXPORT CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface();
 
 extern std::vector<RECLASS_PLUGINS> LoadedPlugins;
 #pragma endregion
