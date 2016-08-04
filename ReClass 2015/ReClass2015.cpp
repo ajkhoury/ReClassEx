@@ -66,7 +66,6 @@ void CReClass2015App::ResizeMemoryFont(int font_width, int font_height)
 	g_ViewFont.DeleteObject();
 
 	HMODULE shcore_load_address = LoadLibrary(_T("shcore.dll"));
-
 	auto pfnGetProcessDpiAwareness = reinterpret_cast<decltype(&GetProcessDpiAwareness)>(GetProcAddress(shcore_load_address, "GetProcessDpiAwareness"));
 	auto pfnGetDpiForMonitor = reinterpret_cast<decltype(&GetDpiForMonitor)>(GetProcAddress(shcore_load_address, "GetDpiForMonitor"));
 	

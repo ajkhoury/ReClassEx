@@ -1,7 +1,6 @@
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+//#include <afxribbonbar.h> //used for ribbon bar. comment this out if not used
 
 #ifdef _WIN64
 #pragma comment(lib, "ReClass64.lib")
@@ -57,3 +56,10 @@ LPHANDLE PLUGIN_CC ReClassGetProcessHandle( );
  *	Return the main window handle for ReClass
  */
 HWND PLUGIN_CC ReClassMainWindow( );
+
+#ifdef _MFC_VER 
+/*
+ *	Get the ribon interface for MFC (usefull for adding custom buttons and such)
+ */
+CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface( );
+#endif

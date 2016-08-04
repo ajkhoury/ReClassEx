@@ -17,7 +17,6 @@ namespace ntdll
 	tRtlGetVersion RtlGetVersion = nullptr;
 	tRtlGetNativeSystemInformation RtlGetNativeSystemInformation = nullptr;
 	tNtCreateThreadEx NtCreateThreadEx = nullptr;
-
 }
 
 std::vector<MemMapInfo> MemMap;
