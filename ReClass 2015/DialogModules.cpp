@@ -84,6 +84,9 @@ void CDialogModules::BuildList()
 
 BOOL CDialogModules::OnInitDialog()
 {
+	SetIcon(NULL, TRUE);
+	SetIcon(NULL, FALSE);
+
 	CDialogEx::OnInitDialog();
 
 	GetWindowRect( &m_OriginalSize );
