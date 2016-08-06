@@ -7797,10 +7797,10 @@
         <Node Name="N00001CF7" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N00001CF8" Type="4" Size="4" bHidden="0" Comment=""/>
     </Class>
-    <Class Name="STATIC_R3DRENDERLAYER_PTR" Type="28" Comment="" Offset="29536552" strOffset="&quot;league of legends.exe&quot;+12BB128" Code="">
+    <Class Name="STATIC_R3DRENDERLAYER_PTR" Type="28" Comment="" Offset="17694720" strOffset="&quot;league of legends.exe&quot;" Code="">
         <Node Name="g_pRenderLayer" Type="8" Size="4" bHidden="0" Comment="" Pointer="r3dRenderLayer"/>
     </Class>
-    <Class Name="r3dRenderLayer" Type="28" Comment="" Offset="9240576" strOffset="8d0000" Code="">
+    <Class Name="r3dRenderLayer" Type="28" Comment="" Offset="193531920" strOffset="B891010" Code="">
         <Node Name="bInited" Type="10" Size="4" bHidden="0" Comment=""/>
         <Node Name="HLibWin" Type="15" Size="4" bHidden="0" Comment=""/>
         <Node Name="N00001D8E" Type="4" Size="4" bHidden="0" Comment=""/>
@@ -22730,5 +22730,148 @@
         <Node Name="N00005305" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N00005306" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N00005307" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N00003AE7" Type="28" Comment="" Offset="35808100" strOffset="&quot;league of legends.exe&quot;+1146364" Code="">
+        <Node Name="N00003AE8" Type="8" Size="4" bHidden="0" Comment="" Pointer="r3dRenderLayer"/>
+        <Node Name="N00003AE9" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AEA" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AEB" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AEC" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AED" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AEE" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AEF" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AF0" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AF1" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AF2" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AF3" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AF4" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AF5" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AF6" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AF7" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N00003AF9" Type="28" Comment="" Offset="17694720" strOffset="10e0000" Code="">
+        <Node Name="N00003AFA" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AFB" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AFC" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AFD" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AFE" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003AFF" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B00" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B01" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B02" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B03" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B04" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B05" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B06" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B07" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B08" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B09" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B0A" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B0B" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B0C" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B0D" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B0E" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B0F" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B10" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B11" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B12" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B13" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B14" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B15" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B16" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B17" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B18" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B19" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B1A" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B1B" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B1C" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B1D" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B1E" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B1F" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B20" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B21" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B22" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B23" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B24" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B25" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B26" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B27" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B28" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B29" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B2A" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N00003B2D" Type="28" Comment="" Offset="17694720" strOffset="10e0000" Code="">
+        <Node Name="N00003B2E" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B2F" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B30" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B31" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B32" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B33" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B34" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B35" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B36" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B37" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B38" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B39" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B3A" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B3B" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B3C" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B3D" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B3E" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B3F" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B40" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B41" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B42" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B43" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B44" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B45" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B46" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B47" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B48" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B49" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B4A" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B4B" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B4C" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B4D" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B4E" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N00003B4C" Type="28" Comment="" Offset="17694720" strOffset="10e0000" Code="">
+        <Node Name="N00003B4D" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B4E" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B4F" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B50" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B51" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B52" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B53" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B54" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B55" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B56" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B57" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B58" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B59" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B5A" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B5B" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B5C" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="RenderLayer" Type="28" Comment="" Offset="193531920" strOffset="B891010" Code="">
+        <Node Name="bInited" Type="10" Size="4" bHidden="0" Comment=""/>
+        <Node Name="HLibWin" Type="15" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B60" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="pDirect3DHandler" Type="8" Size="4" bHidden="0" Comment="" Pointer="DeviceHandler"/>
+        <Node Name="N00003B62" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B63" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B64" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B65" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B66" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B67" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B68" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B69" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B6A" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B6B" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B6C" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003B6D" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N00003B71" Type="28" Comment="" Offset="17694720" strOffset="10e0000" Code="">
+        <Node Name="N00003B72" Type="4" Size="4" bHidden="0" Comment=""/>
     </Class>
 </ReClass>
