@@ -50,6 +50,8 @@ public:
 	UINT  m_nAppLook;
 	BOOL  m_bHiColorIcons;
 
+	void ResizeMemoryFont( int font_width, int font_height );
+
 	virtual void PreLoadState();
 	virtual void LoadCustomState();
 	virtual void SaveCustomState();

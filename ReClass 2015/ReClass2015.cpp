@@ -21,7 +21,6 @@ CReClass2015App theApp;
 BEGIN_MESSAGE_MAP(CReClass2015App, CWinAppEx) 
 	ON_COMMAND(ID_APP_ABOUT, &CReClass2015App::OnAppAbout)
 	ON_COMMAND(ID_FILE_NEW, &CReClass2015App::OnFileNew)
-	//ON_COMMAND(ID_FILE_IMPORT, &CReClass2015App::OnFileImport)
 	ON_COMMAND(ID_RECLASS_PLUGINS, &CReClass2015App::OnButtonPlugins)
 	ON_COMMAND(ID_BUTTON_NEWCLASS, &CReClass2015App::OnButtonNewClass)
 	ON_COMMAND(ID_BUTTON_NOTES, &CReClass2015App::OnButtonNotes)
@@ -58,8 +57,32 @@ CReClass2015App::CReClass2015App()
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
 	SetAppID(_T("ReClass 2015"));
 
-	FontWidth = 12;
-	FontHeight = 12;
+	g_FontWidth = FONT_DEFAULT_WIDTH;
+	g_FontHeight = FONT_DEFAULT_HEIGHT;
+}
+
+void CReClass2015App::ResizeMemoryFont(int font_width, int font_height)
+{
+	g_ViewFont.DeleteObject();
+
+	HMODULE shcore_load_address = LoadLibrary(_T("shcore.dll"));
+	auto pfnGetProcessDpiAwareness = reinterpret_cast<decltype(&GetProcessDpiAwareness)>(GetProcAddress(shcore_load_address, "GetProcessDpiAwareness"));
+	auto pfnGetDpiForMonitor = reinterpret_cast<decltype(&GetDpiForMonitor)>(GetProcAddress(shcore_load_address, "GetDpiForMonitor"));
+	
+	if (pfnGetProcessDpiAwareness != nullptr && pfnGetDpiForMonitor != nullptr)
+	{
+		PROCESS_DPI_AWARENESS dpi;
+		pfnGetProcessDpiAwareness(NULL, &dpi);
+		if (dpi == PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE || dpi == PROCESS_DPI_AWARENESS::PROCESS_SYSTEM_DPI_AWARE)
+		{
+			UINT dpiX, dpiY;
+			HMONITOR monitor = ::MonitorFromWindow(m_pMainWnd->GetSafeHwnd( ), MONITOR_DEFAULTTONEAREST);
+			pfnGetDpiForMonitor(monitor, MONITOR_DPI_TYPE::MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
+			g_FontWidth = MulDiv(font_width, MulDiv(dpiX, 100, 96), 100);
+			g_FontHeight = MulDiv(font_height, MulDiv(dpiY, 100, 96), 100);
+		}
+	}
+	g_ViewFont.CreateFont(g_FontHeight, g_FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T("Terminal"));
 }
 
 BOOL CReClass2015App::InitInstance()
@@ -180,21 +203,7 @@ BOOL CReClass2015App::InitInstance()
 	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_CHANGE));		Icons.push_back(icon);
 	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_CAMERA));		Icons.push_back(icon);
 
-	FontHeight = 16;
-	FontWidth = 8;
-
-	PROCESS_DPI_AWARENESS dpi;
-	GetProcessDpiAwareness( NULL, &dpi );
-	if ( dpi == PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE || dpi == PROCESS_DPI_AWARENESS::PROCESS_SYSTEM_DPI_AWARE )
-	{
-		UINT dpiX, dpiY;
-		HMONITOR monitor = ::MonitorFromWindow( m_pMainWnd->GetSafeHwnd( ), MONITOR_DEFAULTTONEAREST );
-		GetDpiForMonitor( monitor, MONITOR_DPI_TYPE::MDT_EFFECTIVE_DPI, &dpiX, &dpiY );
-		FontWidth = MulDiv( FontWidth, MulDiv( dpiX, 100, 96 ), 100 );
-		FontHeight = MulDiv( FontHeight, MulDiv( dpiY, 100, 96 ), 100 );
-	}
-
-	g_MemoryViewFont.CreateFont(FontHeight, FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T("Terminal"));
+	ResizeMemoryFont( g_FontWidth, g_FontHeight );
 
 	g_hProcess = NULL;
 	g_ProcessID = NULL;
@@ -1744,6 +1753,7 @@ void CReClass2015App::OnButtonClean()
 	CString msg; msg.Format(_T("Unused Classes removed: %i"), count);
 	MessageBox(this->GetMainWnd()->GetSafeHwnd(), msg, _T("Cleaner"), MB_OK);
 }
+
 void CReClass2015App::OnUpdateButtonClean(CCmdUI *pCmdUI)
 {
 	pCmdUI->Enable((theApp.Classes.size() > 0));
@@ -1753,3 +1763,4 @@ void CReClass2015App::OnUpdateFileSave(CCmdUI *pCmdUI)
 {
 	pCmdUI->Enable((CurrentFilePath.GetLength() > 0));
 }
+

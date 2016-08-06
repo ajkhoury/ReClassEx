@@ -21,25 +21,21 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
-	afx_msg void OnAttachButton( );
-	afx_msg void OnRefreshButton( );
-	afx_msg void OnDblClkListControl( NMHDR* pNMHDR, LRESULT* pResult );
+	afx_msg void OnAttachButton();
+	afx_msg void OnRefreshButton();
+	afx_msg void OnDblClkListControl(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult);
 
 private:
-	struct ProcessInfoStack
-	{
-		DWORD ProcessId;
-		CString Procname;
-	};
 
-	void RefreshRunningProcesses();
-
-	enum
-	{
+	enum {
 		COLUMN_PROCESSNAME = 0,
 		COLUMN_PROCESSID,
 		NUM_OF_COLUMNS
+	};
+	struct ProcessInfoStack {
+		DWORD ProcessId;
+		CString Procname;
 	};
 
 	typedef struct COMPARESTRUCT {
@@ -48,6 +44,8 @@ private:
 		bool bAscending;
 	} *LPCOMPARESTRUCT;
 
+	void ListRunningProcs();
+	
 	static int CALLBACK CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
 
 	//Controls

@@ -622,3 +622,4 @@ void CMainFrame::OnUpdateCheckPointer(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(gbPointers);
 }
+

@@ -132,17 +132,12 @@
     <None Include="..\Images\camera.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\ReClass2015.rc2">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="res\classicon.bmp">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\Images\reclass.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="exports.def" />
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
