@@ -78,16 +78,16 @@ void CDialogProcSelect::ListRunningProcs()
 		while (proc_info->NextEntryOffset != 0)
 		{
 			if (proc_info->ImageName.Length
-				 && (!gbFilterProcesses || std::find_if(CommonProcesses.begin(), CommonProcesses.end(),
-														  [proc_info] (const wchar_t* iter_val) -> bool { return _wcsicmp(iter_val, proc_info->ImageName.Buffer) == 0; }) == CommonProcesses.end()))
+				 && (!gbFilterProcesses || std::find_if(CommonProcesses.begin(), CommonProcesses.end(), [proc_info] (const wchar_t* iter_val) -> bool { return _wcsicmp(iter_val, proc_info->ImageName.Buffer) == 0; }) == CommonProcesses.end()))
 			{
 				HANDLE hProcess = ReClassOpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD) proc_info->UniqueProcessId);
 
 			#ifdef _WIN64
-				if (hProcess && Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX64) {
+				if (hProcess && Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX64)
 			#else
-				if (hProcess && Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX86) {
+				if (hProcess && Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX86)
 			#endif
+				{
 					ProcessInfoStack info;
 					info.ProcessId = (DWORD) proc_info->UniqueProcessId;
 
@@ -116,7 +116,6 @@ void CDialogProcSelect::ListRunningProcs()
 
 					m_ProcessInfos.push_back(info);
 				}
-
 				CloseHandle(hProcess);
 			}
 			proc_info = reinterpret_cast<PSYSTEM_PROCESS_INFORMATION>((ULONG) proc_info + proc_info->NextEntryOffset);
@@ -149,7 +148,7 @@ BOOL CDialogProcSelect::OnInitDialog()
 	
 	CenterWindow();
 
-	ListRunningProcs( );
+	ListRunningProcs();
 
 	return TRUE;
 }
@@ -175,7 +174,9 @@ int CALLBACK CDialogProcSelect::CompareFunction(LPARAM lParam1, LPARAM lParam2, 
 			size_t num2 = (size_t)_tcstoui64(strNum2.GetBuffer(), NULL, 16);
 
 			return (int)(num2 - num1);
-		} else if (column == COLUMN_PROCESSNAME) {
+		} 
+		else if (column == COLUMN_PROCESSNAME) 
+		{
 			CString strModuleName1 = pListCtrl->GetItemText(item1, column);
 			CString strModuleName2 = pListCtrl->GetItemText(item2, column);
 

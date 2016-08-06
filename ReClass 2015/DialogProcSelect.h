@@ -15,6 +15,8 @@ public:
 	// Dialog Data
 	enum { IDD = IDD_DIALOGPROCSELECT };
 
+	void ListRunningProcs( );
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual BOOL OnInitDialog();
@@ -25,7 +27,7 @@ protected:
 	afx_msg void OnRefreshButton();
 	afx_msg void OnDblClkListControl(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult);
-
+	
 private:
 
 	enum {
@@ -43,8 +45,6 @@ private:
 		int iColumn;
 		bool bAscending;
 	} *LPCOMPARESTRUCT;
-
-	void ListRunningProcs();
 	
 	static int CALLBACK CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
 
