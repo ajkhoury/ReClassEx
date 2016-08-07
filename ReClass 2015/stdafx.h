@@ -188,7 +188,7 @@ extern CString tdPWChar;
 //
 // Hotspot, Node, & Item IDs
 //
-#define WM_MAXITEMS 256
+#define WM_MAXITEMS 1024
 
 #define WM_CLASSMENU WM_USER
 #define WM_PROCESSMENU (WM_USER+WM_MAXITEMS)
