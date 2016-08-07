@@ -292,7 +292,7 @@ CStringA ReadMemoryStringA(size_t address, SIZE_T max)
 	}
 	else {
 #ifdef _DEBUG
-		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s"), Utils::GetLastErrorString().GetString());
+		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s"), Utils::GetLastErrorString().c_str());
 #endif
 		return CStringA("..");
 	}
@@ -319,7 +319,7 @@ CStringW ReadMemoryStringW(size_t address, SIZE_T max)
 	else 
 	{
 		#ifdef _DEBUG
-		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s"), Utils::GetLastErrorString().GetString());
+		PrintOut(_T("[ReadMemoryString]: Failed to read memory, GetLastError() = %s"), Utils::GetLastErrorString().c_str());
 		#endif
 		return CStringW(L"..");
 	}
@@ -717,7 +717,7 @@ bool UpdateMemoryMap(void)
 			if (!ReClassReadMemory((void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
 			{
 #ifdef _DEBUG
-				PrintOut(_T("[UpdateMemoryMap]: Could not read list entry from LDR list. Error = %s"), Utils::GetLastErrorString().GetString());
+				PrintOut(_T("[UpdateMemoryMap]: Could not read list entry from LDR list. Error = %s"), Utils::GetLastErrorString().c_str());
 #endif
 				if (ProcessInfo)
 					HeapFree(hHeap, 0, ProcessInfo);
@@ -908,7 +908,7 @@ bool UpdateExports()
 			if (!ReClassReadMemory((void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
 			{
 #ifdef _DEBUG
-				PrintOut(_T("[UpdateExports]: Could not read list entry from LDR list. Error = %s"), Utils::GetLastErrorString().GetString());
+				PrintOut(_T("[UpdateExports]: Could not read list entry from LDR list. Error = %s"), Utils::GetLastErrorString().c_str());
 #endif
 				if (ProcessInfo)
 					HeapFree(hHeap, 0, ProcessInfo);
@@ -1130,7 +1130,7 @@ size_t ConvertStrToAddress(CString str)
 			{
 				// Causing memory leaks when Final doesnt point to a valid address.
 				#ifdef _DEBUG
-				// PrintOut(_T("[ConvertStrToAddress]: Failed to read memory. Error: %s"), Utils::GetLastErrorString().GetString());
+				// PrintOut(_T("[ConvertStrToAddress]: Failed to read memory. Error: %s"), Utils::GetLastErrorString().c_str());
 				#endif
 			}
 		}

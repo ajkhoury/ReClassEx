@@ -367,7 +367,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 		{
 			UINT idx = nID - WM_CLASSMENU;
 
-			CChildFrame* pChild = dynamic_cast<CChildFrame*>(CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
+			CChildFrame* pChild = static_cast<CChildFrame*>(CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
 			CNodeClass* pClass = theApp.Classes[idx];
 			pClass->pChildWindow = pChild;
 
@@ -375,6 +375,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 			pChild->SetWindowText(pClass->Name);
 			UpdateFrameTitleForDocument(pClass->Name);
 			pChild->m_wndView.m_pClass = pClass;
+
 			return TRUE;
 		}
 		if (nID >= WM_DELETECLASSMENU && nID < (WM_DELETECLASSMENU + WM_MAXITEMS) )

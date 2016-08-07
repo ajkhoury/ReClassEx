@@ -10,21 +10,19 @@ namespace Utils
 	// forward declarations
 	static void* GetLocalProcAddress(HMODULE module, const char *proc_name);
 	static HMODULE GetLocalModuleHandle(const char* moduleName);
-	static HMODULE GetRemoteModuleHandle(const char* moduleName);
-	static void* GetRemoteProcAddress(HMODULE module, const char *proc_name); 
+	//static HMODULE GetRemoteModuleHandle(const char* moduleName);
+	//static void* GetRemoteProcAddress(HMODULE module, const char *proc_name); 
 
 	// Align value
-	static inline size_t Align(size_t val, size_t alignment)
-	{
+	static inline size_t Align(size_t val, size_t alignment) {
 		return (val % alignment == 0) ? val : (val / alignment + 1) * alignment;
 	}
 
-	static CString GetLastErrorString()
+	static std::basic_string<TCHAR> GetLastErrorString()
 	{
-		DWORD err = GetLastError();
 		TCHAR buf[256];
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf, 256, NULL);
-		return CString(buf);
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf, 256, NULL);
+		return std::basic_string<TCHAR>(buf);
 	}
 
 	template<class T> 
@@ -125,9 +123,18 @@ namespace Utils
 	{
 		void* dwModuleHandle = 0;
 
-		static _PEB* peb = NtCurrentPeb();
-		PPEB_LDR_DATA ldrData = peb->Ldr;
+		static PEB_T* peb = (PEB_T*)NtCurrentPeb();
+		PEB_LDR_DATA_T* ldrData = (PEB_LDR_DATA_T*)peb->Ldr;
 		PLDR_DATA_ENTRY cursor = (PLDR_DATA_ENTRY)ldrData->InInitializationOrderModuleList.Flink;
+
+
+
+#ifdef _DEBUG
+		
+		CreateConsole
+
+		printf(_T("cursor: 0x%X\n"), cursor);
+#endif
 
 		while (cursor->BaseAddress)  
 		{
