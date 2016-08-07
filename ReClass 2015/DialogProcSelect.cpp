@@ -8,9 +8,7 @@
 
 // CDialogProcSelect dialog
 
-// Annoying processes to filter out that you probably won't be looking in the memory of
-// Used unicode because its faster to compare process name from UNICODE_STRING buffer without converting to multibyte
-const std::initializer_list<const wchar_t*> CommonProcesses =
+const std::initializer_list<const wchar_t*> CDialogProcSelect::CommonProcesses =
 {
 	L"svchost.exe", L"System", L"conhost.exe", L"wininit.exe", L"smss.exe", L"winint.exe", L"wlanext.exe",
 	L"spoolsv.exe", L"spoolsv.exe", L"notepad.exe", L"explorer.exe", L"itunes.exe",
@@ -49,6 +47,17 @@ BEGIN_MESSAGE_MAP(CDialogProcSelect, CDialogEx)
 	ON_COMMAND(IDC_REFRESH_PROCESS, &CDialogProcSelect::OnRefreshButton)
 END_MESSAGE_MAP()
 
+bool CDialogProcSelect::IsInCommonProcessList(PWSTR proc)
+{
+	for (int i = 0; i < CommonProcesses.size(); i++)
+	{
+		const wchar_t* entry = *(CommonProcesses.begin() + i);
+		if (wcsicmp(proc, entry) == 0)
+			return true;
+	}
+	return false;
+}
+
 void CDialogProcSelect::ListRunningProcs()
 {
 	if (m_bLoadingProcesses)
@@ -77,8 +86,7 @@ void CDialogProcSelect::ListRunningProcs()
 		{
 			if (proc_info->ImageName.Buffer && proc_info->ImageName.Length)
 			{
-				PWSTR buf = proc_info->ImageName.Buffer;
-				if (!gbFilterProcesses || std::any_of(CommonProcesses.begin(), CommonProcesses.end(), [buf](const wchar_t* proc) { return _wcsicmp(buf, proc) == 0; }))
+				if (!gbFilterProcesses || IsInCommonProcessList(proc_info->ImageName.Buffer))
 				{
 					HANDLE hProcess = ReClassOpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD)proc_info->UniqueProcessId);
 #ifdef _WIN64
