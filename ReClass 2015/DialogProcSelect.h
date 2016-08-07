@@ -63,5 +63,5 @@ private:
 
 	// Annoying processes to filter out that you probably won't be looking in the memory of
 	// Used unicode because its faster to compare process name from UNICODE_STRING buffer without converting to multibyte
-	static const std::initializer_list<const wchar_t*> CommonProcesses;
+	static std::vector<const wchar_t*> CommonProcesses;
 };

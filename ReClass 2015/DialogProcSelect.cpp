@@ -8,7 +8,7 @@
 
 // CDialogProcSelect dialog
 
-const std::initializer_list<const wchar_t*> CDialogProcSelect::CommonProcesses =
+std::vector<const wchar_t*> CDialogProcSelect::CommonProcesses =
 {
 	L"svchost.exe", L"System", L"conhost.exe", L"wininit.exe", L"smss.exe", L"winint.exe", L"wlanext.exe",
 	L"spoolsv.exe", L"spoolsv.exe", L"notepad.exe", L"explorer.exe", L"itunes.exe",
@@ -51,8 +51,7 @@ bool CDialogProcSelect::IsInCommonProcessList(PWSTR proc)
 {
 	for (int i = 0; i < CommonProcesses.size(); i++)
 	{
-		const wchar_t* entry = *(CommonProcesses.begin() + i);
-		if (wcsicmp(proc, entry) == 0)
+		if (_wcsicmp(proc, CommonProcesses[i]) == 0)
 			return true;
 	}
 	return false;
@@ -70,7 +69,9 @@ void CDialogProcSelect::ListRunningProcs()
 
 	if (NT_SUCCESS(ntdll::NtQuerySystemInformation(SystemProcessInformation, NULL, NULL, &buffer_size)))
 	{
+#ifdef _DEBUG
 		PrintOut(_T("[CDialogProcSelect::RefreshRunningProcesses] Failed to get size for system process list from ProcessBasicInformation"));
+#endif
 		return;
 	}
 
