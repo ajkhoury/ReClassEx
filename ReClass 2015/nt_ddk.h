@@ -288,6 +288,8 @@ typedef struct _PEB
 	ULONGLONG CsrServerReadOnlySharedMemoryBase;
 } PEB, *PPEB;
 
+#define NtCurrentPeb() ((PPEB)(NtCurrentTeb()->ProcessEnvironmentBlock))
+
 //typedef struct _PEB_LDR_DATA {
 //	BYTE       Reserved1[8];
 //	PVOID      Reserved2[3];

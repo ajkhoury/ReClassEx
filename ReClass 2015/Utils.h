@@ -125,8 +125,7 @@ namespace Utils
 	{
 		void* dwModuleHandle = 0;
 
-		struct _TEB* teb = (struct _TEB*)NtCurrentTeb();
-		_PEB* peb = (_PEB*)teb->ProcessEnvironmentBlock;
+		static _PEB* peb = NtCurrentPeb();
 		PPEB_LDR_DATA ldrData = peb->Ldr;
 		PLDR_DATA_ENTRY cursor = (PLDR_DATA_ENTRY)ldrData->InInitializationOrderModuleList.Flink;
 
