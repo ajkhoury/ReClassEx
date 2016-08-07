@@ -47,7 +47,6 @@ private:
 	} *LPCOMPARESTRUCT;
 	
 	static int CALLBACK CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
-	bool IsInCommonProcessList(PWSTR proc);
 
 	//Controls
 	CListCtrl m_ProcessList;

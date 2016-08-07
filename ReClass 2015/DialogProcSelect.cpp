@@ -47,16 +47,6 @@ BEGIN_MESSAGE_MAP(CDialogProcSelect, CDialogEx)
 	ON_COMMAND(IDC_REFRESH_PROCESS, &CDialogProcSelect::OnRefreshButton)
 END_MESSAGE_MAP()
 
-bool CDialogProcSelect::IsInCommonProcessList(PWSTR proc)
-{
-	for (int i = 0; i < CommonProcesses.size(); i++)
-	{
-		if (_wcsicmp(proc, CommonProcesses[i]) == 0)
-			return true;
-	}
-	return false;
-}
-
 void CDialogProcSelect::ListRunningProcs()
 {
 	if (m_bLoadingProcesses)
@@ -87,7 +77,8 @@ void CDialogProcSelect::ListRunningProcs()
 		{
 			if (proc_info->ImageName.Buffer && proc_info->ImageName.Length)
 			{
-				if (!gbFilterProcesses || IsInCommonProcessList(proc_info->ImageName.Buffer))
+				const wchar_t* buf = proc_info->ImageName.Buffer;
+				if (!gbFilterProcesses || std::any_of(CommonProcesses.begin(), CommonProcesses.end(), [buf](const wchar_t* proc) { return proc ? _wcsicmp(proc, buf) == 0 : false; }))
 				{
 					HANDLE hProcess = ReClassOpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD)proc_info->UniqueProcessId);
 #ifdef _WIN64
