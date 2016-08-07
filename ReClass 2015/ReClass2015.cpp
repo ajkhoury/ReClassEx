@@ -87,6 +87,11 @@ void CReClass2015App::ResizeMemoryFont(int font_width, int font_height)
 
 BOOL CReClass2015App::InitInstance()
 {
+#ifdef _DEBUG
+	Utils::CreateDbgConsole(_T("dbg"));
+#endif
+
+
 	INITCOMMONCONTROLSEX InitCtrls;
 	InitCtrls.dwSize = sizeof(InitCtrls);
 	InitCtrls.dwICC = ICC_STANDARD_CLASSES;
@@ -219,13 +224,14 @@ BOOL CReClass2015App::InitInstance()
 	pFrame->ShowWindow(m_nCmdShow);
 	pFrame->UpdateWindow();
 
-	Utils::SetDebugPrivilege(TRUE);
-
 	Console = new CDialogConsole( _T( "Console" ) );
 	if (Console->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
 		Console->ShowWindow(SW_HIDE);
 
-	LoadPlugins( );
+	LoadPlugins();
+
+	// Get debug privilege
+	//Utils::SetDebugPrivilege(TRUE);
 	
 	return TRUE;
 }

@@ -12,7 +12,7 @@
 // Used unicode because its faster to compare process name from UNICODE_STRING buffer without converting to multibyte
 const std::initializer_list<const wchar_t*> CommonProcesses =
 {
-	L"svchost.exe", L"conhost.exe", L"wininit.exe", L"smss.exe", L"winint.exe", L"wlanext.exe",
+	L"svchost.exe", L"System", L"conhost.exe", L"wininit.exe", L"smss.exe", L"winint.exe", L"wlanext.exe",
 	L"spoolsv.exe", L"spoolsv.exe", L"notepad.exe", L"explorer.exe", L"itunes.exe",
 	L"sqlservr.exe", L"nvtray.exe",L"nvxdsync.exe", L"lsass.exe", L"jusched.exe",
 	L"conhost.exe", L"chrome.exe", L"firefox.exe", L"winamp.exe", L"TrustedInstaller.exe",
@@ -70,53 +70,53 @@ void CDialogProcSelect::ListRunningProcs()
 	if (NT_SUCCESS(ntdll::NtQuerySystemInformation(SystemProcessInformation, buffer_array.get(), buffer_size, &buffer_size)))
 	{
 		m_bLoadingProcesses = true;
-
-		proc_info = reinterpret_cast<PSYSTEM_PROCESS_INFORMATION>(buffer_array.get());
-
 		int proc_index = 0;
 
-		while (proc_info->NextEntryOffset != 0)
+		proc_info = reinterpret_cast<PSYSTEM_PROCESS_INFORMATION>(buffer_array.get());
+		while (proc_info && proc_info->NextEntryOffset != 0)
 		{
-			if (proc_info->ImageName.Length
-				 && (!gbFilterProcesses || std::find_if(CommonProcesses.begin(), CommonProcesses.end(), [proc_info] (const wchar_t* iter_val) -> bool { return _wcsicmp(iter_val, proc_info->ImageName.Buffer) == 0; }) == CommonProcesses.end()))
+			if (proc_info->ImageName.Buffer && proc_info->ImageName.Length)
 			{
-				HANDLE hProcess = ReClassOpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD) proc_info->UniqueProcessId);
-
-			#ifdef _WIN64
-				if (hProcess && Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX64)
-			#else
-				if (hProcess && Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX86)
-			#endif
+				PWSTR buf = proc_info->ImageName.Buffer;
+				if (!gbFilterProcesses || std::any_of(CommonProcesses.begin(), CommonProcesses.end(), [buf](const wchar_t* proc) { return _wcsicmp(buf, proc) == 0; }))
 				{
-					ProcessInfoStack info;
-					info.ProcessId = (DWORD) proc_info->UniqueProcessId;
+					HANDLE hProcess = ReClassOpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD)proc_info->UniqueProcessId);
+#ifdef _WIN64
+					if (hProcess && Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX64)
+#else
+					if (hProcess && Utils::GetProcessPlatform(hProcess) == Utils::ProcessPlatformX86)
+#endif
+					{
+						ProcessInfoStack info;
+						info.ProcessId = (DWORD)proc_info->UniqueProcessId;
 
-					TCHAR process_path[ MAX_PATH + 1 ] = { 0 };
-					GetModuleFileNameEx(hProcess, NULL, process_path, MAX_PATH);
-					SHFILEINFO info_shell = { 0 };
-					SHGetFileInfo(process_path, NULL, &info_shell, sizeof(SHFILEINFO), SHGFI_ICON);
-					m_ProcessIcons.Add(info_shell.hIcon);
+						TCHAR process_path[MAX_PATH + 1] = { 0 };
+						GetModuleFileNameEx(hProcess, NULL, process_path, MAX_PATH);
+						SHFILEINFO info_shell = { 0 };
+						SHGetFileInfo(process_path, NULL, &info_shell, sizeof(SHFILEINFO), SHGFI_ICON);
+						m_ProcessIcons.Add(info_shell.hIcon);
 
-					LVITEM lvi = { 0 };
-					lvi.mask = LVIF_TEXT | LVIF_IMAGE;
-				#ifdef UNICODE
-					info.Procname = proc_info->ImageName.Buffer;
-				#else
-					info.Procname = CW2A(proc_info->ImageName.Buffer);
-				#endif
-					lvi.pszText = info.Procname.GetBuffer();
-					lvi.cchTextMax = info.Procname.GetLength();
-					lvi.iImage = proc_index++;;
-					lvi.iItem = m_ProcessList.GetItemCount();
-					int pos = m_ProcessList.InsertItem(&lvi);
+						LVITEM lvi = { 0 };
+						lvi.mask = LVIF_TEXT | LVIF_IMAGE;
+#ifdef UNICODE
+						info.Procname = proc_info->ImageName.Buffer;
+#else
+						info.Procname = CW2A(proc_info->ImageName.Buffer);
+#endif
+						lvi.pszText = info.Procname.GetBuffer();
+						lvi.cchTextMax = info.Procname.GetLength();
+						lvi.iImage = proc_index++;;
+						lvi.iItem = m_ProcessList.GetItemCount();
+						int pos = m_ProcessList.InsertItem(&lvi);
 
-					TCHAR strProcId[64];
-					_stprintf_s(strProcId, _T("%d"), info.ProcessId);
-					m_ProcessList.SetItemText(pos, COLUMN_PROCESSID, (LPTSTR)strProcId);
+						TCHAR strProcId[64];
+						_stprintf_s(strProcId, _T("%d"), info.ProcessId);
+						m_ProcessList.SetItemText(pos, COLUMN_PROCESSID, (LPTSTR)strProcId);
 
-					m_ProcessInfos.push_back(info);
+						m_ProcessInfos.push_back(info);
+					}
+					CloseHandle(hProcess);
 				}
-				CloseHandle(hProcess);
 			}
 			proc_info = reinterpret_cast<PSYSTEM_PROCESS_INFORMATION>((ULONG) proc_info + proc_info->NextEntryOffset);
 		}

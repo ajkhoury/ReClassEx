@@ -13,6 +13,35 @@ namespace Utils
 	//static HMODULE GetRemoteModuleHandle(const char* moduleName);
 	//static void* GetRemoteProcAddress(HMODULE module, const char *proc_name); 
 
+#ifdef _DEBUG
+	/*
+	*	Console API stuff
+	*/
+	static FILE* ConsoleStream = 0;
+	static bool CreateDbgConsole(const TCHAR* lpConsoleTitle)
+	{
+		if (!ConsoleStream)
+		{
+			if (!AllocConsole())
+				return false;
+			errno_t ret = freopen_s(&ConsoleStream, "CONOUT$", "w", stdout);
+			if (ret != 0)
+				return false;
+			SetConsoleTitle(lpConsoleTitle);
+		}
+		return true;
+	}
+	static void FreeDbgConsole()
+	{
+		if (ConsoleStream)
+		{
+			fclose(ConsoleStream);
+			FreeConsole();
+			ConsoleStream = 0;
+		}
+	}
+#endif
+
 	// Align value
 	static inline size_t Align(size_t val, size_t alignment) {
 		return (val % alignment == 0) ? val : (val / alignment + 1) * alignment;
@@ -23,38 +52,6 @@ namespace Utils
 		TCHAR buf[256];
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf, 256, NULL);
 		return std::basic_string<TCHAR>(buf);
-	}
-
-	template<class T> 
-	__forceinline int NumDigits(T number)
-	{
-		int digits = 0;
-		// remove this if '-' counts as a digit
-		if (number < (T)0)
-			digits = 1;
-		while (number)
-		{
-			number /= (T)0x16;
-			digits++;
-		}
-		return digits;
-	}
-
-	TCHAR* GetFilePath(TCHAR* append)
-	{
-		static TCHAR szFile[MAX_PATH] = {};
-		GetModuleFileName(GetModuleHandle(0), szFile, MAX_PATH);
-		for (int i = 0; i < (int)_tcslen(szFile); i++)
-		{
-			if (szFile[_tcslen(szFile) - i] == L'\\')
-			{
-				szFile[(_tcslen(szFile) - i) + 1] = L'\0';
-				_tcscat_s(szFile, append);
-				return szFile;
-			}
-		}
-
-		return NULL;
 	}
 
 	static BOOL IsElevated()
@@ -127,13 +124,8 @@ namespace Utils
 		PEB_LDR_DATA_T* ldrData = (PEB_LDR_DATA_T*)peb->Ldr;
 		PLDR_DATA_ENTRY cursor = (PLDR_DATA_ENTRY)ldrData->InInitializationOrderModuleList.Flink;
 
-
-
 #ifdef _DEBUG
-		
-		CreateConsole
-
-		printf(_T("cursor: 0x%X\n"), cursor);
+		_tprintf(_T("cursor: 0x%IX\n"), cursor);
 #endif
 
 		while (cursor->BaseAddress)  
