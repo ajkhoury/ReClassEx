@@ -344,19 +344,20 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 {
 	if (nCode == CN_UPDATE_COMMAND_UI)
 	{
+		CCmdUI* pCmdUI = static_cast<CCmdUI*>(pExtra);
 		if (nID >= WM_CLASSMENU && nID < (WM_CLASSMENU + WM_MAXITEMS))
 		{ 
-			((CCmdUI*)pExtra)->Enable(TRUE); 
+			pCmdUI->Enable(TRUE);
 			return TRUE;
 		}
 		else if (nID >= WM_PROCESSMENU && nID < (WM_PROCESSMENU + WM_MAXITEMS))
 		{ 
-			((CCmdUI*)pExtra)->Enable(TRUE); 
+			pCmdUI->Enable(TRUE);
 			return TRUE;
 		}
 		else if (nID >= WM_DELETECLASSMENU && nID < (WM_DELETECLASSMENU + WM_MAXITEMS))
 		{ 
-			((CCmdUI*)pExtra)->Enable(TRUE); 
+			pCmdUI->Enable(TRUE);
 			return TRUE;
 		}
 	}
@@ -366,7 +367,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 		{
 			UINT idx = nID - WM_CLASSMENU;
 
-			CChildFrame* pChild = (CChildFrame*)this->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
+			CChildFrame* pChild = dynamic_cast<CChildFrame*>(CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
 			CNodeClass* pClass = theApp.Classes[idx];
 			pClass->pChildWindow = pChild;
 
@@ -426,7 +427,9 @@ void CMainFrame::OnUpdateCheckCbRtti(CCmdUI *pCmdUI)
 	if (!gbPointers) 
 	{
 		pCmdUI->Enable(FALSE);
-	}else{
+	}
+	else
+	{
 		pCmdUI->Enable(TRUE);
 		pCmdUI->SetCheck(gbRTTI);
 	}
@@ -564,7 +567,9 @@ void CMainFrame::OnUpdateCheckClipboardCopy(CCmdUI *pCmdUI)
 void CMainFrame::OnButtonLeft()
 {
 	RECT rc; HMONITOR hMon;
-	MONITORINFO mi = { sizeof(MONITORINFO) };
+	MONITORINFO mi;
+	ZeroMemory(&mi, sizeof(MONITORINFO));
+	mi.cbSize = sizeof(MONITORINFO);
 	::GetWindowRect(GetSafeHwnd(), &rc);
 	hMon = ::MonitorFromRect(&rc, MONITOR_DEFAULTTONEAREST);
 	::GetMonitorInfo(hMon, &mi);
@@ -575,7 +580,9 @@ void CMainFrame::OnButtonLeft()
 void CMainFrame::OnButtonRight()
 {
 	RECT rc; HMONITOR hMon;
-	MONITORINFO mi = { sizeof(MONITORINFO) };
+	MONITORINFO mi;
+	ZeroMemory(&mi, sizeof(MONITORINFO));
+	mi.cbSize = sizeof(MONITORINFO);
 	::GetWindowRect(GetSafeHwnd(), &rc);
 	hMon = ::MonitorFromRect(&rc, MONITOR_DEFAULTTONEAREST);
 	::GetMonitorInfo(hMon, &mi);
