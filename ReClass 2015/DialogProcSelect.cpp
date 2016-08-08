@@ -8,7 +8,7 @@
 
 // CDialogProcSelect dialog
 
-std::vector<const wchar_t*> CDialogProcSelect::CommonProcesses =
+std::initializer_list<const wchar_t*> CommonProcesses =
 {
 	L"svchost.exe", L"System", L"conhost.exe", L"wininit.exe", L"smss.exe", L"winint.exe", L"wlanext.exe",
 	L"spoolsv.exe", L"spoolsv.exe", L"notepad.exe", L"explorer.exe", L"itunes.exe",
@@ -24,7 +24,7 @@ std::vector<const wchar_t*> CDialogProcSelect::CommonProcesses =
 	L"CCLibrary.exe", L"pia_tray.exe", L"rubyw.exe", L"netsession_win.exe", L"NvBackend.exe", L"TeamViewer_Service.exe",
 	L"DisplayFusionHookAppWIN6032.exe", L"DisplayFusionHookAppWIN6064.exe", L"GameScannerService.exe", L"AdobeUpdateService.exe",
 	L"steamwebhelper.exe", L"c2c_service.exe", L"Sync Server.exe", L"NvNetworkService.exe", L"Creative Cloud.exe", L"foobar2000.exe",
-	L"code.exe", L"ReClass.exe", L"ReClass64.exe"
+	L"code.exe", L"ReClass.exe", L"ReClass64.exe", L"Discord.exe", L"node.exe", L"TeamViewer.exe", L"Everything.exe"
 };
 
 // standard constructor
@@ -82,8 +82,8 @@ void CDialogProcSelect::ListRunningProcs()
 		{
 			if (proc_info->ImageName.Buffer && proc_info->ImageName.Length)
 			{
-				const wchar_t* buf = proc_info->ImageName.Buffer;
-				if (m_FilterCheck.GetCheck() != BST_CHECKED || std::any_of(CommonProcesses.begin(), CommonProcesses.end(), [buf] (const wchar_t* proc) { return proc ? _wcsicmp(proc, buf) == 0 : false; }))
+				if ( m_FilterCheck.GetCheck( ) != BST_CHECKED || std::find_if( CommonProcesses.begin( ), CommonProcesses.end( ),
+																			   [ proc_info ] ( const wchar_t* proc ) { return _wcsicmp( proc, proc_info->ImageName.Buffer ) == 0; } ) == CommonProcesses.end( ) )
 				{
 					HANDLE hProcess = ReClassOpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD)proc_info->UniqueProcessId);
 #ifdef _WIN64

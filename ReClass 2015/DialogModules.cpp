@@ -157,9 +157,7 @@ void CDialogModules::SetSelected()
 			if ( pChild && IsWindow( pChild->GetSafeHwnd( ) ) && pChild->IsWindowVisible( ) )
 			{
 				static_cast<CMDIChildWnd*>( pChild )->MDIActivate( );
-			} 
-			else
-			{
+			} else {
 				CChildFrame* pNewChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
 				pNewChild->m_wndView.m_pClass = pNewClass;
 				pNewClass->pChildWindow = pNewChild;
