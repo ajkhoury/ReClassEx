@@ -160,18 +160,18 @@ void CDialogModules::SetSelected()
 			} 
 			else
 			{
-				CChildFrame* pNewChild = (CChildFrame*) pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel );
+				CChildFrame* pNewChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
 				pNewChild->m_wndView.m_pClass = pNewClass;
 				pNewClass->pChildWindow = pNewChild;
-				pNewChild->SetTitle( pNewClass->Name );
-				pNewChild->SetWindowText( pNewClass->Name );
-				pFrame->UpdateFrameTitleForDocument( pNewClass->Name );
+				pNewChild->SetTitle(pNewClass->Name);
+				pNewChild->SetWindowText(pNewClass->Name);
+				pFrame->UpdateFrameTitleForDocument(pNewClass->Name);
 			}
 		}
 		else
 		{
-			CMainFrame*  pFrame = static_cast<CMainFrame*>( AfxGetApp( )->m_pMainWnd );
-			CChildFrame* pChild = static_cast<CChildFrame*>( pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel ) ); pNewClass = new CNodeClass;
+			CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp( )->m_pMainWnd);
+			CChildFrame* pChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS( CChildFrame ), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel ));
 
 			pNewClass = new CNodeClass;
 			pNewClass->Name = ClassName;
