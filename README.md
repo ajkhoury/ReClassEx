@@ -1,6 +1,6 @@
 # Reclass-2015
 
-![Alt text](/Images/reclass.png?raw=true "ReClass")
+![Alt text](http://i.imgur.com/UDgnuE3.png "ReClass")
 
 Cleaned up the code a bit and added some new features. Also got rid of a ton of bugs still crawling around.
 
@@ -27,7 +27,7 @@ Cleaned up the code a bit and added some new features. Also got rid of a ton of 
 - Added ability to load PDB file and display PDB Symbols
 - Process list dialog instead of scroll menu 
 
-![Alt text](/Images/reclass2.png?raw=true "ReClass")
+![Alt text](http://i.imgur.com/hBNyEFG.png "ReClass")
 
 ## Current Release Download
 
