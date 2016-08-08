@@ -40,6 +40,8 @@
 #include <memory>
 #include <map>
 
+//TODO: Make this easier to maintain
+#define RECLASS_VERSION _T("1.0.3.0")
 
 //
 // BeaEngine disassembler 
