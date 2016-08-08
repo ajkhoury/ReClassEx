@@ -8,6 +8,8 @@
 
 // CDialogProcSelect dialog
 
+//TODO: Add checkbox on dialog so that you can toggle process filtering from dialog instead of settings tab in ribbon
+
 std::vector<const wchar_t*> CDialogProcSelect::CommonProcesses =
 {
 	L"svchost.exe", L"System", L"conhost.exe", L"wininit.exe", L"smss.exe", L"winint.exe", L"wlanext.exe",
