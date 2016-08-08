@@ -17,30 +17,33 @@ public:
 
 	void ListRunningProcs( );
 
-protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual BOOL OnInitDialog();
 
 	DECLARE_MESSAGE_MAP()
 
+	afx_msg void OnClose( );
 	afx_msg void OnAttachButton();
 	afx_msg void OnRefreshButton();
 	afx_msg void OnDblClkListControl(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult);
-	
-private:
 
-	enum {
+private:
+	enum
+	{
 		COLUMN_PROCESSNAME = 0,
 		COLUMN_PROCESSID,
 		NUM_OF_COLUMNS
 	};
-	struct ProcessInfoStack {
+
+	struct ProcessInfoStack
+	{
 		DWORD ProcessId;
 		CString Procname;
 	};
 
-	typedef struct COMPARESTRUCT {
+	typedef struct COMPARESTRUCT 
+	{
 		CListCtrl* pListCtrl;
 		int iColumn;
 		bool bAscending;
@@ -50,6 +53,7 @@ private:
 
 	//Controls
 	CListCtrl m_ProcessList;
+	CButton m_FilterCheck;
 	bool m_bSortAscendingName;
 	bool m_bSortAscendingId;
 

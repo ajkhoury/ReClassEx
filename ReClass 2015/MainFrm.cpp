@@ -51,8 +51,6 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_DELETECLASS, &CMainFrame::OnUpdateButtonDeleteClass)
 	ON_COMMAND(ID_CHECK_TOPMOST, &CMainFrame::OnCheckTopmost)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_TOPMOST, &CMainFrame::OnUpdateCheckTopmost)
-	ON_COMMAND(ID_CHECK_FILTERPROCESSES, &CMainFrame::OnCheckFilterProcesses)
-	ON_UPDATE_COMMAND_UI(ID_CHECK_FILTERPROCESSES, &CMainFrame::OnUpdateCheckFilterProcesses)
 	ON_COMMAND(ID_CHECK_CLASSBROWSER, &CMainFrame::OnCheckClassBrowser)
 	ON_UPDATE_COMMAND_UI(ID_CHECK_CLASSBROWSER, &CMainFrame::OnUpdateCheckClassBrowser)
 	ON_COMMAND(ID_BUTTON_LEFT, &CMainFrame::OnButtonLeft)
@@ -103,7 +101,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	mdiTabParams.m_bDocumentMenu = TRUE; // enable the document menu at the left edge of the tab area
 	mdiTabParams.m_bFlatFrame = FALSE;
 	EnableMDITabbedGroups(TRUE, mdiTabParams);
-
 
 	m_wndRibbonBar.Create(this);
 	m_wndRibbonBar.LoadFromResource(IDR_RIBBON);
@@ -532,16 +529,6 @@ void CMainFrame::OnCheckClassBrowser()
 void CMainFrame::OnUpdateCheckClassBrowser(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(gbClassBrowser);
-}
-
-void CMainFrame::OnCheckFilterProcesses()
-{
-	gbFilterProcesses = !gbFilterProcesses;
-}
-
-void CMainFrame::OnUpdateCheckFilterProcesses(CCmdUI *pCmdUI)
-{
-	pCmdUI->SetCheck(gbFilterProcesses);
 }
 
 void CMainFrame::OnCheckPrivatePadding()

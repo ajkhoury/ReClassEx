@@ -109,7 +109,7 @@ BOOL CDialogModules::OnInitDialog()
 	return TRUE;
 }
 
-__inline int CDialogModules::FindModuleByName(const TCHAR* szName)
+inline int CDialogModules::FindModuleByName(const TCHAR* szName)
 {
 	for (UINT id = 0; id < MemMapModule.size(); id++)
 	{
@@ -120,69 +120,86 @@ __inline int CDialogModules::FindModuleByName(const TCHAR* szName)
 	return -1;
 };
 
-__inline CNodeClass* CDialogModules::GetClassByName(const TCHAR* szClassName)
+inline CNodeClass* CDialogModules::GetClassByName(const TCHAR* szClassName)
 {
-	CNodeClass* pClass = 0;
-	for (UINT i = 0; i < theApp.Classes.size(); i++) {
-		if (theApp.Classes[i]->Name == szClassName) {
-			pClass = theApp.Classes[i];
-			break;
-		}
-	}
-	return pClass;
+	auto iter = std::find_if( theApp.Classes.begin( ), theApp.Classes.end( ), 
+							  [ szClassName ] ( const CNodeClass* value ) -> bool { return value->Name.CompareNoCase( szClassName ) == 0; } );
+	if ( iter != theApp.Classes.end( ) ) 
+		return *iter;
+	else 
+		return nullptr;
 }
 
 void CDialogModules::SetSelected()
 {
 	POSITION pos = m_ModuleList.GetFirstSelectedItemPosition();
-	while (pos)
+	while ( pos )
 	{
-		int nItem = m_ModuleList.GetNextSelectedItem(pos);
+		int nItem = m_ModuleList.GetNextSelectedItem( pos );
 
-		nItem = FindModuleByName(m_ModuleList.GetItemText(nItem, 0));
-
-		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
-		CChildFrame* pChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
+		nItem = FindModuleByName( m_ModuleList.GetItemText( nItem, 0 ) );
 
 		int extension_size = MemMapModule[ nItem ].Name.ReverseFind( '.' );
-		if ( extension_size == -1 ) 
+		if ( extension_size == -1 )
 			extension_size = 0;
 		else extension_size = MemMapModule[ nItem ].Name.GetLength( ) - extension_size;
 
 		CString ClassName = MemMapModule[ nItem ].Name.Left( MemMapModule[ nItem ].Name.GetLength( ) - extension_size ) + _T( "_base" );
 
-		CNodeClass* pNewClass = GetClassByName(ClassName);
-		if (!pNewClass)
+		CNodeClass* pNewClass = GetClassByName( ClassName );
+
+		if ( pNewClass != nullptr )
 		{
+			CMainFrame*  pFrame = static_cast<CMainFrame*>( AfxGetApp( )->m_pMainWnd );
+			CChildFrame* pChild = pNewClass->pChildWindow;
+
+			// Check if its a window first to dodge the assertion in IsWindowVisible
+			if ( pChild && IsWindow( pChild->GetSafeHwnd( ) ) && pChild->IsWindowVisible( ) )
+			{
+				static_cast<CMDIChildWnd*>( pChild )->MDIActivate( );
+			} 
+			else
+			{
+				CChildFrame* pNewChild = (CChildFrame*) pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel );
+				pNewChild->m_wndView.m_pClass = pNewClass;
+				pNewClass->pChildWindow = pNewChild;
+				pNewChild->SetTitle( pNewClass->Name );
+				pNewChild->SetWindowText( pNewClass->Name );
+				pFrame->UpdateFrameTitleForDocument( pNewClass->Name );
+			}
+		}
+		else
+		{
+			CMainFrame*  pFrame = static_cast<CMainFrame*>( AfxGetApp( )->m_pMainWnd );
+			CChildFrame* pChild = static_cast<CChildFrame*>( pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel ) ); pNewClass = new CNodeClass;
+
 			pNewClass = new CNodeClass;
 			pNewClass->Name = ClassName;
 
-			TCHAR strStart[64];
-			_stprintf(strStart, _T("%IX"), MemMapModule[nItem].Start);
+			TCHAR strStart[ 64 ];
+			_stprintf( strStart, _T( "%IX" ), MemMapModule[ nItem ].Start );
 			pNewClass->strOffset = strStart;
-			pNewClass->offset = MemMapModule[nItem].Start;
+			pNewClass->offset = MemMapModule[ nItem ].Start;
 			pNewClass->pChildWindow = pChild;
-			pNewClass->idx = (int)theApp.Classes.size();
+			pNewClass->idx = (int) theApp.Classes.size( );
 
-			theApp.Classes.push_back(pNewClass);
+			theApp.Classes.push_back( pNewClass );
 
 			DWORD offset = 0;
-			for (int i = 0; i < 64 / sizeof(size_t); i++)
+			for ( int i = 0; i < 64 / sizeof( size_t ); i++ )
 			{
 				CNodeHex* pNode = new CNodeHex;
 				pNode->pParent = pNewClass;
 				pNode->offset = offset;
-				offset += pNode->GetMemorySize();
-				pNewClass->Nodes.push_back(pNode);
+				offset += pNode->GetMemorySize( );
+				pNewClass->Nodes.push_back( pNode );
 			}
+
+			pChild->m_wndView.m_pClass = pNewClass;
+			pChild->SetTitle( pNewClass->Name );
+			pChild->SetWindowText( pNewClass->Name );
+			pFrame->UpdateFrameTitleForDocument( pNewClass->Name );
 		}
-
-		pChild->m_wndView.m_pClass = pNewClass;
-
-		// This will get overwritten for each module that is selected
-		pChild->SetTitle(ClassName);
-		pChild->SetWindowText(ClassName);
-		pFrame->UpdateFrameTitleForDocument(ClassName);
 	}
 }
 

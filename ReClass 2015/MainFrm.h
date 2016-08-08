@@ -94,8 +94,6 @@ public:
 	afx_msg void OnUpdateCheckTopmost(CCmdUI *pCmdUI);
 	afx_msg void OnCheckClassBrowser( );
 	afx_msg void OnUpdateCheckClassBrowser(CCmdUI *pCmdUI);
-	afx_msg void OnCheckFilterProcesses( );
-	afx_msg void OnUpdateCheckFilterProcesses(CCmdUI *pCmdUI);
 	afx_msg void OnCheckPrivatePadding();
 	afx_msg void OnUpdateCheckPrivatePadding(CCmdUI *pCmdUI);
 	afx_msg void OnCheckClipboardCopy();

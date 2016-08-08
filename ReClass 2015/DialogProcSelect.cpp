@@ -8,8 +8,6 @@
 
 // CDialogProcSelect dialog
 
-//TODO: Add checkbox on dialog so that you can toggle process filtering from dialog instead of settings tab in ribbon
-
 std::vector<const wchar_t*> CDialogProcSelect::CommonProcesses =
 {
 	L"svchost.exe", L"System", L"conhost.exe", L"wininit.exe", L"smss.exe", L"winint.exe", L"wlanext.exe",
@@ -47,6 +45,7 @@ BEGIN_MESSAGE_MAP(CDialogProcSelect, CDialogEx)
 	ON_NOTIFY(LVN_COLUMNCLICK, IDC_PROCESS_LIST, CDialogProcSelect::OnColumnClick)
 	ON_COMMAND(IDC_ATTACH_PROCESS, &CDialogProcSelect::OnAttachButton)
 	ON_COMMAND(IDC_REFRESH_PROCESS, &CDialogProcSelect::OnRefreshButton)
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 void CDialogProcSelect::ListRunningProcs()
@@ -54,9 +53,13 @@ void CDialogProcSelect::ListRunningProcs()
 	if (m_bLoadingProcesses)
 		return;
 
+	m_ProcessIcons.DeleteImageList();
+	m_ProcessIcons.Create(15, 15, ILC_COLOR32, 1, 1);
+	m_ProcessIcons.SetBkColor(RGB(255, 255, 255));
+	m_ProcessList.SetImageList(&m_ProcessIcons, LVSIL_SMALL);
 	m_ProcessList.DeleteAllItems();
 
-	PSYSTEM_PROCESS_INFORMATION proc_info;
+	PSYSTEM_PROCESS_INFORMATION proc_info = nullptr;
 	DWORD buffer_size = 0;
 
 	if (NT_SUCCESS(ntdll::NtQuerySystemInformation(SystemProcessInformation, NULL, NULL, &buffer_size)))
@@ -80,7 +83,7 @@ void CDialogProcSelect::ListRunningProcs()
 			if (proc_info->ImageName.Buffer && proc_info->ImageName.Length)
 			{
 				const wchar_t* buf = proc_info->ImageName.Buffer;
-				if (!gbFilterProcesses || std::any_of(CommonProcesses.begin(), CommonProcesses.end(), [buf](const wchar_t* proc) { return proc ? _wcsicmp(proc, buf) == 0 : false; }))
+				if (m_FilterCheck.GetCheck() != BST_CHECKED || std::any_of(CommonProcesses.begin(), CommonProcesses.end(), [buf] (const wchar_t* proc) { return proc ? _wcsicmp(proc, buf) == 0 : false; }))
 				{
 					HANDLE hProcess = ReClassOpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD)proc_info->UniqueProcessId);
 #ifdef _WIN64
@@ -107,7 +110,7 @@ void CDialogProcSelect::ListRunningProcs()
 #endif
 						lvi.pszText = info.Procname.GetBuffer();
 						lvi.cchTextMax = info.Procname.GetLength();
-						lvi.iImage = proc_index++;;
+						lvi.iImage = proc_index++;
 						lvi.iItem = m_ProcessList.GetItemCount();
 						int pos = m_ProcessList.InsertItem(&lvi);
 
@@ -129,38 +132,30 @@ void CDialogProcSelect::ListRunningProcs()
 void CDialogProcSelect::DoDataExchange(CDataExchange* pDX)
 {
 	DDX_Control(pDX, IDC_PROCESS_LIST, m_ProcessList);
+	DDX_Control(pDX, IDC_FILTER_PROCESS_CHECK, m_FilterCheck);
 	CDialogEx::DoDataExchange(pDX);
 }
 
 BOOL CDialogProcSelect::OnInitDialog()
 {
 	CDialogEx::OnInitDialog( );
-
 	GetWindowRect(&m_OriginalSize);
 	ScreenToClient(&m_OriginalSize);
-
-	m_ProcessIcons.Create(15, 15, ILC_COLOR32, 1, 1);
-	m_ProcessIcons.SetBkColor(RGB(255, 255, 255));
-
 	m_ProcessList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);
-
-	m_ProcessList.SetImageList(&m_ProcessIcons, LVSIL_SMALL);
 	m_ProcessList.InsertColumn(COLUMN_PROCESSNAME, _T("Process"), LVCFMT_LEFT, 214);
 	m_ProcessList.InsertColumn(COLUMN_PROCESSID, _T("ID"), LVCFMT_LEFT, 45);
-	
+	m_FilterCheck.SetCheck( gbFilterProcesses ? BST_CHECKED : BST_UNCHECKED );
 	CenterWindow();
-
 	ListRunningProcs();
-
 	return TRUE;
 }
 
 int CALLBACK CDialogProcSelect::CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
 {
-	COMPARESTRUCT* compare = (COMPARESTRUCT*)lParamSort;
+	COMPARESTRUCT* compare = reinterpret_cast<COMPARESTRUCT*>(lParamSort);
 	if (compare)
 	{
-		CListCtrl* pListCtrl = (CListCtrl*)compare->pListCtrl;
+		CListCtrl* pListCtrl = compare->pListCtrl;
 		int column = compare->iColumn;
 		bool ascending = compare->bAscending;
 
@@ -193,6 +188,7 @@ void CDialogProcSelect::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
 	NM_LISTVIEW* pNMListView = reinterpret_cast<NM_LISTVIEW*>(pNMHDR);
 
 	COMPARESTRUCT compare;
+	ZeroMemory(&compare, sizeof(COMPARESTRUCT));
 	compare.pListCtrl = &m_ProcessList;
 	compare.iColumn = pNMListView->iSubItem;
 	switch (compare.iColumn)
@@ -246,3 +242,8 @@ void CDialogProcSelect::OnRefreshButton()
 	ListRunningProcs();
 }
 
+void CDialogProcSelect::OnClose()
+{
+	gbFilterProcesses = m_FilterCheck.GetCheck() == BST_CHECKED;
+	CDialogEx::OnClose();
+}
