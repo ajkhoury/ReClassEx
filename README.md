@@ -49,4 +49,4 @@ See wiki for instructions on how to compile:
 - [Timboy67678](https://github.com/Timboy67678)
 - [DarthTon](https://github.com/DarthTon)
 - leveln
-- buddyfavors
+- [buddyfavors](https://github.com/buddyfavors)
