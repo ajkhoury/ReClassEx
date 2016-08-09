@@ -58,6 +58,7 @@ void CDialogProcSelect::ListRunningProcs()
 	m_ProcessIcons.SetBkColor(RGB(255, 255, 255));
 	m_ProcessList.SetImageList(&m_ProcessIcons, LVSIL_SMALL);
 	m_ProcessList.DeleteAllItems();
+	m_ProcessInfos.clear();
 
 	PSYSTEM_PROCESS_INFORMATION proc_info = nullptr;
 	DWORD buffer_size = 0;
@@ -82,8 +83,8 @@ void CDialogProcSelect::ListRunningProcs()
 		{
 			if (proc_info->ImageName.Buffer && proc_info->ImageName.Length)
 			{
-				if ( m_FilterCheck.GetCheck( ) != BST_CHECKED || std::find_if( CommonProcesses.begin( ), CommonProcesses.end( ),
-																			   [ proc_info ] ( const wchar_t* proc ) { return _wcsicmp( proc, proc_info->ImageName.Buffer ) == 0; } ) == CommonProcesses.end( ) )
+				if (m_FilterCheck.GetCheck() != BST_CHECKED || std::find_if(CommonProcesses.begin(), CommonProcesses.end(),
+																			   [proc_info] (const wchar_t* proc) { return _wcsicmp(proc, proc_info->ImageName.Buffer) == 0; }) == CommonProcesses.end())
 				{
 					HANDLE hProcess = ReClassOpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD)proc_info->UniqueProcessId);
 #ifdef _WIN64
@@ -177,7 +178,7 @@ int CALLBACK CDialogProcSelect::CompareFunction(LPARAM lParam1, LPARAM lParam2, 
 			CString strModuleName1 = pListCtrl->GetItemText(item1, column);
 			CString strModuleName2 = pListCtrl->GetItemText(item2, column);
 
-			return _tcsicmp(strModuleName1.GetBuffer(), strModuleName2.GetBuffer());
+			return strModuleName1.CompareNoCase(strModuleName2);
 		}
 	}
 	return 0;
@@ -226,12 +227,22 @@ void CDialogProcSelect::OnAttachButton()
 	
 	if (proc_info_found != m_ProcessInfos.end())
 	{
-		CloseHandle(g_hProcess); //Stops leaking handles
-		g_ProcessID = proc_info_found->ProcessId;
-		g_hProcess = ReClassOpenProcess(PROCESS_ALL_ACCESS, FALSE, g_ProcessID);
-		g_ProcessName = proc_info_found->Procname;
-		UpdateMemoryMap();
-		EndDialog(0);
+		HANDLE process_open = ReClassOpenProcess(PROCESS_ALL_ACCESS, FALSE, proc_info_found->ProcessId);
+		
+		if (process_open == NULL || GetLastError() != ERROR_SUCCESS) 
+		{
+			auto last_error = Utils::GetLastErrorString();
+			CString message{ };
+			message.Format(_T("Failed to attach to process \"%s\": %s"), proc_info_found->Procname.GetBuffer(), last_error.c_str());
+			MessageBox(message, _T("ReClass 2015"), MB_OK | MB_ICONERROR);
+		} else {
+			CloseHandle(g_hProcess); //Stops leaking handles
+			g_hProcess = process_open;
+			g_ProcessID = proc_info_found->ProcessId;
+			g_ProcessName = proc_info_found->Procname;
+			UpdateMemoryMap();
+			OnClose();
+		}
 	}
 }
 
@@ -245,5 +256,6 @@ void CDialogProcSelect::OnRefreshButton()
 void CDialogProcSelect::OnClose()
 {
 	gbFilterProcesses = m_FilterCheck.GetCheck() == BST_CHECKED;
+	EndDialog(0);
 	CDialogEx::OnClose();
 }

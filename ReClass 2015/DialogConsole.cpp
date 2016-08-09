@@ -85,9 +85,8 @@ void CDialogConsole::PrintText(const TCHAR * message)
 	// Make temporarily editable
 	SendEditor(SCI_SETREADONLY, FALSE);
 
-	m_strConsoleText += _T("> ");
+	m_strConsoleText += _T("\r\n> ");
 	m_strConsoleText += message;
-	m_strConsoleText += _T("\r\n");
 
 #ifdef UNICODE
 	SendEditor(SCI_SETTEXT, 0, (LPARAM)CW2A(m_strConsoleText).m_psz);
@@ -115,6 +114,11 @@ BOOL CDialogConsole::OnInitDialog()
 
 	SizeEditor();
 	SendEditor(SCI_SETSEL, -1, -1);
+
+	SendEditor(SCI_SETREADONLY, FALSE);
+	m_strConsoleText += _T("[~] Console Initialized");
+	SendEditor(SCI_SETTEXT, 0, (LPARAM)"[~] Console Initialized");
+	SendEditor(SCI_SETREADONLY, TRUE);
 
 	m_bInited = TRUE;
 

@@ -14,15 +14,15 @@ protected: // DDX/DDV support
 		CDialogEx::DoDataExchange(pDX);
 	}
 
-	virtual BOOL OnInitDialog( )
+	virtual BOOL OnInitDialog()
 	{
+		CDialogEx::OnInitDialog();
 		CString cstring_temp;
 		cstring_temp.Format(_T("Build Date: %s - %s"), _T(__DATE__), _T(__TIME__));
 		SetDlgItemText(IDC_ABOUT_BUILD_DATE, cstring_temp);
 		cstring_temp.Format(_T("Version: %s"), RECLASS_VERSION);
 		SetDlgItemText(IDC_ABOUT_BUILD_VERSION, cstring_temp);
-
-		return CDialogEx::OnInitDialog();
+		return TRUE;
 	}
 
 	DECLARE_MESSAGE_MAP() // Implementation

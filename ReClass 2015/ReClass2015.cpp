@@ -306,6 +306,7 @@ int CReClass2015App::ExitInstance()
 
 void CReClass2015App::OnButtonReset()
 {
+	CloseHandle(g_hProcess);
 	g_hProcess = NULL;
 	g_ProcessID = 0;
 	g_AttachedProcessAddress = NULL;
