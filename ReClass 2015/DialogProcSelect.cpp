@@ -223,11 +223,11 @@ void CDialogProcSelect::OnAttachButton()
 	{
 		CString selected_text = m_ProcessList.GetItemText(selected_index, 0);
 		auto proc_info_found = std::find_if(m_ProcessInfos.begin(), m_ProcessInfos.end(), [selected_text] (const ProcessInfoStack& proc) -> bool { return proc.Procname == selected_text; });
-	
+		
 		if (proc_info_found != m_ProcessInfos.end())
 		{
 			HANDLE process_open = ReClassOpenProcess(PROCESS_ALL_ACCESS, FALSE, proc_info_found->ProcessId);
-		
+			
 			if (process_open == NULL || GetLastError() != ERROR_SUCCESS) 
 			{
 				auto last_error = Utils::GetLastErrorString();
