@@ -652,7 +652,7 @@ public:
 	CStringW GetStringFromMemoryW(wchar_t* pMemory, int Length)
 	{
 		CStringW widechar;
-		for (int i = 0; i < Length; i += sizeof(wchar_t)) 
+		for (int i = 0; i < Length; i++) 
 		{
 			widechar += (iswprint(pMemory[i]) > 0) ? (wchar_t)pMemory[i] : (wchar_t)(L'.');
 		}
@@ -1603,7 +1603,8 @@ public:
 		if ( Spot.ID == 0 )
 		{
 			memsize = _ttoi( Spot.Text ) * sizeof( wchar_t );
-		} else if ( Spot.ID == 1 )
+		} 
+		else if ( Spot.ID == 1 )
 		{
 			DWORD Length = Spot.Text.GetLength( );
 			if ( Length > ( memsize / sizeof( wchar_t ) ) )
@@ -1647,7 +1648,7 @@ public:
 
 		if ( VALID( pMemory ) )
 		{
-			CStringW str = GetStringFromMemoryW( pMemory, memsize );
+			CStringW str = GetStringFromMemoryW( pMemory, memsize / sizeof(wchar_t));
 			tx = AddText( View, tx, y, crChar, HS_NONE, _T( " = '" ) );
 			tx = AddText( View, tx, y, crChar, HS_OPENCLOSE, _T( "%.150ls" ), str ); // ls cause its unicode
 			tx = AddText( View, tx, y, crChar, HS_NONE, _T( "' " ) ) + g_FontWidth;
