@@ -50,6 +50,3 @@ See wiki for instructions on how to compile:
 - [DarthTon](https://github.com/DarthTon)
 - leveln
 - [buddyfavors](https://github.com/buddyfavors)
-
-
-Hi Ari
