@@ -223,21 +223,21 @@ void CDialogProcSelect::OnAttachButton()
 	{
 		CString selected_text = m_ProcessList.GetItemText(selected_index, 0);
 		auto proc_info_found = std::find_if(m_ProcessInfos.begin(), m_ProcessInfos.end(), [selected_text] (const ProcessInfoStack& proc) -> bool { return proc.Procname == selected_text; });
-	
+		
 		if (proc_info_found != m_ProcessInfos.end())
 		{
 			HANDLE process_open = ReClassOpenProcess(PROCESS_ALL_ACCESS, FALSE, proc_info_found->ProcessId);
-		
+			
 			if (process_open == NULL || GetLastError() != ERROR_SUCCESS) 
 			{
 				auto last_error = Utils::GetLastErrorString();
 				CString message{ };
 				message.Format(_T("Failed to attach to process \"%s\": %s"), proc_info_found->Procname.GetBuffer(), last_error.c_str());
 				MessageBox(message, _T("ReClass 2015"), MB_OK | MB_ICONERROR);
-			}else{
+			} else {
 				CloseHandle(g_hProcess); //Stops leaking handles
 				g_hProcess = process_open;
-					g_ProcessID = proc_info_found->ProcessId;
+				g_ProcessID = proc_info_found->ProcessId;
 				g_ProcessName = proc_info_found->Procname;
 				UpdateMemoryMap();
 				OnClose();
