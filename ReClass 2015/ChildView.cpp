@@ -810,9 +810,9 @@ bool bTracking = false;
 CPoint HoverPoint;
 void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 {
-	CString msg;
 	if (Selected.size() > 1)
 	{
+		CString msg;
 		DWORD size = 0;
 		for (UINT i = 0; i < Selected.size(); i++)
 			size += Selected[i].object->GetMemorySize();
@@ -832,7 +832,6 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 				if (HotSpots[i].Type == HS_SELECT)
 				{
 					CNodeBase* pNode = (CNodeBase*)HotSpots[i].object;
-
 					if (pNode->GetType() == nt_function)
 					{
 						if (HotSpots[i].object->bOpen[HotSpots[i].Level])
@@ -859,8 +858,9 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 
 						m_ToolTip.ShowWindow(SW_SHOW);
 					}
-					if (pNode->GetType() == nt_hex64)
+					else if (pNode->GetType() == nt_hex64)
 					{
+						CString msg;
 						ReClassReadMemory((LPVOID)HotSpots[i].Address, data, sizeof(DWORD_PTR));
 						float* pf = (float*)data;
 						__int64* pi = (__int64*)data;
@@ -874,6 +874,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 					}
 					else if (pNode->GetType() == nt_hex32)
 					{
+						CString msg;
 						ReClassReadMemory((LPVOID)HotSpots[i].Address, data, 4);
 						float* pf = (float*)data;
 						int* pi = (int*)data;
@@ -886,6 +887,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 					}
 					else if (pNode->GetType() == nt_hex16)
 					{
+						CString msg;
 						ReClassReadMemory((LPVOID)HotSpots[i].Address, data, 4);
 						__int16* pi = (__int16*)data;
 						WORD* pd = (WORD*)data;
@@ -897,6 +899,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 					}
 					else if (pNode->GetType() == nt_hex8)
 					{
+						CString msg;
 						ReClassReadMemory((LPVOID)HotSpots[i].Address, data, 4);
 						__int8* pi = (__int8*)data;
 						BYTE* pd = (BYTE*)data;
@@ -1131,29 +1134,17 @@ void CChildView::AddBytes(CNodeClass* pClass, DWORD Length)
 		return;
 	}
 
-#ifdef _WIN64
-	for (UINT i = 0; i < Length / 8; i++)
+	for (UINT i = 0; i < Length / sizeof(size_t); i++)
 	{
 		CNodeBase* pNode;
 		if (pClass->GetType() == nt_vtable)
 			 pNode = new CNodeFunctionPtr;
-		else pNode = new CNodeHex64;
-		pNode->pParent = pClass;
-		pClass->Nodes.push_back(pNode);
-	}
-#else 
-	for (UINT i = 0; i < Length / 4; i++)
-	{
-		CNodeBase* pNode;
-		if (pClass->GetType() == nt_vtable)
-			pNode = new CNodeFunctionPtr;
-		else
-			pNode = new CNodeHex32;
+		else 
+			pNode = new CNodeHex;
 
 		pNode->pParent = pClass;
 		pClass->Nodes.push_back(pNode);
 	}
-#endif
 
 	theApp.CalcAllOffsets();
 }
