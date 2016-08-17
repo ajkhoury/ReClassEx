@@ -1168,31 +1168,17 @@ void CChildView::InsertBytes(CNodeClass* pClass, UINT idx, DWORD Length)
 		return;
 	}
 
-#ifdef _WIN64
-	for (UINT i = 0; i < Length / 8; i++)
+	for (UINT i = 0; i < Length / sizeof(size_t); i++)
 	{
 		CNodeBase* pNode;
 		if (pClass->GetType() == nt_vtable)
 			pNode = new CNodeFunctionPtr;
 		else
-			pNode = new CNodeHex64;
+			pNode = new CNodeHex;
 
 		pNode->pParent = pClass;
 		pClass->Nodes.insert(pClass->Nodes.begin() + idx, pNode);
 	}
-#else
-	for (UINT i = 0; i < Length / 4; i++)
-	{
-		CNodeBase* pNode;
-		if (pClass->GetType() == nt_vtable)
-			pNode = new CNodeFunctionPtr;
-		else
-			pNode = new CNodeHex32;
-
-		pNode->pParent = pClass;
-		pClass->Nodes.insert(pClass->Nodes.begin() + idx, pNode);
-	}
-#endif
 
 	theApp.CalcAllOffsets();
 }
@@ -1210,6 +1196,7 @@ void CChildView::OnAddAdd4( )
 
 	Invalidate(FALSE);
 }
+
 void CChildView::OnUpdateAddAdd4( CCmdUI * pCmdUI )
 { 
 	if (Selected.size() == 1 && (Selected[0].object->pParent || (Selected[0].object->GetType() == nt_class)))
@@ -1217,6 +1204,7 @@ void CChildView::OnUpdateAddAdd4( CCmdUI * pCmdUI )
 	else
 		pCmdUI->Enable(FALSE);
 }
+
 void CChildView::OnAddAdd8()
 {
 	if (Selected[0].object->GetType() == nt_class)
@@ -1225,6 +1213,7 @@ void CChildView::OnAddAdd8()
 		AddBytes((CNodeClass*)Selected[0].object->pParent, 8);
 	Invalidate(FALSE);
 }
+
 void CChildView::OnUpdateAddAdd8(CCmdUI *pCmdUI)
 {
 	if (Selected.size() == 1 && (Selected[0].object->pParent || (Selected[0].object->GetType() == nt_class)))
@@ -1232,6 +1221,7 @@ void CChildView::OnUpdateAddAdd8(CCmdUI *pCmdUI)
 	else
 		pCmdUI->Enable(FALSE);
 }
+
 void CChildView::OnAddAdd64()
 {
 	if (Selected[0].object->GetType() == nt_class)
@@ -1240,6 +1230,7 @@ void CChildView::OnAddAdd64()
 		AddBytes((CNodeClass*)Selected[0].object->pParent, 64);
 	Invalidate(FALSE);
 }
+
 void CChildView::OnUpdateAddAdd64(CCmdUI *pCmdUI)
 {
 	if (Selected.size() == 1 && (Selected[0].object->pParent || (Selected[0].object->GetType() == nt_class)))
@@ -1247,6 +1238,7 @@ void CChildView::OnUpdateAddAdd64(CCmdUI *pCmdUI)
 	else
 		pCmdUI->Enable(FALSE);
 }
+
 void CChildView::OnAddAdd1024()
 {
 	if (Selected[0].object->GetType() == nt_class)
@@ -1255,6 +1247,7 @@ void CChildView::OnAddAdd1024()
 		AddBytes((CNodeClass*)Selected[0].object->pParent, 1024);
 	Invalidate(FALSE);
 }
+
 void CChildView::OnUpdateAddAdd1024(CCmdUI *pCmdUI)
 {
 	if (Selected.size() == 1 && (Selected[0].object->pParent || (Selected[0].object->GetType() == nt_class)))
@@ -1262,6 +1255,7 @@ void CChildView::OnUpdateAddAdd1024(CCmdUI *pCmdUI)
 	else
 		pCmdUI->Enable(FALSE);
 }
+
 void CChildView::OnAddAdd2048()
 {
 	if (Selected[0].object->GetType() == nt_class)
@@ -1270,6 +1264,7 @@ void CChildView::OnAddAdd2048()
 		AddBytes((CNodeClass*)Selected[0].object->pParent, 2048);
 	Invalidate(FALSE);
 }
+
 void CChildView::OnUpdateAddAdd2048(CCmdUI *pCmdUI)
 {
 	if (Selected.size() == 1 && (Selected[0].object->pParent || (Selected[0].object->GetType() == nt_class)))
@@ -1277,11 +1272,13 @@ void CChildView::OnUpdateAddAdd2048(CCmdUI *pCmdUI)
 	else
 		pCmdUI->Enable(FALSE);
 }
+
 void CChildView::OnInsertInsert4()
 {
 	InsertBytes((CNodeClass*)Selected[0].object->pParent, FindNodeIndex(Selected[0].object), 4);
 	Invalidate(FALSE);
 }
+
 void CChildView::OnUpdateInsertInsert4(CCmdUI *pCmdUI)
 {
 	if (Selected.size() == 1 && Selected[0].object->pParent)
@@ -1295,6 +1292,7 @@ void CChildView::OnInsertInsert8()
 	InsertBytes((CNodeClass*)Selected[0].object->pParent, FindNodeIndex(Selected[0].object), 8);
 	Invalidate(FALSE);
 }
+
 void CChildView::OnUpdateInsertInsert8(CCmdUI *pCmdUI)
 {
 	if (Selected.size() == 1 && Selected[0].object->pParent)
@@ -1347,25 +1345,14 @@ void CChildView::OnUpdateInsertInsert2048(CCmdUI *pCmdUI)
 
 void MakeBasicClass(CNodeClass* pClass)
 {
-#ifdef _WIN64
 	for (int i = 0; i < 1/*64/8*/; i++)
 	{
-		CNodeHex64* pNode = new CNodeHex64();
+		CNodeHex* pNode = new CNodeHex();
 		pNode->pParent = pClass;
 		pClass->Nodes.push_back(pNode);
 	}
 	theApp.CalcOffsets(pClass);
 	theApp.Classes.push_back(pClass);
-#else
-	for (int i = 0; i < 1; i++)
-	{
-		CNodeHex32* pNode = new CNodeHex32();
-		pNode->pParent = pClass;
-		pClass->Nodes.push_back(pNode);
-	}
-	theApp.CalcOffsets(pClass);
-	theApp.Classes.push_back(pClass);
-#endif
 }
 
 void CChildView::ReplaceSelectedWithType(NodeType Type)
