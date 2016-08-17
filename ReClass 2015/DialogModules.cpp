@@ -221,7 +221,7 @@ int CALLBACK CDialogModules::CompareFunction(LPARAM lParam1, LPARAM lParam2, LPA
 			size_t num1 = (size_t)_tcstoui64(strNum1.GetBuffer(), NULL, 16);
 			size_t num2 = (size_t)_tcstoui64(strNum2.GetBuffer(), NULL, 16);
 
-			return num2 - num1;
+			return (int)(num2 - num1);
 		}
 		else if (column == COLUMN_MODULE)
 		{

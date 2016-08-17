@@ -678,78 +678,132 @@ BOOL CChildView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	return CWnd::OnMouseWheel(nFlags, zDelta, pt);
 }
 
-typedef std::basic_string<TCHAR> tstring;
-// CString object causes crashes here sometimes for some unknown reason. Using STL std::string in lieu of CString.
-tstring DisassembleCode(unsigned char** StartCodeSection, DWORD codeSize, size_t virtualAddress, int* textHeight)
+__inline CStringA DisassembleCode(size_t virtualAddress, int* textHeight)
 {
-	std::string strOut;
+	CStringA Assembly;
 
-	DISASM disasm;
-	memset(&disasm, 0, sizeof(DISASM));
-	disasm.EIP = (UIntPtr)StartCodeSection;
-	disasm.VirtualAddr = (UInt64)virtualAddress;
+	size_t addy = virtualAddress;
+	ReClassReadMemory((LPVOID)addy, &addy, sizeof(size_t));
+	char* code[1536]; // max 1536 lines
+	ReClassReadMemory((LPVOID)addy, code, 1536);
+	char** EndCodeSection = (code + 1536);
+
+	DISASM MyDisasm;
+	memset(&MyDisasm, 0, sizeof(DISASM));
+
+	MyDisasm.EIP = (size_t)code;
+
+	MyDisasm.VirtualAddr = (unsigned __int64)addy;
 #ifdef _WIN64
-	disasm.Archi = 64;
+	MyDisasm.Archi = 64;
 #else
-	disasm.Archi = 0;
+	MyDisasm.Archi = 0;
 #endif
-	disasm.Options = PrefixedNumeral;
+	MyDisasm.Options = PrefixedNumeral;
 
-	UIntPtr EndCodeSection = (UIntPtr)((UIntPtr)StartCodeSection + codeSize);
-
-
-	bool error = false;
-	while (!error)
+	bool Error = 0;
+	while (!Error)
 	{
-		disasm.SecurityBlock = (UInt32)(EndCodeSection - (UIntPtr)disasm.EIP);
-		int len = Disasm(&disasm);
-		if (len == OUT_OF_BLOCK || len == UNKNOWN_OPCODE)
-		{
-			error = true;
-		}
+		MyDisasm.SecurityBlock = (unsigned __int32)((size_t)EndCodeSection - (size_t)MyDisasm.EIP);
+
+		int len = Disasm(&MyDisasm);
+		if (len == OUT_OF_BLOCK)
+			Error = 1;
+		else if (len == UNKNOWN_OPCODE)
+			Error = 1;
 		else
 		{
-			char szCompleteInstruction[256];
-
-			// Get virtual address of instruction
-			char strAddr[16];
-			sprintf_s(strAddr, "%p", (void*)disasm.VirtualAddr);
-
-			// Get bytes of instruction
-			char strBytes[64] = { 0 };
-			for (int i = 0; i < len; i++)
-			{
-				char strByte[4];
-				sprintf_s(strByte, "%.2X", *(unsigned char*)(disasm.EIP + i));
-				strcat_s(strBytes, strByte);
-			}
-
-			sprintf_s(szCompleteInstruction, "%-9s %-15s %s\r\n", strAddr, strBytes, disasm.CompleteInstr);
-			strOut += szCompleteInstruction;
-
-			disasm.EIP = disasm.EIP + len;
-			disasm.VirtualAddr = disasm.VirtualAddr + len;
-
-			if ((disasm.EIP >= (UIntPtr)EndCodeSection) || (disasm.Instruction.Opcode == 0xCC))
-			{
-				break;
-			}
+			char szInstruction[96];
+			sprintf_s(szInstruction, "%p  %s\r\n", (void*)MyDisasm.VirtualAddr, MyDisasm.CompleteInstr);
+			//std::string strInstruction(szInstruction);
+			Assembly.Append(szInstruction);
+			//Assembly.insert(Assembly.end(), strInstruction.begin(), strInstruction.end());
 
 			*textHeight += 16;
+
+			MyDisasm.EIP = MyDisasm.EIP + len;
+			MyDisasm.VirtualAddr = MyDisasm.VirtualAddr + len;
+			if (MyDisasm.EIP >= (UIntPtr)EndCodeSection)
+				break;
+
+			unsigned char opcode;
+			ReClassReadMemory((LPVOID)MyDisasm.VirtualAddr, &opcode, sizeof(unsigned char));
+			if (opcode == 0xCC) // INT3 instruction
+				break;
 		}
 	}
 
 	*textHeight += 4;
 
-#ifdef UNICODE
-	wchar_t Ret[8192];
-	size_t converted = 0;
-	mbstowcs_s(&converted, Ret, strOut.c_str(), strOut.size());
-#else
-	const char* Ret = strOut.c_str();
-#endif
+	return Assembly;
 
-	return tstring(Ret);
+	//std::string strOut;
+	//
+	//DISASM disasm;
+	//memset(&disasm, 0, sizeof(DISASM));
+	//disasm.EIP = (UIntPtr)StartCodeSection;
+	//disasm.VirtualAddr = (UInt64)virtualAddress;
+	//#ifdef _WIN64
+	//disasm.Archi = 64;
+	//#else
+	//disasm.Archi = 0;
+	//#endif
+	//disasm.Options = PrefixedNumeral;
+	//
+	//UIntPtr EndCodeSection = (UIntPtr)((UIntPtr)StartCodeSection + codeSize);
+	//
+	//bool error = false;
+	//while (!error)
+	//{
+	//	disasm.SecurityBlock = (UInt32)(EndCodeSection - (UIntPtr)disasm.EIP);
+	//	int len = Disasm(&disasm);
+	//	if (len == OUT_OF_BLOCK || len == UNKNOWN_OPCODE)
+	//	{
+	//		error = true;
+	//	}
+	//	else
+	//	{
+	//		char szCompleteInstruction[256];
+	//
+	//		// Get virtual address of instruction
+	//		char strAddr[16];
+	//		sprintf_s(strAddr, "%p", (void*)disasm.VirtualAddr);
+	//
+	//		// Get bytes of instruction
+	//		char strBytes[64] = { 0 };
+	//		for (int i = 0; i < len; i++)
+	//		{
+	//			char strByte[4];
+	//			sprintf_s(strByte, "%.2X", *(unsigned char*)(disasm.EIP + i));
+	//			strcat_s(strBytes, strByte);
+	//		}
+	//
+	//		sprintf_s(szCompleteInstruction, "%-9s %-15s %s\r\n", strAddr, strBytes, disasm.CompleteInstr);
+	//		strOut += szCompleteInstruction;
+	//
+	//		disasm.EIP = disasm.EIP + len;
+	//		disasm.VirtualAddr = disasm.VirtualAddr + len;
+	//
+	//		if ((disasm.EIP >= (UIntPtr)EndCodeSection) || (disasm.Instruction.Opcode == 0xCC))
+	//		{
+	//			break;
+	//		}
+	//
+	//		*textHeight += 16;
+	//	}
+	//}
+	//
+	//*textHeight += 4;
+	//
+	//#ifdef UNICODE
+	//wchar_t Ret[8192];
+	//size_t converted = 0;
+	//mbstowcs_s(&converted, Ret, strOut.c_str(), strOut.size());
+	//#else
+	//const char* Ret = strOut.c_str();
+	//#endif
+	//
+	//return tstring(Ret);
 }
 
 bool bTracking = false;
@@ -784,30 +838,25 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 						if (HotSpots[i].object->bOpen[HotSpots[i].Level])
 							continue;
 
-						DWORD_PTR addr = HotSpots[i].Address;
-						ReClassReadMemory((LPVOID)addr, &addr, sizeof(DWORD_PTR));
-
-						unsigned char* code = (unsigned char*)malloc(1024);
-						ReClassReadMemory((LPVOID)addr, code, 1024);
+						size_t addr = HotSpots[i].Address;
 
 						int textHeight = 0;
-						// CString object causes crashes here sometimes for an unknown reason (too lazy to figure out why). Using STL std::string in lieu of CString.
-						tstring d = DisassembleCode(&code, 1024, addr, &textHeight);
+						CStringA d = DisassembleCode(addr, &textHeight);
 
-						delete[] code;
-
-						//CString d, t;
-						//CNodeFunctionPtr* pObject = (CNodeFunctionPtr*)HotSpots[i].object;
-						//int textHeight = (pObject->Assembly.size() * 16) + 4;
-						//
-						//for (int i = 0; i < pObject->Assembly.size(); i++)
-						//{
-						//	t.Format("%s\r\n", pObject->Assembly[i]);
-						//	d.Append(t);
-						//}
-						m_ToolTip.EnableWindow(FALSE);
+						m_ToolTip.EnableWindow(FALSE);	
+#ifdef UNICODE
+						CStringW ws = CA2W(d);
+						m_ToolTip.SetWindowText(ws.GetString());
+#else
 						m_ToolTip.SetWindowText(d.c_str());
+#endif			
+
+#ifdef _WIN64
+						m_ToolTip.SetWindowPos(NULL, point.x + 16, point.y + 16, 500, textHeight, SWP_NOZORDER);
+#else
 						m_ToolTip.SetWindowPos(NULL, point.x + 16, point.y + 16, 400, textHeight, SWP_NOZORDER);
+#endif
+
 						m_ToolTip.ShowWindow(SW_SHOW);
 					}
 					if (pNode->GetType() == nt_hex64)

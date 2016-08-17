@@ -1113,7 +1113,7 @@ public:
 				{
 					char szInstruction[96];
 					sprintf_s(szInstruction, "%p  %s", (void*)MyDisasm.VirtualAddr, MyDisasm.CompleteInstr);
-					Assembly.push_back(szInstruction);
+					Assembly.emplace_back(szInstruction);
 
 					MyDisasm.EIP = MyDisasm.EIP + len;
 					MyDisasm.VirtualAddr = MyDisasm.VirtualAddr + len;
@@ -1609,7 +1609,8 @@ public:
 			DWORD Length = Spot.Text.GetLength( );
 			if ( Length > ( memsize / sizeof( wchar_t ) ) )
 				Length = ( memsize / sizeof( wchar_t ) );
-			// Has to be done this way in order to make it compatible in mbs and unicode mode
+
+			// Has to be done this way in order to make it compatible in mbs and unicode mode (ghetto)
 			TCHAR* pSource = Spot.Text.GetBuffer( );
 			wchar_t* pwszConverted = new wchar_t[ Length + 1 ];
 			for ( UINT i = 0; i <= Length; i++ )
