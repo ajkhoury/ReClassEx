@@ -273,7 +273,8 @@ enum NodeType
 	nt_class,
 	nt_pchar,
 	nt_pwchar,
-	nt_bits
+	nt_bits,
+	nt_uint64, // qword
 };
 
 #define ISHEXTYPE(type) (type == nt_hex64 || type == nt_hex32 || type == nt_hex16 || type == nt_hex8 || type == nt_bits)

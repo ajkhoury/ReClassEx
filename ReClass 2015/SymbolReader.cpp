@@ -991,10 +991,10 @@ bool SymbolReader::GetSymbolStringWithVA(size_t dwVA, CString& outString)
 	IDiaSymbol *pSymbol;
 	LONG lDisplacement;
 
-#ifdef _DEBUG
-	if (dwVA == 0x7FF6AB662DE8)
-		PrintOut(_T("Test!"));
-#endif
+	//#ifdef _DEBUG
+	//if (dwVA == 0x7FF6AB662DE8)
+	//	PrintOut(_T("Test!"));
+	//#endif
 	
 	size_t dwRVA = dwVA - m_dwModuleBase;
 
