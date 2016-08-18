@@ -91,7 +91,6 @@ BOOL CReClass2015App::InitInstance()
 	Utils::CreateDbgConsole(_T("dbg"));
 #endif
 
-
 	INITCOMMONCONTROLSEX InitCtrls;
 	InitCtrls.dwSize = sizeof(InitCtrls);
 	InitCtrls.dwICC = ICC_STANDARD_CLASSES;
@@ -1644,13 +1643,10 @@ void CReClass2015App::OnOpenPDB()
 		concat_name.Truncate(concat_name.ReverseFind('.'));
 
 	CFileDialog fileDlg { TRUE, _T( "pdb" ), concat_name, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T( "PDB (*.pdb)|*.pdb|All Files (*.*)|*.*||" ), NULL };
-	
 	if (fileDlg.DoModal() != IDOK)
 		return;
 
-	CString pathName = fileDlg.GetPathName();
-
-	pdb.LoadFile(pathName);
+	//pdb.LoadFile(fileDlg.GetPathName());
 }
 
 void CReClass2015App::OnUpdateOpenPDB(CCmdUI *pCmdUI)

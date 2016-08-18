@@ -209,10 +209,13 @@
     <ClInclude Include="DialogPlugins.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PDBReader.h">
+    <ClInclude Include="DialogProcSelect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DialogProcSelect.h">
+    <ClInclude Include="Symbols.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -256,13 +259,16 @@
     <ClCompile Include="DialogPlugins.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PDBReader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DialogProcSelect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Symbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

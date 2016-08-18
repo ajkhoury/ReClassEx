@@ -34,14 +34,7 @@ DWORD __stdcall WaitThread( LPVOID lpParam )
 
 void Pause()
 {
-	WaitForSingleObject( CreateThread( 0, 0, WaitThread, 0, 0, 0 ), INFINITE );
-}
-
-bool is_number( const std::string& s )
-{
-	std::string::const_iterator it = s.begin();
-	while ( it != s.end() && isdigit( *it ) ) ++it;
-	return !s.empty() && it == s.end();
+	WaitForSingleObject(CreateThread( 0, 0, WaitThread, 0, 0, 0 ), INFINITE );
 }
 
 template <class T>

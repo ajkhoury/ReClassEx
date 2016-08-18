@@ -331,19 +331,15 @@ bool PauseResumeThreadList(bool bResumeThread)
 		return 0;
 
 	NTSTATUS status;
-	PVOID SystemProcessInfo;
 	ULONG bufferSize = 0x4000;
 	HANDLE hHeap = GetProcessHeap();
 	DWORD ProcessId = GetProcessId(g_hProcess);
 
-	static HMODULE hNtDll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
-	static tNtQuerySystemInformation fnNTQSI = (tNtQuerySystemInformation)Utils::GetLocalProcAddress(hNtDll, "NtQuerySystemInformation");
-
-	SystemProcessInfo = HeapAlloc(hHeap, HEAP_ZERO_MEMORY | HEAP_GENERATE_EXCEPTIONS, bufferSize);
+	PVOID SystemProcessInfo = HeapAlloc(hHeap, HEAP_ZERO_MEMORY | HEAP_GENERATE_EXCEPTIONS, bufferSize);
 
 	while (TRUE)
 	{
-		status = fnNTQSI(SystemProcessInformation, SystemProcessInfo, bufferSize, &bufferSize);
+		status = ntdll::NtQuerySystemInformation(SystemProcessInformation, SystemProcessInfo, bufferSize, &bufferSize);
 		if (status == STATUS_BUFFER_TOO_SMALL || status == STATUS_INFO_LENGTH_MISMATCH)
 		{
 			if (SystemProcessInfo)
@@ -392,13 +388,9 @@ bool PauseResumeThreadList(bool bResumeThread)
 		HANDLE hThread = ReClassOpenThread(THREAD_SUSPEND_RESUME, FALSE, thId);
 
 		if (bResumeThread) 
-		{
 			ResumeThread(hThread);
-		}
 		else 
-		{
 			SuspendThread(hThread);
-		}
 
 		CloseHandle(hThread);
 	}
@@ -557,12 +549,11 @@ CString GetAddressName(size_t Address, bool bHEX)
 
 CString GetModuleName(size_t Address)
 {
-	for (unsigned int i = 0; i < MemMapModule.size(); i++) 
-	{
+	for (unsigned int i = 0; i < MemMapModule.size(); i++) {
 		if (Address >= MemMapModule[i].Start && Address <= MemMapModule[i].End)
 			return MemMapModule[i].Name;
 	}
-	return _T("<unknown>");
+	return CString();
 }
 
 size_t GetAddressFromName(CString moduleName)
@@ -579,7 +570,7 @@ size_t GetAddressFromName(CString moduleName)
 	return moduleAddress;
 }
 
-bool IsProcHandleValid(HANDLE hProc)
+bool IsProcessHandleValid(HANDLE hProc)
 {
 	if (!hProc)
 		return false;
@@ -606,7 +597,7 @@ bool UpdateMemoryMap(void)
 		return 0;
 	}
 
-	if (!IsProcHandleValid(g_hProcess))
+	if (!IsProcessHandleValid(g_hProcess))
 	{
 		g_hProcess = NULL;
 #ifdef _DEBUG
@@ -639,9 +630,6 @@ bool UpdateMemoryMap(void)
 		}
 	}
 
-	static HMODULE hNtDll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
-	static tNtQueryInformationProcess NtQueryInformationProcess = (tNtQueryInformationProcess)Utils::GetLocalProcAddress(hNtDll, "NtQueryInformationProcess");
-
 	PPROCESS_BASIC_INFORMATION ProcessInfo = NULL;
 	PEB Peb;
 	PEB_LDR_DATA LdrData;
@@ -652,7 +640,7 @@ bool UpdateMemoryMap(void)
 	ProcessInfo = (PPROCESS_BASIC_INFORMATION)HeapAlloc(hHeap, HEAP_ZERO_MEMORY | HEAP_GENERATE_EXCEPTIONS, dwSize);
 
 	ULONG dwSizeNeeded = 0;
-	NTSTATUS status = NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSize, &dwSizeNeeded);
+	NTSTATUS status = ntdll::NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSize, &dwSizeNeeded);
 	if (status >= 0 && dwSize < dwSizeNeeded)
 	{
 		if (ProcessInfo)
@@ -667,7 +655,7 @@ bool UpdateMemoryMap(void)
 			return 0;
 		}
 
-		status = NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSizeNeeded, &dwSizeNeeded);
+		status = ntdll::NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSizeNeeded, &dwSizeNeeded);
 	}
 
 	// Did we successfully get basic info on process
@@ -762,9 +750,6 @@ bool UpdateMemoryMap(void)
 				Mem.Size = ModuleSize;
 				Mem.Name = wcsModule;
 				Mem.Path = wcsFullDllName;
-
-				//PrintOut(_T("%s: %IX"), Mem.Name.GetBuffer(), Mem.Start);
-
 				MemMapModule.push_back(Mem);
 
 				// module code
@@ -804,9 +789,9 @@ bool UpdateMemoryMap(void)
 	}
 	else
 	{
-#ifdef _DEBUG
+		#ifdef _DEBUG
 		PrintOut(_T("[UpdateExports]: NtQueryInformationProcess failed! Aborting..."));
-#endif
+		#endif
 		if (ProcessInfo)
 			HeapFree(hHeap, 0, ProcessInfo);
 		return 0;
@@ -830,9 +815,6 @@ bool UpdateExports()
 	//if (!gbExports) 
 	//	return;
 
-	static HMODULE hNtDll = (HMODULE)Utils::GetLocalModuleHandle("ntdll.dll");
-	static tNtQueryInformationProcess NtQueryInformationProcess = (tNtQueryInformationProcess)Utils::GetLocalProcAddress(hNtDll, "NtQueryInformationProcess");
-
 	PPROCESS_BASIC_INFORMATION ProcessInfo = NULL;
 	PEB Peb;
 	PEB_LDR_DATA LdrData;
@@ -843,7 +825,7 @@ bool UpdateExports()
 	ProcessInfo = (PPROCESS_BASIC_INFORMATION)HeapAlloc(hHeap, HEAP_ZERO_MEMORY | HEAP_GENERATE_EXCEPTIONS, dwSize);
 
 	ULONG dwSizeNeeded = 0;
-	NTSTATUS status = NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSize, &dwSizeNeeded);
+	NTSTATUS status = ntdll::NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSize, &dwSizeNeeded);
 	if (status >= 0 && dwSize < dwSizeNeeded)
 	{
 		if (ProcessInfo)
@@ -852,13 +834,13 @@ bool UpdateExports()
 		ProcessInfo = (PPROCESS_BASIC_INFORMATION)HeapAlloc(hHeap, HEAP_ZERO_MEMORY | HEAP_GENERATE_EXCEPTIONS, dwSizeNeeded);
 		if (!ProcessInfo)
 		{
-#ifdef _DEBUG
+			#ifdef _DEBUG
 			PrintOut(_T("[UpdateExports]: Couldn't allocate heap buffer!"));
-#endif
+			#endif
 			return 0;
 		}
 
-		status = NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSizeNeeded, &dwSizeNeeded);
+		status = ntdll::NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSizeNeeded, &dwSizeNeeded);
 	}
 
 	// Did we successfully get basic info on process
@@ -867,9 +849,9 @@ bool UpdateExports()
 		// Check for PEB
 		if (!ProcessInfo->PebBaseAddress)
 		{
-#ifdef _DEBUG
+			#ifdef _DEBUG
 			PrintOut(_T("[UpdateExports]: PEB is null! Aborting..."));
-#endif
+			#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
 			return 0;
@@ -879,9 +861,9 @@ bool UpdateExports()
 		SIZE_T dwBytesRead = 0;
 		if (ReClassReadMemory(ProcessInfo->PebBaseAddress, &Peb, sizeof(PEB), &dwBytesRead) == 0)
 		{
-#ifdef _DEBUG
+			#ifdef _DEBUG
 			PrintOut(_T("[UpdateExports]: Failed to read PEB! Aborting UpdateExports."));
-#endif
+			#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
 			return 0;
@@ -891,9 +873,9 @@ bool UpdateExports()
 		dwBytesRead = 0;
 		if (ReClassReadMemory(Peb.Ldr, &LdrData, sizeof(LdrData), &dwBytesRead) == 0)
 		{
-#ifdef _DEBUG
+			#ifdef _DEBUG
 			PrintOut(_T("[UpdateExports]: Failed to read PEB Ldr Data! Aborting UpdateExports."));
-#endif
+			#endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
 			return 0;
@@ -907,9 +889,9 @@ bool UpdateExports()
 			dwBytesRead = 0;
 			if (!ReClassReadMemory((void*)pLdrCurrentNode, &lstEntry, sizeof(LDR_DATA_TABLE_ENTRY), &dwBytesRead))
 			{
-#ifdef _DEBUG
+				#ifdef _DEBUG
 				PrintOut(_T("[UpdateExports]: Could not read list entry from LDR list. Error = %s"), Utils::GetLastErrorString().c_str());
-#endif
+				#endif
 				if (ProcessInfo)
 					HeapFree(hHeap, 0, ProcessInfo);
 				return 0;
@@ -971,9 +953,9 @@ bool UpdateExports()
 	}
 	else
 	{
-#ifdef _DEBUG
+		#ifdef _DEBUG
 		PrintOut(_T("[UpdateExports]: NtQueryInformationProcess failed! Aborting..."));
-#endif
+		#endif
 		if (ProcessInfo)
 			HeapFree(hHeap, 0, ProcessInfo);
 		return 0;
@@ -983,38 +965,6 @@ bool UpdateExports()
 		HeapFree(hHeap, 0, ProcessInfo);
 
 	return 1;
-}
-
-// TODO: Remove? Unused. Currently using _tcstoui64 as it is a lot faster.
-__int64 StrToNum(const TCHAR *udata, int udatalen, int base)
-{
-	long index;
-	const TCHAR numdigits[] = TEXT("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	long digitValue = 0;
-	__int64 RetVal = 0;
-	TCHAR digits[sizeof(numdigits) + 1];
-	TCHAR *dataVal;
-	TCHAR data[512];
-	_tcstoui64(L"w", (wchar_t**)(L"wd"), 10);
-	//copy the data to our variable
-	_tcscpy(data, udata);
-	//convert it to upper case
-	_tcsupr(data);
-	ZeroMemory(digits, sizeof(digits));
-	//copy the number of digits supported by base in digits
-	_tcsncpy(digits, numdigits, base);
-	for (index = 0; index < udatalen; index++)
-	{
-		dataVal = _tcschr(digits, data[index]);
-		if (dataVal != 0)
-		{
-			//if it is subtract where to start point
-			digitValue = long(dataVal - digits);
-			//increment Retval with digitvalue
-			RetVal = RetVal * base + digitValue;
-		}
-	}
-	return RetVal;
 }
 
 int SplitString(const CString& input, const CString& delimiter, CStringArray& results)

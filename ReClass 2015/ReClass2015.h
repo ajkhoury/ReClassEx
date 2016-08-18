@@ -7,8 +7,8 @@
 #include "resource.h"       // main symbols
 // Console
 #include "DialogConsole.h"
-// PDB's
-#include "PDBReader.h"
+// Symbols
+#include "Symbols.h"
 
 class CReClass2015App : public CWinAppEx
 {

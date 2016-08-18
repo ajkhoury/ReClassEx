@@ -2,9 +2,11 @@
 //
 
 #include "stdafx.h"
+#include "afxdialogex.h"
+
 #include "DialogProcSelect.h"
 #include "ReClass2015.h"
-#include "afxdialogex.h"
+
 
 // CDialogProcSelect dialog
 
@@ -72,7 +74,7 @@ void CDialogProcSelect::ListRunningProcs()
 	}
 
 	auto buffer_array = std::make_unique<uint8_t[]>(buffer_size + 1);
-
+	
 	if (NT_SUCCESS(ntdll::NtQuerySystemInformation(SystemProcessInformation, buffer_array.get(), buffer_size, &buffer_size)))
 	{
 		m_bLoadingProcesses = true;
@@ -148,6 +150,7 @@ BOOL CDialogProcSelect::OnInitDialog()
 	m_FilterCheck.SetCheck( gbFilterProcesses ? BST_CHECKED : BST_UNCHECKED );
 	CenterWindow();
 	ListRunningProcs();
+
 	return TRUE;
 }
 
@@ -226,20 +229,26 @@ void CDialogProcSelect::OnAttachButton()
 		
 		if (proc_info_found != m_ProcessInfos.end())
 		{
-			HANDLE process_open = ReClassOpenProcess(PROCESS_ALL_ACCESS, FALSE, proc_info_found->ProcessId);
-			
+			HANDLE process_open = ReClassOpenProcess(PROCESS_ALL_ACCESS, FALSE, proc_info_found->ProcessId);	
 			if (process_open == NULL || GetLastError() != ERROR_SUCCESS) 
 			{
 				auto last_error = Utils::GetLastErrorString();
 				CString message{ };
 				message.Format(_T("Failed to attach to process \"%s\": %s"), proc_info_found->Procname.GetBuffer(), last_error.c_str());
 				MessageBox(message, _T("ReClass 2015"), MB_OK | MB_ICONERROR);
-			} else {
+			} 
+			else 
+			{
 				CloseHandle(g_hProcess); //Stops leaking handles
 				g_hProcess = process_open;
 				g_ProcessID = proc_info_found->ProcessId;
 				g_ProcessName = proc_info_found->Procname;
 				UpdateMemoryMap();
+
+				if (sym.Init(g_hProcess)) {
+					sym.LoadModuleSymbols();
+				}
+
 				OnClose();
 			}
 		}
@@ -255,7 +264,7 @@ void CDialogProcSelect::OnRefreshButton()
 
 void CDialogProcSelect::OnClose()
 {
-	gbFilterProcesses = m_FilterCheck.GetCheck() == BST_CHECKED;
+	gbFilterProcesses = (m_FilterCheck.GetCheck() == BST_CHECKED);
 	EndDialog(0);
 	CDialogEx::OnClose();
 }

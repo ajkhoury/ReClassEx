@@ -1,37 +1,47 @@
 #include "stdafx.h"
+#include "SymbolReader.h"
 
-#include "PDBReader.h"
-
-// Global
-PDBReader pdb;
-
-PDBReader::PDBReader() : m_bInitialized(false)
+SymbolReader::SymbolReader() : 
+	m_bInitialized(false), 
+	m_pSource(0), 
+	m_pSession(0), 
+	m_pGlobal(0)
 {
 }
 
-bool PDBReader::LoadDataFromPdb(const wchar_t* szFilename)
+SymbolReader::~SymbolReader()
 {
-	wchar_t wszExt[MAX_PATH];
-	wchar_t *wszSearchPath = L"SRV**\\\\symbols\\symbols"; // Alternate path to search for debug data
+	if (m_pGlobal)
+		m_pGlobal->Release();
+	if (m_pSession)
+		m_pSession->Release();
+	if (m_pSource)
+		m_pSource->Release();
+}
+
+bool SymbolReader::LoadSymbolData(TCHAR* pszSearchPath)
+{
+	TCHAR szExt[MAX_PATH];
+	TCHAR* szSearchPath = 0;
 	DWORD dwMachType = 0;
-	
-	HRESULT hr = CoInitialize(NULL);
-	
+	HRESULT hr = S_OK;
+
+	szSearchPath = (!pszSearchPath) ? _T("srv*C:\\Windows\\symbols*\\\\symbols\\symbols*http://msdl.microsoft.com/download/symbols") : pszSearchPath;
+
 	// Obtain access to the provider
 	hr = CoCreateInstance(__uuidof(DiaSource), NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_pSource));
-	if (FAILED(hr)) 
+	if (FAILED(hr))
 	{
 		PrintOut(_T("[LoadDataFromPdb] CoCreateInstance failed - HRESULT = %08X"), hr);
 		return false;
 	}
 
-	_wsplitpath_s(szFilename, NULL, 0, NULL, 0, NULL, 0, wszExt, MAX_PATH);
-
-	if (!_wcsicmp(wszExt, L".pdb")) 
+	_tsplitpath_s(m_strFilePath.GetString(), NULL, 0, NULL, 0, NULL, 0, szExt, MAX_PATH);
+	if (!_tcsicmp(szExt, _T(".pdb"))) 
 	{
 		// Open and prepare a program database (.pdb) file as a debug data source
-		hr = m_pSource->loadDataFromPdb(szFilename);
-		if (FAILED(hr)) 
+		hr = m_pSource->loadDataFromPdb(m_strFilePath.GetString());
+		if (FAILED(hr))
 		{
 			PrintOut(_T("[LoadDataFromPdb] loadDataFromPdb failed - HRESULT = %08X"), hr);
 			return false;
@@ -40,8 +50,8 @@ bool PDBReader::LoadDataFromPdb(const wchar_t* szFilename)
 	else 
 	{
 		// Open and prepare the debug data associated with the executable
-		hr = m_pSource->loadDataForExe(szFilename, wszSearchPath, NULL);
-		if (FAILED(hr)) 
+		hr = m_pSource->loadDataForExe(m_strFilePath.GetString(), NULL, NULL);
+		if (FAILED(hr))
 		{
 			PrintOut(_T("[LoadDataFromPdb] loadDataForExe failed - HRESULT = %08X"), hr);
 			return false;
@@ -58,16 +68,16 @@ bool PDBReader::LoadDataFromPdb(const wchar_t* szFilename)
 
 	// Retrieve a reference to the global scope
 	hr = m_pSession->get_globalScope(&m_pGlobal);
-	if (hr != S_OK) 
+	if (FAILED(hr))
 	{
-		PrintOut(_T("[LoadDataFromPdb] get_globalScope failed"));
+		PrintOut(_T("[LoadDataFromPdb] get_globalScope failed - HRESULT = %08X"), hr);
 		return false;
 	}
 
 	// Set Machine type for getting correct register names
 	if (m_pGlobal->get_machineType(&dwMachType) == S_OK)
 	{
-		switch (dwMachType) 
+		switch (dwMachType)
 		{
 		case IMAGE_FILE_MACHINE_I386: m_dwMachineType = CV_CFL_80386; break;
 		case IMAGE_FILE_MACHINE_IA64: m_dwMachineType = CV_CFL_IA64; break;
@@ -81,7 +91,7 @@ bool PDBReader::LoadDataFromPdb(const wchar_t* szFilename)
 ////////////////////////////////////////////////////////////
 // Print the string coresponding to the symbol's tag property
 //
-void PDBReader::ReadSymTag(DWORD dwSymTag, CString& outString)
+void SymbolReader::ReadSymTag(DWORD dwSymTag, CString& outString)
 {
 	CString append;
 	append.Format(_T("%s: "), SafeDRef(rgTags, dwSymTag));
@@ -92,7 +102,7 @@ void PDBReader::ReadSymTag(DWORD dwSymTag, CString& outString)
 ////////////////////////////////////////////////////////////
 // Print the name of the symbol
 //
-void PDBReader::ReadName(IDiaSymbol *pSymbol, CString& outString)
+void SymbolReader::ReadName(IDiaSymbol *pSymbol, CString& outString)
 {
 	BSTR bstrName;
 	BSTR bstrUndName;
@@ -133,7 +143,7 @@ void PDBReader::ReadName(IDiaSymbol *pSymbol, CString& outString)
 ////////////////////////////////////////////////////////////
 // Print a VARIANT
 //
-void PDBReader::ReadVariant(VARIANT var, CString& outString)
+void SymbolReader::ReadVariant(VARIANT var, CString& outString)
 {
 	CString append;
 
@@ -203,20 +213,20 @@ void PDBReader::ReadVariant(VARIANT var, CString& outString)
 	}
 }
 
-void PDBReader::ReadBound(IDiaSymbol *pSymbol, CString& outString)
+void SymbolReader::ReadBound(IDiaSymbol *pSymbol, CString& outString)
 {
 	DWORD dwTag = 0;
 	DWORD dwKind;
 
 	if (pSymbol->get_symTag(&dwTag) != S_OK) 
 	{
-		PrintOut(_T("[PDBReader::ReadBound] ERROR - PrintBound() get_symTag"));
+		PrintOut(_T("[SymbolReader::ReadBound] ERROR - PrintBound() get_symTag"));
 		return;
 	}
 
 	if (pSymbol->get_locationType(&dwKind) != S_OK) 
 	{
-		PrintOut(_T("[PDBReader::ReadBound] ERROR - PrintBound() get_locationType"));
+		PrintOut(_T("[SymbolReader::ReadBound] ERROR - PrintBound() get_locationType"));
 		return;
 	}
 
@@ -238,7 +248,7 @@ void PDBReader::ReadBound(IDiaSymbol *pSymbol, CString& outString)
 ////////////////////////////////////////////////////////////
 // Print a string corespondig to a location type
 //
-void PDBReader::ReadLocation(IDiaSymbol *pSymbol, CString& outString)
+void SymbolReader::ReadLocation(IDiaSymbol *pSymbol, CString& outString)
 {
 	DWORD dwLocType;
 	DWORD dwRVA, dwSect, dwOff, dwReg, dwBitPos, dwSlot;
@@ -249,7 +259,7 @@ void PDBReader::ReadLocation(IDiaSymbol *pSymbol, CString& outString)
 	if (pSymbol->get_locationType(&dwLocType) != S_OK) 
 	{
 		// It must be a symbol in optimized code
-		PrintOut(_T("[PDBReader::ReadLocation] Symbol in optimized code!"));
+		PrintOut(_T("[SymbolReader::ReadLocation] Symbol in optimized code!"));
 		return;
 	}
 
@@ -366,7 +376,7 @@ void PDBReader::ReadLocation(IDiaSymbol *pSymbol, CString& outString)
 ////////////////////////////////////////////////////////////
 // Print a string corresponding to a UDT kind
 //
-void PDBReader::ReadUdtKind(IDiaSymbol *pSymbol, CString& outString)
+void SymbolReader::ReadUdtKind(IDiaSymbol *pSymbol, CString& outString)
 {
 	DWORD dwKind = 0;
 	if (pSymbol->get_udtKind(&dwKind) == S_OK) 
@@ -380,7 +390,7 @@ void PDBReader::ReadUdtKind(IDiaSymbol *pSymbol, CString& outString)
 ////////////////////////////////////////////////////////////
 // Print the information details for a type symbol
 //
-void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
+void SymbolReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 {
 	IDiaSymbol *pBaseType;
 	IDiaEnumSymbols *pEnumSym;
@@ -395,7 +405,7 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 
 	if (pSymbol->get_symTag(&dwTag) != S_OK)
 	{
-		PrintOut(_T("[PDBReader::ReadType] ERROR - can't retrieve the symbol's SymTag"));
+		PrintOut(_T("[SymbolReader::ReadType] ERROR - can't retrieve the symbol's SymTag"));
 		return;
 	}
 
@@ -447,7 +457,7 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 	case SymTagPointerType:
 		if (pSymbol->get_type(&pBaseType) != S_OK)
 		{
-			PrintOut(_T("[PDBReader::ReadType] ERROR - SymTagPointerType get_type"));
+			PrintOut(_T("[SymbolReader::ReadType] ERROR - SymTagPointerType get_type"));
 			if (bstrName != NULL)
 				SysFreeString(bstrName);
 			return;
@@ -732,7 +742,7 @@ void PDBReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 ////////////////////////////////////////////////////////////
 // Print a string representing the type of a symbol
 //
-void PDBReader::ReadSymbolType(IDiaSymbol *pSymbol, CString& outString)
+void SymbolReader::ReadSymbolType(IDiaSymbol *pSymbol, CString& outString)
 {
 	IDiaSymbol *pType;
 	if (pSymbol->get_type(&pType) == S_OK) 
@@ -745,14 +755,14 @@ void PDBReader::ReadSymbolType(IDiaSymbol *pSymbol, CString& outString)
 
 ////////////////////////////////////////////////////////////
 //
-void PDBReader::ReadData(IDiaSymbol *pSymbol, CString& outString)
+void SymbolReader::ReadData(IDiaSymbol *pSymbol, CString& outString)
 {
 	ReadLocation(pSymbol, outString);
 
 	DWORD dwDataKind;
 	if (pSymbol->get_dataKind(&dwDataKind) != S_OK)
 	{
-		PrintOut(_T("[PDBReader::ReadData] ERROR - PrintData() get_dataKind"));
+		PrintOut(_T("[SymbolReader::ReadData] ERROR - PrintData() get_dataKind"));
 		return;
 	}
 
@@ -772,10 +782,9 @@ void PDBReader::ReadData(IDiaSymbol *pSymbol, CString& outString)
 //  - only SymTagFunction, SymTagData and SymTagPublicSymbol
 //    can have this property set
 //
-void PDBReader::ReadUndName(IDiaSymbol *pSymbol, CString& outString)
+void SymbolReader::ReadUndName(IDiaSymbol *pSymbol, CString& outString)
 {
 	BSTR bstrName;
-
 	if (pSymbol->get_undecoratedName(&bstrName) != S_OK) 
 	{
 		if (pSymbol->get_name(&bstrName) == S_OK) 
@@ -795,7 +804,7 @@ void PDBReader::ReadUndName(IDiaSymbol *pSymbol, CString& outString)
 		return;
 	}
 
-	if (bstrName[0] != L'\0') {
+	if (bstrName[0] != _T('\0')) {
 		outString += bstrName;
 		//wprintf(L"%s", bstrName);
 	}
@@ -806,7 +815,7 @@ void PDBReader::ReadUndName(IDiaSymbol *pSymbol, CString& outString)
 ////////////////////////////////////////////////////////////
 // Print the name and the type of an user defined type
 //
-void PDBReader::ReadUDT(IDiaSymbol *pSymbol, CString& outString)
+void SymbolReader::ReadUDT(IDiaSymbol *pSymbol, CString& outString)
 {
 	ReadName(pSymbol, outString);
 	ReadSymbolType(pSymbol, outString);
@@ -815,7 +824,7 @@ void PDBReader::ReadUDT(IDiaSymbol *pSymbol, CString& outString)
 ////////////////////////////////////////////////////////////
 // Print a symbol info: name, type etc.
 //
-void PDBReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
+void SymbolReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 {
 	IDiaSymbol *pType;
 	DWORD dwSymTag;
@@ -823,7 +832,7 @@ void PDBReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 
 	if (pSymbol->get_symTag(&dwSymTag) != S_OK) 
 	{
-		PrintOut(_T("[PDBReader::ReadSymbol] ERROR - PrintSymbol get_symTag() failed"));
+		PrintOut(_T("[SymbolReader::ReadSymbol] ERROR - PrintSymbol get_symTag() failed"));
 		return;
 	}
 
@@ -976,7 +985,8 @@ void PDBReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 	//putwchar(L'\n');
 }
 
-bool PDBReader::GetSymbolStringWithVA(size_t dwVA, CString& outString)
+
+bool SymbolReader::GetSymbolStringWithVA(size_t dwVA, CString& outString)
 {
 	IDiaSymbol *pSymbol;
 	LONG lDisplacement;
@@ -986,7 +996,7 @@ bool PDBReader::GetSymbolStringWithVA(size_t dwVA, CString& outString)
 		PrintOut(_T("Test!"));
 #endif
 	
-	size_t dwRVA = dwVA - g_AttachedProcessAddress;
+	size_t dwRVA = dwVA - m_dwModuleBase;
 
 	if (FAILED(m_pSession->findSymbolByRVAEx((DWORD)dwRVA, SymTagNull, &pSymbol, &lDisplacement))) 
 		return false;
@@ -997,17 +1007,23 @@ bool PDBReader::GetSymbolStringWithVA(size_t dwVA, CString& outString)
 	return true;
 }
 
-bool PDBReader::LoadFile(CString FilePath)
+bool SymbolReader::LoadFile(CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, TCHAR* pszSearchPath)
 {
-	wchar_t pathToPdb[MAX_PATH];
-#ifdef UNICODE
-	wcscpy_s(pathToPdb, FilePath.GetString());
-#else
-	size_t converted;
-	mbstowcs_s(&converted, pathToPdb, FilePath.GetString(), MAX_PATH);
-#endif
+	int idx = FilePath.ReverseFind('/');
+	if (idx == -1)
+		idx = FilePath.ReverseFind('\\');
+	return LoadFile(FilePath.Mid(++idx), FilePath, dwBaseAddr, dwModuleSize, pszSearchPath);
+}
 
-	m_bInitialized = LoadDataFromPdb(pathToPdb);
+bool SymbolReader::LoadFile(CString FileName, CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, TCHAR* pszSearchPath)
+{
+	m_strFileName = FileName;
+	m_strFilePath = FilePath;
+
+	m_dwModuleBase = dwBaseAddr;
+	m_dwModuleSize = dwModuleSize;
+
+	m_bInitialized = LoadSymbolData(pszSearchPath);
 
 	return m_bInitialized;
 }

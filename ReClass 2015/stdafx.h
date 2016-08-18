@@ -424,12 +424,10 @@ extern std::vector<RECLASS_PLUGINS> LoadedPlugins;
 #include "ReClass2015.h"
 extern CReClass2015App theApp;
 
-
 //
-// PDB Reader
+// Symbols
 //
-#include "PDBReader.h"
-
+#include "Symbols.h"
 
 //
 // Global preprocessor directive for printing to the Console

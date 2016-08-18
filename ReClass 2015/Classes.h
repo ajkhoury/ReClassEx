@@ -2,7 +2,7 @@
 
 #include "Debug.h"
 #include "bits.h"
-#include "PDBReader.h"
+#include "Symbols.h"
 
 #define TXOFFSET 16
 
@@ -528,12 +528,20 @@ public:
 							x = ResolveRTTI(uintVal, x, View, y);
 
 						// Print out info from PDB at address
-						if (pdb.IsInitialized())
+						if (sym.IsInitialized())
 						{
-							CString nameOut;
-							if (pdb.GetSymbolStringWithVA(uintVal, nameOut))
+							CString moduleName = GetModuleName(uintVal);
+							if (!moduleName.IsEmpty())
 							{
-								x = AddText(View, x, y, crOffset, HS_EDIT, _T("%s "), nameOut);
+								SymbolReader* symbols = sym.GetSymbolsForModule(moduleName);
+								if (symbols)
+								{
+									CString nameOut;
+									if (symbols->GetSymbolStringWithVA(uintVal, nameOut))
+									{
+										x = AddText(View, x, y, crOffset, HS_EDIT, _T("%s "), nameOut);
+									}
+								}
 							}
 						}
 					}
@@ -603,6 +611,25 @@ public:
 						x = AddText(View, x, y, crOffset, HS_NONE, _T("*->%s "), addressStr);
 						if (gbRTTI)
 							x = ResolveRTTI(uintVal, x, View, y);
+
+						// Print out info from PDB at address
+						if (sym.IsInitialized())
+						{
+							CString moduleName = GetModuleName(uintVal);
+							if (!moduleName.IsEmpty())
+							{
+								SymbolReader* symbols = sym.GetSymbolsForModule(moduleName);
+								if (symbols)
+								{
+									CString nameOut;
+									if (symbols->GetSymbolStringWithVA(uintVal, nameOut))
+									{
+										x = AddText(View, x, y, crOffset, HS_EDIT, _T("%s "), nameOut);
+									}
+								}
+							}
+						}
+
 					}
 				}
 

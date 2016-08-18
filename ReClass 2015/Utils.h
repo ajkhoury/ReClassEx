@@ -116,6 +116,26 @@ namespace Utils
 		return TRUE;
 	}
 
+	//Returns the last Win32 error, in string format. Returns an empty string if there is no error.
+	static std::basic_string<TCHAR> GetLastErrorAsString()
+	{
+		// Get the error message, if any
+		DWORD errorMessageID = GetLastError();
+		if (errorMessageID == 0)
+			return std::basic_string<TCHAR>(); //No error message has been recorded
+
+		LPTSTR messageBuffer = 0;
+		size_t size = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+			NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&messageBuffer, 0, NULL);
+
+		std::basic_string<TCHAR> message(messageBuffer, size);
+
+		// Free the buffer
+		LocalFree(messageBuffer);
+
+		return message;
+	}
+
 	static HMODULE GetLocalModuleHandle(const char* moduleName)
 	{
 		void* dwModuleHandle = 0;
@@ -125,7 +145,7 @@ namespace Utils
 		PLDR_DATA_ENTRY cursor = (PLDR_DATA_ENTRY)ldrData->InInitializationOrderModuleList.Flink;
 
 #ifdef _DEBUG
-		_tprintf(_T("cursor: 0x%IX\n"), cursor);
+		_tprintf(_T("cursor: 0x%IX\n"), (size_t)cursor);
 #endif
 
 		while (cursor->BaseAddress)  
@@ -224,6 +244,39 @@ namespace Utils
 			free(dll_name);
 		}
 		return address;
+	}
+
+	static size_t FindPattern(size_t start_offset, DWORD size, unsigned char pattern[], int n)
+	{
+		//printf("n = %i\n", n);
+		char mask[256];
+		for (int i = 0; i <= n; i++)
+		{
+			if (i == n) mask[i] = '\0';
+			else if (pattern[i] == 0xCC) mask[i] = '?';
+			else mask[i] = 'x';
+		}
+
+		int pos = 0;
+		int searchLen = strlen(mask) - 1;
+
+		for (size_t retAddress = start_offset; retAddress < start_offset + size; retAddress++)
+		{
+			if (*(BYTE*)retAddress == pattern[pos] || mask[pos] == '?')
+			{
+				if (mask[pos + 1] == '\0')
+					return (retAddress - searchLen);
+				pos++;
+			}
+			else
+				pos = 0;
+		}
+		return NULL;
+	}
+
+	template<int N> __inline size_t FindPattern(size_t start_offset, DWORD size, unsigned char(&pattern)[N])
+	{
+		return FindPattern(start_offset, size, pattern, N);
 	}
 
 	enum OSType

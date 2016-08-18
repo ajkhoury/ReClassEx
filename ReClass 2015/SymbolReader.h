@@ -1,6 +1,8 @@
 #pragma once
 
 #include <dia2.h>
+#include <tchar.h>
+#include <afxstr.h>
 
 // Basic types
 static const TCHAR* rgBaseType[] =
@@ -155,14 +157,16 @@ static const TCHAR* const rgCallingConvention[] =
 #define MAXELEMS(x)     (sizeof(x)/sizeof(x[0]))
 #define SafeDRef(a, i)  ((i < MAXELEMS(a)) ? a[i] : _T("(none)"))
 
-class PDBReader
+class SymbolReader
 {
 public:
-	PDBReader();
+	SymbolReader();
+	~SymbolReader();
 
 	bool IsInitialized() { return m_bInitialized; }
 
-	bool LoadFile(CString FilePath);
+	bool LoadFile(CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, TCHAR* pszSearchPath = 0);
+	bool LoadFile(CString FileName, CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, TCHAR* pszSearchPath = 0);
 
 	bool GetSymbolStringWithVA(size_t dwVA, CString& outString);
 
@@ -191,16 +195,21 @@ private:
 
 	void ReadSymbol(IDiaSymbol *pSymbol, CString& outString);
 
-	bool LoadDataFromPdb(const wchar_t* szFilename);
+	bool LoadSymbolData(TCHAR* pszSearchPath = 0);
 
 private:
+	bool			m_bInitialized;
+
+	// Source
 	IDiaDataSource* m_pSource;
+
 	IDiaSession*	m_pSession;
 	IDiaSymbol*		m_pGlobal;
 
 	DWORD			m_dwMachineType;
 
-	bool			m_bInitialized;
+	CString			m_strFileName;
+	CString			m_strFilePath;
+	size_t			m_dwModuleBase;
+	DWORD			m_dwModuleSize;
 };
-
-extern PDBReader pdb;

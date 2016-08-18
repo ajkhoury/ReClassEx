@@ -148,5 +148,4 @@ namespace Utils
 		return hRemoteThread;
 	}
 
-
 }
