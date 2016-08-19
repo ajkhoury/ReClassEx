@@ -268,7 +268,7 @@ void CDialogProcSelect::OnAttachButton()
 						}
 
 						int iProgress = (int)(((float)(i+1) / (float)numOfModules) * 100);
-						//printf("[%d/%zd] progress: %f\n", i, numOfModules, flProgress);
+						PrintOut(_T("[%d/%zd] progress: %d\n"), i, numOfModules, iProgress);
 						progress.SetProgress(iProgress);
 					}
 
