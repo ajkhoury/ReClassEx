@@ -224,7 +224,7 @@ void CDialogProcSelect::OnDblClkListControl(NMHDR* pNMHDR, LRESULT* pResult)
 DWORD WINAPI LoadSymbolsThread(LPVOID lpThreadParameter)
 {
 	CDialogProgress progress;
-	progress.Create(CDialogProgress::IDD);
+	progress.Create(CDialogProgress::IDD, theApp.m_pMainWnd);
 	progress.ShowWindow(SW_SHOW);
 	
 	size_t numOfModules = MemMapModule.size();
