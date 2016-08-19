@@ -25,8 +25,10 @@ Cleaned up the code a bit and added some new features. Also got rid of a ton of 
 - Added Module list with the ability to create a new class at module start address
 - Added Console dialog with syntax highlighting
 - Added ability to load PDB file and display PDB Symbols
-- Process list dialog instead of scroll menu 
+- Process list dialog instead of scroll menu
+- Added automatic resolving of symbols for each module in a process
 
+![Alt text](http://i.imgur.com/W6ytfG6.png "Automatic symbol resolving")
 ![Alt text](http://i.imgur.com/hBNyEFG.png "ReClass")
 
 ## Current Release Download
