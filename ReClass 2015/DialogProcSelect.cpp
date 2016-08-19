@@ -5,6 +5,7 @@
 #include "afxdialogex.h"
 
 #include "DialogProcSelect.h"
+#include "DialogProgress.h"
 #include "ReClass2015.h"
 
 
@@ -35,10 +36,12 @@ CDialogProcSelect::CDialogProcSelect(CWnd* pParent)
 	m_bLoadingProcesses(false),
 	m_bSortAscendingName(false),
 	m_bSortAscendingId(false) 
-{ }
+{ 
+}
 
 CDialogProcSelect::~CDialogProcSelect() 
-{ }
+{ 
+}
 
 IMPLEMENT_DYNAMIC(CDialogProcSelect, CDialogEx)
 
@@ -218,6 +221,11 @@ void CDialogProcSelect::OnDblClkListControl(NMHDR* pNMHDR, LRESULT* pResult)
 	OnAttachButton();
 }
 
+int CALLBACK ProgressCallback(float progress)
+{
+	
+}
+
 void CDialogProcSelect::OnAttachButton()
 {
 	int selected_index = m_ProcessList.GetSelectionMark();
@@ -245,20 +253,26 @@ void CDialogProcSelect::OnAttachButton()
 				g_ProcessName = proc_info_found->Procname;
 				UpdateMemoryMap();
 
-
 				if (sym.Init()) 
 				{
+					CDialogProgress progress;
+					progress.Create(CDialogProgress::IDD, this);
+					progress.ShowWindow(SW_SHOW);
+
 					size_t numOfModules = MemMapModule.size();
 					for (int i = 0; i < numOfModules; i++)
 					{
 						MemMapInfo mod = MemMapModule[i];
-						if (!sym.LoadSymbolsForModule(mod.Path, mod.Start, mod.Size))
-						{
+						if (!sym.LoadSymbolsForModule(mod.Path, mod.Start, mod.Size)) {
 							PrintOut(_T("Failed to load symbols for module %ls!"), mod.Name.GetString());
-							float progress = ((float)i / (float)numOfModules) * 100;
-							printf("[%d/%zd] progress: %f\n", i, numOfModules, progress);
 						}
+
+						int iProgress = (int)(((float)(i+1) / (float)numOfModules) * 100);
+						//printf("[%d/%zd] progress: %f\n", i, numOfModules, flProgress);
+						progress.SetProgress(iProgress);
 					}
+
+					progress.EndDialog(0);
 				}
 
 				OnClose();
