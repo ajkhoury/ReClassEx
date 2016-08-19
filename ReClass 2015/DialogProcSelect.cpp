@@ -221,9 +221,34 @@ void CDialogProcSelect::OnDblClkListControl(NMHDR* pNMHDR, LRESULT* pResult)
 	OnAttachButton();
 }
 
-int CALLBACK ProgressCallback(float progress)
+DWORD WINAPI LoadSymbolsThread(LPVOID lpThreadParameter)
 {
+	CDialogProgress progress;
+	progress.Create(CDialogProgress::IDD);
+	progress.ShowWindow(SW_SHOW);
 	
+	size_t numOfModules = MemMapModule.size();
+	progress.SetProgressRange((int)numOfModules);
+
+	for (int i = 0; i < numOfModules; i++)
+	{
+		MemMapInfo mod = MemMapModule[i];
+	
+		progress.Step();
+
+		CString progressText;
+		progressText.Format(_T("[%d/%zd] %s"), i + 1, numOfModules, mod.Name.GetString());
+		PrintOut(_T("%s"), progressText.GetString());
+
+		progress.SetProgressText(progressText);
+	
+		if (!sym.LoadSymbolsForModule(mod.Path, mod.Start, mod.Size)) {
+			PrintOut(_T("Failed to load symbols for module %ls!"), mod.Name.GetString());
+		}
+	}
+	progress.EndDialog(0);
+
+	return TRUE;
 }
 
 void CDialogProcSelect::OnAttachButton()
@@ -251,32 +276,10 @@ void CDialogProcSelect::OnAttachButton()
 				g_hProcess = process_open;
 				g_ProcessID = proc_info_found->ProcessId;
 				g_ProcessName = proc_info_found->Procname;
-				UpdateMemoryMap();
+				UpdateMemoryMap(); 
 
-				if (sym.Init()) 
-				{
-					CDialogProgress progress;
-					progress.Create(CDialogProgress::IDD, this);
-					progress.ShowWindow(SW_SHOW);
-
-					size_t numOfModules = MemMapModule.size();
-					for (int i = 0; i < numOfModules; i++)
-					{
-						MemMapInfo mod = MemMapModule[i];
-
-						int iProgress = (int)(((float)(i + 1) / (float)numOfModules) * 100);
-						CString progressText;
-						progressText.Format(_T("[%d/%zd] %s"), i + 1, numOfModules, mod.Name.GetString());
-						PrintOut(_T("%s"), progressText.GetString());
-						progress.SetProgress(iProgress);
-						progress.SetText(progressText);
-
-						if (!sym.LoadSymbolsForModule(mod.Path, mod.Start, mod.Size)) {
-							PrintOut(_T("Failed to load symbols for module %ls!"), mod.Name.GetString());
-						}
-					}
-
-					progress.EndDialog(0);
+				if (sym.Init()) {
+					CreateThread(NULL, 0, LoadSymbolsThread, NULL, 0, 0);
 				}
 
 				OnClose();
