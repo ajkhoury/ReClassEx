@@ -283,8 +283,6 @@ void CDialogProcSelect::OnAttachButton()
 
 void CDialogProcSelect::OnRefreshButton()
 {
-	if (m_bLoadingProcesses) 
-		return;
 	ListRunningProcs();
 }
 
