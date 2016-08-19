@@ -206,7 +206,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>BeaEngine_s_stdcall_64.lib;SciLexer_64.lib;SQLite_Static_Library_64.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>

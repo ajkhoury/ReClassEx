@@ -245,8 +245,20 @@ void CDialogProcSelect::OnAttachButton()
 				g_ProcessName = proc_info_found->Procname;
 				UpdateMemoryMap();
 
-				if (sym.Init(g_hProcess)) {
-					sym.LoadModuleSymbols();
+
+				if (sym.Init()) 
+				{
+					size_t numOfModules = MemMapModule.size();
+					for (int i = 0; i < numOfModules; i++)
+					{
+						MemMapInfo mod = MemMapModule[i];
+						if (!sym.LoadSymbolsForModule(mod.Path, mod.Start, mod.Size))
+						{
+							PrintOut(_T("Failed to load symbols for module %ls!"), mod.Name.GetString());
+							float progress = ((float)i / (float)numOfModules) * 100;
+							printf("[%d/%zd] progress: %f\n", i, numOfModules, progress);
+						}
+					}
 				}
 
 				OnClose();

@@ -594,7 +594,7 @@ bool UpdateMemoryMap(void)
 #ifdef _DEBUG
 		PrintOut(_T("[UpdateMemoryMap]: Process handle NULL!"));
 #endif
-		return 0;
+		return false;
 	}
 
 	if (!IsProcessHandleValid(g_hProcess))
@@ -603,7 +603,7 @@ bool UpdateMemoryMap(void)
 #ifdef _DEBUG
 		PrintOut(_T("[UpdateMemoryMap]: Process handle invalid!"));
 #endif
-		return 0;
+		return false;
 	}
 
 	SYSTEM_INFO SysInfo;
@@ -652,7 +652,7 @@ bool UpdateMemoryMap(void)
 #ifdef _DEBUG
 			PrintOut(_T("[UpdateMemoryMap]: Couldn't allocate heap buffer!"));
 #endif
-			return 0;
+			return false;
 		}
 
 		status = ntdll::NtQueryInformationProcess(g_hProcess, ProcessBasicInformation, ProcessInfo, dwSizeNeeded, &dwSizeNeeded);
@@ -669,7 +669,7 @@ bool UpdateMemoryMap(void)
 #endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
-			return 0;
+			return false;
 		}
 
 		// Read Process Environment Block (PEB)
@@ -681,7 +681,7 @@ bool UpdateMemoryMap(void)
 #endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
-			return 0;
+			return false;
 		}
 
 		// Get Ldr
@@ -693,7 +693,7 @@ bool UpdateMemoryMap(void)
 #endif
 			if (ProcessInfo)
 				HeapFree(hHeap, 0, ProcessInfo);
-			return 0;
+			return false;
 		}
 
 		LIST_ENTRY *pLdrListHead = (LIST_ENTRY *)LdrData.InLoadOrderModuleList.Flink;
@@ -709,7 +709,7 @@ bool UpdateMemoryMap(void)
 #endif
 				if (ProcessInfo)
 					HeapFree(hHeap, 0, ProcessInfo);
-				return 0;
+				return false;
 			}
 
 			pLdrCurrentNode = lstEntry.InLoadOrderLinks.Flink;
@@ -748,8 +748,13 @@ bool UpdateMemoryMap(void)
 				Mem.Start = (size_t)ModuleBase;
 				Mem.End = Mem.Start + ModuleSize;
 				Mem.Size = ModuleSize;
+#ifdef UNICODE
 				Mem.Name = wcsModule;
 				Mem.Path = wcsFullDllName;
+#else
+				Mem.Name = CW2A(wcsModule);
+				Mem.Path = CW2A(wcsFullDllName);
+#endif
 				MemMapModule.push_back(Mem);
 
 				// module code
@@ -806,7 +811,7 @@ bool UpdateMemoryMap(void)
 			MemMap[i].Name = GetModuleName(MemMap[i].Start);
 	}
 
-	return 1;
+	return true;
 }
 
 bool UpdateExports()

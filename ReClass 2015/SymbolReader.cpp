@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "SymbolReader.h"
 
+//#include <direct.h>
+//#define GetCurrentDir getcwd
+
 SymbolReader::SymbolReader() : 
 	m_bInitialized(false), 
 	m_pSource(0), 
@@ -19,14 +22,11 @@ SymbolReader::~SymbolReader()
 		m_pSource->Release();
 }
 
-bool SymbolReader::LoadSymbolData(TCHAR* pszSearchPath)
+bool SymbolReader::LoadSymbolData(const TCHAR* pszSearchPath)
 {
 	TCHAR szExt[MAX_PATH];
-	TCHAR* szSearchPath = 0;
 	DWORD dwMachType = 0;
 	HRESULT hr = S_OK;
-
-	szSearchPath = (!pszSearchPath) ? _T("srv*C:\\Windows\\symbols*\\\\symbols\\symbols*http://msdl.microsoft.com/download/symbols") : pszSearchPath;
 
 	// Obtain access to the provider
 	hr = CoCreateInstance(__uuidof(DiaSource), NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_pSource));
@@ -43,17 +43,40 @@ bool SymbolReader::LoadSymbolData(TCHAR* pszSearchPath)
 		hr = m_pSource->loadDataFromPdb(m_strFilePath.GetString());
 		if (FAILED(hr))
 		{
-			PrintOut(_T("[LoadDataFromPdb] loadDataFromPdb failed - HRESULT = %08X"), hr);
+			_com_error err(hr);
+			LPCTSTR errMsg = err.ErrorMessage();
+			PrintOut(_T("[LoadDataFromPdb] loadDataFromPdb failed - %s"), errMsg);
 			return false;
 		}
 	}
 	else 
 	{
 		// Open and prepare the debug data associated with the executable
-		hr = m_pSource->loadDataForExe(m_strFilePath.GetString(), NULL, NULL);
+		hr = m_pSource->loadDataForExe(m_strFilePath.GetString(), pszSearchPath, NULL);
 		if (FAILED(hr))
 		{
-			PrintOut(_T("[LoadDataFromPdb] loadDataForExe failed - HRESULT = %08X"), hr);
+			LPCTSTR errMsg = 0;
+			switch (hr)
+			{
+			case E_PDB_NOT_FOUND:
+				errMsg = _T("PDB not found");
+				break;
+			case E_PDB_FORMAT:
+				errMsg = _T("Invalid PDB format");
+				break;
+			case E_PDB_INVALID_SIG:
+				errMsg = _T("Invalid PDB signature");
+				break;
+			case E_PDB_INVALID_AGE:
+				errMsg = _T("Invalid PDB age");
+				break;
+			default:
+				_com_error err(hr);
+				errMsg = err.ErrorMessage();
+				break;
+			}
+
+			PrintOut(_T("[LoadDataFromPdb] loadDataForExe failed - %s"), errMsg);
 			return false;
 		}
 	}
@@ -1007,7 +1030,7 @@ bool SymbolReader::GetSymbolStringWithVA(size_t dwVA, CString& outString)
 	return true;
 }
 
-bool SymbolReader::LoadFile(CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, TCHAR* pszSearchPath)
+bool SymbolReader::LoadFile(CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath)
 {
 	int idx = FilePath.ReverseFind('/');
 	if (idx == -1)
@@ -1015,7 +1038,7 @@ bool SymbolReader::LoadFile(CString FilePath, size_t dwBaseAddr, DWORD dwModuleS
 	return LoadFile(FilePath.Mid(++idx), FilePath, dwBaseAddr, dwModuleSize, pszSearchPath);
 }
 
-bool SymbolReader::LoadFile(CString FileName, CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, TCHAR* pszSearchPath)
+bool SymbolReader::LoadFile(CString FileName, CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath)
 {
 	m_strFileName = FileName;
 	m_strFilePath = FilePath;

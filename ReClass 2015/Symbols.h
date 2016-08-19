@@ -7,25 +7,23 @@ class Symbols
 {
 public:
 	Symbols();
-	Symbols(HANDLE hProcess);
 	~Symbols();
 
 	void Cleanup();
-	bool Init(HANDLE hProcess);
+	bool Init();
 	bool IsInitialized() { return m_bInitialized; }
 
-	void LoadModuleSymbols();
+	bool LoadSymbolsForModule(CString szModulePath, size_t dwBaseAddr, DWORD dwSizeOfImage);
 
 	SymbolReader* GetSymbolsForModule(CString module);
 
 private:
-	bool LoadSymbolsForModule(wchar_t* szModulePath, size_t dwBaseAddr, DWORD dwSizeOfImage);
-
 	//typedef std::pair<CString, size_t> key_type;
 	std::map<CString, SymbolReader*> symbols;
 
 	bool m_bInitialized;
-	HANDLE m_hProcess;
+
+	CString m_strSearchPath;
 };
 
 extern Symbols sym;

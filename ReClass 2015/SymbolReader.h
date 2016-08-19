@@ -165,12 +165,14 @@ public:
 
 	bool IsInitialized() { return m_bInitialized; }
 
-	bool LoadFile(CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, TCHAR* pszSearchPath = 0);
-	bool LoadFile(CString FileName, CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, TCHAR* pszSearchPath = 0);
+	bool LoadFile(CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath = 0);
+	bool LoadFile(CString FileName, CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath = 0);
 
 	bool GetSymbolStringWithVA(size_t dwVA, CString& outString);
 
 private:
+	bool LoadSymbolData(const TCHAR* pszSearchPath = 0);
+
 	void ReadSymTag(DWORD dwSymTag, CString& outString);
 
 	void ReadName(IDiaSymbol *pSymbol, CString& outString);
@@ -194,8 +196,6 @@ private:
 	void ReadLocation(IDiaSymbol *pSymbol, CString& outString);
 
 	void ReadSymbol(IDiaSymbol *pSymbol, CString& outString);
-
-	bool LoadSymbolData(TCHAR* pszSearchPath = 0);
 
 private:
 	bool			m_bInitialized;

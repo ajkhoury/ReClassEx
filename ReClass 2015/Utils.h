@@ -258,7 +258,7 @@ namespace Utils
 		}
 
 		int pos = 0;
-		int searchLen = strlen(mask) - 1;
+		int searchLen = (int)strlen(mask) - 1;
 
 		for (size_t retAddress = start_offset; retAddress < start_offset + size; retAddress++)
 		{
