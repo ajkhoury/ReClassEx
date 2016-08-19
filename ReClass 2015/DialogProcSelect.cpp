@@ -263,13 +263,17 @@ void CDialogProcSelect::OnAttachButton()
 					for (int i = 0; i < numOfModules; i++)
 					{
 						MemMapInfo mod = MemMapModule[i];
+
+						int iProgress = (int)(((float)(i + 1) / (float)numOfModules) * 100);
+						CString progressText;
+						progressText.Format(_T("[%d/%zd] %s"), i + 1, numOfModules, mod.Name.GetString());
+						PrintOut(_T("%s"), progressText.GetString());
+						progress.SetProgress(iProgress);
+						progress.SetText(progressText);
+
 						if (!sym.LoadSymbolsForModule(mod.Path, mod.Start, mod.Size)) {
 							PrintOut(_T("Failed to load symbols for module %ls!"), mod.Name.GetString());
 						}
-
-						int iProgress = (int)(((float)(i+1) / (float)numOfModules) * 100);
-						PrintOut(_T("[%d/%zd] progress: %d\n"), i, numOfModules, iProgress);
-						progress.SetProgress(iProgress);
 					}
 
 					progress.EndDialog(0);

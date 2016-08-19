@@ -17,6 +17,7 @@ public:
 	enum { IDD = IDD_DIALOG_PROGRESS };
 
 	BOOL SetProgress(int pos);
+	void SetText(CString txt);
 
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual BOOL OnInitDialog();
@@ -25,5 +26,5 @@ public:
 
 private:
 	CProgressCtrl m_progressBar;
-
+	CStatic m_progressText;
 };

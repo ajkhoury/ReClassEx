@@ -24,6 +24,7 @@ void CDialogProgress::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_PROGRESSBAR, m_progressBar);
+	DDX_Control(pDX, IDC_PROGRESSTEXT, m_progressText);
 }
 
 BEGIN_MESSAGE_MAP(CDialogProgress, CDialogEx)
@@ -46,4 +47,9 @@ BOOL CDialogProgress::OnInitDialog()
 BOOL CDialogProgress::SetProgress(int pos)
 {
 	return m_progressBar.SetPos(pos);
+}
+
+void CDialogProgress::SetText(CString txt)
+{
+	m_progressText.SetWindowTextW(txt.GetString());
 }
