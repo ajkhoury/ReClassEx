@@ -63,31 +63,28 @@ void Symbols::Cleanup()
 {
 	if (m_bInitialized)
 	{
-		for (auto it = symbols.begin(); it != symbols.end(); ++it) {
+		for (auto it = symbols.begin(); it != symbols.end(); ++it)
 			delete it->second;
-		}
+
 		symbols.clear();
-
 		CoUninitialize();
-
 		m_bInitialized = false;
 	}
 }
 
 bool Symbols::Init()
 {
-	HRESULT hr = S_OK;
-
-	Cleanup();
-
-	hr = CoInitialize(NULL);
-	if (FAILED(hr))
+	if (!m_bInitialized)
 	{
-		PrintOut(_T("[LoadDataFromPdb] CoInitialize failed - HRESULT = %08X"), hr);
-		return false;
+		HRESULT hr = S_OK;
+		hr = CoInitialize(NULL);
+		if (FAILED(hr))
+		{
+			PrintOut(_T("[Symbols::Init] CoInitialize failed - HRESULT = %08X"), hr);
+			return false;
+		}
+		m_bInitialized = true;
 	}
-
-	m_bInitialized = true;
 
 	return true;
 }
@@ -106,7 +103,7 @@ bool Symbols::LoadSymbolsForModule(CString ModulePath, size_t dwBaseAddr, DWORD 
 	SymbolReader* reader = new SymbolReader();
 	if (reader->LoadFile(ModuleName, ModulePath, dwBaseAddr, dwSizeOfImage, szSearchPath))
 	{
-		PrintOut(_T("[LoadSymbolsForModule] Symbols for module %s loaded"), ModuleName.GetString());
+		PrintOut(_T("[Symbols::LoadSymbolsForModule] Symbols for module %s loaded"), ModuleName.GetString());
 		symbols.insert(std::make_pair(ModuleName, reader));
 		return true;
 	}

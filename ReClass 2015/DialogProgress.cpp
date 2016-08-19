@@ -51,5 +51,5 @@ BOOL CDialogProgress::SetProgress(int pos)
 
 void CDialogProgress::SetText(CString txt)
 {
-	m_progressText.SetWindowTextW(txt.GetString());
+	m_progressText.SetWindowText(txt);
 }
