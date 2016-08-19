@@ -1454,7 +1454,7 @@ void CReClass2015App::OnButtonGenerate()
 			}
 			if(Type == nt_uint64)
 			{
-				t.Format( _T( "\t%s %s; //0x%0.8X %s\r\n" ), tdQWORD, pNode->Name, pNode->offset, pNode->Comment );
+				t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), tdQWORD, pNode->Name, pNode->offset, pNode->Comment );
 				var.push_back( t );
 			}
 			if (Type == nt_uint32)
