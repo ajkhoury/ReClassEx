@@ -25,6 +25,7 @@ class CNodePtr;
 class CNodeInt64;
 class CNodeInt32;
 class CNodeInt8;
+class CNodeQWORD;
 class CNodeDWORD;
 class CNodeWORD;
 class CNodeByte;
@@ -1427,6 +1428,46 @@ public:
 		return y += g_FontHeight;
 	}
 };
+
+class CNodeQWORD : public CNodeBase
+{
+public:
+	CNodeQWORD() { nodeType = nt_uint64; }
+
+	virtual void Update(HotSpot& Spot)
+	{
+		StandardUpdate(Spot);
+		DWORD64 v = _ttoi64(Spot.Text);
+		if(Spot.ID == 0)
+			ReClassWriteMemory((LPVOID)Spot.Address, &v, sizeof(DWORD64));
+	}
+
+	virtual int GetMemorySize( ) { return sizeof(DWORD64); }
+
+	virtual int Draw(ViewInfo& View, int x, int y)
+	{
+		if (bHidden) 
+			return DrawHidden(View, x, y);
+
+		DWORD64* pMemory = (DWORD64*)&View.pData[offset];
+		AddSelection(View, 0, y, g_FontHeight);
+		AddDelete(View, x, y);
+		AddTypeDrop(View, x, y);
+		//AddAdd(View,x,y);
+
+		int tx = x + TXOFFSET;
+		tx = AddIcon(View, tx, y, ICON_UNSIGNED, HS_NONE, HS_NONE);
+		tx = AddAddressOffset(View, tx, y);
+		tx = AddText(View, tx, y, crType, HS_NONE, _T("QWORD "));
+		tx = AddText(View, tx, y, crName, HS_NAME, _T("%s"), Name);
+		tx = AddText(View, tx, y, crName, HS_NONE, _T(" = "));
+		tx = AddText(View, tx, y, crValue, HS_EDIT, _T("%llu"), pMemory[0]) + g_FontWidth;
+		tx = AddComment(View, tx, y);
+
+		return y += g_FontHeight;
+	}
+};
+
 
 class CNodeDWORD : public CNodeBase
 {

@@ -74,6 +74,7 @@ CString tdInt64;
 CString tdInt32;
 CString tdInt16;
 CString tdInt8;
+CString tdQWORD;
 CString tdDWORD;
 CString tdWORD;
 CString tdBYTE;

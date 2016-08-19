@@ -24,6 +24,7 @@ public:
 	CEdit m_Int32;
 	CEdit m_Int16;
 	CEdit m_Int8;
+	CEdit m_QWord;
 	CEdit m_DWord;
 	CEdit m_Word;
 	CEdit m_BYTE;

@@ -175,6 +175,7 @@ extern CString tdInt64;
 extern CString tdInt32;
 extern CString tdInt16;
 extern CString tdInt8;
+extern CString tdQWORD;
 extern CString tdDWORD;
 extern CString tdWORD;
 extern CString tdBYTE;
@@ -284,7 +285,7 @@ __inline const TCHAR* NodeTypeToString(NodeType type)
 	static const TCHAR* pszNodeTypes[] = { _T("nt_base"), _T("nt_instance"), _T("nt_struct"), _T("nt_hidden"), _T("nt_hex32"), _T("nt_hex64"), _T("nt_hex16"), _T("nt_hex8"),
 		_T("nt_pointer"), _T("nt_int64"), _T("nt_int32"), _T("nt_int16"), _T("nt_int8"), _T("nt_float"), _T("nt_double"), _T("nt_uint32"), _T("nt_uint16"), _T("nt_uint8"),
 		_T("nt_text"), _T("nt_unicode"), _T("nt_function"), _T("nt_custom"), _T("nt_vec2"), _T("nt_vec3"), _T("nt_quat"), _T("nt_matrix"), _T("nt_vtable"), _T("nt_array"),
-		_T("nt_class"), _T("nt_pchar"), _T("nt_pwchar"), _T("nt_bits")
+		_T("nt_class"), _T("nt_pchar"), _T("nt_pwchar"), _T("nt_bits"), _T("nt_uint64")
 	};	
 	return pszNodeTypes[type];
 }

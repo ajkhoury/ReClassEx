@@ -27,6 +27,7 @@ void CDialogTypes::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_INT32, m_Int32);
 	DDX_Control(pDX, IDC_EDIT_INT16, m_Int16);
 	DDX_Control(pDX, IDC_EDIT_INT8, m_Int8);
+	DDX_Control(pDX, IDC_EDIT_QWORD, m_QWord);
 	DDX_Control(pDX, IDC_EDIT_DWORD, m_DWord);
 	DDX_Control(pDX, IDC_EDIT_WORD, m_Word);
 	DDX_Control(pDX, IDC_EDIT_BYTE, m_BYTE);
@@ -56,6 +57,7 @@ BOOL CDialogTypes::OnInitDialog()
 	m_Int16.SetWindowText(tdInt16);
 	m_Int8.SetWindowText(tdInt8);
 
+	m_QWord.SetWindowText(tdQWORD);
 	m_DWord.SetWindowText(tdDWORD);
 	m_Word.SetWindowText(tdWORD);
 	m_BYTE.SetWindowText(tdBYTE);
@@ -79,6 +81,7 @@ void CDialogTypes::OnOK()
 	m_Int16.GetWindowText(tdInt16);
 	m_Int8.GetWindowText(tdInt8);
 
+	m_QWord.GetWindowText(tdQWORD);
 	m_DWord.GetWindowText(tdDWORD);
 	m_Word.GetWindowText(tdWORD);
 	m_BYTE.GetWindowText(tdBYTE);

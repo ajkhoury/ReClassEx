@@ -158,6 +158,9 @@ public:
 	afx_msg void OnTypeInt8();
 	afx_msg void OnUpdateTypeInt8(CCmdUI *pCmdUI);
 
+	afx_msg void OnTypeQword();
+	afx_msg void OnUpdateTypeQword(CCmdUI* pCmdUI);
+
 	afx_msg void OnTypeDword();
 	afx_msg void OnUpdateTypeDword(CCmdUI *pCmdUI);
 

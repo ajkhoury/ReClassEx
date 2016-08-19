@@ -128,6 +128,7 @@ BOOL CReClass2015App::InitInstance()
 	tdInt32 = GetProfileString( _T( "Typedefs" ), _T( "tdInt32" ), _T( "__int32" ) );
 	tdInt16 = GetProfileString( _T( "Typedefs" ), _T( "tdInt16" ), _T( "__int16" ) );
 	tdInt8 = GetProfileString( _T( "Typedefs" ), _T( "tdInt8" ), _T( "__int8" ) );
+	tdQWORD = GetProfileString( _T( "Typedefs" ), _T( "tdQWORD" ), _T( "DWORD64" ) );
 	tdDWORD = GetProfileString( _T( "Typedefs" ), _T( "tdDWORD" ), _T( "DWORD" ) );
 	tdWORD = GetProfileString( _T( "Typedefs" ), _T( "tdWORD" ), _T( "WORD" ) );
 	tdBYTE = GetProfileString( _T( "Typedefs" ), _T( "tdBYTE" ), _T( "unsigned char" ) );
@@ -251,22 +252,23 @@ int CReClass2015App::ExitInstance()
 	// Release Scintilla
 	Scintilla_ReleaseResources();
 
-	WriteProfileString( _T( "Typedefs" ), _T( "tdHex" ), tdHex );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdInt64" ), tdInt64 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdInt32" ), tdInt32 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdInt16" ), tdInt16 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdInt8" ), tdInt8 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdDWORD" ), tdDWORD );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdWORD" ), tdWORD );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdBYTE" ), tdBYTE );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdFloat" ), tdFloat );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdDouble" ), tdDouble );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdVec2" ), tdVec2 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdVec3" ), tdVec3 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdQuat" ), tdQuat );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdMatrix" ), tdMatrix );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdPChar" ), tdPChar );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdPWChar" ), tdPWChar );
+	WriteProfileString(_T("Typedefs"), _T("tdHex"), tdHex);
+	WriteProfileString(_T("Typedefs"), _T("tdInt64"), tdInt64);
+	WriteProfileString(_T("Typedefs"), _T("tdInt32"), tdInt32);
+	WriteProfileString(_T("Typedefs"), _T("tdInt16"), tdInt16);
+	WriteProfileString(_T("Typedefs"), _T("tdInt8"), tdInt8);
+	WriteProfileString(_T("Typedefs"), _T("tdQWORD"), tdQWORD);
+	WriteProfileString(_T("Typedefs"), _T("tdDWORD"), tdDWORD);
+	WriteProfileString(_T("Typedefs"), _T("tdWORD"), tdWORD);
+	WriteProfileString(_T("Typedefs"), _T("tdBYTE"), tdBYTE);
+	WriteProfileString(_T("Typedefs"), _T("tdFloat"), tdFloat);
+	WriteProfileString(_T("Typedefs"), _T("tdDouble"), tdDouble);
+	WriteProfileString(_T("Typedefs"), _T("tdVec2"), tdVec2);
+	WriteProfileString(_T("Typedefs"), _T("tdVec3"), tdVec3);
+	WriteProfileString(_T("Typedefs"), _T("tdQuat"), tdQuat);
+	WriteProfileString(_T("Typedefs"), _T("tdMatrix"), tdMatrix);
+	WriteProfileString(_T("Typedefs"), _T("tdPChar"), tdPChar);
+	WriteProfileString(_T("Typedefs"), _T("tdPWChar"), tdPWChar);
 
 	WriteProfileInt(_T("Colors"), _T("crBackground"), crBackground);
 	WriteProfileInt(_T("Colors"), _T("crSelect"), crSelect);
@@ -892,6 +894,7 @@ CNodeBase* CReClass2015App::CreateNewNode(NodeType Type)
 	if (Type == nt_int16) return new CNodeInt16;
 	if (Type == nt_int8) return new CNodeInt8;
 
+	if (Type == nt_uint64) return new CNodeQWORD;
 	if (Type == nt_uint32) return new CNodeDWORD;
 	if (Type == nt_uint16) return new CNodeWORD;
 	if (Type == nt_uint8) return new CNodeByte;
@@ -942,6 +945,7 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 	settings->SetAttribute("tdInt32", CW2A(tdInt32));
 	settings->SetAttribute("tdInt16", CW2A(tdInt16));
 	settings->SetAttribute("tdInt8", CW2A(tdInt8));
+	settings->SetAttribute("tdQWORD", CW2A(tdQWORD));
 	settings->SetAttribute("tdDWORD", CW2A(tdDWORD));
 	settings->SetAttribute("tdWORD", CW2A(tdWORD));
 	settings->SetAttribute("tdBYTE", CW2A(tdBYTE));
@@ -959,6 +963,7 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 	settings->SetAttribute("tdInt32", tdInt32);
 	settings->SetAttribute("tdInt16", tdInt16);
 	settings->SetAttribute("tdInt8",  tdInt8);
+	settings->SetAttribute("tdQWORD", tdQWORD);
 	settings->SetAttribute("tdDWORD", tdDWORD);
 	settings->SetAttribute("tdWORD",  tdWORD);
 	settings->SetAttribute("tdBYTE",  tdBYTE);
@@ -1117,7 +1122,6 @@ void CReClass2015App::SaveXML(TCHAR* FileName)
 			}
 		}
 	}
-
 
 	char szFilename[MAX_PATH] = { 0 };
 #ifdef UNICODE
@@ -1448,7 +1452,11 @@ void CReClass2015App::OnButtonGenerate()
 				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt8, pNode->Name, pNode->offset, pNode->Comment);
 				var.push_back(t);
 			}
-
+			if(Type == nt_uint64)
+			{
+				t.Format( _T( "\t%s %s; //0x%0.8X %s\r\n" ), tdQWORD, pNode->Name, pNode->offset, pNode->Comment );
+				var.push_back( t );
+			}
 			if (Type == nt_uint32)
 			{
 				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdDWORD, pNode->Name, pNode->offset, pNode->Comment);
