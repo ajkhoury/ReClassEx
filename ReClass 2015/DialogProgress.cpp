@@ -37,7 +37,6 @@ BOOL CDialogProgress::OnInitDialog()
 	
 	m_progressBar.SetStep(1);
 
-	// TODO:  Add extra initialization here
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -55,6 +54,11 @@ BOOL CDialogProgress::SetProgressPosition(int pos)
 void CDialogProgress::SetProgressText(CString txt)
 {
 	m_progressText.SetWindowTextW(txt.GetString());
+}
+
+int CDialogProgress::SetStep(int step)
+{
+	return m_progressBar.SetStep(step);
 }
 
 int CDialogProgress::Step()

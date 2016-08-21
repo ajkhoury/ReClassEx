@@ -132,7 +132,7 @@ void SymbolReader::ReadName(IDiaSymbol *pSymbol, CString& outString)
 
 	if (pSymbol->get_name(&bstrName) != S_OK) 
 	{
-		outString += _T("(none)");
+		//outString += _T("(none)");
 		//wprintf(L"(none)");
 		return;
 	}
@@ -232,6 +232,7 @@ void SymbolReader::ReadVariant(VARIANT var, CString& outString)
 		outString += _T(" ??");
 		//wprintf(L" ??");
 	}
+	break;
 
 	}
 }
@@ -240,16 +241,19 @@ void SymbolReader::ReadBound(IDiaSymbol *pSymbol, CString& outString)
 {
 	DWORD dwTag = 0;
 	DWORD dwKind;
+	HRESULT hr = S_OK;
 
-	if (pSymbol->get_symTag(&dwTag) != S_OK) 
+	hr = pSymbol->get_symTag(&dwTag);
+	if (FAILED(hr)) 
 	{
-		PrintOut(_T("[SymbolReader::ReadBound] ERROR - PrintBound() get_symTag"));
+		PrintOut(_T("[ReadBound] ERROR - get_symTag failed - HRESULT %08X"), hr);
 		return;
 	}
 
-	if (pSymbol->get_locationType(&dwKind) != S_OK) 
+	hr = pSymbol->get_locationType(&dwKind);
+	if (FAILED(hr))
 	{
-		PrintOut(_T("[SymbolReader::ReadBound] ERROR - PrintBound() get_locationType"));
+		PrintOut(_T("[ReadBound] ERROR - get_locationType - HRESULT %08X"), hr);
 		return;
 	}
 
@@ -282,7 +286,7 @@ void SymbolReader::ReadLocation(IDiaSymbol *pSymbol, CString& outString)
 	if (pSymbol->get_locationType(&dwLocType) != S_OK) 
 	{
 		// It must be a symbol in optimized code
-		PrintOut(_T("[SymbolReader::ReadLocation] Symbol in optimized code!"));
+		PrintOut(_T("[ReadLocation] Symbol in optimized code!"));
 		return;
 	}
 
@@ -391,7 +395,7 @@ void SymbolReader::ReadLocation(IDiaSymbol *pSymbol, CString& outString)
 		break;
 
 	default:
-		PrintOut(_T("Error - invalid location type: 0x%X"), dwLocType);
+		PrintOut(_T("Error - invalid location type: %d"), dwLocType);
 		break;
 	}
 }
@@ -428,7 +432,7 @@ void SymbolReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 
 	if (pSymbol->get_symTag(&dwTag) != S_OK)
 	{
-		PrintOut(_T("[SymbolReader::ReadType] ERROR - can't retrieve the symbol's SymTag"));
+		PrintOut(_T("[ReadType] ERROR - cannot retrieve the symbol's SymTag"));
 		return;
 	}
 
@@ -480,7 +484,7 @@ void SymbolReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 	case SymTagPointerType:
 		if (pSymbol->get_type(&pBaseType) != S_OK)
 		{
-			PrintOut(_T("[SymbolReader::ReadType] ERROR - SymTagPointerType get_type"));
+			PrintOut(_T("[ReadType] ERROR - SymTagPointerType get_type"));
 			if (bstrName != NULL)
 				SysFreeString(bstrName);
 			return;
@@ -720,7 +724,6 @@ void SymbolReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 		if (pSymbol->get_types(0, &count, NULL) == S_OK)
 		{
 			IDiaSymbol** rgpDiaSymbols = (IDiaSymbol**)_alloca(sizeof(IDiaSymbol *)* count);
-
 			if (pSymbol->get_types(count, &count, rgpDiaSymbols) == S_OK)
 			{
 				for (ULONG i = 0; i < count; i++)
@@ -734,7 +737,7 @@ void SymbolReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 		// print custom data
 		if ((pSymbol->get_dataBytes(cbData, &cbData, NULL) == S_OK) && (cbData != 0))
 		{
-			outString += _T(", Data: ");
+			outString += _T(" data: ");
 			//wprintf(L", Data: ");
 
 			BYTE *pbData = new BYTE[cbData];
@@ -743,7 +746,7 @@ void SymbolReader::ReadType(IDiaSymbol *pSymbol, CString& outString)
 			for (ULONG i = 0; i < cbData; i++)
 			{
 				CString append;
-				append.Format(_T("0x%02X "), pbData[i]);
+				append.Format(_T("%02X "), pbData[i]);
 				outString += append;
 				//wprintf(L"0x%02X ", pbData[i]);
 			}
@@ -770,9 +773,10 @@ void SymbolReader::ReadSymbolType(IDiaSymbol *pSymbol, CString& outString)
 	IDiaSymbol *pType;
 	if (pSymbol->get_type(&pType) == S_OK) 
 	{
-		//wprintf(L", Type: ");
+		//wprintf(L" Type: ");
 		ReadType(pType, outString);
 		pType->Release();
+		outString += _T(' ');
 	}
 }
 
@@ -782,16 +786,19 @@ void SymbolReader::ReadData(IDiaSymbol *pSymbol, CString& outString)
 {
 	ReadLocation(pSymbol, outString);
 
+	HRESULT hr = S_OK;
 	DWORD dwDataKind;
-	if (pSymbol->get_dataKind(&dwDataKind) != S_OK)
+
+	hr = pSymbol->get_dataKind(&dwDataKind);
+	if (FAILED(hr))
 	{
-		PrintOut(_T("[SymbolReader::ReadData] ERROR - PrintData() get_dataKind"));
+		PrintOut(_T("[ReadData] ERROR - get_dataKind - %08X"), hr);
 		return;
 	}
 
-	outString += _T(", ");
+	outString += _T(' ');
 	outString += SafeDRef(rgDataKind, dwDataKind);
-	outString += _T(", ");
+	outString += _T(' ');
 	//wprintf(L", %s", SafeDRef(rgDataKind, dwDataKind));
 	ReadSymbolType(pSymbol, outString);
 
@@ -813,14 +820,13 @@ void SymbolReader::ReadUndName(IDiaSymbol *pSymbol, CString& outString)
 		if (pSymbol->get_name(&bstrName) == S_OK) 
 		{
 			// Print the name of the symbol instead
-			outString += (bstrName[0] != _T('\0')) ? bstrName : _T("(none)");
+			outString += (bstrName[0] != _T('\0')) ? bstrName : _T("");
 			//wprintf(L"%s", (bstrName[0] != L'\0') ? bstrName : L"(none)");
-
 			SysFreeString(bstrName);
 		}
 		else 
 		{
-			outString += _T("(none)");
+			//outString += _T("(none)");
 			//wprintf(L"(none)");
 		}
 
@@ -840,8 +846,8 @@ void SymbolReader::ReadUndName(IDiaSymbol *pSymbol, CString& outString)
 //
 void SymbolReader::ReadUDT(IDiaSymbol *pSymbol, CString& outString)
 {
-	ReadName(pSymbol, outString);
 	ReadSymbolType(pSymbol, outString);
+	ReadName(pSymbol, outString);
 }
 
 ////////////////////////////////////////////////////////////
@@ -852,10 +858,12 @@ void SymbolReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 	IDiaSymbol *pType;
 	DWORD dwSymTag;
 	ULONGLONG ulLen;
-
-	if (pSymbol->get_symTag(&dwSymTag) != S_OK) 
+	HRESULT hr = S_OK;
+	
+	hr = pSymbol->get_symTag(&dwSymTag);
+	if (FAILED(hr))
 	{
-		PrintOut(_T("[SymbolReader::ReadSymbol] ERROR - PrintSymbol get_symTag() failed"));
+		PrintOut(_T("[ReadSymbol] ERROR - PrintSymbol get_symTag() failed - HRESULT %08X"), hr);
 		return;
 	}
 
@@ -872,19 +880,17 @@ void SymbolReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 		break;
 
 	case SymTagData:
-		//ReadData(pSymbol, outString);
+		ReadData(pSymbol, outString);
 		break;
 
 	case SymTagFunction:
 	case SymTagBlock:
 	{
 		//ReadLocation(pSymbol, outString);
-
-		if (dwSymTag != SymTagFunction &&
-			pSymbol->get_length(&ulLen) == S_OK)
+		if (dwSymTag != SymTagFunction && pSymbol->get_length(&ulLen) == S_OK)
 		{
 			CString append;
-			append.Format(_T(", len = %08X, "), (ULONG)ulLen);
+			append.Format(_T(" len(%08X) "), (ULONG)ulLen);
 			outString += append;
 			//wprintf(L", len = %08X, ", (ULONG)ulLen);
 		}
@@ -895,28 +901,26 @@ void SymbolReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 			if (pSymbol->get_callingConvention(&dwCall) == S_OK)
 			{
 				CString append;
-				append.Format(_T(", %s"), SafeDRef(rgCallingConvention, dwCall));
+				append.Format(_T(" %s"), SafeDRef(rgCallingConvention, dwCall));
 				outString += append;
 				//wprintf(L", %s", SafeDRef(rgCallingConvention, dwCall));
 			}
 		}
 
-		ReadUndName(pSymbol, outString);
+		ReadName(pSymbol, outString);
 
-		//IDiaEnumSymbols *pEnumChildren;
-		//if (SUCCEEDED(pSymbol->findChildren(SymTagNull, NULL, nsNone, &pEnumChildren)))
-		//{
-		//	IDiaSymbol *pChild;
-		//	ULONG celt = 0;
-		//
-		//	while (SUCCEEDED(pEnumChildren->Next(1, &pChild, &celt)) && (celt == 1))
-		//	{
-		//		ReadSymbol(pChild, outString);
-		//		pChild->Release();
-		//	}
-		//
-		//	pEnumChildren->Release();
-		//}
+		IDiaEnumSymbols *pEnumChildren;
+		if (SUCCEEDED(pSymbol->findChildren(SymTagNull, NULL, nsNone, &pEnumChildren)))
+		{
+			IDiaSymbol *pChild;
+			ULONG celt = 0;
+			while (SUCCEEDED(pEnumChildren->Next(1, &pChild, &celt)) && (celt == 1))
+			{
+				ReadSymbol(pChild, outString);
+				pChild->Release();
+			}	
+			pEnumChildren->Release();
+		}
 	}
 	return;
 
@@ -926,10 +930,10 @@ void SymbolReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 		break;
 
 	case SymTagLabel:
-		//ReadLocation(pSymbol, outString);
+		ReadLocation(pSymbol, outString);
 		//outString += _T(", ");
 		//wprintf(L", ");
-		//ReadName(pSymbol, outString);
+		ReadName(pSymbol, outString);
 		break;
 
 	case SymTagEnum:
@@ -974,15 +978,16 @@ void SymbolReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 		break;
 
 	default:
+		ReadSymbolType(pSymbol, outString);
 		ReadName(pSymbol, outString);
 
-		if (pSymbol->get_type(&pType) == S_OK)
-		{
-			outString += _T(" has type ");
-			//wprintf(L" has type ");
-			ReadType(pType, outString);
-			pType->Release();
-		}
+		//if (pSymbol->get_type(&pType) == S_OK)
+		//{
+		//	outString += _T(" type ");
+		//	//wprintf(L" has type ");
+		//	ReadType(pType, outString);
+		//	pType->Release();
+		//}
 	}
 
 	if ((dwSymTag == SymTagUDT) || (dwSymTag == SymTagAnnotation))

@@ -19,6 +19,7 @@ public:
 	void SetProgressRange(int range);
 	BOOL SetProgressPosition(int pos);
 	void SetProgressText(CString txt);
+	int SetStep(int step);
 	int Step();
 
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
