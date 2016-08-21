@@ -70,6 +70,9 @@ bool SymbolReader::LoadSymbolData(const TCHAR* pszSearchPath)
 			case E_PDB_INVALID_AGE:
 				errMsg = _T("Invalid PDB age");
 				break;
+			case E_PDB_NO_DEBUG_INFO:
+				errMsg = _T("No debug info found in PDB");
+				break;
 			default:
 				_com_error err(hr);
 				errMsg = err.ErrorMessage();
