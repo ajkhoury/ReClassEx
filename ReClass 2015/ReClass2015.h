@@ -5,6 +5,7 @@
 #endif
 
 #include "resource.h"       // main symbols
+
 // Console
 #include "DialogConsole.h"
 // Symbols
