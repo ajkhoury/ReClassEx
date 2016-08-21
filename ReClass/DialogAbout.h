@@ -17,6 +17,7 @@ protected: // DDX/DDV support
 	virtual BOOL OnInitDialog()
 	{
 		CDialogEx::OnInitDialog();
+
 		CString cstring_temp;
 		cstring_temp.Format(_T("Build Date: %s - %s"), _T(__DATE__), _T(__TIME__));
 		SetDlgItemText(IDC_ABOUT_BUILD_DATE, cstring_temp);

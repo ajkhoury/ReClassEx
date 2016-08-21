@@ -179,9 +179,6 @@
     <ClInclude Include="SDK.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ReClass2015.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="bits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -221,6 +218,9 @@
     <ClInclude Include="DialogProgress.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ReClass2016.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -245,9 +245,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DialogClasses.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ReClass2015.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="tinyxml2.cpp">
@@ -277,11 +274,9 @@
     <ClCompile Include="DialogProgress.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="ReClass2015.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
+    <ClCompile Include="ReClass2016.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\menu_modify.bmp">
@@ -305,5 +300,10 @@
     <Image Include="res\file_large.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ReClass2016.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

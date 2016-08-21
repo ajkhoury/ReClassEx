@@ -11,10 +11,10 @@
 // Symbols
 #include "Symbols.h"
 
-class CReClass2015App : public CWinAppEx
+class CReClass2016App : public CWinAppEx
 {
 public:
-	CReClass2015App();
+	CReClass2016App();
 
 //App Globals
 	CString Header;

@@ -41,7 +41,7 @@
 #include <map>
 
 //TODO: Make this easier to maintain
-#define RECLASS_VERSION _T("1.0.3.0")
+#define RECLASS_VERSION _T("1.1.0.0")
 
 //
 // BeaEngine disassembler 
@@ -433,8 +433,8 @@ extern std::vector<RECLASS_PLUGINS> LoadedPlugins;
 //
 // Main Application
 //
-#include "ReClass2015.h"
-extern CReClass2015App theApp;
+#include "ReClass2016.h"
+extern CReClass2016App theApp;
 
 
 //

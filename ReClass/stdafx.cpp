@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "ReClass2015.h"
 #include "MainFrm.h"
 
 //Globals

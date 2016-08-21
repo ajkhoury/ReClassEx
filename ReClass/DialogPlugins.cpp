@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "DialogPlugins.h"
-#include "ReClass2015.h"
+#include "ReClass2016.h"
 #include "afxdialogex.h"
 
 // CDialogPlugins dialog
