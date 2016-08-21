@@ -912,18 +912,19 @@ void SymbolReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 
 		ReadName(pSymbol, outString);
 
-		IDiaEnumSymbols *pEnumChildren;
-		if (SUCCEEDED(pSymbol->findChildren(SymTagNull, NULL, nsNone, &pEnumChildren)))
-		{
-			IDiaSymbol *pChild;
-			ULONG celt = 0;
-			while (SUCCEEDED(pEnumChildren->Next(1, &pChild, &celt)) && (celt == 1))
-			{
-				ReadSymbol(pChild, outString);
-				pChild->Release();
-			}	
-			pEnumChildren->Release();
-		}
+		// Causes buffer overflow on CString object sometimes :(
+		//IDiaEnumSymbols *pEnumChildren;
+		//if (SUCCEEDED(pSymbol->findChildren(SymTagNull, NULL, nsNone, &pEnumChildren)))
+		//{
+		//	IDiaSymbol *pChild;
+		//	ULONG celt = 0;
+		//	while (SUCCEEDED(pEnumChildren->Next(1, &pChild, &celt)) && (celt == 1))
+		//	{
+		//		ReadSymbol(pChild, outString);
+		//		pChild->Release();
+		//	}	
+		//	pEnumChildren->Release();
+		//}
 	}
 	return;
 
