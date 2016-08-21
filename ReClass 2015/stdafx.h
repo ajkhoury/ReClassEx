@@ -97,6 +97,10 @@ using namespace tinyxml2;
 // Utilities
 //
 #include "Utils.h"
+
+//
+// Symbols
+//
 #include "Symbols.h"
 
 //
@@ -428,10 +432,6 @@ extern std::vector<RECLASS_PLUGINS> LoadedPlugins;
 #include "ReClass2015.h"
 extern CReClass2015App theApp;
 
-//
-// Symbols
-//
-#include "Symbols.h"
 
 //
 // Global preprocessor directive for printing to the Console

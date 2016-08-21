@@ -227,11 +227,13 @@ BOOL CReClass2015App::InitInstance()
 		Console->ShowWindow(SW_HIDE);
 	
 	g_SymLoader = new (std::nothrow) Symbols;
-
-	if(g_SymLoader != nullptr) {
+	if(g_SymLoader != nullptr) 
+	{
 		PrintOut(_T("Symbol resolution enabled"));
 		gbSymbolResolution = true;
-	} else {
+	} 
+	else 
+	{
 		PrintOut(_T("Failed to init symbol loader, disabling globaly"));
 		gbSymbolResolution = false;
 	}
