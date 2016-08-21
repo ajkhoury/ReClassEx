@@ -1,6 +1,6 @@
 # Reclass-2016
 
-![Alt text](http://i.imgur.com/ZAmQAHN.png "ReClass")
+![Alt text](https://i.gyazo.com/485c87c45a4eae9af08d5412c5844be3.png "ReClass")
 
 Cleaned up the code a bit and added some new features. Also got rid of a ton of bugs still crawling around.
 
