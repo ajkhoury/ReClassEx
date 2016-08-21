@@ -184,30 +184,33 @@ BOOL CReClass2016App::InitInstance()
 	m_hMDIMenu = ::LoadMenu(hInst, MAKEINTRESOURCE(IDR_ReClass2016TYPE));
 	m_hMDIAccel = ::LoadAccelerators(hInst, MAKEINTRESOURCE(IDR_ReClass2016TYPE));
 
-	HICON icon;
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_OPEN));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_CLOSED));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_CLASS));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_METHOD));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_VTABLE));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_DELETE));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_ADD));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_RANDOM));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_DROPARROW));	Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_POINTER));	Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_ARRAY));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_CUSTOM));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_ENUM));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_FLOAT));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_LEFT));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_RIGHT));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_MATRIX));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_INTEGER));	Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_TEXT));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_UNSIGNED));	Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_VECTOR));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_CHANGE));		Icons.push_back(icon);
-	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_CAMERA));		Icons.push_back(icon);
+#define PushIcon(id) Icons.push_back(::LoadIcon(hInst, MAKEINTRESOURCE(id)));
+	
+	PushIcon(IDI_ICON_OPEN);
+	PushIcon(IDI_ICON_CLOSED);
+	PushIcon(IDI_ICON_CLASS);
+	PushIcon(IDI_ICON_METHOD);
+	PushIcon(IDI_ICON_VTABLE);
+	PushIcon(IDI_ICON_DELETE);
+	PushIcon(IDI_ICON_ADD);
+	PushIcon(IDI_ICON_RANDOM);
+	PushIcon(IDI_ICON_DROPARROW);
+	PushIcon(IDI_ICON_POINTER);
+	PushIcon(IDI_ICON_ARRAY);
+	PushIcon(IDI_ICON_CUSTOM);
+	PushIcon(IDI_ICON_ENUM);
+	PushIcon(IDI_ICON_FLOAT);
+	PushIcon(IDI_ICON_LEFT);
+	PushIcon(IDI_ICON_RIGHT);
+	PushIcon(IDI_ICON_MATRIX);
+	PushIcon(IDI_ICON_INTEGER);
+	PushIcon(IDI_ICON_TEXT);
+	PushIcon(IDI_ICON_UNSIGNED);
+	PushIcon(IDI_ICON_VECTOR);
+	PushIcon(IDI_ICON_CHANGE);
+	PushIcon(IDI_ICON_CAMERA);
+
+#undef PushIcon
 
 	ResizeMemoryFont(g_FontWidth, g_FontHeight);
 
@@ -234,7 +237,7 @@ BOOL CReClass2016App::InitInstance()
 	} 
 	else 
 	{
-		PrintOut(_T("Failed to init symbol loader, disabling globaly"));
+		PrintOut(_T("Failed to init symbol loader, disabling globally"));
 		gbSymbolResolution = false;
 	}
 
