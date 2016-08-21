@@ -306,6 +306,8 @@
     <None Include="res\ribbon.mfcribbon-ms">
       <SubType>Designer</SubType>
     </None>
+    <None Include="res\symsrv32.dll" />
+    <None Include="res\symsrv64.dll" />
     <None Include="res\writelarge.bmp" />
     <None Include="res\writesmall.bmp" />
   </ItemGroup>

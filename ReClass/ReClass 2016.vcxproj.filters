@@ -138,6 +138,8 @@
     <None Include="..\Images\reclass.png">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\symsrv32.dll" />
+    <None Include="res\symsrv64.dll" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
