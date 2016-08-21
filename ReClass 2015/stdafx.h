@@ -92,7 +92,6 @@ using namespace tinyxml2;
 // Not even needed until importing is done
 #include "..\\SQLite\\CppSQLite3.h"
 
-
 //
 // Utilities
 //
@@ -112,16 +111,6 @@ extern size_t g_AttachedProcessAddress;
 extern DWORD  g_AttachedProcessSize;
 extern CString g_ProcessName;
 extern Symbols* g_SymLoader;
-
-namespace ntdll
-{
-	extern PVOID Base;
-	extern tNtQuerySystemInformation NtQuerySystemInformation;
-	extern tNtQueryInformationProcess NtQueryInformationProcess;
-	extern tRtlGetVersion RtlGetVersion;
-	extern tRtlGetNativeSystemInformation RtlGetNativeSystemInformation;
-	extern tNtCreateThreadEx NtCreateThreadEx;
-}
 
 extern std::vector<struct MemMapInfo> MemMap;
 extern std::vector<struct MemMapInfo> MemMapCode;
@@ -193,6 +182,21 @@ extern CString tdQuat;
 extern CString tdMatrix;
 extern CString tdPChar;
 extern CString tdPWChar;
+
+//
+// NTDLL
+//
+namespace ntdll
+{
+	extern PVOID Base;
+	extern tNtQuerySystemInformation NtQuerySystemInformation;
+	extern tNtQueryInformationProcess NtQueryInformationProcess;
+	extern tRtlGetVersion RtlGetVersion;
+	extern tRtlGetNativeSystemInformation RtlGetNativeSystemInformation;
+	extern tNtCreateThreadEx NtCreateThreadEx;
+}
+
+
 
 //
 // Hotspot, Node, & Item IDs
