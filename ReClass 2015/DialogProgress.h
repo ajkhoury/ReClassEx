@@ -16,10 +16,8 @@ public:
 // Dialog Data
 	enum { IDD = IDD_DIALOG_PROGRESS };
 
-	void SetProgressRange(int range);
-	BOOL SetProgressPosition(int pos);
-	void SetProgressText(CString txt);
-	int Step();
+	CProgressCtrl& Bar( ) { return m_progressBar; }
+	void SetProgressText(const CString& str) { m_progressText.SetWindowText(str); }
 
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	virtual BOOL OnInitDialog();

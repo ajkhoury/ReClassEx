@@ -139,12 +139,15 @@ void CDialogProcSelect::DoDataExchange(CDataExchange* pDX)
 {
 	DDX_Control(pDX, IDC_PROCESS_LIST, m_ProcessList);
 	DDX_Control(pDX, IDC_FILTER_PROCESS_CHECK, m_FilterCheck);
+	DDX_Control(pDX, IDC_CHECK_LOADSYM, m_LoadAllSymbols);
 	CDialogEx::DoDataExchange(pDX);
 }
 
 BOOL CDialogProcSelect::OnInitDialog()
 {
 	CDialogEx::OnInitDialog( );
+	if(!gbSymbolResolution)
+		m_LoadAllSymbols.EnableWindow(FALSE);
 	GetWindowRect(&m_OriginalSize);
 	ScreenToClient(&m_OriginalSize);
 	m_ProcessList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);
@@ -153,7 +156,6 @@ BOOL CDialogProcSelect::OnInitDialog()
 	m_FilterCheck.SetCheck( gbFilterProcesses ? BST_CHECKED : BST_UNCHECKED );
 	CenterWindow();
 	ListRunningProcs();
-
 	return TRUE;
 }
 
@@ -221,36 +223,6 @@ void CDialogProcSelect::OnDblClkListControl(NMHDR* pNMHDR, LRESULT* pResult)
 	OnAttachButton();
 }
 
-DWORD WINAPI LoadSymbolsThread(LPVOID lpThreadParameter)
-{
-	CDialogProgress progress;
-	progress.Create(CDialogProgress::IDD, theApp.m_pMainWnd);
-	progress.ShowWindow(SW_SHOW);
-	
-	size_t numOfModules = MemMapModule.size();
-	progress.SetProgressRange((int)numOfModules);
-
-	for (int i = 0; i < numOfModules; i++)
-	{
-		MemMapInfo mod = MemMapModule[i];
-	
-		progress.Step();
-
-		CString progressText;
-		progressText.Format(_T("[%d/%zd] %s"), i + 1, numOfModules, mod.Name.GetString());
-		PrintOut(_T("%s"), progressText.GetString());
-
-		progress.SetProgressText(progressText);
-	
-		if (!sym.LoadSymbolsForModule(mod.Path, mod.Start, mod.Size)) {
-			PrintOut(_T("Failed to load symbols for module %ls!"), mod.Name.GetString());
-		}
-	}
-	progress.EndDialog(0);
-
-	return TRUE;
-}
-
 void CDialogProcSelect::OnAttachButton()
 {
 	int selected_index = m_ProcessList.GetSelectionMark();
@@ -269,19 +241,36 @@ void CDialogProcSelect::OnAttachButton()
 				CString message{ };
 				message.Format(_T("Failed to attach to process \"%s\": %s"), proc_info_found->Procname.GetBuffer(), last_error.c_str());
 				MessageBox(message, _T("ReClass 2015"), MB_OK | MB_ICONERROR);
-			}
-			else 
-			{
+			} else {
 				CloseHandle(g_hProcess); //Stops leaking handles
 				g_hProcess = process_open;
 				g_ProcessID = proc_info_found->ProcessId;
 				g_ProcessName = proc_info_found->Procname;
 				UpdateMemoryMap(); 
+				
+				if (gbSymbolResolution && m_LoadAllSymbols.GetCheck() == BST_CHECKED)
+				{
+					int numOfModules = (int)MemMapModule.size();
 
-				if (sym.Init()) {
-					CreateThread(NULL, 0, LoadSymbolsThread, NULL, 0, 0);
+					CDialogProgress progress;
+					progress.Create(CDialogProgress::IDD, theApp.m_pMainWnd);
+					progress.ShowWindow(SW_SHOW);
+					progress.Bar().SetRange32(0, numOfModules);
+					progress.Bar().SetStep(1);
+
+					for (int i = 0; i < numOfModules; i++)
+					{
+						MemMapInfo mod = MemMapModule[i];
+
+						CString progressText;
+						progressText.Format(_T("[%d/%d] %s"), i + 1, numOfModules, mod.Name.GetString());
+						progress.SetProgressText(progressText);
+						progress.Bar().StepIt();
+
+						sym.LoadSymbolsForModule(mod.Path, mod.Start, mod.Size);
+					}
+					progress.EndDialog(0);
 				}
-
 				OnClose();
 			}
 		}

@@ -57,6 +57,7 @@ bool gbOffset = true;
 bool gbText = true;
 bool gbRTTI = true;
 bool gbResizingFont = true;
+bool gbSymbolResolution = true;
 
 bool gbFloat = true;
 bool gbInt = true;

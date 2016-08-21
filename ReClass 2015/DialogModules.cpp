@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ReClass2015.h"
 #include "DialogModules.h"
+#include "DialogProgress.h"
 
 #include "MainFrm.h"
 #include "ChildFrm.h"
@@ -16,12 +17,10 @@ CDialogModules::CDialogModules(CWnd* pParent)
 	m_bSortAscendingStart(false),
 	m_bSortAscendingEnd(false),
 	m_bSortAscendingSize(false)
-{
-}
+{}
 
 CDialogModules::~CDialogModules()
-{
-}
+{}
 
 void CDialogModules::DoDataExchange(CDataExchange* pDX)
 {
@@ -32,18 +31,22 @@ void CDialogModules::DoDataExchange(CDataExchange* pDX)
 
 void CDialogModules::OnSize(UINT nType, int cx, int cy)
 {
-	CDialogEx::OnSize( nType, cx, cy );
+	CDialogEx::OnSize(nType, cx, cy);
 }
 
-void CDialogModules::OnGetMinMaxInfo( MINMAXINFO *lpinfo )
+void CDialogModules::OnGetMinMaxInfo(MINMAXINFO *lpinfo)
 {
-	if ( !m_OriginalSize.IsRectNull( ) )
+	if (!m_OriginalSize.IsRectNull())
 	{
-		lpinfo->ptMinTrackSize.x = m_OriginalSize.Width( );
-		lpinfo->ptMinTrackSize.y = m_OriginalSize.Height( );
+		lpinfo->ptMinTrackSize.x = m_OriginalSize.Width();
+		lpinfo->ptMinTrackSize.y = m_OriginalSize.Height();
 	}
+	CDialogEx::OnGetMinMaxInfo(lpinfo);
+}
 
-	CDialogEx::OnGetMinMaxInfo( lpinfo );
+void CDialogModules::OnContextMenu(CWnd* pWnd, CPoint pos)
+{
+	CDialogEx::OnContextMenu(pWnd, pos);
 }
 
 BEGIN_MESSAGE_MAP(CDialogModules, CDialogEx)
@@ -53,7 +56,6 @@ BEGIN_MESSAGE_MAP(CDialogModules, CDialogEx)
 	ON_WM_GETMINMAXINFO()
 	ON_WM_SIZE()
 END_MESSAGE_MAP()
-
 
 void CDialogModules::BuildList()
 {
@@ -65,10 +67,8 @@ void CDialogModules::BuildList()
 		SHGetFileInfo(MemMapModule[i].Path, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
 		m_ModuleIcons.Add(sfi.hIcon);
 
-		CString name = moduleInfo.Name;
-
 		CString uppercase_name = CString(moduleInfo.Name).MakeUpper();
-		if ( m_Filter.GetLength( ) != 0 && uppercase_name.Find( m_Filter.MakeUpper( ) ) == -1 )
+		if (m_Filter.GetLength() != 0 && uppercase_name.Find(m_Filter.MakeUpper()) == -1)
 			continue;
 
 		TCHAR strStart[64];
@@ -78,7 +78,7 @@ void CDialogModules::BuildList()
 		TCHAR strSize[64];
 		_stprintf_s(strSize, _T("0x%X"), moduleInfo.Size);
 
-		AddData(i, (LPTSTR)name.GetString(), strStart, strEnd, strSize, static_cast<LPARAM>(moduleInfo.Start));
+		AddData(i, moduleInfo.Name.GetBuffer(), strStart, strEnd, strSize, static_cast<LPARAM>(moduleInfo.Start));
 	}
 }
 
@@ -89,8 +89,8 @@ BOOL CDialogModules::OnInitDialog()
 
 	CDialogEx::OnInitDialog();
 
-	GetWindowRect( &m_OriginalSize );
-	ScreenToClient( &m_OriginalSize );
+	GetWindowRect(&m_OriginalSize);
+	ScreenToClient(&m_OriginalSize);
 
 	m_ModuleIcons.Create(15, 15, ILC_COLOR32, 1, 1);
 	m_ModuleIcons.SetBkColor(RGB(255, 255, 255));
@@ -118,7 +118,7 @@ inline int CDialogModules::FindModuleByName(const TCHAR* szName)
 			return id;
 	}
 	return -1;
-};
+}
 
 inline CNodeClass* CDialogModules::GetClassByName(const TCHAR* szClassName)
 {
@@ -136,21 +136,25 @@ void CDialogModules::SetSelected()
 	while ( pos )
 	{
 		int nItem = m_ModuleList.GetNextSelectedItem( pos );
-
 		nItem = FindModuleByName( m_ModuleList.GetItemText( nItem, 0 ) );
 
-		int extension_size = MemMapModule[ nItem ].Name.ReverseFind( '.' );
+		MemMapInfo mod = MemMapModule[ nItem ];
+
+		if (gbSymbolResolution)
+			sym.LoadSymbolsForModule( mod.Path, mod.Start, mod.Size );
+
+		int extension_size = mod.Name.ReverseFind( '.' );
 		if ( extension_size == -1 )
 			extension_size = 0;
-		else extension_size = MemMapModule[ nItem ].Name.GetLength( ) - extension_size;
+		else extension_size = mod.Name.GetLength( ) - extension_size;
 
-		CString ClassName = MemMapModule[ nItem ].Name.Left( MemMapModule[ nItem ].Name.GetLength( ) - extension_size ) + _T( "_base" );
+		CString ClassName = mod.Name.Left( mod.Name.GetLength( ) - extension_size ) + _T( "_base" );
 
 		CNodeClass* pNewClass = GetClassByName( ClassName );
 
 		if ( pNewClass != nullptr )
 		{
-			CMainFrame*  pFrame = static_cast<CMainFrame*>( AfxGetApp( )->m_pMainWnd );
+			CMainFrame* pFrame = static_cast<CMainFrame*>( AfxGetApp( )->m_pMainWnd );
 			CChildFrame* pChild = pNewClass->pChildWindow;
 
 			// Check if its a window first to dodge the assertion in IsWindowVisible
@@ -168,16 +172,16 @@ void CDialogModules::SetSelected()
 		}
 		else
 		{
-			CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp( )->m_pMainWnd);
+			CMainFrame* pFrame = static_cast<CMainFrame*>(AfxGetApp( )->m_pMainWnd);
 			CChildFrame* pChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS( CChildFrame ), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel ));
 
 			pNewClass = new CNodeClass;
 			pNewClass->Name = ClassName;
 
 			TCHAR strStart[ 64 ];
-			_stprintf( strStart, _T( "%IX" ), MemMapModule[ nItem ].Start );
+			_stprintf( strStart, _T( "%IX" ), mod.Start );
 			pNewClass->strOffset = strStart;
-			pNewClass->offset = MemMapModule[ nItem ].Start;
+			pNewClass->offset = mod.Start;
 			pNewClass->pChildWindow = pChild;
 			pNewClass->idx = (int) theApp.Classes.size( );
 
@@ -231,7 +235,6 @@ int CALLBACK CDialogModules::CompareFunction(LPARAM lParam1, LPARAM lParam2, LPA
 			return _tcsicmp(strModuleName1.GetBuffer(), strModuleName2.GetBuffer());
 		}
 	}
-
 	return 0;
 }
 
@@ -289,7 +292,6 @@ int CDialogModules::AddData(int Index, LPTSTR ModuleName, LPTSTR StartAddress, L
 	LVITEM lvi = { 0 };
 
 	lvi.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM;
-
 	lvi.pszText = ModuleName;
 	lvi.cchTextMax = static_cast<int>(_tcslen(ModuleName)) + 1;
 	lvi.iImage = Index;

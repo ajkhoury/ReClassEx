@@ -157,6 +157,7 @@ extern bool gbOffset;
 extern bool gbText;
 extern bool gbRTTI;
 extern bool gbResizingFont;
+extern bool gbSymbolResolution;
 
 extern bool gbFloat;
 extern bool gbInt;
