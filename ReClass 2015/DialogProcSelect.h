@@ -54,6 +54,8 @@ private:
 	//Controls
 	CListCtrl m_ProcessList;
 	CButton m_FilterCheck;
+	CButton m_LoadAllSymbols;
+
 	bool m_bSortAscendingName;
 	bool m_bSortAscendingId;
 

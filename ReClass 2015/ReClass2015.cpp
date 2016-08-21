@@ -174,6 +174,7 @@ BOOL CReClass2015App::InitInstance()
 
 	CMDIFrameWnd* pFrame = new CMainFrame();
 	m_pMainWnd = pFrame;
+	
 	if (!pFrame)
 		return FALSE;
 	if (!pFrame->LoadFrame(IDR_MAINFRAME))
@@ -208,7 +209,7 @@ BOOL CReClass2015App::InitInstance()
 	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_CHANGE));		Icons.push_back(icon);
 	icon = ::LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON_CAMERA));		Icons.push_back(icon);
 
-	ResizeMemoryFont( g_FontWidth, g_FontHeight );
+	ResizeMemoryFont(g_FontWidth, g_FontHeight);
 
 	g_hProcess = NULL;
 	g_ProcessID = NULL;
@@ -221,12 +222,22 @@ BOOL CReClass2015App::InitInstance()
 		return FALSE;
 	}
 	
-	pFrame->ShowWindow(m_nCmdShow);
-	pFrame->UpdateWindow();
-
-	Console = new CDialogConsole( _T( "Console" ) );
+	Console = new CDialogConsole(_T("Console"));
 	if (Console->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
 		Console->ShowWindow(SW_HIDE);
+	
+	g_SymLoader = new (std::nothrow) Symbols;
+
+	if(g_SymLoader != nullptr) {
+		PrintOut(_T("Symbol resolution enabled"));
+		gbSymbolResolution = true;
+	} else {
+		PrintOut(_T("Failed to init symbol loader, disabling globaly"));
+		gbSymbolResolution = false;
+	}
+
+	pFrame->ShowWindow(m_nCmdShow);
+	pFrame->UpdateWindow();
 
 	LoadPlugins();
 
@@ -246,6 +257,9 @@ int CReClass2015App::ExitInstance()
 
 	if (Console) 
 		delete Console;
+
+	if(g_SymLoader)
+		delete g_SymLoader;
 
 	AfxOleTerm(FALSE);
 

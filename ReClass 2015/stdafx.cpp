@@ -8,6 +8,7 @@ DWORD g_ProcessID = NULL;
 size_t g_AttachedProcessAddress = NULL;
 DWORD g_AttachedProcessSize = NULL;
 CString g_ProcessName;
+Symbols* g_SymLoader = nullptr;
 
 namespace ntdll
 {
@@ -57,6 +58,7 @@ bool gbOffset = true;
 bool gbText = true;
 bool gbRTTI = true;
 bool gbResizingFont = true;
+bool gbSymbolResolution = true;
 
 bool gbFloat = true;
 bool gbInt = true;

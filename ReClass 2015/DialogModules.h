@@ -21,6 +21,7 @@ protected:
 	afx_msg void OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnDblClkListControl(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnGetMinMaxInfo(MINMAXINFO *lpinfo);
+	afx_msg void OnContextMenu(CWnd* pWnd, CPoint pos);
 
 private:
 	enum

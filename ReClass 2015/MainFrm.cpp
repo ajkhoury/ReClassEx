@@ -1,3 +1,5 @@
+#include <afxtabctrl.h>
+
 #include "stdafx.h"
 #include "ReClass2015.h"
 #include "Classes.h"
@@ -81,7 +83,6 @@ CMainFrame::~CMainFrame()
 
 }
 
-#include <afxtabctrl.h>
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CMDIFrameWndEx::OnCreate(lpCreateStruct) == -1)
@@ -92,13 +93,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// Create tabs
 	CMDITabInfo mdiTabParams;
-	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D; // other styles available...
+	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D_VS2005;
 	mdiTabParams.m_tabLocation = CMFCTabCtrl::LOCATION_TOP;
 	mdiTabParams.m_nTabBorderSize = 4;
-	mdiTabParams.m_bActiveTabCloseButton = TRUE;      // set to FALSE to place close button at left of tab area
-	mdiTabParams.m_bTabIcons = TRUE;    // set to TRUE to enable document icons on MDI taba
-	mdiTabParams.m_bAutoColor = TRUE;    // set to FALSE to disable auto-coloring of MDI tabs
-	mdiTabParams.m_bDocumentMenu = TRUE; // enable the document menu at the left edge of the tab area
+	mdiTabParams.m_bActiveTabCloseButton = TRUE;
+	mdiTabParams.m_bTabIcons = TRUE;
+	mdiTabParams.m_bAutoColor = TRUE;
+	mdiTabParams.m_bDocumentMenu = TRUE;
 	mdiTabParams.m_bFlatFrame = FALSE;
 	EnableMDITabbedGroups(TRUE, mdiTabParams);
 
