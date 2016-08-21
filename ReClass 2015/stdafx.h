@@ -97,7 +97,7 @@ using namespace tinyxml2;
 // Utilities
 //
 #include "Utils.h"
-
+#include "Symbols.h"
 
 //
 // Globals
@@ -107,6 +107,7 @@ extern DWORD  g_ProcessID;
 extern size_t g_AttachedProcessAddress;
 extern DWORD  g_AttachedProcessSize;
 extern CString g_ProcessName;
+extern Symbols* g_SymLoader;
 
 namespace ntdll
 {

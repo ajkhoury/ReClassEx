@@ -529,12 +529,12 @@ public:
 							x = ResolveRTTI(uintVal, x, View, y);
 
 						// Print out info from PDB at address
-						if (sym.IsInitialized())
+						if (gbSymbolResolution)
 						{
 							CString moduleName = GetModuleName(uintVal);
 							if (!moduleName.IsEmpty())
 							{
-								SymbolReader* symbols = sym.GetSymbolsForModule(moduleName);
+								SymbolReader* symbols = g_SymLoader->GetSymbolsForModule(moduleName);
 								if (symbols)
 								{
 									CString nameOut;
@@ -614,12 +614,12 @@ public:
 							x = ResolveRTTI(uintVal, x, View, y);
 
 						// Print out info from PDB at address
-						if (sym.IsInitialized())
+						if (gbSymbolResolution)
 						{
 							CString moduleName = GetModuleName(uintVal);
 							if (!moduleName.IsEmpty())
 							{
-								SymbolReader* symbols = sym.GetSymbolsForModule(moduleName);
+								SymbolReader* symbols = g_SymLoader->GetSymbolsForModule(moduleName);
 								if (symbols)
 								{
 									CString nameOut;

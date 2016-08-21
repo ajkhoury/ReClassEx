@@ -98,10 +98,6 @@ BOOL CReClass2015App::InitInstance()
 
 	CWinAppEx::InitInstance();
 
-	Console = new CDialogConsole(_T("Console"));
-	if (Console->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
-		Console->ShowWindow(SW_HIDE);
-
 	ntdll::Base = (PVOID)Utils::GetLocalModuleHandle("ntdll.dll");
 	ntdll::NtQuerySystemInformation = reinterpret_cast<tNtQuerySystemInformation>(Utils::GetLocalProcAddress((HMODULE)ntdll::Base, "NtQuerySystemInformation"));
 	ntdll::NtQueryInformationProcess = reinterpret_cast<tNtQueryInformationProcess>(Utils::GetLocalProcAddress((HMODULE)ntdll::Base, "NtQueryInformationProcess"));
@@ -125,14 +121,6 @@ BOOL CReClass2015App::InitInstance()
 	CMFCToolTipInfo ttParams;
 	ttParams.m_bVislManagerTheme = TRUE;
 	theApp.GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL, RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
-
-	if(sym.Init()) {
-		PrintOut(_T("Symbol resolution enabled"));
-		gbSymbolResolution = true;
-	} else {
-		PrintOut(_T("Failed to init symbol loader, disabling globaly"));
-		gbSymbolResolution = false;
-	}
 
 	//Typedefs
 	tdHex = GetProfileString( _T( "Typedefs" ), _T( "tdHex" ), _T( "char" ) );
@@ -234,6 +222,20 @@ BOOL CReClass2015App::InitInstance()
 		return FALSE;
 	}
 	
+	Console = new CDialogConsole(_T("Console"));
+	if (Console->Create(CDialogConsole::IDD, CWnd::GetDesktopWindow()))
+		Console->ShowWindow(SW_HIDE);
+	
+	g_SymLoader = new (std::nothrow) Symbols;
+
+	if(g_SymLoader != nullptr) {
+		PrintOut(_T("Symbol resolution enabled"));
+		gbSymbolResolution = true;
+	} else {
+		PrintOut(_T("Failed to init symbol loader, disabling globaly"));
+		gbSymbolResolution = false;
+	}
+
 	pFrame->ShowWindow(m_nCmdShow);
 	pFrame->UpdateWindow();
 
@@ -253,10 +255,11 @@ int CReClass2015App::ExitInstance()
 	if (m_hMDIAccel != NULL)
 		FreeResource(m_hMDIAccel);
 
-	sym.Cleanup();
-
 	if (Console) 
 		delete Console;
+
+	if(g_SymLoader)
+		delete g_SymLoader;
 
 	AfxOleTerm(FALSE);
 

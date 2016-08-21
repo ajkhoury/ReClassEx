@@ -25,5 +25,3 @@ private:
 
 	CString m_strSearchPath;
 };
-
-extern Symbols sym;

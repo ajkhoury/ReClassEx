@@ -141,7 +141,7 @@ void CDialogModules::SetSelected()
 		MemMapInfo mod = MemMapModule[ nItem ];
 
 		if ( gbSymbolResolution )
-			sym.LoadSymbolsForModule( mod.Path, mod.Start, mod.Size );
+			g_SymLoader->LoadSymbolsForModule( mod.Path, mod.Start, mod.Size );
 
 		int extension_size = mod.Name.ReverseFind( '.' );
 		if ( extension_size == -1 )

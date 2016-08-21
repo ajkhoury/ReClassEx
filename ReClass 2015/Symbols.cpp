@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Symbols.h"
 
-Symbols sym;
-
 Symbols::Symbols() :
 	m_bInitialized(false)
 {
@@ -12,7 +10,7 @@ Symbols::Symbols() :
 	HKEY hKey = NULL;
 	for (int i = 14; i >= 8; i--)
 	{
-		CString regPath = "Software\\Microsoft\\VisualStudio\\";
+		CString regPath = _T("Software\\Microsoft\\VisualStudio\\");
 		wchar_t version[4];
 		_itow_s(i, version, 10);
 
@@ -43,15 +41,18 @@ Symbols::Symbols() :
 	if (!searchPath.IsEmpty())
 	{
 		m_strSearchPath.Format(_T("srv*%s*http://msdl.microsoft.com/download/symbols"), searchPath.GetString());
+		PrintOut(_T("Symbol server path found from Visual Studio config: %s"), searchPath.GetString());
 	}
 	else
 	{
 		TCHAR szWindowsDir[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, szWindowsDir);
 		m_strSearchPath.Format(_T("srv*%s\\symbols*http://msdl.microsoft.com/download/symbols"), szWindowsDir);
+		PrintOut(_T("Symbol server path not found, using windows dir: %s"), szWindowsDir);
 	}
 
-	Init();
+	if(!Init()) 
+		throw std::exception("init_failed");
 }
 
 Symbols::~Symbols()

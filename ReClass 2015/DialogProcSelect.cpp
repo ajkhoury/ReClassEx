@@ -253,7 +253,7 @@ void CDialogProcSelect::OnAttachButton()
 					int numOfModules = (int)MemMapModule.size();
 
 					CDialogProgress progress;
-					progress.Create(CDialogProgress::IDD, theApp.m_pMainWnd);
+					progress.Create(CDialogProgress::IDD, this);
 					progress.ShowWindow(SW_SHOW);
 					progress.Bar().SetRange32(0, numOfModules);
 					progress.Bar().SetStep(1);
@@ -267,7 +267,7 @@ void CDialogProcSelect::OnAttachButton()
 						progress.SetProgressText(progressText);
 						progress.Bar().StepIt();
 
-						sym.LoadSymbolsForModule(mod.Path, mod.Start, mod.Size);
+						g_SymLoader->LoadSymbolsForModule(mod.Path, mod.Start, mod.Size);
 					}
 					progress.EndDialog(0);
 				}
