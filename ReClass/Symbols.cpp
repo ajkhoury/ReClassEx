@@ -111,6 +111,7 @@ bool Symbols::WriteSymSrvDll()
 Symbols::~Symbols()
 {
 	Cleanup();
+	_tremove(_T("symsrv.dll"));
 }
 
 void Symbols::Cleanup()
