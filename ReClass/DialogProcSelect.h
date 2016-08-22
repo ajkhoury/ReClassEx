@@ -65,4 +65,5 @@ private:
 	//Misc
 	std::vector<ProcessInfoStack> m_ProcessInfos;
 	volatile bool m_bLoadingProcesses;
+	
 };

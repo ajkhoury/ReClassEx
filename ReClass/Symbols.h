@@ -7,6 +7,10 @@ class Symbols
 {
 public:
 	Symbols();
+
+	void ResolveSearchPath();
+	bool WriteSymSrvDll();
+
 	~Symbols();
 
 	void Cleanup();

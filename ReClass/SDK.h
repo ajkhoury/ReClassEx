@@ -1,7 +1,7 @@
 #ifndef SDK_H
 #define SDK_H
 
-#include "ReClass2015.h"
+#include "ReClass2016.h"
 
 class ReclassSDK
 {

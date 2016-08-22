@@ -1,13 +1,27 @@
 #include "stdafx.h"
 #include "Symbols.h"
+#include <fstream>
 
 Symbols::Symbols() :
 	m_bInitialized(false)
 {
-	//C:\Users\Owner\AppData\Local\Temp\SymbolCache
+	ResolveSearchPath();
+
+	if (!WriteSymSrvDll())
+		throw std::exception("WriteSymSrvDll_failed");
+
+	if(!Init()) 
+		throw std::exception("init_failed");
+}
+
+void Symbols::ResolveSearchPath()
+{
 	CString searchPath;
 	LRESULT lRet;
 	HKEY hKey = NULL;
+
+	//C:\Users\User\AppData\Local\Temp\SymbolCache
+
 	for (int i = 14; i >= 8; i--)
 	{
 		CString regPath = _T("Software\\Microsoft\\VisualStudio\\");
@@ -50,14 +64,54 @@ Symbols::Symbols() :
 		m_strSearchPath.Format(_T("srv*%s\\symbols*http://msdl.microsoft.com/download/symbols"), szWindowsDir);
 		PrintOut(_T("Symbol server path not found, using windows dir: %s"), szWindowsDir);
 	}
+}
 
-	if(!Init()) 
-		throw std::exception("init_failed");
+bool Symbols::WriteSymSrvDll()
+{
+	HRSRC hSymSrvRes = NULL;
+	HGLOBAL hGlobal = NULL;
+	LPVOID pSymSrvData = NULL;
+	DWORD dwSymSrvDataSize = 0;
+
+#ifdef _WIN64
+	hSymSrvRes = FindResource(NULL, MAKEINTRESOURCE(IDR_RCDATA_SYMSRV64), RT_RCDATA);
+#else
+	hSymSrvRes = FindResource(NULL, MAKEINTRESOURCE(IDR_RCDATA_SYMSRV32), RT_RCDATA);
+#endif
+	if (hSymSrvRes != NULL)
+	{
+		hGlobal = LoadResource(NULL, hSymSrvRes);
+		if (hGlobal != NULL)
+		{
+			pSymSrvData = LockResource(hGlobal);
+			dwSymSrvDataSize = SizeofResource(NULL, hSymSrvRes);
+			if (pSymSrvData != NULL)
+			{
+				std::ofstream fSymSrvDll(_T("symsrv.dll"), std::ios::binary);
+				if (fSymSrvDll)
+				{
+					fSymSrvDll.write((const char*)pSymSrvData, dwSymSrvDataSize);
+					fSymSrvDll.close();
+
+					UnlockResource(hGlobal);
+					FreeResource(hGlobal);
+
+					return true;
+				}
+			}
+		}
+
+		UnlockResource(hGlobal);
+		FreeResource(hGlobal);
+	}
+
+	return false;
 }
 
 Symbols::~Symbols()
 {
 	Cleanup();
+	_tremove(_T("symsrv.dll"));
 }
 
 void Symbols::Cleanup()

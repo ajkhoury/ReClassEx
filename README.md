@@ -1,6 +1,6 @@
-# Reclass-2015
+# Reclass-2016
 
-![Alt text](http://i.imgur.com/UDgnuE3.png "ReClass")
+![Alt text](https://i.gyazo.com/485c87c45a4eae9af08d5412c5844be3.png "ReClass")
 
 Cleaned up the code a bit and added some new features. Also got rid of a ton of bugs still crawling around.
 
@@ -33,7 +33,7 @@ Cleaned up the code a bit and added some new features. Also got rid of a ton of 
 
 ## Current Release Download
 
-[DOWNLOAD](https://github.com/dude719/Reclass-2015/releases)
+[DOWNLOAD](https://github.com/dude719/Reclass-2016/releases)
 
 ## How to build
 

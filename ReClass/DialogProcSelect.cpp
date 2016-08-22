@@ -6,7 +6,7 @@
 
 #include "DialogProcSelect.h"
 #include "DialogProgress.h"
-#include "ReClass2015.h"
+#include "ReClass2016.h"
 
 // CDialogProcSelect dialog
 
@@ -136,7 +136,7 @@ void CDialogProcSelect::DoDataExchange(CDataExchange* pDX)
 {
 	DDX_Control(pDX, IDC_PROCESS_LIST, m_ProcessList);
 	DDX_Control(pDX, IDC_FILTER_PROCESS_CHECK, m_FilterCheck);
-	DDX_Control(pDX, IDC_CHECK_LOADSYM, m_LoadAllSymbols);
+	DDX_Control(pDX, IDC_CHECK_LOADSYMBOLS, m_LoadAllSymbols);
 	CDialogEx::DoDataExchange(pDX);
 }
 
@@ -237,8 +237,10 @@ void CDialogProcSelect::OnAttachButton()
 				auto last_error = Utils::GetLastErrorString();
 				CString message{ };
 				message.Format(_T("Failed to attach to process \"%s\": %s"), proc_info_found->Procname.GetBuffer(), last_error.c_str());
-				MessageBox(message, _T("ReClass 2015"), MB_OK | MB_ICONERROR);
-			} else {
+				MessageBox(message, _T("ReClass 2016"), MB_OK | MB_ICONERROR);
+			} 
+			else 
+			{
 				CloseHandle(g_hProcess); //Stops leaking handles
 				g_hProcess = process_open;
 				g_ProcessID = proc_info_found->ProcessId;

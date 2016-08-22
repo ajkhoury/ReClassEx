@@ -41,7 +41,7 @@
 #include <map>
 
 //TODO: Make this easier to maintain
-#define RECLASS_VERSION _T("1.0.3.0")
+#define RECLASS_VERSION _T("1.1.0.0")
 
 //
 // BeaEngine disassembler 
@@ -92,11 +92,14 @@ using namespace tinyxml2;
 // Not even needed until importing is done
 #include "..\\SQLite\\CppSQLite3.h"
 
-
 //
 // Utilities
 //
 #include "Utils.h"
+
+//
+// Symbols
+//
 #include "Symbols.h"
 
 //
@@ -108,16 +111,6 @@ extern size_t g_AttachedProcessAddress;
 extern DWORD  g_AttachedProcessSize;
 extern CString g_ProcessName;
 extern Symbols* g_SymLoader;
-
-namespace ntdll
-{
-	extern PVOID Base;
-	extern tNtQuerySystemInformation NtQuerySystemInformation;
-	extern tNtQueryInformationProcess NtQueryInformationProcess;
-	extern tRtlGetVersion RtlGetVersion;
-	extern tRtlGetNativeSystemInformation RtlGetNativeSystemInformation;
-	extern tNtCreateThreadEx NtCreateThreadEx;
-}
 
 extern std::vector<struct MemMapInfo> MemMap;
 extern std::vector<struct MemMapInfo> MemMapCode;
@@ -189,6 +182,21 @@ extern CString tdQuat;
 extern CString tdMatrix;
 extern CString tdPChar;
 extern CString tdPWChar;
+
+//
+// NTDLL
+//
+namespace ntdll
+{
+	extern PVOID Base;
+	extern tNtQuerySystemInformation NtQuerySystemInformation;
+	extern tNtQueryInformationProcess NtQueryInformationProcess;
+	extern tRtlGetVersion RtlGetVersion;
+	extern tRtlGetNativeSystemInformation RtlGetNativeSystemInformation;
+	extern tNtCreateThreadEx NtCreateThreadEx;
+}
+
+
 
 //
 // Hotspot, Node, & Item IDs
@@ -425,13 +433,9 @@ extern std::vector<RECLASS_PLUGINS> LoadedPlugins;
 //
 // Main Application
 //
-#include "ReClass2015.h"
-extern CReClass2015App theApp;
+#include "ReClass2016.h"
+extern CReClass2016App theApp;
 
-//
-// Symbols
-//
-#include "Symbols.h"
 
 //
 // Global preprocessor directive for printing to the Console

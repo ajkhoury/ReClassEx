@@ -158,8 +158,8 @@ public:
 
 	int AddText(ViewInfo& View, int x, int y, DWORD color, int HitID, const char* fmt, ...)
 	{
-		char buffer[ 1024 ] = { 0 };
-		TCHAR finalBuffer[ 1024 ] = { 0 };
+		char buffer[1024] = { 0 };
+		TCHAR finalBuffer[1024] = { 0 };
 
 		va_list va_alist;
 		size_t converted;
@@ -171,11 +171,11 @@ public:
 		_vsnprintf_s(buffer, 1024, fmt, va_alist);
 		va_end(va_alist);
 
-		#ifdef UNICODE
+#ifdef UNICODE
 		mbstowcs_s(&converted, finalBuffer, buffer, 1024);
-		#else
+#else
 		memcpy(&finalBuffer, buffer, 1024);
-		#endif
+#endif
 
 		int width = static_cast<int>(strlen(buffer)) * g_FontWidth;
 
@@ -190,7 +190,7 @@ public:
 					pos.SetRect(x, y, x + g_FontWidth * 2, y + g_FontHeight);
 
 				AddHotSpot(View, pos, finalBuffer, HitID, HS_EDIT);
-			} 
+			}
 
 			pos.SetRect(x, y, 0, 0);
 			View.dc->SetTextColor(color);
@@ -622,10 +622,11 @@ public:
 								SymbolReader* symbols = g_SymLoader->GetSymbolsForModule(moduleName);
 								if (symbols)
 								{
-									CString nameOut;
-									if (symbols->GetSymbolStringWithVA(uintVal, nameOut))
+									CString SymbolOut;
+									SymbolOut.Preallocate(1024);
+									if (symbols->GetSymbolStringWithVA(uintVal, SymbolOut))
 									{
-										x = AddText(View, x, y, crOffset, HS_EDIT, _T("%s "), nameOut);
+										x = AddText(View, x, y, crOffset, HS_EDIT, _T("%s "), SymbolOut.GetString());
 									}
 								}
 							}
