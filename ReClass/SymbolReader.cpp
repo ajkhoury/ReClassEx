@@ -6,20 +6,17 @@
 
 SymbolReader::SymbolReader() : 
 	m_bInitialized(false), 
-	m_pSource(0), 
-	m_pSession(0), 
-	m_pGlobal(0)
+	m_pSource(nullptr), 
+	m_pSession(nullptr), 
+	m_pGlobal(nullptr)
 {
 }
 
 SymbolReader::~SymbolReader()
 {
-	if (m_pGlobal)
-		m_pGlobal->Release();
-	if (m_pSession)
-		m_pSession->Release();
-	if (m_pSource)
-		m_pSource->Release();
+	SAFE_RELEASE(m_pGlobal);
+	SAFE_RELEASE(m_pSession);
+	SAFE_RELEASE(m_pSource);
 }
 
 bool SymbolReader::LoadSymbolData(const TCHAR* pszSearchPath)

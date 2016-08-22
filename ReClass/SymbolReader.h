@@ -156,6 +156,7 @@ static const TCHAR* const rgCallingConvention[] =
 
 #define MAXELEMS(x)     (sizeof(x)/sizeof(x[0]))
 #define SafeDRef(a, i)  ((i < MAXELEMS(a)) ? a[i] : _T("(none)"))
+#define SAFE_RELEASE(x) if(x){ (x)->Release(); (x) = nullptr; }
 
 class SymbolReader
 {
