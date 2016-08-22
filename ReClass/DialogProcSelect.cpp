@@ -250,7 +250,7 @@ void CDialogProcSelect::OnAttachButton()
 				if (gbSymbolResolution && m_LoadAllSymbols.GetCheck() == BST_CHECKED)
 				{
 					int numOfModules = (int)MemMapModule.size();
-
+					
 					CDialogProgress progress;
 					progress.Create(CDialogProgress::IDD, this);
 					progress.ShowWindow(SW_SHOW);
@@ -266,7 +266,8 @@ void CDialogProcSelect::OnAttachButton()
 						progress.SetProgressText(progressText);
 						progress.Bar().StepIt();
 
-						g_SymLoader->LoadSymbolsForModule(mod.Path, mod.Start, mod.Size);
+						if (!g_SymLoader->LoadSymbolsForModule(mod.Path, mod.Start, mod.Size))
+							PrintOut(_T("Failed to load symbols for %s (%s)"), mod.Name.GetString(), proc_info_found->Procname.GetString());
 					}
 					progress.EndDialog(0);
 				}

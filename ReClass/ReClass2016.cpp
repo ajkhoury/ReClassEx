@@ -11,11 +11,8 @@
 #include "DialogAbout.h"
 #include "Parser.h"
 
-//#include "SDK.h"
-//ReclassSDK* ReclassSDK::m_pReclassSDK;
-
 // The one and only CReClass2016App object
-CReClass2016App theApp; 
+CReClass2016App theApp;
 
 // CReClass2016App
 BEGIN_MESSAGE_MAP(CReClass2016App, CWinAppEx) 

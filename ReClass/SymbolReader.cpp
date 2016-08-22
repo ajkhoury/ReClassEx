@@ -224,7 +224,7 @@ void SymbolReader::ReadVariant(VARIANT var, CString& outString)
 
 	case VT_BSTR:
 	{
-		append.Format(_T(" \"%s\""), var.bstrVal);
+		append.Format(_T(" \"%ls\""), var.bstrVal);
 		outString += append;
 		//wprintf(L" \"%s\"", var.bstrVal);
 	}
