@@ -47,6 +47,8 @@ private:
 //public:
 	CImageList				m_ModuleIcons;
 	
+	CButton					m_SymbolLoad;
+
 	CListCtrl				m_ModuleList;
 	bool					m_bSortAscendingName;
 	bool					m_bSortAscendingStart;
@@ -57,6 +59,7 @@ private:
 	CString					m_Filter;
 	std::vector<HICON>		m_hModuleIcons;
 	CRect					m_OriginalSize;
+
 	void SetSelected();
 
 	virtual BOOL OnInitDialog();

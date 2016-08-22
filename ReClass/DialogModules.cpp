@@ -27,6 +27,7 @@ void CDialogModules::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_MODULELIST, m_ModuleList);
 	DDX_Control(pDX, IDC_MODULENAME, m_Edit);
+	DDX_Control(pDX, IDC_MODULES_DEBUG_LOAD, m_SymbolLoad);
 }
 
 void CDialogModules::OnSize(UINT nType, int cx, int cy)
@@ -84,13 +85,16 @@ void CDialogModules::BuildList()
 
 BOOL CDialogModules::OnInitDialog()
 {
+	CDialogEx::OnInitDialog( );
+
 	SetIcon(NULL, TRUE);
 	SetIcon(NULL, FALSE);
 
-	CDialogEx::OnInitDialog();
-
 	GetWindowRect(&m_OriginalSize);
 	ScreenToClient(&m_OriginalSize);
+
+	m_SymbolLoad.EnableWindow(gbSymbolResolution ? TRUE : FALSE);
+	m_SymbolLoad.SetCheck(gbLoadModuleSymbol ? BST_CHECKED : BST_UNCHECKED);
 
 	m_ModuleIcons.Create(15, 15, ILC_COLOR32, 1, 1);
 	m_ModuleIcons.SetBkColor(RGB(255, 255, 255));
@@ -140,8 +144,8 @@ void CDialogModules::SetSelected( )
 
 		MemMapInfo mod = MemMapModule[ nItem ];
 
-		if ( gbSymbolResolution )
-			g_SymLoader->LoadSymbolsForModule( mod.Path, mod.Start, mod.Size );
+		if (gbSymbolResolution && m_SymbolLoad.GetCheck() == BST_CHECKED)
+			g_SymLoader->LoadSymbolsForModule(mod.Path, mod.Start, mod.Size);
 
 		int extension_size = mod.Name.ReverseFind( '.' );
 		if ( extension_size == -1 )
@@ -282,6 +286,8 @@ void CDialogModules::OnDblClkListControl(NMHDR* pNMHDR, LRESULT* pResult)
 void CDialogModules::OnOK()
 {
 	SetSelected();
+	if (m_SymbolLoad.GetCheck() == BST_CHECKED)
+		gbSymbolResolution = true;
 	CDialogEx::OnOK();
 }
 

@@ -152,6 +152,7 @@ extern bool gbText;
 extern bool gbRTTI;
 extern bool gbResizingFont;
 extern bool gbSymbolResolution;
+extern bool gbLoadModuleSymbol;
 
 extern bool gbFloat;
 extern bool gbInt;

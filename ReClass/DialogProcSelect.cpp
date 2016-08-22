@@ -150,7 +150,8 @@ BOOL CDialogProcSelect::OnInitDialog()
 	m_ProcessList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);
 	m_ProcessList.InsertColumn(COLUMN_PROCESSNAME, _T("Process"), LVCFMT_LEFT, 214);
 	m_ProcessList.InsertColumn(COLUMN_PROCESSID, _T("ID"), LVCFMT_LEFT, 45);
-	m_FilterCheck.SetCheck( gbFilterProcesses ? BST_CHECKED : BST_UNCHECKED );
+	m_FilterCheck.SetCheck(gbFilterProcesses ? BST_CHECKED : BST_UNCHECKED);
+	m_LoadAllSymbols.SetCheck(gbLoadModuleSymbol ? BST_CHECKED : BST_UNCHECKED);
 	CenterWindow();
 	ListRunningProcs();
 	return TRUE;
@@ -285,6 +286,7 @@ void CDialogProcSelect::OnRefreshButton()
 void CDialogProcSelect::OnClose()
 {
 	gbFilterProcesses = (m_FilterCheck.GetCheck() == BST_CHECKED);
+	gbLoadModuleSymbol = (m_LoadAllSymbols.GetCheck() == BST_CHECKED);
 	EndDialog(0);
 	CDialogEx::OnClose();
 }

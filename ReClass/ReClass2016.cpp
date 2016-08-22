@@ -166,6 +166,8 @@ BOOL CReClass2016App::InitInstance()
 	gbPrivatePadding = GetProfileInt(_T("Display"), _T("gbPrivatePadding"), gbPrivatePadding) > 0 ? true : false;
 	gbClipboardCopy = GetProfileInt(_T("Display"), _T("gbClipboardCopy"), gbClipboardCopy) > 0 ? true : false;
 
+	gbLoadModuleSymbol = GetProfileInt(_T("Misc"), _T("gbLoadModuleSymbol"), gbLoadModuleSymbol) > 0 ? true : false;
+
 	// make toggle
 	gbTop = false; //GetProfileInt("Display","gbTop",gbTop) > 0 ? true : false;
 
@@ -236,6 +238,7 @@ BOOL CReClass2016App::InitInstance()
 	{
 		PrintOut(_T("Failed to init symbol loader, disabling globally"));
 		gbSymbolResolution = false;
+		gbLoadModuleSymbol = false;
 	}
 
 	pFrame->ShowWindow(m_nCmdShow);
@@ -314,6 +317,8 @@ int CReClass2016App::ExitInstance()
 	WriteProfileInt(_T("Display"), _T("gbFilterProcesses"), gbFilterProcesses);
 	WriteProfileInt(_T("Display"), _T("gbPrivatePadding"), gbPrivatePadding);
 	WriteProfileInt(_T("Display"), _T("gbClipboardCopy"), gbClipboardCopy);
+	
+	WriteProfileInt(_T("Misc"), _T("gbLoadModuleSymbol"), gbLoadModuleSymbol);
 
 	for ( auto plugin : LoadedPlugins )
 		FreeLibrary( plugin.LoadedBase );
