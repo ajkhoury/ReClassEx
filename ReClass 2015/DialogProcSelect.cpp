@@ -8,7 +8,6 @@
 #include "DialogProgress.h"
 #include "ReClass2015.h"
 
-
 // CDialogProcSelect dialog
 
 std::initializer_list<const wchar_t*> CommonProcesses =
@@ -36,12 +35,10 @@ CDialogProcSelect::CDialogProcSelect(CWnd* pParent)
 	m_bLoadingProcesses(false),
 	m_bSortAscendingName(false),
 	m_bSortAscendingId(false) 
-{ 
-}
+{ }
 
 CDialogProcSelect::~CDialogProcSelect() 
-{ 
-}
+{ }
 
 IMPLEMENT_DYNAMIC(CDialogProcSelect, CDialogEx)
 
