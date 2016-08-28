@@ -49,8 +49,7 @@ public:
 		theApp.Classes.push_back(pClass);
 
 		// Open GUI Child Frame
-		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
-
+		CMainFrame*  pFrame = STATIC_DOWNCAST(CMainFrame, AfxGetApp()->m_pMainWnd);
 		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
 		pChild->m_wndView.m_pClass = pClass;
 

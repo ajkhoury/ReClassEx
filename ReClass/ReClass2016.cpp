@@ -117,7 +117,7 @@ BOOL CReClass2016App::InitInstance()
 
 	CMFCToolTipInfo ttParams;
 	ttParams.m_bVislManagerTheme = TRUE;
-	theApp.GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL, RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
+	GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL, RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
 
 	//Typedefs
 	tdHex = GetProfileString( _T( "Typedefs" ), _T( "tdHex" ), _T( "char" ) );
@@ -165,26 +165,16 @@ BOOL CReClass2016App::InitInstance()
 	gbFilterProcesses = GetProfileInt(_T("Display"), _T("gbFilterProcesses"), gbFilterProcesses) > 0 ? true : false;
 	gbPrivatePadding = GetProfileInt(_T("Display"), _T("gbPrivatePadding"), gbPrivatePadding) > 0 ? true : false;
 	gbClipboardCopy = GetProfileInt(_T("Display"), _T("gbClipboardCopy"), gbClipboardCopy) > 0 ? true : false;
-
 	gbLoadModuleSymbol = GetProfileInt(_T("Misc"), _T("gbLoadModuleSymbol"), gbLoadModuleSymbol) > 0 ? true : false;
 
 	// make toggle
 	gbTop = false; //GetProfileInt("Display","gbTop",gbTop) > 0 ? true : false;
 
-	CMDIFrameWnd* pFrame = new CMainFrame();
-	m_pMainWnd = pFrame;
-	
-	if (!pFrame)
-		return FALSE;
-	if (!pFrame->LoadFrame(IDR_MAINFRAME))
-		return FALSE;
-
-	HINSTANCE hInst = AfxGetResourceHandle();
+	HINSTANCE hInst = AfxGetInstanceHandle();
 	m_hMDIMenu = ::LoadMenu(hInst, MAKEINTRESOURCE(IDR_ReClass2016TYPE));
 	m_hMDIAccel = ::LoadAccelerators(hInst, MAKEINTRESOURCE(IDR_ReClass2016TYPE));
 
-#define PushIcon(id) Icons.push_back(::LoadIcon(hInst, MAKEINTRESOURCE(id)));
-	
+#define PushIcon(id) Icons.emplace_back(::LoadIcon(hInst, MAKEINTRESOURCE(id)));
 	PushIcon(IDI_ICON_OPEN);
 	PushIcon(IDI_ICON_CLOSED);
 	PushIcon(IDI_ICON_CLASS);
@@ -208,8 +198,17 @@ BOOL CReClass2016App::InitInstance()
 	PushIcon(IDI_ICON_VECTOR);
 	PushIcon(IDI_ICON_CHANGE);
 	PushIcon(IDI_ICON_CAMERA);
-
 #undef PushIcon
+
+	CMainFrame* pFrame = new CMainFrame();
+	m_pMainWnd = pFrame;
+	if (!pFrame)
+		return FALSE;
+	if (!pFrame->LoadFrame(IDR_MAINFRAME))
+		return FALSE;
+
+	pFrame->ShowWindow(m_nCmdShow);
+	pFrame->UpdateWindow();
 
 	ResizeMemoryFont(g_FontWidth, g_FontHeight);
 
@@ -240,9 +239,6 @@ BOOL CReClass2016App::InitInstance()
 		gbSymbolResolution = false;
 		gbLoadModuleSymbol = false;
 	}
-
-	pFrame->ShowWindow(m_nCmdShow);
-	pFrame->UpdateWindow();
 
 	LoadPlugins();
 
@@ -329,6 +325,7 @@ int CReClass2016App::ExitInstance()
 void CReClass2016App::OnButtonReset()
 {
 	CloseHandle(g_hProcess);
+
 	g_hProcess = NULL;
 	g_ProcessID = 0;
 	g_AttachedProcessAddress = NULL;

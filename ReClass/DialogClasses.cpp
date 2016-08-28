@@ -61,7 +61,7 @@ BOOL CDialogClasses::OnInitDialog()
 
 	m_ImageList.Create(GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), ILC_COLOR32, 1, 1);
 	m_ImageList.SetBkColor(RGB(255, 255, 255));
-	m_hClassIcon = LoadIcon(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_ICON_CLASS));
+	m_hClassIcon = ::LoadIcon(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_ICON_CLASS));
 	m_ImageList.Add(m_hClassIcon);
 
 	BuildList();
@@ -84,7 +84,7 @@ __inline int FindClassByName(const TCHAR* szName)
 
 void CDialogClasses::OnOK()
 {
-	unsigned numselected = m_ClassViewList.GetSelectedCount();
+	UINT numselected = m_ClassViewList.GetSelectedCount();
 	POSITION pos = m_ClassViewList.GetFirstSelectedItemPosition();
 	while (pos)
 	{
@@ -105,7 +105,9 @@ void CDialogClasses::OnOK()
 		if (pChild && IsWindow(pChild->GetSafeHwnd()) && pChild->IsWindowVisible())
 		{
 			static_cast<CMDIChildWnd*>(pChild)->MDIActivate();
-		} else {
+		} 
+		else 
+		{
 			CChildFrame* pNewChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
 			pNewChild->m_wndView.m_pClass = theApp.Classes[nItem];
 			theApp.Classes[nItem]->pChildWindow = pNewChild;
