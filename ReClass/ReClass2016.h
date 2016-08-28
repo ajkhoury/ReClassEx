@@ -32,6 +32,10 @@ public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
 
+// Implementation
+	class CMainFrame* GetMainFrame();
+	CMFCRibbonBar* GetRibbonBar();
+
 	CNodeBase* CreateNewNode(NodeType Type);
 	bool IsNodeValid(CNodeBase* pCheckNode);
 	CNodeBase* IsNodeRef(CNodeBase* pTestNode);
@@ -44,7 +48,6 @@ public:
 
 	void SaveXML(TCHAR* FileName);
 
-// Implementation
 	HMENU  m_hMDIMenu;
 	HACCEL m_hMDIAccel;
 
@@ -63,6 +66,7 @@ public:
 	afx_msg void OnAppAbout();
 	afx_msg void OnFileNew();
 	afx_msg void OnFileOpen();
+	afx_msg void OnFileSave();
 	afx_msg void OnFileSaveAs();
 	afx_msg void OnFileImport();
 	afx_msg void OnButtonNewClass();
@@ -85,8 +89,6 @@ public:
 	afx_msg void OnUpdateButtonClean(CCmdUI *pCmdUI);
 	afx_msg void OnButtonModules();
 	afx_msg void OnUpdateButtonModules(CCmdUI *pCmdUI);
-	afx_msg void OnFileSave();
-	afx_msg void OnUpdateFileSave(CCmdUI *pCmdUI);
 	afx_msg void OnButtonPlugins();
 	afx_msg void OnUpdateButtonPlugins(CCmdUI *pCmdUI);
 	afx_msg void OnOpenPDB();

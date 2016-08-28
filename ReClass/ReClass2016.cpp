@@ -1,15 +1,18 @@
 #include "stdafx.h"
+
+#include "ReClass2016.h"
+
 #include "afxwinappex.h"
 #include "afxdialogex.h"
-#include "ReClass2016.h"
-#include "MainFrm.h"
-#include "ChildFrm.h"
+
+#include "MainFrame.h"
+#include "ChildFrame.h"
+
 #include "DialogEdit.h"
 #include "DialogClasses.h"
 #include "DialogModules.h"
 #include "DialogPlugins.h"
 #include "DialogAbout.h"
-#include "Parser.h"
 
 // The one and only CReClass2016App object
 CReClass2016App theApp;
@@ -44,7 +47,6 @@ BEGIN_MESSAGE_MAP(CReClass2016App, CWinAppEx)
 	ON_COMMAND(ID_BUTTON_GENERATE, &CReClass2016App::OnButtonGenerate)
 	ON_COMMAND(ID_BUTTON_CLEAN, &CReClass2016App::OnButtonClean)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_CLEAN, &CReClass2016App::OnUpdateButtonClean)
-	ON_UPDATE_COMMAND_UI(ID_FILE_SAVE, &CReClass2016App::OnUpdateFileSave)
 	ON_UPDATE_COMMAND_UI(ID_FILE_OPEN_PDB, &CReClass2016App::OnUpdateOpenPDB)
 END_MESSAGE_MAP()
 
@@ -206,6 +208,9 @@ BOOL CReClass2016App::InitInstance()
 		return FALSE;
 	if (!pFrame->LoadFrame(IDR_MAINFRAME))
 		return FALSE;
+	
+	pFrame->m_hMenuDefault = m_hMDIMenu;
+	pFrame->m_hAccelTable = m_hMDIAccel;
 
 	pFrame->ShowWindow(m_nCmdShow);
 	pFrame->UpdateWindow();
@@ -330,7 +335,7 @@ void CReClass2016App::OnButtonReset()
 	g_ProcessID = 0;
 	g_AttachedProcessAddress = NULL;
 
-	CMDIFrameWnd* pFrame = static_cast<CMDIFrameWnd*>(AfxGetApp()->m_pMainWnd);
+	CMDIFrameWnd* pFrame = STATIC_DOWNCAST(CMDIFrameWnd, m_pMainWnd);
 	CMDIChildWnd* wnd = pFrame->MDIGetActive();
 
 	while (wnd)
@@ -892,6 +897,16 @@ void CReClass2016App::OnButtonFooter()
 	Footer = dlg.Text;
 }
 
+CMainFrame* CReClass2016App::GetMainFrame()
+{
+	return static_cast<CMainFrame*>(theApp.m_pMainWnd);
+}
+
+CMFCRibbonBar* CReClass2016App::GetRibbonBar()
+{
+	return &GetMainFrame()->m_wndRibbonBar;
+}
+
 CNodeBase* CReClass2016App::CreateNewNode(NodeType Type)
 {
 	if (Type == nt_class) return new CNodeClass;
@@ -1158,7 +1173,10 @@ void CReClass2016App::SaveXML(TCHAR* FileName)
 
 void CReClass2016App::OnFileSave()
 {
-	SaveXML(CurrentFilePath.GetBuffer());
+	if (CurrentFilePath.IsEmpty())
+		OnFileSaveAs();
+	else
+		SaveXML(CurrentFilePath.GetBuffer());
 }
 
 void CReClass2016App::OnFileSaveAs()
@@ -1738,7 +1756,7 @@ CNodeBase* CReClass2016App::IsNodeRef(CNodeBase* pTestNode)
 
 void CReClass2016App::OnButtonClean()
 {
-	CMDIFrameWnd* pFrame = STATIC_DOWNCAST(CMDIFrameWnd, AfxGetApp()->m_pMainWnd);
+	CMDIFrameWnd* pFrame = STATIC_DOWNCAST(CMDIFrameWnd, m_pMainWnd);
 	CMDIChildWnd* wnd = pFrame->MDIGetActive();
 	while (wnd)
 	{
@@ -1784,10 +1802,5 @@ void CReClass2016App::OnButtonClean()
 void CReClass2016App::OnUpdateButtonClean(CCmdUI *pCmdUI)
 {
 	pCmdUI->Enable((theApp.Classes.size() > 0));
-}
-
-void CReClass2016App::OnUpdateFileSave(CCmdUI *pCmdUI)
-{
-	pCmdUI->Enable((CurrentFilePath.GetLength() > 0));
 }
 

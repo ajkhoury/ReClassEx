@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReClass>
+    <!--Reclass 2016-->
+    <TypeDef tdHex="char" tdInt64="__int64" tdInt32="__int32" tdInt16="__int16" tdInt8="__int8" tdQWORD="DWORD64" tdDWORD="DWORD" tdWORD="WORD" tdBYTE="unsigned char" tdFloat="float" tdDouble="double" tdVec2="Vector2" tdVec3="Vector3" tdQuat="Vector4" tdMatrix="matrix3x4_t" tdPChar="char *" tdPWChar="wchar_t *"/>
+    <Header Text=""/>
+    <Footer Text=""/>
+    <Notes Text=""/>
+</ReClass>

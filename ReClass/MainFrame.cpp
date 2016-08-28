@@ -1,12 +1,11 @@
 #include <afxtabctrl.h>
 
 #include "stdafx.h"
-#include "ReClass2016.h"
-#include "Classes.h"
-#include "ChildFrm.h"
-#include "Debug.h"
+
+#include "ChildFrame.h"
+#include "MainFrame.h"
+
 #include "DialogClasses.h"
-#include "MainFrm.h"
 #include "DialogProcSelect.h"
 #include "DialogTypes.h"
 
@@ -80,7 +79,6 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
-
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)

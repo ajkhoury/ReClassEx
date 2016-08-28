@@ -2,8 +2,8 @@
 #include "ReClass2016.h"
 #include "DialogClasses.h"
 
-#include "MainFrm.h"
-#include "ChildFrm.h"
+#include "MainFrame.h"
+#include "ChildFrame.h"
 #include "SDK.h"
 
 #include "afxdialogex.h"

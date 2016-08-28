@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "ReClass2016.h"
+
 #include "DialogModules.h"
 #include "DialogProgress.h"
 
-#include "MainFrm.h"
-#include "ChildFrm.h"
+#include "MainFrame.h"
+#include "ChildFrame.h"
 #include "SDK.h"
 
 #include "afxdialogex.h"
@@ -157,7 +157,8 @@ void CDialogModules::SetSelected()
 
 		if (pNewClass != nullptr)
 		{
-			CMainFrame* pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
+			
+			CMDIFrameWnd* pFrame = STATIC_DOWNCAST(CMDIFrameWnd, AfxGetApp()->m_pMainWnd);
 			CChildFrame* pChild = pNewClass->pChildWindow;
 
 			// Check if its a window first to dodge the assertion in IsWindowVisible
@@ -165,7 +166,8 @@ void CDialogModules::SetSelected()
 			{
 				static_cast<CMDIChildWnd*>(pChild)->MDIActivate();
 			}
-			else {
+			else 
+			{
 				CChildFrame* pNewChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
 				pNewChild->m_wndView.m_pClass = pNewClass;
 				pNewClass->pChildWindow = pNewChild;

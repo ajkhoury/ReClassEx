@@ -1,6 +1,5 @@
 #include "stdafx.h"
-#include "ReClass2016.h"
-#include "ChildFrm.h"
+#include "ChildFrame.h"
 #include "ChildView.h"
 #include "DialogEdit.h"
 

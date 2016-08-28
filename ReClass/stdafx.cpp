@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "MainFrm.h"
+//#include "CMainFrame.h"
 
 //Globals
 HANDLE g_hProcess = NULL;
@@ -236,7 +236,7 @@ HWND PLUGIN_CC ReClassMainWindow()
 
 CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface( )
 {
-	return &(static_cast<CMainFrame*>(theApp.m_pMainWnd)->m_wndRibbonBar);
+	return theApp.GetRibbonBar();
 }
 #pragma endregion
 

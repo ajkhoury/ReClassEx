@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CNodeClassInstance.h"
 
-CNodeClassInstance::CNodeClassInstance()
+CNodeClassInstance::CNodeClassInstance() : pNode(0)
 {
 	m_nodeType = nt_instance;
 }

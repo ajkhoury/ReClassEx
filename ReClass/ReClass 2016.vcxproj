@@ -347,7 +347,7 @@
     <ClInclude Include="CNodeWORD.h" />
     <ClInclude Include="DialogAbout.h" />
     <ClInclude Include="CBitArray.h" />
-    <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="ChildFrame.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="Classes.h" />
     <ClInclude Include="CMemory.h" />
@@ -361,7 +361,7 @@
     <ClInclude Include="DialogProgress.h" />
     <ClInclude Include="DialogTypes.h" />
     <ClInclude Include="CHotSpot.h" />
-    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="MainFrame.h" />
     <ClInclude Include="NodeType.h" />
     <ClInclude Include="nt_ddk.h" />
     <ClInclude Include="SymbolReader.h" />
@@ -376,7 +376,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\SQLite\CppSQLite3.cpp" />
-    <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="ChildFrame.cpp" />
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="CMemory.cpp" />
     <ClCompile Include="CNodeArray.cpp" />
@@ -419,7 +419,7 @@
     <ClCompile Include="DialogProcSelect.cpp" />
     <ClCompile Include="DialogProgress.cpp" />
     <ClCompile Include="DialogTypes.cpp" />
-    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="SymbolReader.cpp" />
     <ClCompile Include="ReClass2016.cpp" />
     <ClCompile Include="stdafx.cpp">
