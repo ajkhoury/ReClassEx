@@ -240,9 +240,10 @@ void CDialogProcSelect::OnAttachButton()
 				message.Format(_T("Failed to attach to process \"%s\": %s"), proc_info_found->Procname.GetBuffer(), last_error.c_str());
 				MessageBox(message, _T("ReClass 2016"), MB_OK | MB_ICONERROR);
 			} 
-			else 
+			else
 			{
 				CloseHandle(g_hProcess); //Stops leaking handles
+
 				g_hProcess = process_open;
 				g_ProcessID = proc_info_found->ProcessId;
 				g_ProcessName = proc_info_found->Procname;

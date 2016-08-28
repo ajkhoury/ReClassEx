@@ -509,6 +509,9 @@
     <Image Include="res\file_large.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\toolbar1.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ReClass2016.rc">
