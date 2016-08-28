@@ -35,3 +35,4 @@ Reclass2015.rar
 *.exp
 *.iobj
 *.ipdb
+/ReClass/symsrv.dll
