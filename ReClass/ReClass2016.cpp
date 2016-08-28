@@ -383,11 +383,11 @@ void CReClass2016App::OnUpdateButtonKill(CCmdUI* pCmdUI)
 
 void CReClass2016App::CalcOffsets(CNodeClass* pClass)
 {
-	DWORD offset = 0;
-	for (UINT i = 0; i < pClass->Nodes.size(); i++)
+	size_t offset = 0;
+	for (UINT i = 0; i < pClass->NodeCount(); i++)
 	{
-		pClass->Nodes[i]->offset = offset;
-		offset += pClass->Nodes[i]->GetMemorySize();
+		pClass->GetNode(i)->SetOffset(offset);
+		offset += pClass->GetNode(i)->GetMemorySize();
 	}
 }
 
@@ -415,73 +415,74 @@ void CReClass2016App::OnFileNew()
 	for (int i = 0; i < 64 / sizeof(size_t); i++)
 	{
 		CNodeHex* pNode = new CNodeHex;
-		pNode->pParent = pClass;
-		pClass->Nodes.push_back(pNode);
+		pNode->SetParent(pClass);
+		pClass->AddNode(pNode);
 	}
 
 	CalcOffsets(pClass);
+
 	return;
 
 	//CNodeIcon* pIcon = new CNodeIcon;
 	//pClass->Nodes.push_back(pIcon);
 
-	CNodeVTable* pVTable = new CNodeVTable;
-	pClass->Nodes.push_back(pVTable);
-	for (int i = 0; i < 5; i++)
-	{
-		CNodeFunctionPtr* pNode = new CNodeFunctionPtr;
-		pNode->offset = i * pNode->GetMemorySize();
-		pVTable->Nodes.push_back(pNode);
-	}
-
-	pClass->Nodes.push_back(new CNodeHex64);
-	pClass->Nodes.push_back(new CNodeHex32);
-	pClass->Nodes.push_back(new CNodeHex16);
-	pClass->Nodes.push_back(new CNodeHex8);
-	pClass->Nodes.push_back(new CNodeInt64);
-	pClass->Nodes.push_back(new CNodeInt32);
-	pClass->Nodes.push_back(new CNodeInt64);
-	pClass->Nodes.push_back(new CNodeInt16);
-	pClass->Nodes.push_back(new CNodeInt8);
-	pClass->Nodes.push_back(new CNodeDWORD);
-	pClass->Nodes.push_back(new CNodeWORD);
-	pClass->Nodes.push_back(new CNodeByte);
-	pClass->Nodes.push_back(new CNodeText);
-	pClass->Nodes.push_back(new CNodeUnicode);
-	pClass->Nodes.push_back(new CNodeFloat);
-	pClass->Nodes.push_back(new CNodeDouble);
-	pClass->Nodes.push_back(new CNodeCustom);
-	pClass->Nodes.push_back(new CNodeVec2);
-	pClass->Nodes.push_back(new CNodeVec3);
-	pClass->Nodes.push_back(new CNodeQuat);
-	pClass->Nodes.push_back(new CNodeMatrix);
-	pClass->Nodes.push_back(new CNodeCharPtr);
-
-	//for (int i=0; i < 2; i++)
-	{
-		CNodePtr* pNode1 = new CNodePtr;
-		CNodePtr* pNode2 = new CNodePtr;
-		pNode1->pNode = pNode2;
-		pNode2->pNode = pClass;
-
-		pClass->Nodes.push_back(pNode1);
-	}
-	//for (int i=0; i < 2; i++)
-	{
-		// 
-		CNodeArray* pNode = new CNodeArray;
-		CNodeHex* pNode2 = new CNodeHex;
-		pNode->pNode = pNode2;
-		pClass->Nodes.push_back(pNode);
-	}
-
-	// Calc Offsets
-	DWORD offset = 0;
-	for (UINT i = 0; i < pClass->Nodes.size(); i++)
-	{
-		pClass->Nodes[i]->offset = offset;
-		offset += pClass->Nodes[i]->GetMemorySize();
-	}
+	//CNodeVTable* pVTable = new CNodeVTable;
+	//pClass->AddNode(pVTable);
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	CNodeFunctionPtr* pNode = new CNodeFunctionPtr;
+	//	pNode->SetOffset(i * pNode->GetMemorySize());
+	//	pVTable->AddNode(pNode);
+	//}
+	//
+	//pClass->AddNode(new CNodeHex64);
+	//pClass->AddNode(new CNodeHex32);
+	//pClass->AddNode(new CNodeHex16);
+	//pClass->AddNode(new CNodeHex8);
+	//pClass->AddNode(new CNodeInt64);
+	//pClass->AddNode(new CNodeInt32);
+	//pClass->AddNode(new CNodeInt64);
+	//pClass->AddNode(new CNodeInt16);
+	//pClass->AddNode(new CNodeInt8);
+	//pClass->AddNode(new CNodeDWORD);
+	//pClass->AddNode(new CNodeWORD);
+	//pClass->AddNode(new CNodeByte);
+	//pClass->AddNode(new CNodeText);
+	//pClass->AddNode(new CNodeUnicode);
+	//pClass->AddNode(new CNodeFloat);
+	//pClass->AddNode(new CNodeDouble);
+	//pClass->AddNode(new CNodeCustom);
+	//pClass->AddNode(new CNodeVec2);
+	//pClass->AddNode(new CNodeVec3);
+	//pClass->AddNode(new CNodeQuat);
+	//pClass->AddNode(new CNodeMatrix);
+	//pClass->AddNode(new CNodeCharPtr);
+	//
+	////for (int i=0; i < 2; i++)
+	//{
+	//	CNodePtr* pNode1 = new CNodePtr;
+	//	CNodePtr* pNode2 = new CNodePtr;
+	//	pNode1->pNode = pNode2;
+	//	pNode2->pNode = pClass;
+	//
+	//	pClass->AddNode(pNode1);
+	//}
+	////for (int i=0; i < 2; i++)
+	//{
+	//	// 
+	//	CNodeArray* pNode = new CNodeArray;
+	//	CNodeHex* pNode2 = new CNodeHex;
+	//	pNode->pNode = pNode2;
+	//	pClass->AddNode(pNode);
+	//}
+	//
+	//// Calc Offsets
+	//DWORD offset = 0;
+	//for (UINT i = 0; i < pClass->NodeCount(); i++)
+	//{
+	//	pClass->GetNode(i)->SetOffset(offset);
+	//	offset += pClass->GetNode(i)->GetMemorySize();
+	//}
 
 	//CNodeClassPtr* pClass2 = new CNodeClassPtr;
 	//pClass2->pClass = pClass;
@@ -529,13 +530,6 @@ public:
 	int length;
 	int ref;
 	std::vector<ImportNode> Nodes;
-};
-
-class ImportLink
-{
-public:
-	CNodeBase* pNode;
-	CString Name; 
 };
 
 // TODO: Fix this
@@ -613,7 +607,7 @@ void CReClass2016App::OnFileImport()
 	//			//pChild->m_wndView.m_pClass = pClass;
 	//
 	//			CNodeBase* pNode;
-	//			for (UINT n=0; n<Import[i].Nodes.size();n++)
+	//			for (UINT n=0; n<Import[i].NodeCount();n++)
 	//			{
 	//				NodeType t = Import[i].Nodes[n].type;
 	//				if ( t == nt_hex64 ) pNode = new CNodeHex64;
@@ -639,7 +633,7 @@ void CReClass2016App::OnFileImport()
 	//					if (Import[ r ].Name == "VTABLE")
 	//					{
 	//						pNode = new CNodeVTable;
-	//						for (UINT v=0; v<Import[r].Nodes.size();v++)
+	//						for (UINT v=0; v<Import[r].NodeCount();v++)
 	//						{
 	//							CNodeFunctionPtr* pFun = new CNodeFunctionPtr;
 	//							pFun->Name = Import[r].Nodes[v].Name;
@@ -717,28 +711,29 @@ void CReClass2016App::ClearSelection()
 {
 	for (UINT i = 0; i < Classes.size(); i++)
 	{
-		Classes[i]->bSelected = false;
-		for (UINT n = 0; n < Classes[i]->Nodes.size(); n++)
+		Classes[i]->Unselect();
+		for (UINT n = 0; n < Classes[i]->NodeCount(); n++)
 		{
-			CNodeBase* pNode = Classes[i]->Nodes[n];
-			pNode->bSelected = false;
+			CNodeBase* pNode = Classes[i]->GetNode(n);
+			pNode->Unselect();
 
 			NodeType nt = pNode->GetType();
 			if (nt == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
-				for (UINT f = 0; f < pVTable->Nodes.size(); f++)
-					pVTable->Nodes[f]->bSelected = false;
+				for (UINT f = 0; f < pVTable->NodeCount(); f++) {
+					pVTable->GetNode(f)->Unselect();
+				}
 			}
 			if (nt == nt_array)
 			{
 				CNodeArray* pArray = (CNodeArray*)pNode;
-				pArray->bSelected = false;
+				pArray->Unselect();
 			}
 			if (nt == nt_pointer)
 			{
 				CNodePtr* pPtr = (CNodePtr*)pNode;
-				pPtr->bSelected = false;
+				pPtr->Unselect();
 			}
 		}
 	}
@@ -748,27 +743,28 @@ void CReClass2016App::ClearHidden()
 {
 	for (UINT i = 0; i < Classes.size(); i++)
 	{
-		Classes[i]->bHidden = false;
-		for (UINT n = 0; n < Classes[i]->Nodes.size(); n++)
+		Classes[i]->Show();
+		for (UINT n = 0; n < Classes[i]->NodeCount(); n++)
 		{
-			CNodeBase* pNode = Classes[i]->Nodes[n];
-			pNode->bHidden = false;
+			CNodeBase* pNode = Classes[i]->GetNode(n);
+			pNode->Show();
 
 			NodeType nt = pNode->GetType();
 			if (nt == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
-				for (UINT f = 0; f < pVTable->Nodes.size(); f++) pVTable->Nodes[f]->bHidden = false;
+				for (UINT f = 0; f < pVTable->NodeCount(); f++) 
+					pVTable->GetNode(f)->Show();
 			}
 			if (nt == nt_array)
 			{
 				CNodeArray* pArray = (CNodeArray*)pNode;
-				pArray->bHidden = false;
+				pArray->Show();
 			}
 			if (nt == nt_pointer)
 			{
 				CNodePtr* pPtr = (CNodePtr*)pNode;
-				pPtr->bHidden = false;
+				pPtr->Show();
 			}
 		}
 	}
@@ -778,9 +774,9 @@ bool CReClass2016App::IsNodeValid(CNodeBase* pCheckNode)
 {
 	for (UINT i = 0; i < Classes.size(); i++)
 	{
-		for (UINT n = 0; n < Classes[i]->Nodes.size(); n++)
+		for (UINT n = 0; n < Classes[i]->NodeCount(); n++)
 		{
-			CNodeBase* pNode = Classes[i]->Nodes[n];
+			CNodeBase* pNode = Classes[i]->GetNode(n);
 			if (pNode == pCheckNode) 
 				return true;
 
@@ -788,9 +784,9 @@ bool CReClass2016App::IsNodeValid(CNodeBase* pCheckNode)
 			if (nt == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
-				for (UINT f = 0; f < pVTable->Nodes.size(); f++)
+				for (UINT f = 0; f < pVTable->NodeCount(); f++)
 				{
-					if (pVTable->Nodes[f] == pCheckNode)
+					if (pVTable->GetNode(f) == pCheckNode)
 						return true;
 
 				}
@@ -828,8 +824,8 @@ void CReClass2016App::OnButtonNewClass()
 	for (int i = 0; i < 64 / sizeof(size_t); i++)
 	{
 		CNodeHex* pNode = new CNodeHex;
-		pNode->pParent = pClass;
-		pClass->Nodes.push_back(pNode);
+		pNode->SetParent(pClass);
+		pClass->AddNode(pNode);
 	}
 
 	CalcOffsets(pClass);
@@ -1029,9 +1025,9 @@ void CReClass2016App::SaveXML(TCHAR* FileName)
 		CNodeClass* pClass = Classes[i];
 
 #ifdef UNICODE
-		CStringA strClassName = CW2A(pClass->Name);
-		CStringA strClassComment = CW2A(pClass->Comment);
-		CStringA strClassOffset = CW2A(pClass->strOffset);
+		CStringA strClassName = CW2A(pClass->GetName());
+		CStringA strClassComment = CW2A(pClass->GetComment());
+		CStringA strClassOffset = CW2A(pClass->GetOffsetString());
 		CStringA strClassCode = CW2A(pClass->Code);
 #else
 		CStringA strClassName = pClass->Name;
@@ -1044,20 +1040,20 @@ void CReClass2016App::SaveXML(TCHAR* FileName)
 		classNode->SetAttribute("Name", strClassName);
 		classNode->SetAttribute("Type", pClass->GetType());
 		classNode->SetAttribute("Comment", strClassComment);
-		classNode->SetAttribute("Offset", (int)pClass->offset);
+		classNode->SetAttribute("Offset", (int)pClass->GetOffset());
 		classNode->SetAttribute("strOffset", strClassOffset);
 		classNode->SetAttribute("Code", strClassCode);
 		root->LinkEndChild(classNode);
 
-		for (UINT n = 0; n < pClass->Nodes.size(); n++)
+		for (UINT n = 0; n < pClass->NodeCount(); n++)
 		{
-			CNodeBase* pNode = pClass->Nodes[n];
+			CNodeBase* pNode = pClass->GetNode(n);
 			if (!pNode)
 				continue;
 
 #ifdef UNICODE
-			CStringA strNodeName = CW2A(pNode->Name);
-			CStringA strNodeComment = CW2A(pNode->Comment);
+			CStringA strNodeName = CW2A(pNode->GetName());
+			CStringA strNodeComment = CW2A(pNode->GetComment());
 #else
 			CStringA strNodeName = pNode->Name;
 			CStringA strNodeComment = pNode->Comment;
@@ -1067,7 +1063,7 @@ void CReClass2016App::SaveXML(TCHAR* FileName)
 			node->SetAttribute("Name", strNodeName);
 			node->SetAttribute("Type", pNode->GetType());
 			node->SetAttribute("Size", pNode->GetMemorySize());
-			node->SetAttribute("bHidden", pNode->bHidden);
+			node->SetAttribute("bHidden", pNode->IsHidden());
 			node->SetAttribute("Comment", strNodeComment);
 
 			classNode->LinkEndChild(node);
@@ -1078,8 +1074,8 @@ void CReClass2016App::SaveXML(TCHAR* FileName)
 				node->SetAttribute("Total", (UINT)pptr->Total);
 
 #ifdef UNICODE
-				CStringA strArrayNodeName = CW2A(pptr->pNode->Name);
-				CStringA strArrayNodeComment = CW2A(pptr->pNode->Comment);
+				CStringA strArrayNodeName = CW2A(pptr->pNode->GetName());
+				CStringA strArrayNodeComment = CW2A(pptr->pNode->GetComment());
 #else
 				CStringA strArrayNodeName = pptr->pNode->Name;
 				CStringA strArrayNodeComment = pptr->pNode->Comment;
@@ -1096,7 +1092,7 @@ void CReClass2016App::SaveXML(TCHAR* FileName)
 			{
 				CNodePtr* pptr = (CNodePtr*)pNode;
 #ifdef UNICODE
-				CStringA strPtrNodeName = CW2A(pptr->pNode->Name);
+				CStringA strPtrNodeName = CW2A(pptr->pNode->GetName());
 #else
 				CStringA strPtrNodeName = pptr->pNode->Name;
 #endif
@@ -1107,7 +1103,7 @@ void CReClass2016App::SaveXML(TCHAR* FileName)
 			{
 				CNodeClassInstance* pptr = (CNodeClassInstance*)pNode;
 #ifdef UNICODE
-				CStringA strInstanceNodeName = CW2A(pptr->pNode->Name);
+				CStringA strInstanceNodeName = CW2A(pptr->pNode->GetName());
 #else
 				CStringA strInstanceNodeName = pptr->pNode->Name;
 #endif
@@ -1116,12 +1112,12 @@ void CReClass2016App::SaveXML(TCHAR* FileName)
 			else if (pNode->GetType() == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
-				for (UINT f = 0; f < pVTable->Nodes.size(); f++)
+				for (UINT f = 0; f < pVTable->NodeCount(); f++)
 				{
-					CNodeFunctionPtr* pNodefun = (CNodeFunctionPtr*)pVTable->Nodes[f];
+					CNodeFunctionPtr* pNodefun = (CNodeFunctionPtr*)pVTable->GetNode(f);
 #ifdef UNICODE
-					CStringA strFunctionNodeName = CW2A(pNodefun->Name);
-					CStringA strFunctionNodeComment = CW2A(pNodefun->Comment);
+					CStringA strFunctionNodeName = CW2A(pNodefun->GetName());
+					CStringA strFunctionNodeComment = CW2A(pNodefun->GetComment());
 #else
 					CStringA strFunctionNodeName = pNodefun->Name;
 					CStringA strFunctionNodeComment = pNodefun->Comment;
@@ -1130,7 +1126,7 @@ void CReClass2016App::SaveXML(TCHAR* FileName)
 					XMLElement *fun = doc.NewElement("Function");			
 					fun->SetAttribute("Name", strFunctionNodeName);
 					fun->SetAttribute("Comment", strFunctionNodeComment);
-					fun->SetAttribute("bHidden", pNodefun->bHidden);
+					fun->SetAttribute("bHidden", pNodefun->IsHidden());
 					node->LinkEndChild(fun);
 					for (UINT as = 0; as < pNodefun->Assembly.size(); as++)
 					{
@@ -1196,11 +1192,13 @@ void CReClass2016App::OnFileOpen()
 	TiXMLDocument doc;
 
 #ifdef UNICODE
+#define _CA2W(psz) CA2W(psz)
 	// Convert path to mbs in unicode mode
 	char szFilename[MAX_PATH] = { 0 };
 	size_t converted = 0;
 	wcstombs_s(&converted, szFilename, pathName, MAX_PATH);
 #else
+#define _CA2W(psz) (psz)
 	char* szFilename = pathName.GetBuffer();
 #endif
 
@@ -1213,7 +1211,8 @@ void CReClass2016App::OnFileOpen()
 	XMLHandle hDoc(&doc);
 	XMLHandle hRoot(0);
 	XMLElement* pElem;
-	std::vector<ImportLink> Links;
+	typedef std::map<CString, CNodeBase*> LinkMap;
+	LinkMap Links;
 
 	pElem = hDoc.FirstChildElement().ToElement();
 	if (!pElem)
@@ -1241,14 +1240,14 @@ void CReClass2016App::OnFileOpen()
 	while (pElem)
 	{
 		CNodeClass* pClass = new CNodeClass;
-		pClass->Name = CA2W(pElem->Attribute("Name"));
-		pClass->Comment = CA2W(pElem->Attribute("Comment"));
-		pClass->Code = CA2W(pElem->Attribute("Code"));
-		pClass->offset = atoi(pElem->Attribute("Offset"));
-		pClass->strOffset = CA2W(pElem->Attribute("strOffset"));
+		pClass->SetName(_CA2W(pElem->Attribute("Name")));
+		pClass->SetComment(_CA2W(pElem->Attribute("Comment")));
+		pClass->SetOffset(atoi(pElem->Attribute("Offset")));
+		pClass->SetOffsetString(_CA2W(pElem->Attribute("strOffset")));
+		pClass->Code = _CA2W(pElem->Attribute("Code"));
 
-		if (pClass->strOffset == "")
-			pClass->strOffset = CA2W(pElem->Attribute("Offset"));
+		if (pClass->GetOffsetString() == "")
+			pClass->SetOffsetString(_CA2W(pElem->Attribute("Offset")));
 
 		XMLElement* pClassElem = pElem->FirstChildElement();
 		while (pClassElem)
@@ -1260,30 +1259,37 @@ void CReClass2016App::OnFileOpen()
 			{
 				int Size = -1;
 				CNodeBase* pNode = CreateNewNode((NodeType)Type);
-				pNode->Name = CA2W(pClassElem->Attribute("Name"));
-				pNode->Comment = CA2W(pClassElem->Attribute("Comment"));
-				pNode->bHidden = atoi(pClassElem->Attribute("bHidden")) > 0 ? true : false;
-				pClassElem->QueryIntAttribute("Size", &Size);
-				pNode->pParent = pClass;
-				pClass->Nodes.push_back(pNode);
+				pNode->SetName(_CA2W(pClassElem->Attribute("Name")));
+				pNode->SetComment(_CA2W(pClassElem->Attribute("Comment")));
+				pNode->SetHidden(atoi(pClassElem->Attribute("bHidden")) > 0 ? true : false);
+				pNode->SetParent(pClass);
+				pClass->AddNode(pNode);
 
-				if (Type == nt_custom)
+				pClassElem->QueryIntAttribute("Size", &Size);
+
+				if (Type == nt_custom) 
+				{
 					((CNodeCustom*)pNode)->memsize = Size;
-				if (Type == nt_text)
+				}
+				else if (Type == nt_text)
+				{
 					((CNodeText*)pNode)->memsize = Size;
-				if (Type == nt_unicode)
+				}
+				else if (Type == nt_unicode) 
+				{
 					((CNodeText*)pNode)->memsize = Size;
-				if (Type == nt_vtable)
+				}
+				else if (Type == nt_vtable)
 				{
 					XMLElement* pVTableElem = pClassElem->FirstChildElement();
 					while (pVTableElem)
 					{
 						CNodeFunctionPtr* pFun = new CNodeFunctionPtr;
-						pFun->Name = CA2W(pVTableElem->Attribute("Name"));
-						pFun->Comment = CA2W(pVTableElem->Attribute("Comment"));
-						pFun->bHidden = atoi(pVTableElem->Attribute("bHidden")) > 0 ? true : false;
-						pFun->pParent = pNode;
-						((CNodeVTable*)pNode)->Nodes.push_back(pFun);
+						pFun->SetName(_CA2W(pVTableElem->Attribute("Name")));
+						pFun->SetComment(_CA2W(pVTableElem->Attribute("Comment")));
+						pFun->SetHidden(atoi(pVTableElem->Attribute("bHidden")) > 0 ? true : false);
+						pFun->SetParent(pNode);
+						pNode->AddNode(pFun);
 
 						XMLElement* pCode = pVTableElem->FirstChildElement();
 						while (pCode)
@@ -1295,47 +1301,38 @@ void CReClass2016App::OnFileOpen()
 						pVTableElem = pVTableElem->NextSiblingElement();
 					}
 				}
-				//<Node Name="N4823" Type="23" Size="64" bHidden="0" Comment="" Total="1">
-				//<Array Name="N12DB" Type="24" Size="64" Comment="" />
-				if (Type == nt_array)
+				else if (Type == nt_array)
 				{
+					//<Node Name="N4823" Type="23" Size="64" bHidden="0" Comment="" Total="1">
+					//<Array Name="N12DB" Type="24" Size="64" Comment="" />
 					CNodeArray* pArray = (CNodeArray*)pNode;
-					pArray->Total = atoi(pClassElem->Attribute("Total"));
+					pArray->Total = (DWORD)atoi(pClassElem->Attribute("Total"));
 
 					XMLElement* pArrayElem = pClassElem->FirstChildElement();
 					if (pArrayElem)
 					{
-						CString Name = CA2W(pArrayElem->Attribute("Name"));
-						CString Comment = CA2W(pArrayElem->Attribute("Comment"));
-						int ArrayType = -1;
+						CString Name = _CA2W(pArrayElem->Attribute("Name"));
+						CString Comment = _CA2W(pArrayElem->Attribute("Comment"));
+						int ArrayType = nt_none, ArraySize = 0;
 						pArrayElem->QueryIntAttribute("Type", &ArrayType);
-						int ArraySize = -1;
 						pClassElem->QueryIntAttribute("Size", &ArraySize);
 
 						if (ArrayType == nt_class)
 						{
-							ImportLink link;
-							link.Name = Name;
-							link.pNode = pNode;
-							Links.push_back(link);
+							Links.insert(std::make_pair(Name, pNode));
 						}
 						//Handle other type of arrays....
 					}
 				}
-
-				if (Type == nt_pointer)
+				else if (Type == nt_pointer)
 				{
-					ImportLink link;
-					link.Name = CA2W(pClassElem->Attribute("Pointer"));
-					link.pNode = pNode;
-					Links.push_back(link);
+					CString PointerStr = _CA2W(pClassElem->Attribute("Pointer"));
+					Links.insert(std::make_pair(PointerStr, pNode));
 				}
-				if (Type == nt_instance)
+				else if (Type == nt_instance)
 				{
-					ImportLink link;
-					link.Name = CA2W(pClassElem->Attribute("Instance"));
-					link.pNode = pNode;
-					Links.push_back(link);
+					CString InstanceStr = _CA2W(pClassElem->Attribute("Instance"));
+					Links.insert(std::make_pair(InstanceStr, pNode));
 				}
 			}
 
@@ -1347,28 +1344,28 @@ void CReClass2016App::OnFileOpen()
 		pElem = pElem->NextSiblingElement("Class");
 	}
 
-
 	//Fix Links... very ghetto this whole thing is just fucked
-	for (UINT i = 0; i < Links.size(); i++)
+	//for (UINT i = 0; i < Links.size(); i++)
+	for (LinkMap::iterator it = Links.begin(); it != Links.end(); it++)
 	{
 		for (UINT c = 0; c < Classes.size(); c++)
 		{
-			if (Links[i].Name == Classes[c]->Name)
+			if (it->first == Classes[c]->GetName())
 			{
-				NodeType Type = Links[i].pNode->GetType();
+				NodeType Type = it->second->GetType();
 				if (Type == nt_pointer)
 				{
-					CNodePtr* pPointer = (CNodePtr*)Links[i].pNode;
+					CNodePtr* pPointer = dynamic_cast<CNodePtr*>(it->second);
 					pPointer->pNode = Classes[c];
 				}
 				if (Type == nt_instance)
 				{
-					CNodeClassInstance* pClassInstance = (CNodeClassInstance*)Links[i].pNode;
+					CNodeClassInstance* pClassInstance = dynamic_cast<CNodeClassInstance*>(it->second);
 					pClassInstance->pNode = Classes[c];
 				}
 				if (Type == nt_array)
 				{
-					CNodeArray* pArray = (CNodeArray*)Links[i].pNode;
+					CNodeArray* pArray = dynamic_cast<CNodeArray*>(it->second);
 					pArray->pNode = Classes[c];
 				}
 			}
@@ -1391,7 +1388,7 @@ void CReClass2016App::OnButtonGenerate()
 
 	for (UINT c = 0; c < Classes.size(); c++)
 	{
-		t.Format(_T("class %s;\r\n"), Classes[c]->Name);
+		t.Format(_T("class %s;\r\n"), Classes[c]->GetName());
 		generated_text += t;
 	}
 
@@ -1411,20 +1408,20 @@ void CReClass2016App::OnButtonGenerate()
 		vfun.clear();
 		var.clear();
 
-		ClassName.Format(_T("class %s"), pClass->Name);
+		ClassName.Format(_T("class %s"), pClass->GetName());
 
 		int fill = 0;
 		int fillStart = 0;
 
-		for (UINT n = 0; n < pClass->Nodes.size(); n++)
+		for (UINT n = 0; n < pClass->NodeCount(); n++)
 		{
-			CNodeBase* pNode = (CNodeBase*)pClass->Nodes[n];
+			CNodeBase* pNode = (CNodeBase*)pClass->GetNode(n);
 			NodeType Type = pNode->GetType();
 
 			if ((Type == nt_hex64) || (Type == nt_hex32) || (Type == nt_hex16) || (Type == nt_hex8))
 			{
 				if (fill == 0)
-					fillStart = (int)pNode->offset;
+					fillStart = (int)pNode->GetOffset();
 				fill += pNode->GetMemorySize();
 			}
 			else
@@ -1443,142 +1440,142 @@ void CReClass2016App::OnButtonGenerate()
 			if (Type == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
-				for (UINT f = 0; f < pVTable->Nodes.size(); f++)
+				for (UINT f = 0; f < pVTable->NodeCount(); f++)
 				{
-					CString fn(pVTable->Nodes[f]->Name);
+					CString fn(pVTable->GetNode(f)->GetName());
 					if (fn.GetLength() == 0)
 						fn.Format(_T("void Function%i()"), f);
-					t.Format(_T("\tvirtual %s; //%s\r\n"), fn, pVTable->Nodes[f]->Comment);
+					t.Format(_T("\tvirtual %s; //%s\r\n"), fn, pVTable->GetNode(f)->GetComment());
 					vfun.push_back(t);
 				}
 			}
 
 			if (Type == nt_int64)
 			{
-				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt64, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt64, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 			if (Type == nt_int32)
 			{
-				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt32, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt32, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 			if (Type == nt_int16)
 			{
-				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt16, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt16, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 			if (Type == nt_int8)
 			{
-				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt8, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdInt8, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 			if(Type == nt_uint64)
 			{
-				t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), tdQWORD, pNode->Name, pNode->offset, pNode->Comment );
+				t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), tdQWORD, pNode->GetName(), pNode->GetOffset(), pNode->GetComment() );
 				var.push_back( t );
 			}
 			if (Type == nt_uint32)
 			{
-				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdDWORD, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdDWORD, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 			if (Type == nt_uint16)
 			{
-				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdWORD, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdWORD, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 			if (Type == nt_uint8)
 			{
-				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdBYTE, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdBYTE, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 
 			if (Type == nt_vec2)
 			{
-				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdVec2, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdVec2, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 			if (Type == nt_vec3)
 			{
-				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdVec3, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdVec3, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 			if (Type == nt_quat)
 			{
-				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdQuat, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdQuat, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 			if (Type == nt_matrix)
 			{
-				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdMatrix, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdMatrix, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 
 			if (Type == nt_pchar)
 			{
-				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdPChar, pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdPChar, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 			if ( Type == nt_pwchar )
 			{
-				t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), tdPWChar, pNode->Name, pNode->offset, pNode->Comment );
+				t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), tdPWChar, pNode->GetName(), pNode->GetOffset(), pNode->GetComment() );
 				var.push_back( t );
 			}
 			if (Type == nt_text)
 			{
 				CNodeText* pText = (CNodeText*)pNode;
-				t.Format(_T("\tchar %s[%i]; //0x%0.4X %s\r\n"), pText->Name, pText->memsize, pText->offset, pText->Comment);
+				t.Format(_T("\tchar %s[%i]; //0x%0.4X %s\r\n"), pText->GetName(), pText->memsize, pText->GetComment(), pText->GetComment());
 				var.push_back(t);
 			}
 			if (Type == nt_unicode)
 			{
 				CNodeUnicode* pText = (CNodeUnicode*)pNode;
-				t.Format(_T("\twchar_t %s[%i]; //0x%0.4X %s\r\n"), pText->Name, pText->memsize / sizeof(wchar_t), pText->offset, pText->Comment);
+				t.Format(_T("\twchar_t %s[%i]; //0x%0.4X %s\r\n"), pText->GetName(), pText->memsize / sizeof(wchar_t), pText->GetOffset(), pText->GetComment());
 				var.push_back(t);
 			}
 
 			if (Type == nt_float)
 			{
-				t.Format(_T("\tfloat %s; //0x%0.4X %s\r\n"), pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdFloat, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 			if (Type == nt_double)
 			{
-				t.Format(_T("\tdouble %s; //0x%0.4X %s\r\n"), pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), tdDouble, pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 
 			if (Type == nt_custom)
 			{
-				t.Format(_T("\t%s; //0x%0.4X %s\r\n"), pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s; //0x%0.4X %s\r\n"), pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 
 			if (Type == nt_function)
 			{
-				t.Format(_T("\t%s; //0x%0.4X %s\r\n"), pNode->Name, pNode->offset, pNode->Comment);
+				t.Format(_T("\t%s; //0x%0.4X %s\r\n"), pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);
 			}
 
 			if (Type == nt_pointer)
 			{
 				CNodePtr* pPointer = (CNodePtr*)pNode;
-				t.Format(_T("\t%s* %s; //0x%0.4X %s\r\n"), pPointer->pNode->Name, pPointer->Name, pPointer->offset, pPointer->Comment);
+				t.Format(_T("\t%s* %s; //0x%0.4X %s\r\n"), pPointer->pNode->GetName(), pPointer->GetName(), pPointer->GetOffset(), pPointer->GetComment());
 				var.push_back(t);
 			}
 
 			if (Type == nt_instance)
 			{
 				CNodeClassInstance* pCls = (CNodeClassInstance*)pNode;
-				if (pCls->offset == 0)
+				if (pCls->GetOffset() == 0)
 				{
-					t.Format(_T(" : public %s"), pCls->pNode->Name); // Inheritance
+					t.Format(_T(" : public %s"), pCls->pNode->GetName()); // Inheritance
 					ClassName += t;
 				}
 				else
 				{
-					t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), pCls->pNode->Name, pCls->Name, pCls->offset, pCls->Comment);
+					t.Format(_T("\t%s %s; //0x%0.4X %s\r\n"), pCls->pNode->GetName(), pCls->GetName(), pCls->GetOffset(), pCls->GetComment());
 					var.push_back(t);
 				}
 			}
@@ -1586,7 +1583,7 @@ void CReClass2016App::OnButtonGenerate()
 			if (Type == nt_array)
 			{
 				CNodeArray* pArray = (CNodeArray*)pNode;
-				t.Format(_T("\t%s %s[%i]; //0x%0.4X %s\r\n"), pArray->pNode->Name, pArray->Name, pArray->Total, pArray->offset, pArray->Comment);
+				t.Format(_T("\t%s %s[%i]; //0x%0.4X %s\r\n"), pArray->pNode->GetName(), pArray->GetName(), pArray->Total, pArray->GetOffset(), pArray->GetComment());
 				var.push_back(t);
 			}
 
@@ -1685,14 +1682,14 @@ void CReClass2016App::OnUpdateOpenPDB(CCmdUI *pCmdUI)
 
 void CReClass2016App::DeleteClass(CNodeClass* pClass)
 {
-	PrintOut(_T("DeleteClass(\"%s\") called"), pClass->Name.GetString());
+	PrintOut(_T("DeleteClass(\"%s\") called"), pClass->GetName().GetString());
 
 	CNodeBase* pNode = IsNodeRef(pClass);
 	if (pNode)
 	{
-		PrintOut(_T("Class still has a reference in %s.%s"), pNode->pParent->Name.GetString(), pNode->Name.GetString());
+		PrintOut(_T("Class still has a reference in %s.%s"), pNode->GetParent()->GetName().GetString(), pNode->GetName().GetString());
 		CString msg;
-		msg.Format(_T("Class still has a reference in %s.%s"), pNode->pParent->Name.GetString(), pNode->Name.GetString());
+		msg.Format(_T("Class still has a reference in %s.%s"), pNode->GetParent()->GetName().GetString(), pNode->GetName().GetString());
 		GetMainWnd( )->MessageBox( msg );
 		return;
 	}
@@ -1712,25 +1709,26 @@ CNodeBase* CReClass2016App::IsNodeRef(CNodeBase* pTestNode)
 	for (UINT c = 0; c < Classes.size(); c++)
 	{
 		CNodeClass* pClass = (CNodeClass*)Classes[c];
-		for (UINT n = 0; n < pClass->Nodes.size(); n++)
+		for (UINT n = 0; n < pClass->NodeCount(); n++)
 		{
-			CNodeBase* pNode = pClass->Nodes[n];
+			CNodeBase* pNode = pClass->GetNode(n);
 			if (!pNode)
 				continue;
 
-			if (pNode->GetType() == nt_instance)
+			NodeType nt = pNode->GetType();
+			if (nt == nt_instance)
 			{
 				CNodeClassInstance* pInstance = (CNodeClassInstance*)pNode;
 				if (pInstance->pNode == pTestNode)
 					return pInstance;
 			}
-			if (pNode->GetType() == nt_pointer)
+			else if (nt == nt_pointer)
 			{
 				CNodePtr* pInstance = (CNodePtr*)pNode;
 				if (pInstance->pNode == pTestNode)
 					return pInstance;
 			}
-			if (pNode->GetType() == nt_array)
+			else if (nt == nt_array)
 			{
 				CNodeArray* pInstance = (CNodeArray*)pNode;
 				if (pInstance->pNode == pTestNode)
@@ -1763,9 +1761,9 @@ void CReClass2016App::OnButtonClean()
 	{
 		CNodeClass* pClass = toCheck[i];
 		bool bCanDelete = true;
-		for (UINT n = 0; n < pClass->Nodes.size(); n++)
+		for (UINT n = 0; n < pClass->NodeCount(); n++)
 		{
-			CNodeBase* pNode = pClass->Nodes[n];
+			CNodeBase* pNode = pClass->GetNode(n);
 			NodeType Type = pNode->GetType();
 
 			if (Type == nt_hex64 || Type == nt_hex32 || Type == nt_hex16 || Type == nt_hex8)
@@ -1783,7 +1781,7 @@ void CReClass2016App::OnButtonClean()
 
 	PrintOut(_T("Unused Classes removed: %i"), count);
 	CString msg; msg.Format(_T("Unused Classes removed: %i"), count);
-	MessageBox(this->GetMainWnd()->GetSafeHwnd(), msg, _T("Cleaner"), MB_OK);
+	MessageBox(GetMainWnd()->GetSafeHwnd(), msg, _T("Cleaner"), MB_OK);
 }
 
 void CReClass2016App::OnUpdateButtonClean(CCmdUI *pCmdUI)

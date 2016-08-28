@@ -7,25 +7,29 @@ class CMemory;
 class myCEdit : public CEdit
 {
 public:
-	HotSpot spot;
-	int MinWidth;
-	HBRUSH m_brBackGnd;
-
 	virtual BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg void OnEnChange();
 	afx_msg HBRUSH CtlColor(CDC* /*pDC*/, UINT /*nCtlColor*/);
+
+public:
+	CHotSpot spot;
+	int MinWidth;
+	HBRUSH m_brBackGnd;
 };
 
 class myCToolTip : public CEdit
 {
 public:
-	HBRUSH m_brBackGnd;
 	virtual BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
+
 	DECLARE_MESSAGE_MAP()
 	afx_msg HBRUSH CtlColor(CDC* pDC, UINT nCtlColor);
+
+public:
+	HBRUSH m_brBackGnd;
 };
 
 // CChildView window
@@ -35,21 +39,6 @@ class CChildView : public CWnd
 public:
 	CChildView();
 	virtual ~CChildView();
-
-	CNodeClass* m_pClass;
-	CMemory Memory;
-
-	std::vector<HotSpot> HotSpots;
-	std::vector<HotSpot> Selected;
-	HotSpot ExchangeTarget;
-
-	//Controls
-	myCEdit m_Edit;
-	myCToolTip m_ToolTip;
-
-	CScrollBar m_Scroll;
-
-	bool isDeleting;
 
 	// Overrides
 protected:
@@ -234,5 +223,21 @@ public:
 
 	afx_msg void OnButtonSwap();
 	afx_msg void OnUpdateButtonSwap(CCmdUI *pCmdUI);
+
+public:
+	CNodeClass* m_pClass;
+	CMemory Memory;
+
+	std::vector<CHotSpot> HotSpots;
+	std::vector<CHotSpot> Selected;
+	CHotSpot ExchangeTarget;
+
+	//Controls
+	myCEdit m_Edit;
+	myCToolTip m_ToolTip;
+
+	CScrollBar m_Scroll;
+
+	bool isDeleting;
 };
 

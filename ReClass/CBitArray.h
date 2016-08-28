@@ -1,12 +1,4 @@
-//
-//File:   bits.h
-//Author: dude719
-//
-//Created on March 24, 2015, 1:34 AM
-//
-
-#ifndef BITS_H
-#define	BITS_H
+#pragma once
 
 #include <stdio.h>
 #include <limits.h>     /* for CHAR_BIT */
@@ -25,10 +17,10 @@
 #define GET_BIT_VALUE(a, bit_number) (((a) & (1 << (bit_number))) >> bit_number)
 
 template<typename T>
-class BitArray
+class CBitArray
 {
 public:
-	BitArray()
+	CBitArray()
 	{
 		value = 0xFF;
 		length = sizeof(T) * CHAR_BIT;
@@ -36,7 +28,7 @@ public:
 		bits = (char*)malloc(size);
 	}
 
-	BitArray(T num)
+	CBitArray(T num)
 	{
 		value = num;
 		length = sizeof(T) * CHAR_BIT;
@@ -44,7 +36,7 @@ public:
 		bits = (char*)malloc(size);
 	}
 
-	~BitArray()
+	~CBitArray()
 	{
 		delete[] bits;
 	}
@@ -114,5 +106,3 @@ private:
 	int length;
 	char* bits;
 };
-
-#endif	/* BITS_H */

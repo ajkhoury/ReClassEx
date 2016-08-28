@@ -593,19 +593,11 @@ bool UpdateMemoryMap(void)
 	CustomNames.clear();
 
 	if (g_hProcess == NULL)
-	{
-#ifdef _DEBUG
-		PrintOut(_T("[UpdateMemoryMap]: Process handle NULL!"));
-#endif
 		return false;
-	}
 
 	if (!IsProcessHandleValid(g_hProcess))
 	{
 		g_hProcess = NULL;
-#ifdef _DEBUG
-		PrintOut(_T("[UpdateMemoryMap]: Process handle invalid!"));
-#endif
 		return false;
 	}
 

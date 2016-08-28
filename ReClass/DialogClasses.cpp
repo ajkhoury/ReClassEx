@@ -43,7 +43,7 @@ void CDialogClasses::BuildList()
 
 	for (UINT i = 0; i < theApp.Classes.size(); i++)
 	{
-		CString name = theApp.Classes[i]->Name;
+		CString name = theApp.Classes[i]->GetName();
 		if (m_Filter.GetLength() != 0 && name.MakeUpper().Find(m_Filter.MakeUpper()) == -1)
 			continue;
 		AddData(i, 0, name);
@@ -76,7 +76,7 @@ __inline int FindClassByName(const TCHAR* szName)
 		CNodeClass* pNodeClass = theApp.Classes[id];
 		if (!pNodeClass)
 			continue;
-		if (_tcsicmp(pNodeClass->Name, szName) == 0)
+		if (_tcsicmp(pNodeClass->GetName(), szName) == 0)
 			return id;
 	}
 	return -1;
@@ -106,12 +106,12 @@ void CDialogClasses::OnOK()
 		{
 			static_cast<CMDIChildWnd*>(pChild)->MDIActivate();
 		} else {
-			CChildFrame* pNewChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
+			CChildFrame* pNewChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
 			pNewChild->m_wndView.m_pClass = theApp.Classes[nItem];
 			theApp.Classes[nItem]->pChildWindow = pNewChild;
-			pNewChild->SetTitle(theApp.Classes[nItem]->Name);
-			pNewChild->SetWindowText(theApp.Classes[nItem]->Name);
-			pFrame->UpdateFrameTitleForDocument(theApp.Classes[nItem]->Name);
+			pNewChild->SetTitle(theApp.Classes[nItem]->GetName());
+			pNewChild->SetWindowText(theApp.Classes[nItem]->GetName());
+			pFrame->UpdateFrameTitleForDocument(theApp.Classes[nItem]->GetName());
 		}
 	}
 

@@ -28,7 +28,7 @@ public:
 		{
 			CNodeBase* pBase = theApp.Classes.at(classId);
 			if (pBase)
-				return pBase->Nodes.size();
+				return pBase->NodeCount();
 		}
 
 		return -1;
@@ -45,13 +45,13 @@ public:
 
 		// Create Class
 		CNodeClass* pClass = new CNodeClass;
-		pClass->Name = szName;
+		pClass->SetName(szName);
 		theApp.Classes.push_back(pClass);
 
 		// Open GUI Child Frame
 		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
 
-		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
+		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
 		pChild->m_wndView.m_pClass = pClass;
 
 		pClass->pChildWindow = pChild;
@@ -66,13 +66,21 @@ public:
 		//
 	}
 
-	virtual int FindClassByName(LPTSTR szName)
+	virtual int FindClassByName(LPTSTR szName, bool caseSensitive = true)
 	{
 		unsigned int id = 0;
 		while (++id < theApp.Classes.size())
 		{
-			if (_tcscmp(theApp.Classes.at(id)->Name, szName) == 0)
-				return id;
+			if (caseSensitive)
+			{
+				if (_tcscmp(theApp.Classes[id]->GetName(), szName) == 0)
+					return id;
+			}
+			else
+			{
+				if (_tcsicmp(theApp.Classes[id]->GetName(), szName) == 0)
+					return id;
+			}
 		}
 		return -1;
 	}
@@ -90,10 +98,11 @@ public:
 		{
 			CNodeBase* pNode = theApp.CreateNewNode(type);
 			// CNodeHex64* pNode = new CNodeHex64;
-			pNode->pParent = pBase;
-			pNode->Name = szName;
+			pNode->SetParent(pBase);
+			pNode->SetName(szName);
 
-			pBase->Nodes.push_back(pNode);
+			pBase->AddNode(pNode);
+			
 			return TRUE;
 		}
 
@@ -120,7 +129,7 @@ private:
 		unsigned int id = 0;
 
 		while (++id < theApp.Classes.size())
-			if (theApp.Classes.at(id)->pParent == pBase)
+			if (theApp.Classes.at(id)->GetParent() == pBase)
 				return id;
 
 		return -1;

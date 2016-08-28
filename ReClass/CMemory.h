@@ -3,29 +3,13 @@
 class CMemory
 {
 public:
-	CMemory()
-	{
-		MemorySize = 0;
-		pMemory = 0;
-	}
+	CMemory();
 
-	~CMemory()
-	{
-		if (pMemory)
-			delete pMemory;
-	}
+	~CMemory();
 
-	void SetSize(unsigned long Size)
-	{
-		if ((!pMemory) || (Size != MemorySize))
-		{
-			if (pMemory)
-				delete pMemory;
-			pMemory = new unsigned char[Size];
-			MemorySize = Size;
-		}
-	}
+	void SetSize(unsigned long Size);
 
+public:
 	unsigned long MemorySize;
 	unsigned char* pMemory;
 };

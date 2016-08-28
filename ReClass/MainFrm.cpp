@@ -365,13 +365,13 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 		{
 			UINT idx = nID - WM_CLASSMENU;
 
-			CChildFrame* pChild = static_cast<CChildFrame*>(CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
+			CChildFrame* pChild = static_cast<CChildFrame*>(CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
 			CNodeClass* pClass = theApp.Classes[idx];
 			pClass->pChildWindow = pChild;
 
-			pChild->SetTitle(pClass->Name);
-			pChild->SetWindowText(pClass->Name);
-			UpdateFrameTitleForDocument(pClass->Name);
+			pChild->SetTitle(pClass->GetName().GetString());
+			pChild->SetWindowText(pClass->GetName().GetString());
+			UpdateFrameTitleForDocument(pClass->GetName().GetString());
 			pChild->m_wndView.m_pClass = pClass;
 
 			return TRUE;
@@ -465,7 +465,7 @@ void CMainFrame::OnButtonEditClass()
 		for (UINT m = 0; m < theApp.Classes.size(); m++)
 		{
 			CString MenuItem;
-			MenuItem.Format(_T("%i - %s"), m, theApp.Classes[m]->Name);
+			MenuItem.Format(_T("%i - %s"), m, theApp.Classes[m]->GetName().GetString());
 			menu.AppendMenu(MF_STRING | MF_ENABLED, WM_CLASSMENU + m, MenuItem);
 		}
 
@@ -489,7 +489,7 @@ void CMainFrame::OnButtonDeleteClass()
 	menu.CreatePopupMenu();
 	for (UINT m = 0; m < theApp.Classes.size(); m++)
 	{
-		menu.AppendMenu(MF_STRING | MF_ENABLED, WM_DELETECLASSMENU + m, theApp.Classes[m]->Name);
+		menu.AppendMenu(MF_STRING | MF_ENABLED, WM_DELETECLASSMENU + m, theApp.Classes[m]->GetName());
 	}
 	menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this);
 }

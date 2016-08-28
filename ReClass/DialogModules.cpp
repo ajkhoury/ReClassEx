@@ -11,7 +11,7 @@
 
 IMPLEMENT_DYNAMIC(CDialogModules, CDialogEx)
 
-CDialogModules::CDialogModules(CWnd* pParent) 
+CDialogModules::CDialogModules(CWnd* pParent)
 	: CDialogEx(CDialogModules::IDD, pParent),
 	m_bSortAscendingName(false),
 	m_bSortAscendingStart(false),
@@ -85,7 +85,7 @@ void CDialogModules::BuildList()
 
 BOOL CDialogModules::OnInitDialog()
 {
-	CDialogEx::OnInitDialog( );
+	CDialogEx::OnInitDialog();
 
 	SetIcon(NULL, TRUE);
 	SetIcon(NULL, FALSE);
@@ -124,85 +124,87 @@ inline int CDialogModules::FindModuleByName(const TCHAR* szName)
 	return -1;
 }
 
-inline CNodeClass* CDialogModules::GetClassByName(const TCHAR* szClassName)
+__inline CNodeClass* CDialogModules::GetClassByName(const TCHAR* szClassName)
 {
-	auto iter = std::find_if( theApp.Classes.begin( ), theApp.Classes.end( ), 
-							  [ szClassName ] ( const CNodeClass* value ) -> bool { return value->Name.CompareNoCase( szClassName ) == 0; } );
-	if ( iter != theApp.Classes.end( ) ) 
+	auto iter = std::find_if(theApp.Classes.begin(), theApp.Classes.end(), [szClassName](const CNodeClass* value) -> bool { return (value->GetName().CompareNoCase(szClassName) == 0); });
+	if (iter != theApp.Classes.end())
 		return *iter;
-	else 
+	else
 		return nullptr;
 }
 
-void CDialogModules::SetSelected( )
+void CDialogModules::SetSelected()
 {
-	POSITION pos = m_ModuleList.GetFirstSelectedItemPosition( );
-	while ( pos )
+	POSITION pos = m_ModuleList.GetFirstSelectedItemPosition();
+	while (pos)
 	{
-		int nItem = m_ModuleList.GetNextSelectedItem( pos );
-		nItem = FindModuleByName( m_ModuleList.GetItemText( nItem, 0 ) );
+		int nItem = m_ModuleList.GetNextSelectedItem(pos);
+		nItem = FindModuleByName(m_ModuleList.GetItemText(nItem, 0));
 
-		MemMapInfo mod = MemMapModule[ nItem ];
+		MemMapInfo mod = MemMapModule[nItem];
 
 		if (gbSymbolResolution && m_SymbolLoad.GetCheck() == BST_CHECKED)
 			g_SymLoader->LoadSymbolsForModule(mod.Path, mod.Start, mod.Size);
 
-		int extension_size = mod.Name.ReverseFind( '.' );
-		if ( extension_size == -1 )
+		int extension_size = mod.Name.ReverseFind('.');
+		if (extension_size == -1)
 			extension_size = 0;
-		else extension_size = mod.Name.GetLength( ) - extension_size;
+		else extension_size = mod.Name.GetLength() - extension_size;
 
-		CString ClassName = mod.Name.Left( mod.Name.GetLength( ) - extension_size ) + _T( "_base" );
+		CString ClassName = mod.Name.Left(mod.Name.GetLength() - extension_size) + _T("_base");
 
-		CNodeClass* pNewClass = GetClassByName( ClassName );
+		CNodeClass* pNewClass = GetClassByName(ClassName);
 
-		if ( pNewClass != nullptr )
+		if (pNewClass != nullptr)
 		{
-			CMainFrame* pFrame = static_cast<CMainFrame*>( AfxGetApp( )->m_pMainWnd );
+			CMainFrame* pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
 			CChildFrame* pChild = pNewClass->pChildWindow;
 
 			// Check if its a window first to dodge the assertion in IsWindowVisible
-			if ( pChild && IsWindow( pChild->GetSafeHwnd( ) ) && pChild->IsWindowVisible( ) )
+			if (pChild && IsWindow(pChild->GetSafeHwnd()) && pChild->IsWindowVisible())
 			{
-				static_cast<CMDIChildWnd*>( pChild )->MDIActivate( );
-			} else {
-				CChildFrame* pNewChild = static_cast<CChildFrame*>( pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel ) );
+				static_cast<CMDIChildWnd*>(pChild)->MDIActivate();
+			}
+			else {
+				CChildFrame* pNewChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
 				pNewChild->m_wndView.m_pClass = pNewClass;
 				pNewClass->pChildWindow = pNewChild;
-				pNewChild->SetTitle( pNewClass->Name );
-				pNewChild->SetWindowText( pNewClass->Name );
-				pFrame->UpdateFrameTitleForDocument( pNewClass->Name );
+				pNewChild->SetTitle(pNewClass->GetName());
+				pNewChild->SetWindowText(pNewClass->GetName());
+				pFrame->UpdateFrameTitleForDocument(pNewClass->GetName());
 			}
-		} else {
-			CMainFrame* pFrame = static_cast<CMainFrame*>( AfxGetApp( )->m_pMainWnd );
-			CChildFrame* pChild = static_cast<CChildFrame*>( pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2015TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel ) );
+		}
+		else 
+		{
+			CMainFrame* pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
+			CChildFrame* pChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
 
 			pNewClass = new CNodeClass;
-			pNewClass->Name = ClassName;
+			pNewClass->SetName(ClassName);
 
-			TCHAR strStart[ 64 ];
-			_stprintf( strStart, _T( "%IX" ), mod.Start );
-			pNewClass->strOffset = strStart;
-			pNewClass->offset = mod.Start;
+			TCHAR strStart[64];
+			_stprintf(strStart, _T("%IX"), mod.Start);
+			pNewClass->SetOffsetString(strStart);
+			pNewClass->SetOffset(mod.Start);
 			pNewClass->pChildWindow = pChild;
-			pNewClass->idx = (int) theApp.Classes.size( );
+			pNewClass->idx = (int)theApp.Classes.size();
 
-			theApp.Classes.push_back( pNewClass );
+			theApp.Classes.push_back(pNewClass);
 
 			DWORD offset = 0;
-			for ( int i = 0; i < 64 / sizeof( size_t ); i++ )
+			for (int i = 0; i < 64 / sizeof(size_t); i++)
 			{
 				CNodeHex* pNode = new CNodeHex;
-				pNode->pParent = pNewClass;
-				pNode->offset = offset;
-				offset += pNode->GetMemorySize( );
-				pNewClass->Nodes.push_back( pNode );
+				pNode->SetParent(pNewClass);
+				pNode->SetOffset(offset);
+				offset += pNode->GetMemorySize();
+				pNewClass->AddNode(pNode);
 			}
 
 			pChild->m_wndView.m_pClass = pNewClass;
-			pChild->SetTitle( pNewClass->Name );
-			pChild->SetWindowText( pNewClass->Name );
-			pFrame->UpdateFrameTitleForDocument( pNewClass->Name );
+			pChild->SetTitle(pNewClass->GetName());
+			pChild->SetWindowText(pNewClass->GetName());
+			pFrame->UpdateFrameTitleForDocument(pNewClass->GetName());
 		}
 	}
 }

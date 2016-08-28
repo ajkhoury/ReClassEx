@@ -209,20 +209,6 @@ namespace ntdll
 #define WM_CHANGECLASSMENU (WM_USER+WM_MAXITEMS+WM_MAXITEMS)
 #define WM_DELETECLASSMENU (WM_USER+WM_MAXITEMS+WM_MAXITEMS+WM_MAXITEMS)
 
-#define	NONE -1
-#define	HS_NONE -1
-#define HS_EDIT 0
-#define HS_OPENCLOSE 1
-#define HS_SELECT 2
-#define HS_DROP 3
-#define HS_CLICK 4
-#define HS_CHANGE_A 5
-#define HS_CHANGE_X 6
-#define HS_DELETE 7
-#define HS_RTTI 8
-#define HS_ADDRESS 68
-#define HS_NAME 69
-#define HS_COMMENT 70
 
 #define ICON_OPEN 0
 #define ICON_CLOSED 1
@@ -250,56 +236,6 @@ namespace ntdll
 
 // Max export entries allowed
 #define MAX_EXPORTS 16384
-
-enum NodeType
-{
-	nt_none = -1,
-	nt_base,
-	nt_instance,
-	nt_struct,
-	nt_hidden,
-	nt_hex32,
-	nt_hex64,
-	nt_hex16,
-	nt_hex8,
-	nt_pointer,
-	nt_int64,
-	nt_int32,
-	nt_int16,
-	nt_int8,
-	nt_float,
-	nt_double,
-	nt_uint32, // dword
-	nt_uint16, // word
-	nt_uint8, // byte
-	nt_text,
-	nt_unicode,
-	nt_function,
-	nt_custom,
-	nt_vec2,
-	nt_vec3,
-	nt_quat,
-	nt_matrix,
-	nt_vtable,
-	nt_array,
-	nt_class,
-	nt_pchar,
-	nt_pwchar,
-	nt_bits,
-	nt_uint64, // qword
-};
-
-#define ISHEXTYPE(type) (type == nt_hex64 || type == nt_hex32 || type == nt_hex16 || type == nt_hex8 || type == nt_bits)
-
-__inline const TCHAR* NodeTypeToString(NodeType type)
-{
-	static const TCHAR* pszNodeTypes[] = { _T("nt_base"), _T("nt_instance"), _T("nt_struct"), _T("nt_hidden"), _T("nt_hex32"), _T("nt_hex64"), _T("nt_hex16"), _T("nt_hex8"),
-		_T("nt_pointer"), _T("nt_int64"), _T("nt_int32"), _T("nt_int16"), _T("nt_int8"), _T("nt_float"), _T("nt_double"), _T("nt_uint32"), _T("nt_uint16"), _T("nt_uint8"),
-		_T("nt_text"), _T("nt_unicode"), _T("nt_function"), _T("nt_custom"), _T("nt_vec2"), _T("nt_vec3"), _T("nt_quat"), _T("nt_matrix"), _T("nt_vtable"), _T("nt_array"),
-		_T("nt_class"), _T("nt_pchar"), _T("nt_pwchar"), _T("nt_bits"), _T("nt_uint64")
-	};	
-	return pszNodeTypes[type];
-}
 
 
 //
@@ -351,17 +287,6 @@ struct AddressName
 {
 	CString Name;
 	size_t Address;
-};
-
-struct HotSpot
-{
-	CRect Rect;
-	CString Text;
-	size_t Address;
-	int ID;
-	int Type;
-	UINT Level;
-	class CNodeBase* object;
 };
 
 // All node type classes
