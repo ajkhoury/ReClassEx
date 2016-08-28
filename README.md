@@ -42,7 +42,7 @@ See wiki for instructions on how to compile:
 
 [Reclass Wiki](https://github.com/dude719/Reclass-2015/wiki)
 
-## Authors
+## Authors/Special Thanks
 - DrUnKeN ChEeTaH
 - P47R!CK
 - DogMatt
