@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CNodePtr.h"
 
-CNodePtr::CNodePtr()
+CNodePtr::CNodePtr() : pNode(NULL)
 {
 	m_nodeType = nt_pointer;
 }

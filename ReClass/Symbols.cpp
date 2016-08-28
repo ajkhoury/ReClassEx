@@ -168,6 +168,30 @@ bool Symbols::LoadSymbolsForModule(CString ModulePath, size_t dwBaseAddr, DWORD 
 	return false;
 }
 
+bool Symbols::LoadSymbolsForPdb(CString PdbPath)
+{
+	int idx = PdbPath.ReverseFind('/');
+	if (idx == -1)
+		idx = PdbPath.ReverseFind('\\');
+	CString PdbFileName = PdbPath.Mid(++idx);
+
+	const TCHAR* szSearchPath = 0;
+	if (!m_strSearchPath.IsEmpty())
+		szSearchPath = m_strSearchPath.GetString();
+
+	SymbolReader* reader = new SymbolReader();
+	if (reader->LoadFile(PdbFileName, PdbPath, 0, 0, szSearchPath))
+	{
+		PrintOut(_T("[Symbols::LoadSymbolsForPdb] Symbols for module %s loaded"), PdbFileName.GetString());
+		symbols.insert(std::make_pair(PdbFileName, reader));
+		return true;
+	}
+
+	delete reader;
+
+	return false;
+}
+
 //void Symbols::LoadModuleSymbols()
 //{
 //	PPROCESS_BASIC_INFORMATION pbi = NULL;

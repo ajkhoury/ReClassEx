@@ -166,7 +166,7 @@ public:
 
 	bool IsInitialized() { return m_bInitialized; }
 
-	bool LoadFile(CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath = 0);
+	bool LoadFile(CString FilePath, size_t dwBaseAddr = 0, DWORD dwModuleSize = 0, const TCHAR* pszSearchPath = 0);
 	bool LoadFile(CString FileName, CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath = 0);
 
 	bool GetSymbolStringWithVA(size_t dwVA, CString& outString);

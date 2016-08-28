@@ -18,6 +18,7 @@ public:
 	bool IsInitialized() { return m_bInitialized; }
 
 	bool LoadSymbolsForModule(CString szModulePath, size_t dwBaseAddr, DWORD dwSizeOfImage);
+	bool LoadSymbolsForPdb(CString szPdbPath);
 
 	SymbolReader* GetSymbolsForModule(CString module);
 

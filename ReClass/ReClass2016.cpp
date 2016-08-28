@@ -18,6 +18,10 @@ CReClass2016App theApp;
 BEGIN_MESSAGE_MAP(CReClass2016App, CWinAppEx) 
 	ON_COMMAND(ID_APP_ABOUT, &CReClass2016App::OnAppAbout)
 	ON_COMMAND(ID_FILE_NEW, &CReClass2016App::OnFileNew)
+	ON_COMMAND(ID_FILE_SAVE, &CReClass2016App::OnFileSave)
+	ON_COMMAND(ID_FILE_SAVE_AS, &CReClass2016App::OnFileSaveAs)
+	ON_COMMAND(ID_FILE_OPEN, &CReClass2016App::OnFileOpen)
+	ON_COMMAND(ID_FILE_OPEN_PDB, &CReClass2016App::OnOpenPDB)
 	ON_COMMAND(ID_RECLASS_PLUGINS, &CReClass2016App::OnButtonPlugins)
 	ON_COMMAND(ID_BUTTON_NEWCLASS, &CReClass2016App::OnButtonNewClass)
 	ON_COMMAND(ID_BUTTON_NOTES, &CReClass2016App::OnButtonNotes)
@@ -27,10 +31,6 @@ BEGIN_MESSAGE_MAP(CReClass2016App, CWinAppEx)
 	ON_COMMAND(ID_BUTTON_PARSER, &CReClass2016App::OnButtonParser)
 	ON_COMMAND(ID_BUTTON_HEADER, &CReClass2016App::OnButtonHeader)
 	ON_COMMAND(ID_BUTTON_FOOTER, &CReClass2016App::OnButtonFooter)
-	ON_COMMAND(ID_FILE_SAVE, &CReClass2016App::OnFileSave)
-	ON_COMMAND(ID_FILE_SAVE_AS, &CReClass2016App::OnFileSaveAs)
-	ON_COMMAND(ID_FILE_OPEN, &CReClass2016App::OnFileOpen)
-	ON_COMMAND(ID_FILE_OPEN_PDB, &CReClass2016App::OnOpenPDB)
 	ON_COMMAND(ID_BUTTON_RESET, &CReClass2016App::OnButtonReset)
 	ON_COMMAND(ID_BUTTON_PAUSE, &CReClass2016App::OnButtonPause)
 	ON_COMMAND(ID_BUTTON_RESUME, &CReClass2016App::OnButtonResume)
@@ -1672,7 +1672,7 @@ void CReClass2016App::OnOpenPDB()
 	if (fileDlg.DoModal() != IDOK)
 		return;
 
-	//pdb.LoadFile(fileDlg.GetPathName());
+	g_SymLoader->LoadSymbolsForPdb(fileDlg.GetPathName());
 }
 
 void CReClass2016App::OnUpdateOpenPDB(CCmdUI *pCmdUI)

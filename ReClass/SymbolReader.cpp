@@ -1014,18 +1014,13 @@ void SymbolReader::ReadSymbol(IDiaSymbol *pSymbol, CString& outString)
 	//putwchar(L'\n');
 }
 
-
 bool SymbolReader::GetSymbolStringWithVA(size_t dwVA, CString& outString)
 {
 	IDiaSymbol *pSymbol;
 	LONG lDisplacement;
-
-	//#ifdef _DEBUG
-	//if (dwVA == 0x7FF6AB662DE8)
-	//	PrintOut(_T("Test!"));
-	//#endif
 	
-	size_t dwRVA = dwVA - m_dwModuleBase;
+	size_t dwBase = m_dwModuleBase ? m_dwModuleBase : g_AttachedProcessAddress;
+	size_t dwRVA = dwVA - dwBase;
 
 	if (FAILED(m_pSession->findSymbolByRVAEx((DWORD)dwRVA, SymTagNull, &pSymbol, &lDisplacement))) 
 		return false;
