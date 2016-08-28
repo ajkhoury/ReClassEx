@@ -279,6 +279,46 @@ namespace Utils
 		return FindPattern(start_offset, size, pattern, N);
 	}
 
+	static CString GetVersionInfo(const TCHAR* versionKey)
+	{
+		CString strResult;
+		HRSRC hVersion = FindResource(NULL, MAKEINTRESOURCE(VS_VERSION_INFO), VS_FILE_INFO);
+		if (hVersion != NULL)
+		{
+			HGLOBAL hGlobal = LoadResource(NULL, hVersion);
+			if (hGlobal != NULL)
+			{
+				LPVOID versionInfo = LockResource(hGlobal);
+				if (versionInfo != NULL)
+				{
+					struct LANGANDCODEPAGE {
+						WORD wLanguage;
+						WORD wCodePage;
+					} *lpTranslate;
+
+					UINT uiSize;
+
+					if (VerQueryValue(versionInfo, _T("\\VarFileInfo\\Translation"), (LPVOID*)&lpTranslate, &uiSize) && uiSize > 0)
+					{
+						// Version information
+						BYTE* lpb;
+						CString strQuery;
+						strQuery.Format(_T("\\StringFileInfo\\%04x%04x\\%s"), lpTranslate->wLanguage, lpTranslate->wCodePage, versionKey);
+						if (VerQueryValue(versionInfo, strQuery.GetString(), (LPVOID*)&lpb, &uiSize) && uiSize > 0)
+						{
+							strResult = (LPCTSTR)lpb;
+						}
+					}
+				}
+			}
+
+			UnlockResource(hGlobal);
+			FreeResource(hGlobal);
+		}
+
+		return strResult;
+	}
+
 	enum OSType
 	{
 		UnknownOS = 0,
