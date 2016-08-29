@@ -46,7 +46,7 @@ int CNodeBase::AddText(ViewInfo& View, int x, int y, DWORD color, int HitID, con
 
 	va_list va_alist;
 	va_start(va_alist, fmt);
-	_vsnwprintf(wcsbuf, sizeof(wcsbuf), fmt, va_alist);
+	_vsnwprintf(wcsbuf, ARRAYSIZE(wcsbuf), fmt, va_alist);
 	va_end(va_alist);
 
 	int width = static_cast<int>(wcslen(wcsbuf)) * g_FontWidth;
