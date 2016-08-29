@@ -144,7 +144,7 @@ BOOL CDialogEdit::OnInitDialog()
 	// Create the Scintilla editor	
 	InitialiseEditor();
 	int length = Text.GetLength();
-	char* pText = (char*)malloc(length + 1);
+	char* pText = new char[length + 1];
 
 #ifdef UNICODE
 	size_t converted = 0;
@@ -176,7 +176,7 @@ void CDialogEdit::OnCancel()
 			SendEditor(SCI_GETTEXT, uSize + 1, (LPARAM)pBuf);
 			pBuf[uSize] = '\0';
 			Text = pBuf;
-			delete pBuf;
+			delete[] pBuf;
 		}
 	}
 	CDialogEx::OnCancel();
