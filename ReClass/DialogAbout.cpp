@@ -23,7 +23,8 @@ BOOL CDialogAbout::OnInitDialog()
 	CString cstring_temp;
 	cstring_temp.Format(_T("Build Date: %s - %s"), _T(__DATE__), _T(__TIME__));
 	SetDlgItemText(IDC_ABOUT_BUILD_DATE, cstring_temp);
-	cstring_temp.Format(_T("Version: %s"), RECLASS_VERSION);
+	CString strReclassVersion = Utils::GetVersionInfo(_T("FileVersion"));
+	cstring_temp.Format(_T("Version: %s"), strReclassVersion);
 	SetDlgItemText(IDC_ABOUT_BUILD_VERSION, cstring_temp);
 
 	CString strAuthors;

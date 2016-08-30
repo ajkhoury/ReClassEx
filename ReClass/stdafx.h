@@ -40,16 +40,12 @@
 #include <memory>
 #include <map>
 
-//TODO: Make this easier to maintain
-#define RECLASS_VERSION _T("1.1.0.0")
-
 //
 // BeaEngine disassembler 
 //
 #define BEA_ENGINE_STATIC
 #define BEA_USE_STDCALL
 #include "..\\beaengine\\beaengine\\headers\\BeaEngine.h"
-
 
 //
 // Scintilla parser
