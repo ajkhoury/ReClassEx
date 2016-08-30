@@ -63,7 +63,7 @@ CReClass2016App::CReClass2016App()
 void CReClass2016App::ResizeMemoryFont(int font_width, int font_height)
 {
 	g_ViewFont.DeleteObject();
-
+	
 	HMODULE shcore_load_address = LoadLibrary(_T("shcore.dll"));
 	if (shcore_load_address)
 	{

@@ -148,4 +148,9 @@ namespace Utils
 		return hRemoteThread;
 	}
 
+	HANDLE NtCreateThread(LPVOID lpRemoteThreadStart, LPVOID lpParam, DWORD* threadId = 0)
+	{
+		return NtCreateThreadEx(GetCurrentProcess(), lpRemoteThreadStart, lpParam, threadId);
+	}
+
 }

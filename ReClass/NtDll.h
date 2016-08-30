@@ -20,14 +20,14 @@ namespace ntdll
 		if (Base)
 			return true;
 
-		Base = Utils::GetLocalModuleHandle("ntdll.dll");
+		Base = Utils::GetLocalModuleHandle(_T("ntdll.dll"));
 		if (Base)
 		{
-			NtQuerySystemInformation = reinterpret_cast<tNtQuerySystemInformation>(Utils::GetLocalProcAddress(Base, "NtQuerySystemInformation"));
-			NtQueryInformationProcess = reinterpret_cast<tNtQueryInformationProcess>(Utils::GetLocalProcAddress(Base, "NtQueryInformationProcess"));
-			NtCreateThreadEx = reinterpret_cast<tNtCreateThreadEx>(Utils::GetLocalProcAddress(Base, "NtCreateThreadEx"));
-			RtlGetVersion = reinterpret_cast<tRtlGetVersion>(Utils::GetLocalProcAddress(Base, "RtlGetVersion"));
-			RtlGetNativeSystemInformation = reinterpret_cast<tRtlGetNativeSystemInformation>(Utils::GetLocalProcAddress(Base, "RtlGetNativeSystemInformation"));
+			NtQuerySystemInformation = reinterpret_cast<tNtQuerySystemInformation>(Utils::GetLocalProcAddress(Base, _T("NtQuerySystemInformation")));
+			NtQueryInformationProcess = reinterpret_cast<tNtQueryInformationProcess>(Utils::GetLocalProcAddress(Base, _T("NtQueryInformationProcess")));
+			NtCreateThreadEx = reinterpret_cast<tNtCreateThreadEx>(Utils::GetLocalProcAddress(Base, _T("NtCreateThreadEx")));
+			RtlGetVersion = reinterpret_cast<tRtlGetVersion>(Utils::GetLocalProcAddress(Base, _T("RtlGetVersion")));
+			RtlGetNativeSystemInformation = reinterpret_cast<tRtlGetNativeSystemInformation>(Utils::GetLocalProcAddress(Base, _T("RtlGetNativeSystemInformation")));
 			return !(!NtQueryInformationProcess || !NtQueryInformationProcess || !NtCreateThreadEx || !RtlGetVersion || !RtlGetNativeSystemInformation);
 		}
 		return false;

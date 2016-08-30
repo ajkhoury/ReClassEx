@@ -8,8 +8,11 @@
 namespace Utils
 {
 	// forward declarations
-	static void* GetLocalProcAddress(HMODULE module, const char *proc_name);
-	static HMODULE GetLocalModuleHandle(const char* moduleName);
+	static void* GetLocalProcAddressA(HMODULE module, LPCSTR proc_name);
+	static void* GetLocalProcAddressW(HMODULE module, LPCWSTR proc_name);
+	static HMODULE GetLocalModuleHandleA(LPCSTR moduleName);
+	static HMODULE GetLocalModuleHandleW(LPCWSTR moduleName);
+
 	//static HMODULE GetRemoteModuleHandle(const char* moduleName);
 	//static void* GetRemoteProcAddress(HMODULE module, const char *proc_name); 
 
@@ -136,35 +139,46 @@ namespace Utils
 		return message;
 	}
 
-	static HMODULE GetLocalModuleHandle(const char* moduleName)
+	static HMODULE GetLocalModuleHandleW(LPCWSTR moduleName)
 	{
-		void* dwModuleHandle = 0;
+		PVOID ModuleBase = 0;
 
 		static PEB_T* peb = (PEB_T*)NtCurrentPeb();
 		PEB_LDR_DATA_T* ldrData = (PEB_LDR_DATA_T*)peb->Ldr;
 		PLDR_DATA_ENTRY cursor = (PLDR_DATA_ENTRY)ldrData->InInitializationOrderModuleList.Flink;
-
-#ifdef _DEBUG
-		_tprintf(_T("cursor: 0x%IX\n"), (size_t)cursor);
-#endif
-
-		while (cursor->BaseAddress)  
+		while (cursor->BaseAddress)
 		{
-			char strBaseDllName[MAX_PATH] = { 0 };
-			size_t bytesCopied = 0;
-			wcstombs_s(&bytesCopied, strBaseDllName, cursor->BaseDllName.Buffer, MAX_PATH);
-			if (_stricmp(strBaseDllName, moduleName) == 0) {
-				dwModuleHandle = cursor->BaseAddress;
+			wchar_t wcsBaseDllName[MAX_PATH] = { 0 };
+			wcscpy_s(wcsBaseDllName, cursor->BaseDllName.Buffer);
+			if (_wcsicmp(wcsBaseDllName, moduleName) == 0) 
+			{
+				ModuleBase = cursor->BaseAddress;
 				break;
 			}
 			cursor = (PLDR_DATA_ENTRY)cursor->InMemoryOrderModuleList.Flink;
 		}
-		return (HMODULE)dwModuleHandle;
+		return (HMODULE)ModuleBase;
 	}
 
-	static void* GetLocalProcAddress(HMODULE module, const char *proc_name)
+	static HMODULE GetLocalModuleHandleA(LPCSTR moduleName)
 	{
-		char *modb = (char *)module;
+		wchar_t wcsModuleName[MAX_PATH] = { 0 };
+		size_t converted = 0;
+		mbstowcs_s(&converted, wcsModuleName, moduleName, MAX_PATH);
+		return GetLocalModuleHandleW(wcsModuleName);
+	}
+
+#ifdef UNICODE
+#define GetLocalModuleHandle GetLocalModuleHandleW
+#else
+#define GetLocalModuleHandle GetLocalModuleHandleA
+#endif
+
+	static PVOID GetLocalProcAddressA(HMODULE module, LPCSTR proc_name)
+	{
+		PCHAR modb = (PCHAR)module;
+		if (!modb)
+			return NULL;
 
 		IMAGE_DOS_HEADER *dos_header = (IMAGE_DOS_HEADER *)modb;
 		IMAGE_NT_HEADERS *nt_headers = (IMAGE_NT_HEADERS *)((size_t)modb + dos_header->e_lfanew);
@@ -173,12 +187,12 @@ namespace Utils
 		IMAGE_DATA_DIRECTORY *exp_entry = (IMAGE_DATA_DIRECTORY *)(&opt_header->DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT]);
 		IMAGE_EXPORT_DIRECTORY *exp_dir = (IMAGE_EXPORT_DIRECTORY *)((size_t)modb + exp_entry->VirtualAddress);
 
-		DWORD* func_table = (DWORD*)((size_t)modb + exp_dir->AddressOfFunctions);
-		WORD* ord_table = (WORD *)((size_t)modb + exp_dir->AddressOfNameOrdinals);
-		DWORD* name_table = (DWORD*)((size_t)modb + exp_dir->AddressOfNames);
+		DWORD* func_table	= (DWORD*)((size_t)modb + exp_dir->AddressOfFunctions);
+		WORD*  ord_table	= (WORD*)((size_t)modb + exp_dir->AddressOfNameOrdinals);
+		DWORD* name_table	= (DWORD*)((size_t)modb + exp_dir->AddressOfNames);
 
-		void *address = NULL;
-		DWORD i;
+		PVOID address = NULL;
+		DWORD i = 0;
 
 		if (((ULONG_PTR)proc_name >> 16) == 0) // Ordinal
 		{
@@ -186,8 +200,7 @@ namespace Utils
 			ULONG_PTR ord_base = exp_dir->Base;
 			if (ordinal < ord_base || ordinal > ord_base + exp_dir->NumberOfFunctions)
 				return NULL;
-
-			address = (void*)((size_t)modb + func_table[ordinal - ord_base]);
+			address = (PVOID)((size_t)modb + func_table[ordinal - ord_base]);
 		}
 		else
 		{
@@ -195,56 +208,78 @@ namespace Utils
 			for (i = 0; i < exp_dir->NumberOfNames; i++)
 			{
 				// name table pointers are rvas
-				char* procEntryName = (char*)((size_t)modb + name_table[i]);
+				PCHAR procEntryName = (PCHAR)((size_t)modb + name_table[i]);
 				if (_stricmp(proc_name, procEntryName) == 0)
 				{
-					address = (void*)((size_t)modb + func_table[ord_table[i]]);
+					address = (PVOID)((size_t)modb + func_table[ord_table[i]]);
 					break;
 				}
 			}
 		}
-		if ((char *)address >= (char*)exp_dir && (char*)address < (char*)exp_dir + exp_entry->Size)
+		// forwarded
+		if ((PCHAR)address >= (PCHAR)exp_dir && (PCHAR)address < (PCHAR)exp_dir + exp_entry->Size)
 		{
 			HMODULE frwd_module = 0;
+			PCHAR dll_name = 0;
+			PCHAR func_name = 0;
+			CHAR dllName[MAX_PATH] = { 0 };
 
-			char* dll_name = _strdup((char*)address);
+			dll_name = _strdup((PCHAR)address);
 			if (!dll_name)
 				return NULL;
-			char* func_name = strchr(dll_name, '.');
-			*func_name++ = 0;
 
-			address = NULL;
+			func_name = strchr(dll_name, '.');
+			if (!func_name) // Something is wrong...
+			{
+				free(dll_name);
+				return NULL;
+			}
+			*func_name++ = '\0';
 
-			char dllName[256];
 			strcpy_s(dllName, dll_name);
 			strcat_s(dllName, strlen(dll_name) + 4 + 1, ".dll");
+			free(dll_name); // Free dll_name as we dont need it anymore
 
-			frwd_module = (HMODULE)Utils::GetLocalModuleHandle(dllName);
+			address = 0;
+
+			frwd_module = (HMODULE)Utils::GetLocalModuleHandleA(dllName);
 			if (!frwd_module)
 				frwd_module = LoadLibraryA(dllName);
 			if (!frwd_module)
 			{
-#ifdef _DEBUG
+				#ifdef _DEBUG
 				MessageBox(0, _T("Utils::GetProcAddress failed to load module using Utils::GetLocalModuleHandle and LoadLibrary!"), _T("Reclass 2015"), MB_ICONERROR);
-#endif
+				#endif
 				return NULL;
 			}
 
 			bool forwardByOrd = strchr(func_name, '#') == 0 ? false : true;
 			if (forwardByOrd) // forwarded by ordinal
 			{
-				WORD func_ord = atoi(func_name + 1);
-				address = Utils::GetLocalProcAddress(frwd_module, (const char*)func_ord);
+				WORD func_ord = (WORD)atol(func_name + 1);
+				address = Utils::GetLocalProcAddressA(frwd_module, (const char*)func_ord);
 			}
 			else
 			{
-				address = Utils::GetLocalProcAddress(frwd_module, func_name);
+				address = Utils::GetLocalProcAddressA(frwd_module, func_name);
 			}
-
-			free(dll_name);
 		}
 		return address;
 	}
+
+	static PVOID GetLocalProcAddressW(HMODULE module, LPCWSTR proc_name)
+	{
+		char szProcName[MAX_PATH] = { 0 };
+		size_t converted = 0;
+		wcstombs_s(&converted, szProcName, proc_name, MAX_PATH);
+		return GetLocalProcAddressA(module, szProcName);
+	}
+
+#ifdef UNICODE
+#define GetLocalProcAddress GetLocalProcAddressW
+#else
+#define GetLocalProcAddress GetLocalProcAddressA
+#endif
 
 	static size_t FindPattern(size_t start_offset, DWORD size, unsigned char pattern[], int n)
 	{
