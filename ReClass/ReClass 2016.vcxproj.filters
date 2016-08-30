@@ -25,6 +25,12 @@
     <Filter Include="Source Files\Nodes">
       <UniqueIdentifier>{09513a0b-6261-437d-a42c-6dab2bf1019e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Dialogs">
+      <UniqueIdentifier>{be46e2e2-7807-4159-91f7-2062346ee55d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Dialogs">
+      <UniqueIdentifier>{118d300c-034c-4bce-a7d5-c0690e474484}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\output_wnd.ico">
@@ -166,16 +172,7 @@
     <ClInclude Include="..\SQLite\CppSQLite3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DialogTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DialogEdit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Debug.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DialogClasses.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SDK.h">
@@ -193,28 +190,10 @@
     <ClInclude Include="tinyxml2.h">
       <Filter>Header Files\XML</Filter>
     </ClInclude>
-    <ClInclude Include="DialogAbout.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DialogModules.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DialogConsole.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DialogPlugins.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DialogProcSelect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Symbols.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SymbolReader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DialogProgress.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ReClass2016.h">
@@ -334,6 +313,33 @@
     <ClInclude Include="NtDll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DialogAbout.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogClasses.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogConsole.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogEdit.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogModules.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogPlugins.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogProcSelect.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogProgress.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogTypes.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -345,29 +351,8 @@
     <ClCompile Include="..\SQLite\CppSQLite3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DialogTypes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DialogEdit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DialogClasses.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="tinyxml2.cpp">
       <Filter>Source Files\XML</Filter>
-    </ClCompile>
-    <ClCompile Include="DialogModules.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DialogConsole.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DialogPlugins.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DialogProcSelect.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utils.cpp">
       <Filter>Source Files</Filter>
@@ -376,9 +361,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SymbolReader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DialogProgress.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ReClass2016.cpp">
@@ -491,6 +473,33 @@
     </ClCompile>
     <ClCompile Include="NtDll.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogClasses.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogConsole.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogEdit.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogModules.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogPlugins.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogProcSelect.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogProgress.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogTypes.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogAbout.cpp">
+      <Filter>Source Files\Dialogs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

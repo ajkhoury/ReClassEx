@@ -65,21 +65,25 @@ void CReClass2016App::ResizeMemoryFont(int font_width, int font_height)
 	g_ViewFont.DeleteObject();
 
 	HMODULE shcore_load_address = LoadLibrary(_T("shcore.dll"));
-	auto pfnGetProcessDpiAwareness = reinterpret_cast<decltype(&GetProcessDpiAwareness)>(GetProcAddress(shcore_load_address, "GetProcessDpiAwareness"));
-	auto pfnGetDpiForMonitor = reinterpret_cast<decltype(&GetDpiForMonitor)>(GetProcAddress(shcore_load_address, "GetDpiForMonitor"));
-	
-	if (pfnGetProcessDpiAwareness != nullptr && pfnGetDpiForMonitor != nullptr)
+	if (shcore_load_address)
 	{
-		PROCESS_DPI_AWARENESS dpi;
-		pfnGetProcessDpiAwareness(NULL, &dpi);
-		if (dpi == PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE || dpi == PROCESS_DPI_AWARENESS::PROCESS_SYSTEM_DPI_AWARE)
+		auto pfnGetProcessDpiAwareness = reinterpret_cast<decltype(&GetProcessDpiAwareness)>(GetProcAddress(shcore_load_address, "GetProcessDpiAwareness"));
+		auto pfnGetDpiForMonitor = reinterpret_cast<decltype(&GetDpiForMonitor)>(GetProcAddress(shcore_load_address, "GetDpiForMonitor"));
+
+		if (pfnGetProcessDpiAwareness != nullptr && pfnGetDpiForMonitor != nullptr)
 		{
-			UINT dpiX, dpiY;
-			HMONITOR monitor = ::MonitorFromWindow(m_pMainWnd->GetSafeHwnd( ), MONITOR_DEFAULTTONEAREST);
-			pfnGetDpiForMonitor(monitor, MONITOR_DPI_TYPE::MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
-			g_FontWidth = MulDiv(font_width, MulDiv(dpiX, 100, 96), 100);
-			g_FontHeight = MulDiv(font_height, MulDiv(dpiY, 100, 96), 100);
+			PROCESS_DPI_AWARENESS dpi;
+			pfnGetProcessDpiAwareness(NULL, &dpi);
+			if (dpi == PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE || dpi == PROCESS_DPI_AWARENESS::PROCESS_SYSTEM_DPI_AWARE)
+			{
+				UINT dpiX, dpiY;
+				HMONITOR monitor = ::MonitorFromWindow(m_pMainWnd->GetSafeHwnd(), MONITOR_DEFAULTTONEAREST);
+				pfnGetDpiForMonitor(monitor, MONITOR_DPI_TYPE::MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
+				g_FontWidth = MulDiv(font_width, MulDiv(dpiX, 100, 96), 100);
+				g_FontHeight = MulDiv(font_height, MulDiv(dpiY, 100, 96), 100);
+			}
 		}
+		FreeLibrary(shcore_load_address);
 	}
 	g_ViewFont.CreateFont(g_FontHeight, g_FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T("Terminal"));
 }
@@ -214,6 +218,7 @@ BOOL CReClass2016App::InitInstance()
 	pFrame->ShowWindow(m_nCmdShow);
 	pFrame->UpdateWindow();
 
+	// Fix for 4k monitors
 	ResizeMemoryFont(g_FontWidth, g_FontHeight);
 
 	g_hProcess = NULL;
@@ -501,7 +506,7 @@ void CReClass2016App::OnFileNew()
 // App command to run the dialog
 void CReClass2016App::OnAppAbout()
 {
-	CAboutDlg aboutDlg;
+	CDialogAbout aboutDlg;
 	aboutDlg.DoModal();
 }
 
