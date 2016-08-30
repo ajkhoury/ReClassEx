@@ -9,16 +9,6 @@ DWORD g_AttachedProcessSize = NULL;
 CString g_ProcessName;
 Symbols* g_SymLoader = nullptr;
 
-namespace ntdll
-{
-	PVOID Base = nullptr;
-	tNtQuerySystemInformation NtQuerySystemInformation = nullptr;
-	tNtQueryInformationProcess NtQueryInformationProcess = nullptr;
-	tRtlGetVersion RtlGetVersion = nullptr;
-	tRtlGetNativeSystemInformation RtlGetNativeSystemInformation = nullptr;
-	tNtCreateThreadEx NtCreateThreadEx = nullptr;
-}
-
 std::vector<MemMapInfo> MemMap;
 std::vector<MemMapInfo> MemMapCode;
 std::vector<MemMapInfo> MemMapData;

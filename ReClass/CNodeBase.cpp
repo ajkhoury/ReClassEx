@@ -49,7 +49,7 @@ int CNodeBase::AddText(ViewInfo& View, int x, int y, DWORD color, int HitID, con
 	_vsnwprintf(wcsbuf, ARRAYSIZE(wcsbuf), fmt, va_alist);
 	va_end(va_alist);
 
-	int width = static_cast<int>(wcslen(wcsbuf)) * g_FontWidth;
+	int width = (int)(wcslen(wcsbuf)) * g_FontWidth;
 
 	if ((y >= -(g_FontHeight)) && (y + g_FontHeight <= View.client->bottom + g_FontHeight))
 	{

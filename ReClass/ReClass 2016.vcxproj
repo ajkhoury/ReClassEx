@@ -363,6 +363,7 @@
     <ClInclude Include="CHotSpot.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="NodeType.h" />
+    <ClInclude Include="NtDll.h" />
     <ClInclude Include="nt_ddk.h" />
     <ClInclude Include="SymbolReader.h" />
     <ClInclude Include="ReClass2016.h" />
@@ -420,6 +421,7 @@
     <ClCompile Include="DialogProgress.cpp" />
     <ClCompile Include="DialogTypes.cpp" />
     <ClCompile Include="MainFrame.cpp" />
+    <ClCompile Include="NtDll.cpp" />
     <ClCompile Include="SymbolReader.cpp" />
     <ClCompile Include="ReClass2016.cpp" />
     <ClCompile Include="stdafx.cpp">

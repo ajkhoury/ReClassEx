@@ -103,6 +103,11 @@ using namespace tinyxml2;
 #include "Symbols.h"
 
 //
+// NTDLL
+//
+#include "NtDll.h"
+
+//
 // Globals
 //
 extern HANDLE g_hProcess;
@@ -183,21 +188,6 @@ extern CString tdQuat;
 extern CString tdMatrix;
 extern CString tdPChar;
 extern CString tdPWChar;
-
-//
-// NTDLL
-//
-namespace ntdll
-{
-	extern PVOID Base;
-	extern tNtQuerySystemInformation NtQuerySystemInformation;
-	extern tNtQueryInformationProcess NtQueryInformationProcess;
-	extern tRtlGetVersion RtlGetVersion;
-	extern tRtlGetNativeSystemInformation RtlGetNativeSystemInformation;
-	extern tNtCreateThreadEx NtCreateThreadEx;
-}
-
-
 
 //
 // Hotspot, Node, & Item IDs
