@@ -1374,17 +1374,17 @@ void CReClass2016App::OnFileOpen()
 				NodeType Type = it->second->GetType();
 				if (Type == nt_pointer)
 				{
-					CNodePtr* pPointer = dynamic_cast<CNodePtr*>(it->second);
+					CNodePtr* pPointer = static_cast<CNodePtr*>(it->second);
 					pPointer->pNode = Classes[c];
 				}
 				if (Type == nt_instance)
 				{
-					CNodeClassInstance* pClassInstance = dynamic_cast<CNodeClassInstance*>(it->second);
+					CNodeClassInstance* pClassInstance = static_cast<CNodeClassInstance*>(it->second);
 					pClassInstance->pNode = Classes[c];
 				}
 				if (Type == nt_array)
 				{
-					CNodeArray* pArray = dynamic_cast<CNodeArray*>(it->second);
+					CNodeArray* pArray = static_cast<CNodeArray*>(it->second);
 					pArray->pNode = Classes[c];
 				}
 			}
