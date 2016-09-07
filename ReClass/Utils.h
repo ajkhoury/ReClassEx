@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <afxstr.h> // << For CString
 #include <fcntl.h>
 #include <io.h>
 #include "nt_ddk.h"
@@ -53,7 +54,7 @@ namespace Utils
 	static CString GetLastErrorString()
 	{
 		TCHAR buf[256];
-		size_t size = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf, 256, NULL);
+		int size = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf, 256, NULL);
 		return CString(buf, size);
 	}
 
