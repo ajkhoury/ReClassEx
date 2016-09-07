@@ -26,7 +26,8 @@ protected:
 private:
 	enum
 	{
-		COLUMN_MODULE = 0,
+		COLUMN_NAME = 0,
+		COLUMN_PATH,
 		COLUMN_START,
 		COLUMN_END,
 		COLUMN_SIZE,
@@ -51,6 +52,7 @@ private:
 
 	CListCtrl				m_ModuleList;
 	bool					m_bSortAscendingName;
+	bool					m_bSortAscendingPath;
 	bool					m_bSortAscendingStart;
 	bool					m_bSortAscendingEnd;
 	bool					m_bSortAscendingSize;
@@ -64,6 +66,6 @@ private:
 
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
-	virtual int AddData(int Index, LPTSTR ModuleName, LPTSTR StartAddress, LPTSTR EndAddress, LPTSTR ModuleSize, LPARAM lParam);
+	virtual int AddData(int Index, LPCTSTR ModuleName, LPCTSTR ModulePath, LPCTSTR StartAddress, LPCTSTR EndAddress, LPCTSTR ModuleSize, LPARAM lParam);
 	virtual void BuildList();
 };

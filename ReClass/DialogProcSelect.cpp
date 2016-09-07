@@ -235,9 +235,8 @@ void CDialogProcSelect::OnAttachButton()
 			HANDLE process_open = ReClassOpenProcess(PROCESS_ALL_ACCESS, FALSE, proc_info_found->ProcessId);	
 			if (process_open == NULL || GetLastError() != ERROR_SUCCESS) 
 			{
-				auto last_error = Utils::GetLastErrorString();
-				CString message{ };
-				message.Format(_T("Failed to attach to process \"%s\": %s"), proc_info_found->Procname.GetBuffer(), last_error.c_str());
+				CString message;
+				message.Format(_T("Failed to attach to process \"%s\": %s"), proc_info_found->Procname.GetString(), Utils::GetLastErrorString().GetString());
 				MessageBox(message, _T("ReClass 2016"), MB_OK | MB_ICONERROR);
 			} 
 			else

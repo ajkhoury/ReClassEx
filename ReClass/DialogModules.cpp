@@ -60,26 +60,34 @@ END_MESSAGE_MAP()
 
 void CDialogModules::BuildList()
 {
-	for (UINT i = 0; i < MemMapModule.size(); i++)
+	for (UINT idx = 0; idx < MemMapModule.size(); idx++)
 	{
-		MemMapInfo moduleInfo = MemMapModule[i];
+		MemMapInfo moduleInfo = MemMapModule[idx];
 
 		SHFILEINFO sfi = { 0 };
-		SHGetFileInfo(MemMapModule[i].Path, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
+		SHGetFileInfo(moduleInfo.Path, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
 		m_ModuleIcons.Add(sfi.hIcon);
 
 		CString uppercase_name = CString(moduleInfo.Name).MakeUpper();
 		if (m_Filter.GetLength() != 0 && uppercase_name.Find(m_Filter.MakeUpper()) == -1)
 			continue;
 
-		TCHAR strStart[64];
+		TCHAR strStart[64] = { 0 };
 		_stprintf_s(strStart, _T("0x%IX"), moduleInfo.Start);
-		TCHAR strEnd[64];
+		TCHAR strEnd[64] = { 0 };
 		_stprintf_s(strEnd, _T("0x%IX"), moduleInfo.End);
-		TCHAR strSize[64];
+		TCHAR strSize[64] = { 0 };
 		_stprintf_s(strSize, _T("0x%X"), moduleInfo.Size);
 
-		AddData(i, moduleInfo.Name.GetBuffer(), strStart, strEnd, strSize, static_cast<LPARAM>(moduleInfo.Start));
+		AddData(
+			idx,
+			moduleInfo.Name.GetString(),
+			moduleInfo.Path.GetString(), 
+			const_cast<LPCTSTR>(strStart), 
+			const_cast<LPCTSTR>(strEnd),
+			const_cast<LPCTSTR>(strSize), 
+			static_cast<LPARAM>(moduleInfo.Start)
+		);
 	}
 }
 
@@ -101,9 +109,10 @@ BOOL CDialogModules::OnInitDialog()
 
 	m_ModuleList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);
 
-	m_ModuleList.InsertColumn(COLUMN_MODULE, _T("Module"), LVCFMT_LEFT, 300);
-	m_ModuleList.InsertColumn(COLUMN_START, _T("Start"), LVCFMT_LEFT, 80);
-	m_ModuleList.InsertColumn(COLUMN_END, _T("End"), LVCFMT_LEFT, 80);
+	m_ModuleList.InsertColumn(COLUMN_NAME, _T("Module"), LVCFMT_LEFT, 140);
+	m_ModuleList.InsertColumn(COLUMN_PATH, _T("Path"), LVCFMT_LEFT, 200);
+	m_ModuleList.InsertColumn(COLUMN_START, _T("Start"), LVCFMT_LEFT, 100);
+	m_ModuleList.InsertColumn(COLUMN_END, _T("End"), LVCFMT_LEFT, 100);
 	m_ModuleList.InsertColumn(COLUMN_SIZE, _T("Size"), LVCFMT_LEFT, 80);
 
 	m_ModuleList.SetImageList(&m_ModuleIcons, LVSIL_SMALL);
@@ -233,12 +242,29 @@ int CALLBACK CDialogModules::CompareFunction(LPARAM lParam1, LPARAM lParam2, LPA
 
 			return (int)(num2 - num1);
 		}
-		else if (column == COLUMN_MODULE)
+		else if (column == COLUMN_NAME)
 		{
 			CString strModuleName1 = pListCtrl->GetItemText(item1, column);
 			CString strModuleName2 = pListCtrl->GetItemText(item2, column);
 
 			return _tcsicmp(strModuleName1.GetBuffer(), strModuleName2.GetBuffer());
+		}
+		else if (column == COLUMN_PATH)
+		{
+			CString strModulePath1 = pListCtrl->GetItemText(item1, column);
+			CString strModulePath2 = pListCtrl->GetItemText(item2, column);
+
+			int idxSlash1 = strModulePath1.ReverseFind(_T('\\'));
+			if (!idxSlash1)
+				idxSlash1 = strModulePath1.ReverseFind(_T('/'));
+			CString strModuleFile1 = strModulePath1.Mid(++idxSlash1);
+
+			int idxSlash2 = strModulePath2.ReverseFind(_T('\\'));
+			if (!idxSlash2)
+				idxSlash2 = strModulePath2.ReverseFind(_T('/'));
+			CString strModuleFile2 = strModulePath2.Mid(++idxSlash2);
+
+			return _tcsicmp(strModuleFile1.GetBuffer(), strModuleFile2.GetBuffer());
 		}
 	}
 	return 0;
@@ -254,9 +280,13 @@ void CDialogModules::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
 
 	switch (compare->iColumn)
 	{
-	case COLUMN_MODULE:
+	case COLUMN_NAME:
 		m_bSortAscendingName = !m_bSortAscendingName;
 		compare->bAscending = m_bSortAscendingName;
+		break;
+	case COLUMN_PATH:
+		m_bSortAscendingPath = !m_bSortAscendingPath;
+		compare->bAscending = m_bSortAscendingPath;
 		break;
 	case COLUMN_START:
 		m_bSortAscendingStart = !m_bSortAscendingStart;
@@ -295,12 +325,12 @@ void CDialogModules::OnOK()
 	CDialogEx::OnOK();
 }
 
-int CDialogModules::AddData(int Index, LPTSTR ModuleName, LPTSTR StartAddress, LPTSTR EndAddress, LPTSTR ModuleSize, LPARAM lParam)
+int CDialogModules::AddData(int Index, LPCTSTR ModuleName, LPCTSTR ModulePath, LPCTSTR StartAddress, LPCTSTR EndAddress, LPCTSTR ModuleSize, LPARAM lParam)
 {
 	LVITEM lvi = { 0 };
 
 	lvi.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM;
-	lvi.pszText = ModuleName;
+	lvi.pszText = (LPTSTR)ModuleName;
 	lvi.cchTextMax = static_cast<int>(_tcslen(ModuleName)) + 1;
 	lvi.iImage = Index;
 	lvi.lParam = lParam;
@@ -308,9 +338,10 @@ int CDialogModules::AddData(int Index, LPTSTR ModuleName, LPTSTR StartAddress, L
 
 	int pos = m_ModuleList.InsertItem(&lvi);
 
-	m_ModuleList.SetItemText(pos, COLUMN_START, (LPTSTR)StartAddress);
-	m_ModuleList.SetItemText(pos, COLUMN_END, (LPTSTR)EndAddress);
-	m_ModuleList.SetItemText(pos, COLUMN_SIZE, (LPTSTR)ModuleSize);
+	m_ModuleList.SetItemText(pos, COLUMN_PATH, (LPCTSTR)ModulePath);
+	m_ModuleList.SetItemText(pos, COLUMN_START, (LPCTSTR)StartAddress);
+	m_ModuleList.SetItemText(pos, COLUMN_END, (LPCTSTR)EndAddress);
+	m_ModuleList.SetItemText(pos, COLUMN_SIZE, (LPCTSTR)ModuleSize);
 
 	return pos;
 }

@@ -50,11 +50,11 @@ namespace Utils
 		return (val % alignment == 0) ? val : (val / alignment + 1) * alignment;
 	}
 
-	static std::basic_string<TCHAR> GetLastErrorString()
+	static CString GetLastErrorString()
 	{
 		TCHAR buf[256];
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf, 256, NULL);
-		return std::basic_string<TCHAR>(buf);
+		size_t size = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf, 256, NULL);
+		return CString(buf, size);
 	}
 
 	static BOOL IsElevated()
@@ -119,26 +119,6 @@ namespace Utils
 		return TRUE;
 	}
 
-	//Returns the last Win32 error, in string format. Returns an empty string if there is no error.
-	static std::basic_string<TCHAR> GetLastErrorAsString()
-	{
-		// Get the error message, if any
-		DWORD errorMessageID = GetLastError();
-		if (errorMessageID == 0)
-			return std::basic_string<TCHAR>(); //No error message has been recorded
-
-		LPTSTR messageBuffer = 0;
-		size_t size = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-			NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&messageBuffer, 0, NULL);
-
-		std::basic_string<TCHAR> message(messageBuffer, size);
-
-		// Free the buffer
-		LocalFree(messageBuffer);
-
-		return message;
-	}
-
 	static HMODULE GetLocalModuleHandleW(LPCWSTR moduleName)
 	{
 		PVOID ModuleBase = 0;
@@ -151,7 +131,7 @@ namespace Utils
 			wchar_t wcsBaseDllName[MAX_PATH] = { 0 };
 			wcscpy_s(wcsBaseDllName, cursor->BaseDllName.Buffer);
 			if (_wcsicmp(wcsBaseDllName, moduleName) == 0) 
-			{
+			{ 
 				ModuleBase = cursor->BaseAddress;
 				break;
 			}
