@@ -362,6 +362,72 @@ BOOL TransparentBlt(CImage* pSrcImage, CImage* pDstImage, int xDest, int yDest, 
 	return bResult;
 }
 
+wchar_t GetBeginChar(CString name)
+{
+	if (!name.IsEmpty())
+	{
+		wchar_t real = name.MakeUpper().GetAt(0);
+		if (iswalpha(real) || iswalnum(real))
+		{
+			return real;
+		}
+	}
+	return '_';
+}
+
+bool SortBeginnings(std::pair<wchar_t, std::vector<std::pair<CString, UINT>>> i, std::pair<wchar_t, std::vector<std::pair<CString, UINT>>> j)
+{
+	return i.first < j.first;
+}
+
+bool SortClassesByName(std::pair<CString, UINT> i, std::pair<CString, UINT> j)
+{
+	return GetBeginChar(i.first) < GetBeginChar(j.first);
+}
+
+std::vector<std::pair<wchar_t, std::vector<std::pair<CString, UINT>>>> ExplodeByFirstChar(std::vector<std::pair<CString, UINT>> classRefs)
+{
+	std::vector<std::pair<wchar_t, std::vector<std::pair<CString, UINT>>>> out;
+
+	for (int i = 0; i < classRefs.size(); i++)
+	{
+		std::pair<CString, UINT>* classRef = &classRefs[i];
+
+		// determine begin char
+		wchar_t begin = GetBeginChar(classRef->first);
+
+		// find if already in out
+		std::vector<std::pair<CString, UINT>>* outByBegin = NULL;
+		for (int j = 0; j < out.size(); j++)
+		{
+			if (out[j].first == begin)
+			{
+				outByBegin = &out[j].second;
+				break;
+			}
+		}
+
+		// create if missing
+		if (outByBegin == NULL)
+		{
+			out.push_back(std::pair<wchar_t, std::vector<std::pair<CString, UINT>>>(begin, std::vector<std::pair<CString, UINT>>()));
+			outByBegin = &out[out.size() - 1].second;
+		}
+
+		// add to correct begin vector
+		outByBegin->push_back(*classRef);
+	}
+
+	// Sort all
+	std::sort(out.begin(), out.end(), SortBeginnings);
+	for (int i = 0; i < out.size(); i++)
+	{
+		std::sort(out[i].second.begin(), out[i].second.end(), SortClassesByName);
+	}
+
+	return out;
+}
+
 void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	m_Edit.ShowWindow(SW_HIDE);
@@ -486,13 +552,33 @@ void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 				CBitmap bmp;
 				bmp.Attach(img.Detach());
 
+				std::vector<std::pair<CString, UINT>> classRefs;
+
 				for (UINT m = 0; m < theApp.Classes.size(); m++)
 				{
 					if ((HotSpots[i].Type == HS_CHANGE_X) && (pNode->GetParent() == theApp.Classes[m]))
 						continue;
-					menu.AppendMenu(MF_STRING | MF_ENABLED, WM_CHANGECLASSMENU + m, theApp.Classes[m]->GetName());
-					menu.SetMenuItemBitmaps(m, MF_BYPOSITION, &bmp, &bmp);
+
+					classRefs.push_back(std::pair<CString, UINT>(theApp.Classes[m]->GetName(), m));
 				}
+
+				std::vector<std::pair<wchar_t, std::vector<std::pair<CString, UINT>>>> out = ExplodeByFirstChar(classRefs);
+
+				for (UINT i = 0; i < out.size(); i++)
+				{
+					CMenu innerMenu;
+					innerMenu.CreatePopupMenu();
+
+					for (UINT j = 0; j < out[i].second.size(); j++)
+					{
+						innerMenu.AppendMenu(MF_STRING | MF_ENABLED, WM_CHANGECLASSMENU + out[i].second[j].second, out[i].second[j].first);
+						innerMenu.SetMenuItemBitmaps(j, MF_BYPOSITION, &bmp, &bmp);
+					}
+
+					menu.AppendMenu(MF_POPUP, (UINT_PTR)innerMenu.m_hMenu, CString(out[i].first));
+					menu.SetMenuItemBitmaps(i, MF_BYPOSITION, &bmp, &bmp);
+				}
+
 				menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_NOANIMATION, pos.left, pos.bottom, this);
 			}
 			Invalidate();
