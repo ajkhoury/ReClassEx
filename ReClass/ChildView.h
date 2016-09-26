@@ -198,6 +198,9 @@ public:
 	afx_msg void OnTypeFunction();
 	afx_msg void OnUpdateTypeFunction(CCmdUI *pCmdUI);
 
+	afx_msg void OnTypeFunctionPtr( );
+	afx_msg void OnUpdateTypeFunctionPtr( CCmdUI *pCmdUI );
+
 	afx_msg void OnTypePointer();
 	afx_msg void OnUpdateTypePointer(CCmdUI *pCmdUI);
 

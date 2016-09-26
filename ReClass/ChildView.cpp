@@ -133,6 +133,7 @@ BEGIN_MESSAGE_MAP( CChildView, CWnd )
 	ON_COMMAND( ID_INSERT_INSERT2048, &CChildView::OnInsertInsert2048 )
 	ON_COMMAND( ID_TYPE_VTABLE, &CChildView::OnTypeVtable )
 	ON_COMMAND( ID_TYPE_FUNCTION, &CChildView::OnTypeFunction )
+	ON_COMMAND( ID_TYPE_FUNCTION_PTR, &CChildView::OnTypeFunctionPtr )
 	ON_COMMAND( ID_TYPE_POINTER, &CChildView::OnTypePointer )
 	ON_COMMAND( ID_TYPE_ARRAY, &CChildView::OnTypeArray )
 	ON_COMMAND( ID_TYPE_CLASS, &CChildView::OnTypeClass )
@@ -1789,6 +1790,16 @@ void CChildView::OnTypeFunction( )
 }
 
 void CChildView::OnUpdateTypeFunction( CCmdUI *pCmdUI )
+{
+	StandardTypeUpdate( pCmdUI );
+}
+
+void CChildView::OnTypeFunctionPtr( )
+{
+	ReplaceSelectedWithType( nt_functionptr );
+}
+
+void CChildView::OnUpdateTypeFunctionPtr( CCmdUI *pCmdUI )
 {
 	StandardTypeUpdate( pCmdUI );
 }
