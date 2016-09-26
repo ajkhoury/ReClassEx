@@ -16,9 +16,9 @@ void CNodeFunctionPtr::Update( CHotSpot & Spot )
 
 		size_t address = Spot.Address;
 		ReClassReadMemory( (LPVOID)address, &address, sizeof( size_t ) );
-		char* code[1536]; // max 1536 lines
-		ReClassReadMemory( (LPVOID)address, code, 1536 );
-		char** EndCodeSection = (code + 1536);
+		char code[4096] = { (char)0xCC }; // max one PAGE_SIZE length (4096 bytes)
+		ReClassReadMemory( (LPVOID)address, code, 4096 );
+		size_t EndCodeSection = (size_t)(code + 4096);
 
 		DISASM MyDisasm;
 		ZeroMemory( &MyDisasm, sizeof( DISASM ) );
@@ -36,7 +36,7 @@ void CNodeFunctionPtr::Update( CHotSpot & Spot )
 		bool Error = 0;
 		while (!Error)
 		{
-			MyDisasm.SecurityBlock = (UInt32)((size_t)EndCodeSection - (size_t)MyDisasm.EIP);
+			MyDisasm.SecurityBlock = (UInt32)((size_t)EndCodeSection - MyDisasm.EIP);
 
 			int len = Disasm( &MyDisasm );
 			if (len == OUT_OF_BLOCK)
