@@ -9,7 +9,7 @@ public:
 
 	virtual void Update( CHotSpot& Spot );
 
-	virtual int GetMemorySize( ) { return sizeof( size_t ); }
+	virtual int GetMemorySize( ) { return memsize; }
 
 	virtual int Draw( ViewInfo& View, int x, int y );
 

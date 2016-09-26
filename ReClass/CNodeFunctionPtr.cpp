@@ -21,7 +21,7 @@ void CNodeFunctionPtr::Update( CHotSpot & Spot )
 		char** EndCodeSection = (code + 1536);
 
 		DISASM MyDisasm;
-		memset( &MyDisasm, 0, sizeof( DISASM ) );
+		ZeroMemory( &MyDisasm, sizeof( DISASM ) );
 
 		MyDisasm.EIP = (size_t)code;
 
@@ -77,7 +77,7 @@ int CNodeFunctionPtr::Draw( ViewInfo & View, int x, int y )
 	tx = AddAddressOffset( View, tx, y );
 
 	if (m_pParentNode->GetType( ) != nt_vtable)
-		tx = AddText( View, tx, y, crType, HS_NONE, _T( "Function" ) );
+		tx = AddText( View, tx, y, crType, HS_NONE, _T( "FunctionPtr" ) );
 	else
 		tx = AddText( View, tx, y, crFunction, HS_NONE, _T( "(%i)" ), m_Offset / sizeof( size_t ) );
 
@@ -100,7 +100,7 @@ int CNodeFunctionPtr::Draw( ViewInfo & View, int x, int y )
 
 	if (m_LevelsOpen[View.Level])
 	{
-		for (UINT i = 0; i < Assembly.size( ); i++)
+		for (size_t i = 0; i < Assembly.size( ); i++)
 		{
 			y += g_FontHeight;
 			AddText( View, ax, y, crHex, HS_EDIT, "%s", Assembly[i].GetBuffer( ) );
