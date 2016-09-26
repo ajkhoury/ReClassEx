@@ -51,5 +51,6 @@ See wiki for instructions on how to compile:
 - [stevemk14ebr](https://github.com/stevemk14ebr)
 - [Timboy67678](https://github.com/Timboy67678)
 - [DarthTon](https://github.com/DarthTon)
+- [ReUnioN](https://github.com/ReUnioN)
 - leveln
 - [buddyfavors](https://github.com/buddyfavors)
