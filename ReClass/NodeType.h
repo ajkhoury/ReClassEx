@@ -12,6 +12,7 @@ class CNodeHex16;
 class CNodeHex8;
 class CNodeBits;
 class CNodeVTable;
+class CNodeFunction;
 class CNodeFunctionPtr;
 class CNodePtr;
 class CNodeInt64;
