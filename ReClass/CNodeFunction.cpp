@@ -12,58 +12,7 @@ void CNodeFunction::Update( CHotSpot & Spot )
 	StandardUpdate( Spot );
 
 	if (Spot.ID == 0)
-	{
-		Assembly.clear( );
-
-		size_t address = Spot.Address;
-		char code[4096] = { (char)0xCC }; // max 4096 bytes
-		ReClassReadMemory( (LPVOID)address, code, 4096 );
-		size_t EndCodeSection = (size_t)(code + 4096);
-
-		DISASM MyDisasm;
-		ZeroMemory( &MyDisasm, sizeof( DISASM ) );
-
-		MyDisasm.EIP = (size_t)code;
-
-		MyDisasm.VirtualAddr = (UInt64)address;
-		#ifdef _WIN64
-		MyDisasm.Archi = 64;
-		#else
-		MyDisasm.Archi = 0;
-		#endif
-		MyDisasm.Options = PrefixedNumeral;
-
-		bool Error = 0;
-		while (!Error)
-		{
-			MyDisasm.SecurityBlock = (UInt32)(EndCodeSection - MyDisasm.EIP);
-
-			int len = Disasm( &MyDisasm );
-			if (len == OUT_OF_BLOCK)
-				Error = 1;
-			else if (len == UNKNOWN_OPCODE)
-				Error = 1;
-			else
-			{
-				char szInstruction[96];
-				sprintf_s( szInstruction, "%p  %s", (void*)MyDisasm.VirtualAddr, MyDisasm.CompleteInstr );
-				Assembly.emplace_back( szInstruction );
-
-				MyDisasm.EIP = MyDisasm.EIP + len;
-				MyDisasm.VirtualAddr = MyDisasm.VirtualAddr + len;
-				if (MyDisasm.EIP >= (UIntPtr)EndCodeSection)
-					break;
-
-				if (MyDisasm.Instruction.Opcode == 0xCC) // INT3 instruction
-				{
-					// Set memsize
-					memsize = (DWORD)(MyDisasm.VirtualAddr - (UInt64)address);
-					break;
-				}
-			}
-		}
-
-	}
+		DisassembleBytes( Spot.Address );
 }
 
 int CNodeFunction::Draw( ViewInfo & View, int x, int y )
@@ -106,5 +55,60 @@ int CNodeFunction::Draw( ViewInfo & View, int x, int y )
 	}
 
 	return y += g_FontHeight;
+}
+
+void CNodeFunction::DisassembleBytes( size_t Address )
+{
+	Assembly.clear( );
+
+	size_t address = Address;
+
+	char code[4096] = { (char)0xCC }; // max 4096 bytes
+	ReClassReadMemory( (LPVOID)address, code, 4096 );
+	size_t EndCodeSection = (size_t)(code + 4096);
+
+	DISASM MyDisasm;
+	ZeroMemory( &MyDisasm, sizeof( DISASM ) );
+
+	MyDisasm.EIP = (size_t)code;
+
+	MyDisasm.VirtualAddr = (UInt64)address;
+	#ifdef _WIN64
+	MyDisasm.Archi = 64;
+	#else
+	MyDisasm.Archi = 0;
+	#endif
+	MyDisasm.Options = PrefixedNumeral;
+
+	bool Error = 0;
+	while (!Error)
+	{
+		MyDisasm.SecurityBlock = (UInt32)(EndCodeSection - MyDisasm.EIP);
+
+		int len = Disasm( &MyDisasm );
+		if (len == OUT_OF_BLOCK)
+			Error = 1;
+		else if (len == UNKNOWN_OPCODE)
+			Error = 1;
+		else
+		{
+			// Set memsize
+			memsize += len;
+
+			char szInstruction[96];
+			sprintf_s( szInstruction, "%p  %s", (void*)MyDisasm.VirtualAddr, MyDisasm.CompleteInstr );
+			Assembly.emplace_back( szInstruction );
+
+			MyDisasm.EIP += len;
+			MyDisasm.VirtualAddr += len;
+
+			if (MyDisasm.EIP >= (UIntPtr)EndCodeSection)
+				break;
+
+			if (MyDisasm.Instruction.Opcode == 0xCC) // INT3 instruction
+				break;
+
+		}
+	}
 }
 

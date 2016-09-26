@@ -13,6 +13,8 @@ public:
 
 	virtual int Draw( ViewInfo& View, int x, int y );
 
+	void DisassembleBytes( size_t Address );
+
 public:
 	DWORD memsize;
 
