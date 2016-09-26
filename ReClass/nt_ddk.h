@@ -1007,7 +1007,6 @@ typedef struct _OBJECT_ATTRIBUTES64
 	ULONG64 SecurityQualityOfService;
 } OBJECT_ATTRIBUTES64, *POBJECT_ATTRIBUTES64;
 
-
 #define InitializeObjectAttributes(p,n,a,r,s) { \
 	(p)->Length = sizeof(OBJECT_ATTRIBUTES); \
 	(p)->RootDirectory = r; \

@@ -947,7 +947,8 @@ CNodeBase* CReClass2016App::CreateNewNode(NodeType Type)
 	if (Type == nt_unicode) return new CNodeUnicode;
 
 	if (Type == nt_vtable) return new CNodeVTable;
-	if (Type == nt_function) return new CNodeFunctionPtr;
+	if (Type == nt_functionptr) return new CNodeFunctionPtr;
+	if (Type == nt_function) return new CNodeFunction;
 
 	if (Type == nt_pointer) return new CNodePtr;
 	if (Type == nt_array) return new CNodeArray;
@@ -1571,7 +1572,7 @@ void CReClass2016App::OnButtonGenerate()
 				var.push_back(t);
 			}
 
-			if (Type == nt_function)
+			if (Type == nt_functionptr)
 			{
 				t.Format(_T("\t%s; //0x%0.4X %s\r\n"), pNode->GetName(), pNode->GetOffset(), pNode->GetComment());
 				var.push_back(t);

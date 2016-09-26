@@ -60,7 +60,7 @@ enum NodeType
 	nt_uint8, // byte
 	nt_text,
 	nt_unicode,
-	nt_function,
+	nt_functionptr,
 	nt_custom,
 	nt_vec2,
 	nt_vec3,
@@ -73,6 +73,7 @@ enum NodeType
 	nt_pwchar,
 	nt_bits,
 	nt_uint64, // qword
+	nt_function,
 };
 
 #define ISHEXTYPE(type) (type == nt_hex64 || type == nt_hex32 || type == nt_hex16 || type == nt_hex8 || type == nt_bits)

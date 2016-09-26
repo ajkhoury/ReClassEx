@@ -324,6 +324,7 @@
     <ClInclude Include="CNodeDouble.h" />
     <ClInclude Include="CNodeDWORD.h" />
     <ClInclude Include="CNodeFloat.h" />
+    <ClInclude Include="CNodeFunction.h" />
     <ClInclude Include="CNodeFunctionPtr.h" />
     <ClInclude Include="CNodeHex16.h" />
     <ClInclude Include="CNodeHex32.h" />
@@ -391,6 +392,7 @@
     <ClCompile Include="CNodeDouble.cpp" />
     <ClCompile Include="CNodeDWORD.cpp" />
     <ClCompile Include="CNodeFloat.cpp" />
+    <ClCompile Include="CNodeFunction.cpp" />
     <ClCompile Include="CNodeFunctionPtr.cpp" />
     <ClCompile Include="CNodeHex16.cpp" />
     <ClCompile Include="CNodeHex32.cpp" />

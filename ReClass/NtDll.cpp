@@ -4,10 +4,10 @@
 
 namespace ntdll
 {
-	HMODULE Base = nullptr;
-	tNtQuerySystemInformation NtQuerySystemInformation = nullptr;
-	tNtQueryInformationProcess NtQueryInformationProcess = nullptr;
-	tRtlGetVersion RtlGetVersion = nullptr;
-	tRtlGetNativeSystemInformation RtlGetNativeSystemInformation = nullptr;
-	tNtCreateThreadEx NtCreateThreadEx = nullptr;
+HMODULE Base = nullptr;
+tNtQuerySystemInformation NtQuerySystemInformation = nullptr;
+tNtQueryInformationProcess NtQueryInformationProcess = nullptr;
+tRtlGetVersion RtlGetVersion = nullptr;
+tRtlGetNativeSystemInformation RtlGetNativeSystemInformation = nullptr;
+tNtCreateThreadEx NtCreateThreadEx = nullptr;
 }

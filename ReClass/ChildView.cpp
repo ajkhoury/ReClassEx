@@ -132,7 +132,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_COMMAND(ID_INSERT_INSERT1024, &CChildView::OnInsertInsert1024)
 	ON_COMMAND(ID_INSERT_INSERT2048, &CChildView::OnInsertInsert2048)
 	ON_COMMAND(ID_TYPE_VTABLE, &CChildView::OnTypeVtable)
-	ON_COMMAND(ID_TYPE_FUNCTION, &CChildView::OnTypeFunction)
+	ON_COMMAND(ID_TYPE_FUNCTION, &CChildView::OnTypeFunctionPtr)
 	ON_COMMAND(ID_TYPE_POINTER, &CChildView::OnTypePointer)
 	ON_COMMAND(ID_TYPE_ARRAY, &CChildView::OnTypeArray)
 	ON_COMMAND(ID_TYPE_CLASS, &CChildView::OnTypeClass)
@@ -180,7 +180,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_ARRAY, &CChildView::OnUpdateTypeArray)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_CLASS, &CChildView::OnUpdateTypeClass)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_VTABLE, &CChildView::OnUpdateTypeVtable)
-	ON_UPDATE_COMMAND_UI(ID_TYPE_FUNCTION, &CChildView::OnUpdateTypeFunction)
+	ON_UPDATE_COMMAND_UI(ID_TYPE_FUNCTION, &CChildView::OnUpdateTypeFunctionPtr)
 	ON_UPDATE_COMMAND_UI(ID_TYPE_POINTER, &CChildView::OnUpdateTypePointer)
 
 	ON_COMMAND(ID_BUTTON_EDITCODE, &CChildView::OnButtonEditcode)
@@ -830,7 +830,7 @@ void CChildView::OnMouseHover(UINT nFlags, CPoint point)
 				if (HotSpots[i].Type == HS_SELECT)
 				{
 					CNodeBase* pNode = (CNodeBase*)HotSpots[i].object;
-					if (pNode->GetType() == nt_function)
+					if (pNode->GetType() == nt_functionptr)
 					{
 						if (HotSpots[i].object->IsLevelOpen(HotSpots[i].Level))
 							continue;
@@ -1369,7 +1369,7 @@ void CChildView::ReplaceSelectedWithType(NodeType Type)
 		if (!theApp.IsNodeValid(Selected[i].object))
 			continue;
 		if (Selected[i].object->GetParent()->GetType() == nt_vtable)
-			Type = nt_function;
+			Type = nt_functionptr;
 
 		CNodeBase* pNewNode = theApp.CreateNewNode(Type);
 
@@ -1687,12 +1687,12 @@ void CChildView::OnUpdateTypeVtable(CCmdUI *pCmdUI)
 	StandardTypeUpdate(pCmdUI);
 }
 
-void CChildView::OnTypeFunction()
+void CChildView::OnTypeFunctionPtr()
 {
-	ReplaceSelectedWithType(nt_function);
+	ReplaceSelectedWithType( nt_functionptr );
 }
 
-void CChildView::OnUpdateTypeFunction(CCmdUI *pCmdUI)
+void CChildView::OnUpdateTypeFunctionPtr(CCmdUI *pCmdUI)
 {
 	StandardTypeUpdate(pCmdUI);
 }

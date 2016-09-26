@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ChildView.h"
 
 class CChildFrame : public CMDIChildWndEx

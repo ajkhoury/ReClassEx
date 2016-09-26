@@ -10,6 +10,7 @@
 #include "CNodeBits.h"
 #include "CNodeVTable.h"
 #include "CNodeFunctionPtr.h"
+#include "CNodeFunction.h"
 #include "CNodePtr.h"
 #include "CNodeInt64.h"
 #include "CNodeInt32.h"

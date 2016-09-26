@@ -55,21 +55,22 @@
 #include "..\\scintilla\\include\\Scintilla.h"
 
 // A few basic colors for scintilla editor
-const COLORREF black = RGB(0, 0, 0);
-const COLORREF white = RGB(255, 255, 255);
-const COLORREF green = RGB(0, 200, 0);
-const COLORREF red = RGB(255, 0, 0);
-const COLORREF lightred = RGB(255, 100, 100);
-const COLORREF blue = RGB(0, 0, 255);
-const COLORREF darkblue = RGB(0, 0, 100);
-const COLORREF yellow = RGB(255, 255, 0);
-const COLORREF orange = RGB(255, 175, 65);
-const COLORREF magenta = RGB(255, 0, 255);
-const COLORREF cyan = RGB(0, 255, 255);
-const COLORREF purple = RGB(128, 0, 255);
+const COLORREF black = RGB( 0, 0, 0 );
+const COLORREF white = RGB( 255, 255, 255 );
+const COLORREF green = RGB( 0, 200, 0 );
+const COLORREF red = RGB( 255, 0, 0 );
+const COLORREF lightred = RGB( 255, 100, 100 );
+const COLORREF blue = RGB( 0, 0, 255 );
+const COLORREF darkblue = RGB( 0, 0, 100 );
+const COLORREF yellow = RGB( 255, 255, 0 );
+const COLORREF orange = RGB( 255, 175, 65 );
+const COLORREF magenta = RGB( 255, 0, 255 );
+const COLORREF cyan = RGB( 0, 255, 255 );
+const COLORREF purple = RGB( 128, 0, 255 );
 
 // Scintilla Colors structure
-struct SScintillaColors {
+struct SScintillaColors
+{
 	int			iItem;
 	COLORREF	rgb;
 };
@@ -227,32 +228,32 @@ extern CString tdPWChar;
 //
 // Global functions
 //
-bool PauseResumeThreadList(bool bResumeThread);
+bool PauseResumeThreadList( bool bResumeThread );
 
-bool UpdateMemoryMap();
-bool UpdateExports();
+bool UpdateMemoryMap( );
+bool UpdateExports( );
 
-size_t GetBase();
-bool IsCode(size_t Address);
-bool IsData(size_t Address);
-bool IsMemory(size_t Address);
-bool IsModule(size_t Address);
+size_t GetBase( );
+bool IsCode( size_t Address );
+bool IsData( size_t Address );
+bool IsMemory( size_t Address );
+bool IsModule( size_t Address );
 
-CString GetAddressName(size_t Address,bool bHEX);
-CString GetModuleName(size_t Address);
-size_t  GetAddressFromName(CString moduleName);
+CString GetAddressName( size_t Address, bool bHEX );
+CString GetModuleName( size_t Address );
+size_t  GetAddressFromName( CString moduleName );
 
-BOOL ReClassReadMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read = nullptr);
-BOOL ReClassWriteMemory(LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote = nullptr);
+BOOL ReClassReadMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read = nullptr );
+BOOL ReClassWriteMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote = nullptr );
 HANDLE ReClassOpenProcess( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwProcessID );
 HANDLE ReClassOpenThread( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwThreadID );
 
-CStringA ReadMemoryStringA(size_t address, SIZE_T max = 40);
-CStringW ReadMemoryStringW(size_t address, SIZE_T max = 40);
+CStringA ReadMemoryStringA( size_t address, SIZE_T max = 40 );
+CStringW ReadMemoryStringW( size_t address, SIZE_T max = 40 );
 
-__int64 StrToNum(const TCHAR *udata, int udatalen, int base);
-int SplitString(const CString& input, const CString& delimiter, CStringArray& results);
-size_t ConvertStrToAddress(CString str);
+__int64 StrToNum( const TCHAR *udata, int udatalen, int base );
+int SplitString( const CString& input, const CString& delimiter, CStringArray& results );
+size_t ConvertStrToAddress( CString str );
 
 
 // 
@@ -291,13 +292,13 @@ struct AddressName
 // Also decided to change folder creation so that its up to the user to create the folder if they want/have plugins
 //
 #pragma region Plugins
-void LoadPlugins();
+void LoadPlugins( );
 
 #define RECLASS_EXPORT __declspec(dllexport) 
 #define PLUGIN_CC __stdcall
 
-typedef BOOL(PLUGIN_CC *MEMORY_OPERATION)(LPVOID, LPVOID, SIZE_T, PSIZE_T);
-typedef HANDLE(PLUGIN_CC *HANDLE_OPERATION)(DWORD, BOOL, DWORD);
+typedef BOOL( PLUGIN_CC *MEMORY_OPERATION )(LPVOID, LPVOID, SIZE_T, PSIZE_T);
+typedef HANDLE( PLUGIN_CC *HANDLE_OPERATION )(DWORD, BOOL, DWORD);
 
 extern MEMORY_OPERATION g_PluginOverrideMemoryWrite;
 extern MEMORY_OPERATION g_PluginOverrideMemoryRead;
@@ -306,7 +307,7 @@ extern HANDLE_OPERATION g_PluginOverrideHandleThread;
 
 typedef struct _RECLASS_PLUGIN_INFO
 {
-	_RECLASS_PLUGIN_INFO() : DialogID(-1) {}
+	_RECLASS_PLUGIN_INFO( ) : DialogID( -1 ) { }
 
 	wchar_t Name[260];
 	wchar_t About[2048];
@@ -314,9 +315,9 @@ typedef struct _RECLASS_PLUGIN_INFO
 	int DialogID;
 } RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
-BOOL PLUGIN_CC PluginInit(LPRECLASS_PLUGIN_INFO lpRCInfo);
-void PLUGIN_CC PluginStateChange(bool state);
-typedef BOOL(PLUGIN_CC *tPluginInit)(LPRECLASS_PLUGIN_INFO lpRCInfo);
+BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
+void PLUGIN_CC PluginStateChange( bool state );
+typedef BOOL( PLUGIN_CC *tPluginInit )(LPRECLASS_PLUGIN_INFO lpRCInfo);
 typedef void(PLUGIN_CC *tPluginStateChange)(bool state);
 
 typedef struct _RECLASS_PLUGINS
@@ -331,12 +332,12 @@ typedef struct _RECLASS_PLUGINS
 } RECLASS_PLUGINS, *LPRECLASS_PLUGINS;
 
 //Exported Functions Below
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideMemoryOperations(MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet = FALSE);
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideHandleOperations(HANDLE_OPERATION HandleProcess, HANDLE_OPERATION HandleThread, BOOL bForceSet = FALSE);
-RECLASS_EXPORT void PLUGIN_CC ReClassPrintConsole(const wchar_t *format, ...);
-RECLASS_EXPORT LPHANDLE PLUGIN_CC ReClassGetProcessHandle();
-RECLASS_EXPORT HWND PLUGIN_CC ReClassMainWindow();
-RECLASS_EXPORT CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface();
+RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet = FALSE );
+RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION HandleProcess, HANDLE_OPERATION HandleThread, BOOL bForceSet = FALSE );
+RECLASS_EXPORT void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
+RECLASS_EXPORT LPHANDLE PLUGIN_CC ReClassGetProcessHandle( );
+RECLASS_EXPORT HWND PLUGIN_CC ReClassMainWindow( );
+RECLASS_EXPORT CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface( );
 
 extern std::vector<RECLASS_PLUGINS> LoadedPlugins;
 #pragma endregion
