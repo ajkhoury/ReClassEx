@@ -258,6 +258,9 @@ BOOL CReClass2016App::InitInstance( )
 
 int CReClass2016App::ExitInstance( )
 {
+	//
+	// Free resources
+	//
 	if (m_hMDIMenu != NULL)
 		FreeResource( m_hMDIMenu );
 
@@ -272,9 +275,14 @@ int CReClass2016App::ExitInstance( )
 
 	AfxOleTerm( FALSE );
 
+	//
 	// Release Scintilla
+	//
 	Scintilla_ReleaseResources( );
 
+	//
+	// Write settings to profile
+	//
 	WriteProfileString( _T( "Typedefs" ), _T( "tdHex" ),	g_tdHex );
 	WriteProfileString( _T( "Typedefs" ), _T( "tdInt64" ),	g_tdInt64 );
 	WriteProfileString( _T( "Typedefs" ), _T( "tdInt32" ),	g_tdInt32 );
@@ -308,7 +316,6 @@ int CReClass2016App::ExitInstance( )
 	WriteProfileInt( _T( "Colors" ), _T( "g_crChar" ),		g_crChar );
 	WriteProfileInt( _T( "Colors" ), _T( "crCustom" ),		g_crCustom );
 	WriteProfileInt( _T( "Colors" ), _T( "g_crHex" ),			g_crHex );
-
 	WriteProfileInt( _T( "Display" ), _T( "g_bOffset" ),		g_bOffset );
 	WriteProfileInt( _T( "Display" ), _T( "g_bAddress" ),	g_bAddress );
 	WriteProfileInt( _T( "Display" ), _T( "g_bText" ),		g_bText );
@@ -321,9 +328,11 @@ int CReClass2016App::ExitInstance( )
 	WriteProfileInt( _T( "Display" ), _T( "gbFilterProcesses" ), g_bFilterProcesses );
 	WriteProfileInt( _T( "Display" ), _T( "g_bPrivatePadding" ), g_bPrivatePadding );
 	WriteProfileInt( _T( "Display" ), _T( "g_bClipboardCopy" ), g_bClipboardCopy );
-
 	WriteProfileInt( _T( "Misc" ), _T( "gbLoadModuleSymbol" ), g_bLoadModuleSymbol );
 
+	//
+	// Unload any loaded plugins
+	//
 	UnloadPlugins( );
 
 	return CWinAppEx::ExitInstance( );

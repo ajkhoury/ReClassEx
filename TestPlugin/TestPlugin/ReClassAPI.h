@@ -25,16 +25,13 @@ typedef HANDLE( PLUGIN_CC *tOpenThreadOperation )(IN DWORD dwDesiredAccess, IN B
 
 typedef struct _RECLASS_PLUGIN_INFO
 {
-	#ifdef __cplusplus
-	_RECLASS_PLUGIN_INFO( ) : DialogID( -1 ) { }
-	#endif
-	wchar_t Name[ 260 ];
-	wchar_t About[ 2048 ];
-	wchar_t Version[ 64 ];
+	wchar_t Name[256];
+	wchar_t Version[256];
+	wchar_t About[2048];
 	int DialogID;
-} RECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
+} RECLASS_PLUGIN_INFO, *PRECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
-BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
+BOOL PLUGIN_CC PluginInit( PRECLASS_PLUGIN_INFO lpRCInfo );
 VOID PLUGIN_CC PluginStateChange( BOOL state );
 INT_PTR CALLBACK PluginSettingsDlg( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam );
 
@@ -46,6 +43,10 @@ INT_PTR CALLBACK PluginSettingsDlg( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM l
 BOOL PLUGIN_CC ReClassOverrideReadMemoryOperation( tReadMemoryOperation MemRead );
 BOOL PLUGIN_CC ReClassOverrideWriteMemoryOperation( tWriteMemoryOperation MemWrite );
 BOOL PLUGIN_CC ReClassOverrideMemoryOperations( tReadMemoryOperation MemRead, tWriteMemoryOperation MemWrite );
+BOOL PLUGIN_CC ReClassIsReadMemoryOverriden( );
+BOOL PLUGIN_CC ReClassIsWriteMemoryOverriden( );
+BOOL PLUGIN_CC ReClassRemoveReadMemoryOverride( );
+BOOL PLUGIN_CC ReClassRemoveWriteMemoryOverride( );
 
 /*
  *	Register overides for the opening of handles for various process/thread operations

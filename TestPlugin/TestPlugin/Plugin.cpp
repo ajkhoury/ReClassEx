@@ -1,6 +1,7 @@
 #include "Plugin.h"
+#include "resource.h"
 
-BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo )
+BOOL PLUGIN_CC PluginInit( PRECLASS_PLUGIN_INFO lpRCInfo )
 {
 	wcscpy_s( lpRCInfo->Name, L"Test Plugin Name" );
 	wcscpy_s( lpRCInfo->Version, L"1.0.0.2" );
@@ -25,11 +26,58 @@ INT_PTR CALLBACK PluginSettingsDlg( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM l
 {
 	switch (Msg)
 	{
+
 	case WM_INITDIALOG:
-		return TRUE;
+	{
+		SendMessage( 
+			GetDlgItem( hWnd, IDC_CHECK_READ_MEMORY_OVERRIDE ), 
+			BM_SETCHECK, 
+			MAKEWPARAM( ReClassIsReadMemoryOverriden( ) ? BST_CHECKED : BST_UNCHECKED, 0 ), 
+			0 
+		);
+		SendMessage( 
+			GetDlgItem( hWnd, IDC_CHECK_WRITE_MEMORY_OVERRIDE ), 
+			BM_SETCHECK, 
+			MAKEWPARAM( ReClassIsWriteMemoryOverriden( ) ? BST_CHECKED : BST_UNCHECKED, 0 ), 
+			0 
+		);
+	}
+	return TRUE;
+
+	case WM_COMMAND:
+	{
+		WORD NotificationCode = HIWORD( wParam );
+		WORD ControlId = LOWORD( wParam );
+		HWND hControlWnd = reinterpret_cast<HWND>(lParam);
+		
+		if (NotificationCode == BN_CLICKED)
+		{
+			BOOLEAN bChecked = (SendMessage( hControlWnd, BM_GETCHECK, 0, 0 ) == BST_CHECKED);
+
+			if (ControlId == IDC_CHECK_READ_MEMORY_OVERRIDE)
+			{
+				if (bChecked)
+					ReClassOverrideReadMemoryOperation( ReadCallback );
+				else
+					ReClassRemoveReadMemoryOverride( );
+			}
+			else if (ControlId == IDC_CHECK_WRITE_MEMORY_OVERRIDE)
+			{
+				if (bChecked)
+					ReClassOverrideWriteMemoryOperation( WriteCallback );
+				else
+					ReClassRemoveWriteMemoryOverride( );
+			}
+		}	
+	}
+	break;
+
 	case WM_CLOSE:
+	{
 		EndDialog( hWnd, 0 );
-		break;
+	}
+	break;
+
 	}
 	return FALSE;
 }

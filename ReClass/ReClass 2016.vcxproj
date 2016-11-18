@@ -379,6 +379,7 @@
     <ClInclude Include="NodeType.h" />
     <ClInclude Include="NtDll.h" />
     <ClInclude Include="Native.h" />
+    <ClInclude Include="PluginAPI.h" />
     <ClInclude Include="SymbolReader.h" />
     <ClInclude Include="ReClass2016.h" />
     <ClInclude Include="Resource.h" />
@@ -439,6 +440,7 @@
     <ClCompile Include="DialogTypes.cpp" />
     <ClCompile Include="CMainFrame.cpp" />
     <ClCompile Include="NtDll.cpp" />
+    <ClCompile Include="PluginAPI.cpp" />
     <ClCompile Include="SymbolReader.cpp" />
     <ClCompile Include="ReClass2016.cpp" />
     <ClCompile Include="stdafx.cpp">

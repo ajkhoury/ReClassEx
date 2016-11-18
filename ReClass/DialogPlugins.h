@@ -2,6 +2,7 @@
 
 #include "afxwin.h"
 #include "Resource.h"
+#include "PluginAPI.h"
 
 // CDialogPlugins dialog
 
@@ -32,7 +33,7 @@ protected:
 private:
 
 	PRECLASS_PLUGIN GetSelectedPlugin( ) { return g_LoadedPlugins.at(m_PluginsList.GetSelectionMark( )); }
-	void RefreshPlugins( );
+	VOID RefreshPlugins( );
 
 	CListCtrl m_PluginsList;
 };

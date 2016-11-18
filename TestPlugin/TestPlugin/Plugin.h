@@ -7,7 +7,6 @@
 #include <sstream>
 #include <memory>
 
-#include "resource.h"
 #include "ReClassAPI.h"
 
 BOOL WINAPI WriteCallback( LPVOID write_address, LPVOID buffer_ptr, SIZE_T write_size, PSIZE_T num_write );

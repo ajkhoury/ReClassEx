@@ -92,7 +92,7 @@ void CDialogPlugins::OnPopupMenuChangeState( )
 	RefreshPlugins( );
 }
 
-void CDialogPlugins::RefreshPlugins( )
+VOID CDialogPlugins::RefreshPlugins( )
 {
 	m_PluginsList.DeleteAllItems( );
 
