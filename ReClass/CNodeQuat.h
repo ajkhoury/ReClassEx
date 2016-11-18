@@ -5,11 +5,11 @@
 class CNodeQuat : public CNodeBase
 {
 public:
-	CNodeQuat();
+	CNodeQuat( );
 
-	virtual void Update(CHotSpot& Spot);
+	virtual void Update( HotSpot& Spot );
 
-	virtual int GetMemorySize() { return sizeof(float) * 4; }
+	virtual int GetMemorySize( ) { return sizeof( float ) * 4; }
 
-	virtual int Draw(ViewInfo& View, int x, int y);
+	virtual int Draw( ViewInfo& View, int x, int y );
 };

@@ -2,51 +2,51 @@
 #include "ReClass2016.h"
 #include "DialogClasses.h"
 
-#include "MainFrame.h"
-#include "ChildFrame.h"
+#include "CMainFrame.h"
+#include "CChildFrame.h"
 #include "SDK.h"
 
 #include "afxdialogex.h"
 
-IMPLEMENT_DYNAMIC(CDialogClasses, CDialogEx)
+IMPLEMENT_DYNAMIC( CDialogClasses, CDialogEx )
 
-CDialogClasses::CDialogClasses(CWnd* pParent) : CDialogEx(CDialogClasses::IDD, pParent)
+CDialogClasses::CDialogClasses( CWnd* pParent ) : CDialogEx( CDialogClasses::IDD, pParent )
 {
 }
 
-CDialogClasses::~CDialogClasses()
+CDialogClasses::~CDialogClasses( )
 {
 }
 
-void CDialogClasses::DoDataExchange(CDataExchange* pDX)
+void CDialogClasses::DoDataExchange( CDataExchange* pDX )
 {
-	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_CLASSLIST, m_ClassViewList);
-	DDX_Control(pDX, IDC_CLASSNAME, m_Edit);
+	CDialogEx::DoDataExchange( pDX );
+	DDX_Control( pDX, IDC_CLASSLIST, m_ClassViewList );
+	DDX_Control( pDX, IDC_CLASSNAME, m_Edit );
 }
 
-BEGIN_MESSAGE_MAP(CDialogClasses, CDialogEx)
-	ON_EN_CHANGE(IDC_CLASSNAME, &CDialogClasses::OnEnChangeClassname)
-	ON_NOTIFY(NM_DBLCLK, IDC_CLASSLIST, &CDialogClasses::OnDblclkListControl)
-END_MESSAGE_MAP()
+BEGIN_MESSAGE_MAP( CDialogClasses, CDialogEx )
+	ON_EN_CHANGE( IDC_CLASSNAME, &CDialogClasses::OnEnChangeClassname )
+	ON_NOTIFY( NM_DBLCLK, IDC_CLASSLIST, &CDialogClasses::OnDblclkListControl )
+END_MESSAGE_MAP( )
 
 
-void CDialogClasses::BuildList()
+void CDialogClasses::BuildList( )
 {
 	RECT listRect;
-	m_ClassViewList.GetWindowRect(&listRect);
-	m_ClassViewList.InsertColumn(0, _T("Class"), LVCFMT_CENTER, listRect.right - listRect.left - 4);
-	
-	m_ImageList.Add(m_hClassIcon);
-	
+	m_ClassViewList.GetWindowRect( &listRect );
+	m_ClassViewList.InsertColumn( 0, _T( "Class" ), LVCFMT_CENTER, listRect.right - listRect.left - 4 );
+
+	m_ImageList.Add( m_hClassIcon );
+
 	m_ClassViewList.SetImageList( &m_ImageList, LVSIL_SMALL );
 
-	for (UINT i = 0; i < theApp.Classes.size(); i++)
+	for (UINT i = 0; i < g_ReClassApp.Classes.size( ); i++)
 	{
-		CString name = theApp.Classes[i]->GetName();
-		if (m_Filter.GetLength() != 0 && name.MakeUpper().Find(m_Filter.MakeUpper()) == -1)
+		CString name = g_ReClassApp.Classes[i]->GetName( );
+		if (m_Filter.GetLength( ) != 0 && name.MakeUpper( ).Find( m_Filter.MakeUpper( ) ) == -1)
 			continue;
-		AddData(i, 0, name);
+		AddData( i, 0, name );
 	}
 }
 
@@ -55,75 +55,75 @@ void CDialogClasses::OnDblclkListControl( LPNMHDR pnmhdr, LRESULT *lpresult )
 	CDialogClasses::OnOK( );
 }
 
-BOOL CDialogClasses::OnInitDialog()
+BOOL CDialogClasses::OnInitDialog( )
 {
-	CDialogEx::OnInitDialog();
+	CDialogEx::OnInitDialog( );
 
-	m_ImageList.Create(GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), ILC_COLOR32, 1, 1);
-	m_ImageList.SetBkColor(RGB(255, 255, 255));
-	m_hClassIcon = ::LoadIcon(AfxGetResourceHandle(), MAKEINTRESOURCE(IDI_ICON_CLASS));
-	m_ImageList.Add(m_hClassIcon);
+	m_ImageList.Create( GetSystemMetrics( SM_CXSMICON ), GetSystemMetrics( SM_CYSMICON ), ILC_COLOR32, 1, 1 );
+	m_ImageList.SetBkColor( RGB( 255, 255, 255 ) );
+	m_hClassIcon = ::LoadIcon( AfxGetResourceHandle( ), MAKEINTRESOURCE( IDI_ICON_CLASS ) );
+	m_ImageList.Add( m_hClassIcon );
 
-	BuildList();
+	BuildList( );
 
 	return TRUE;
 }
 
-__inline int FindClassByName(const TCHAR* szName)
+__inline int FindClassByName( const TCHAR* szName )
 {
-	for (int id = 0; id < theApp.Classes.size(); id++)
+	for (int id = 0; id < g_ReClassApp.Classes.size( ); id++)
 	{
-		CNodeClass* pNodeClass = theApp.Classes[id];
+		CNodeClass* pNodeClass = g_ReClassApp.Classes[id];
 		if (!pNodeClass)
 			continue;
-		if (_tcsicmp(pNodeClass->GetName(), szName) == 0)
+		if (_tcsicmp( pNodeClass->GetName( ), szName ) == 0)
 			return id;
 	}
 	return -1;
 };
 
-void CDialogClasses::OnOK()
+void CDialogClasses::OnOK( )
 {
-	UINT numselected = m_ClassViewList.GetSelectedCount();
-	POSITION pos = m_ClassViewList.GetFirstSelectedItemPosition();
+	UINT numselected = m_ClassViewList.GetSelectedCount( );
+	POSITION pos = m_ClassViewList.GetFirstSelectedItemPosition( );
 	while (pos)
 	{
-		int nItem = m_ClassViewList.GetNextSelectedItem(pos);
-		CString szBuffer = m_ClassViewList.GetItemText(nItem, 0);
+		int nItem = m_ClassViewList.GetNextSelectedItem( pos );
+		CString szBuffer = m_ClassViewList.GetItemText( nItem, 0 );
 
 		#ifdef _DEBUG
-		PrintOut(_T("nitem %d"), nItem);
+		PrintOut( _T( "nitem %d" ), nItem );
 		#endif
 
-		nItem = FindClassByName(szBuffer.GetBuffer());
+		nItem = FindClassByName( szBuffer.GetBuffer( ) );
 
 		// Thanks timboy67678
-		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
-		CChildFrame* pChild = theApp.Classes[nItem]->pChildWindow;
+		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp( )->m_pMainWnd);
+		CChildFrame* pChild = g_ReClassApp.Classes[nItem]->pChildWindow;
 
 		// Check if its a window first to dodge the assertion in IsWindowVisible
-		if (pChild && IsWindow(pChild->GetSafeHwnd()) && pChild->IsWindowVisible())
+		if (pChild && IsWindow( pChild->GetSafeHwnd( ) ) && pChild->IsWindowVisible( ))
 		{
-			static_cast<CMDIChildWnd*>(pChild)->MDIActivate();
-		} 
-		else 
+			static_cast<CMDIChildWnd*>(pChild)->MDIActivate( );
+		}
+		else
 		{
-			CChildFrame* pNewChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
-			pNewChild->m_wndView.m_pClass = theApp.Classes[nItem];
-			theApp.Classes[nItem]->pChildWindow = pNewChild;
-			pNewChild->SetTitle(theApp.Classes[nItem]->GetName());
-			pNewChild->SetWindowText(theApp.Classes[nItem]->GetName());
-			pFrame->UpdateFrameTitleForDocument(theApp.Classes[nItem]->GetName());
+			CChildFrame* pNewChild = (CChildFrame*)pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel );
+			pNewChild->m_wndView.m_pClass = g_ReClassApp.Classes[nItem];
+			g_ReClassApp.Classes[nItem]->pChildWindow = pNewChild;
+			pNewChild->SetTitle( g_ReClassApp.Classes[nItem]->GetName( ) );
+			pNewChild->SetWindowText( g_ReClassApp.Classes[nItem]->GetName( ) );
+			pFrame->UpdateFrameTitleForDocument( g_ReClassApp.Classes[nItem]->GetName( ) );
 		}
 	}
 
-	CDialogEx::OnOK();
+	CDialogEx::OnOK( );
 }
 
-void CDialogClasses::AddData(int row, int col, const TCHAR* str)
+void CDialogClasses::AddData( int row, int col, const TCHAR* str )
 {
 	LVITEM lv;
-	ZeroMemory(&lv, sizeof(LVITEM));
+	ZeroMemory( &lv, sizeof( LVITEM ) );
 	lv.iItem = row;
 	lv.iSubItem = col;
 	lv.pszText = (LPTSTR)str;
@@ -132,18 +132,18 @@ void CDialogClasses::AddData(int row, int col, const TCHAR* str)
 	{
 		lv.mask = LVIF_IMAGE | LVIF_TEXT;
 		lv.iImage = 0;
-		m_ClassViewList.InsertItem(&lv);
+		m_ClassViewList.InsertItem( &lv );
 	}
 	else
 	{
 		lv.mask = LVIF_TEXT;
-		m_ClassViewList.SetItem(&lv);
+		m_ClassViewList.SetItem( &lv );
 	}
 }
 
-void CDialogClasses::OnEnChangeClassname()
+void CDialogClasses::OnEnChangeClassname( )
 {
-	m_Edit.GetWindowText(m_Filter);
-	m_ClassViewList.DeleteAllItems();
-	BuildList();
+	m_Edit.GetWindowText( m_Filter );
+	m_ClassViewList.DeleteAllItems( );
+	BuildList( );
 }

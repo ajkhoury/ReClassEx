@@ -5,11 +5,11 @@
 class CNodeVec3 : public CNodeBase
 {
 public:
-	CNodeVec3();
+	CNodeVec3( );
 
-	virtual void Update(CHotSpot& Spot);
+	virtual void Update( HotSpot& Spot );
 
-	virtual int GetMemorySize() { return sizeof(float) * 3; }
+	virtual int GetMemorySize( ) { return sizeof( float ) * 3; }
 
-	virtual int Draw(ViewInfo& View, int x, int y);
+	virtual int Draw( ViewInfo& View, int x, int y );
 };

@@ -5,11 +5,11 @@
 class CNodeBits : public CNodeBase
 {
 public:
-	CNodeBits();
+	CNodeBits( );
 
-	virtual void Update(CHotSpot& Spot);
+	virtual void Update( HotSpot& Spot );
 
-	virtual int GetMemorySize() { return 1; }
+	virtual int GetMemorySize( ) { return 1; }
 
-	virtual int Draw(ViewInfo& View, int x, int y);
+	virtual int Draw( ViewInfo& View, int x, int y );
 };

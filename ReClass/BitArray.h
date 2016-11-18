@@ -17,10 +17,10 @@
 #define GET_BIT_VALUE(a, bit_number) (((a) & (1 << (bit_number))) >> bit_number)
 
 template<typename T>
-class CBitArray
+class BitArray
 {
 public:
-	CBitArray()
+	BitArray()
 	{
 		value = 0xFF;
 		length = sizeof(T) * CHAR_BIT;
@@ -28,7 +28,7 @@ public:
 		bits = (char*)malloc(size);
 	}
 
-	CBitArray(T num)
+	BitArray(T num)
 	{
 		value = num;
 		length = sizeof(T) * CHAR_BIT;
@@ -36,7 +36,7 @@ public:
 		bits = (char*)malloc(size);
 	}
 
-	~CBitArray()
+	~BitArray()
 	{
 		delete[] bits;
 	}

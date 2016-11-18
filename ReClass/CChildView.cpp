@@ -1,76 +1,12 @@
 #include "stdafx.h"
-#include "ChildFrame.h"
-#include "ChildView.h"
+
+#include "CChildFrame.h"
+#include "CChildView.h"
 #include "DialogEdit.h"
 
-#ifndef NDEBUG
+#ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
-BEGIN_MESSAGE_MAP( myCEdit, CEdit )
-	ON_WM_CHAR( )
-	ON_CONTROL_REFLECT( EN_CHANGE, &myCEdit::OnEnChange )
-	ON_WM_CTLCOLOR_REFLECT( )
-END_MESSAGE_MAP( )
-
-BOOL myCEdit::Create( DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID )
-{
-	m_brBackGnd = CreateSolidBrush( crSelect );
-	dwStyle = dwStyle | ES_AUTOHSCROLL; // ICY
-	return CEdit::Create( dwStyle, rect, pParentWnd, nID );
-}
-
-HBRUSH myCEdit::CtlColor( CDC* pDC, UINT nCtlColor )
-{
-	pDC->SetBkColor( crSelect );
-	return m_brBackGnd;
-}
-
-void myCEdit::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
-{
-	if (nChar == VK_RETURN)
-	{
-		ShowWindow( SW_HIDE );
-		GetWindowText( spot.Text );
-
-		CChildView* pChild = (CChildView*)GetParent( );
-		CNodeBase* c = (CNodeBase*)spot.object;
-
-		DWORD before = c->GetMemorySize( );
-		c->Update( spot );
-		DWORD after = c->GetMemorySize( );
-
-		pChild->ResizeNode( (CNodeClass*)c->GetParent( ), pChild->FindNodeIndex( c ), before, after );
-		pChild->Invalidate( );
-	}
-	CEdit::OnChar( nChar, nRepCnt, nFlags );
-}
-
-void myCEdit::OnEnChange( )
-{
-	CString text;
-	GetWindowText( text );
-	int  w = (text.GetLength( ) + 1) * g_FontWidth; // + 6;
-	if (w > MinWidth)
-		SetWindowPos( NULL, 0, 0, w, g_FontHeight, SWP_NOMOVE );
-}
-
-BEGIN_MESSAGE_MAP( myCToolTip, CEdit )
-	ON_WM_CTLCOLOR_REFLECT( )
-END_MESSAGE_MAP( )
-
-BOOL myCToolTip::Create( DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID )
-{
-	m_brBackGnd = CreateSolidBrush( 0xffffff );
-	return CEdit::Create( dwStyle, rect, pParentWnd, nID );
-}
-
-HBRUSH myCToolTip::CtlColor( CDC* pDC, UINT nCtlColor )
-{
-	pDC->SetBkColor( 0xffffff );
-	return m_brBackGnd;
-}
-
 
 // CChildView
 CChildView::CChildView( )
@@ -250,10 +186,10 @@ void CChildView::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	{
 		if (Selected.size( ) > 0)
 		{
-			CHotSpot* firstSelected = &Selected[0];
+			HotSpot* firstSelected = &Selected[0];
 			if (firstSelected->Address != HotSpots[HotSpots.size( ) - 1].Address)
 			{
-				theApp.ClearSelection( );
+				g_ReClassApp.ClearSelection( );
 				Selected.clear( );
 				for (UINT i = 0; i < HotSpots.size( ); i++)
 				{
@@ -282,10 +218,10 @@ void CChildView::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	{
 		if (Selected.size( ) > 0)
 		{
-			CHotSpot* firstSelected = &Selected[0];
+			HotSpot* firstSelected = &Selected[0];
 			if (firstSelected->Address != HotSpots[0].Address)
 			{
-				theApp.ClearSelection( );
+				g_ReClassApp.ClearSelection( );
 				Selected.clear( );
 
 				for (UINT i = 0; i < HotSpots.size( ); i++)
@@ -313,7 +249,7 @@ void CChildView::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 			if (idx != MAX_NODES)
 			{
 				pClass->DeleteNode( idx );
-				theApp.CalcAllOffsets( );
+				g_ReClassApp.CalcAllOffsets( );
 			}
 		}
 		Selected.clear( );
@@ -450,7 +386,7 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 			{
 				if (nFlags == MK_LBUTTON)
 				{
-					theApp.ClearSelection( );
+					g_ReClassApp.ClearSelection( );
 					Selected.clear( );
 					pHitObject->Select( );
 					Selected.push_back( HotSpots[i] );
@@ -498,13 +434,13 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 							idx2 = idxTemp;
 						}
 
-						theApp.ClearSelection( );
+						g_ReClassApp.ClearSelection( );
 						Selected.clear( );
 						for (UINT s = idx1; s <= idx2; s++)
 						{
 							pClass->GetNode( s )->Select( );
-							CHotSpot spot;
-							//ZeroMemory(&spot, sizeof(CHotSpot));
+							HotSpot spot;
+							//ZeroMemory(&spot, sizeof(HotSpot));
 							spot.Address = pClass->GetOffset( ) + pClass->GetNode( s )->GetOffset( );
 							spot.object = pClass->GetNode( s );
 							Selected.push_back( spot );
@@ -531,7 +467,7 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 					if (idx != MAX_NODES)
 					{
 						pClass->DeleteNode( idx );
-						theApp.CalcAllOffsets( );
+						g_ReClassApp.CalcAllOffsets( );
 					}
 				}
 				Selected.clear( );
@@ -555,12 +491,12 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 
 				std::vector<std::pair<CString, UINT>> classRefs;
 
-				for (UINT m = 0; m < theApp.Classes.size( ); m++)
+				for (UINT m = 0; m < g_ReClassApp.Classes.size( ); m++)
 				{
-					if ((HotSpots[i].Type == HS_CHANGE_X) && (pNode->GetParent( ) == theApp.Classes[m]))
+					if ((HotSpots[i].Type == HS_CHANGE_X) && (pNode->GetParent( ) == g_ReClassApp.Classes[m]))
 						continue;
 
-					classRefs.push_back( std::pair<CString, UINT>( theApp.Classes[m]->GetName( ), m ) );
+					classRefs.push_back( std::pair<CString, UINT>( g_ReClassApp.Classes[m]->GetName( ), m ) );
 				}
 
 				std::vector<std::pair<wchar_t, std::vector<std::pair<CString, UINT>>>> out = ExplodeByFirstChar( classRefs );
@@ -605,7 +541,7 @@ void CChildView::OnRButtonDown( UINT nFlags, CPoint point )
 			{
 				if (nFlags == MK_RBUTTON)
 				{
-					theApp.ClearSelection( );
+					g_ReClassApp.ClearSelection( );
 					Selected.clear( );
 					pHitObject->Select( );
 					Selected.push_back( HotSpots[i] );
@@ -638,7 +574,7 @@ void CChildView::OnPaint( )
 	CRect client;
 	GetClientRect( &client );
 
-	dc.FillSolidRect( &client, crBackground );
+	dc.FillSolidRect( &client, g_crBackground );
 	if (!m_pClass)
 		return;
 
@@ -653,7 +589,7 @@ void CChildView::OnPaint( )
 	ViewInfo View;
 	View.Address = m_pClass->GetOffset( );
 	View.pData = Memory.pMemory;
-	View.Classes = &theApp.Classes;
+	View.Classes = &g_ReClassApp.Classes;
 	View.client = &client;
 	View.dc = &dc;
 	View.Level = 0;
@@ -669,17 +605,17 @@ void CChildView::OnPaint( )
 
 	if (m_pClass->RequestPosition != -1)
 	{
-		if ((m_pClass->RequestPosition >= 0) && ((unsigned int)m_pClass->RequestPosition < theApp.Classes.size( )))
+		if ((m_pClass->RequestPosition >= 0) && ((unsigned int)m_pClass->RequestPosition < g_ReClassApp.Classes.size( )))
 		{
 			int idx = -1;
-			for (UINT i = 0; i < theApp.Classes.size( ); i++)
+			for (UINT i = 0; i < g_ReClassApp.Classes.size( ); i++)
 			{
 				CNodeClass* pClass = View.Classes->at( i );
-				if (m_pClass == theApp.Classes[i])
+				if (m_pClass == g_ReClassApp.Classes[i])
 					idx = i;
 			}
-			theApp.Classes.erase( theApp.Classes.begin( ) + idx );
-			theApp.Classes.insert( theApp.Classes.begin( ) + m_pClass->RequestPosition, m_pClass );
+			g_ReClassApp.Classes.erase( g_ReClassApp.Classes.begin( ) + idx );
+			g_ReClassApp.Classes.insert( g_ReClassApp.Classes.begin( ) + m_pClass->RequestPosition, m_pClass );
 		}
 		m_pClass->RequestPosition = -1;
 	}
@@ -1089,7 +1025,7 @@ void CChildView::ReplaceNode( CNodeClass* pClass, UINT idx, CNodeBase* pNewNode 
 
 	delete pOldNode;
 
-	theApp.CalcAllOffsets( );
+	g_ReClassApp.CalcAllOffsets( );
 }
 
 void CChildView::RemoveNodes( CNodeClass* pClass, UINT idx, DWORD Length )
@@ -1117,7 +1053,7 @@ void CChildView::RemoveNodes( CNodeClass* pClass, UINT idx, DWORD Length )
 		FillNodes( pClass, idx, totalSize - Length );
 	}
 
-	theApp.CalcAllOffsets( );
+	g_ReClassApp.CalcAllOffsets( );
 }
 
 void CChildView::FillNodes( CNodeClass* pClass, UINT idx, DWORD Length )
@@ -1204,7 +1140,7 @@ void CChildView::ResizeNode( CNodeClass* pClass, UINT idx, DWORD before, DWORD A
 			RemoveNodes( pClass, idx + 1, After - before );
 	}
 
-	theApp.CalcAllOffsets( );
+	g_ReClassApp.CalcAllOffsets( );
 }
 
 void CChildView::AddBytes( CNodeClass* pClass, DWORD Length )
@@ -1222,7 +1158,7 @@ void CChildView::AddBytes( CNodeClass* pClass, DWORD Length )
 			pNode = new CNodeHex32;
 		pNode->SetParent( pClass );
 		pClass->AddNode( pNode );
-		theApp.CalcAllOffsets( );
+		g_ReClassApp.CalcAllOffsets( );
 		return;
 	}
 
@@ -1238,7 +1174,7 @@ void CChildView::AddBytes( CNodeClass* pClass, DWORD Length )
 		pClass->AddNode( pNode );
 	}
 
-	theApp.CalcAllOffsets( );
+	g_ReClassApp.CalcAllOffsets( );
 }
 
 void CChildView::InsertBytes( CNodeClass* pClass, UINT idx, DWORD Length )
@@ -1256,7 +1192,7 @@ void CChildView::InsertBytes( CNodeClass* pClass, UINT idx, DWORD Length )
 			pNode = new CNodeHex32;
 		pNode->SetParent( pClass );
 		pClass->InsertNode( idx, pNode );
-		theApp.CalcAllOffsets( );
+		g_ReClassApp.CalcAllOffsets( );
 		return;
 	}
 
@@ -1272,7 +1208,7 @@ void CChildView::InsertBytes( CNodeClass* pClass, UINT idx, DWORD Length )
 		pClass->InsertNode( idx, pNode );
 	}
 
-	theApp.CalcAllOffsets( );
+	g_ReClassApp.CalcAllOffsets( );
 }
 
 void CChildView::OnAddAdd4( )
@@ -1443,8 +1379,8 @@ void MakeBasicClass( CNodeClass* pClass )
 		pNode->SetParent( pClass );
 		pClass->AddNode( pNode );
 	}
-	theApp.CalcOffsets( pClass );
-	theApp.Classes.push_back( pClass );
+	g_ReClassApp.CalcOffsets( pClass );
+	g_ReClassApp.Classes.push_back( pClass );
 }
 
 void CChildView::ReplaceSelectedWithType( NodeType Type )
@@ -1455,12 +1391,12 @@ void CChildView::ReplaceSelectedWithType( NodeType Type )
 
 	for (UINT i = 0; i < Selected.size( ); i++)
 	{
-		if (!theApp.IsNodeValid( Selected[i].object ))
+		if (!g_ReClassApp.IsNodeValid( Selected[i].object ))
 			continue;
 		if (Selected[i].object->GetParent( )->GetType( ) == nt_vtable)
 			Type = nt_functionptr;
 
-		CNodeBase* pNewNode = theApp.CreateNewNode( Type );
+		CNodeBase* pNewNode = g_ReClassApp.CreateNewNode( Type );
 
 		if (Type == nt_class)
 		{
@@ -1492,21 +1428,21 @@ void CChildView::ReplaceSelectedWithType( NodeType Type )
 		if (Type == nt_pointer)
 		{
 			CNodePtr*	pPtr = (CNodePtr*)pNewNode;
-			CNodeClass* pClass = (CNodeClass*)theApp.CreateNewNode( nt_class );
+			CNodeClass* pClass = (CNodeClass*)g_ReClassApp.CreateNewNode( nt_class );
 			MakeBasicClass( pClass );
 			pPtr->pNode = pClass;
 		}
 		if (Type == nt_array)
 		{
 			CNodeArray* pArray = (CNodeArray*)pNewNode;
-			CNodeClass* pClass = (CNodeClass*)theApp.CreateNewNode( nt_class );
+			CNodeClass* pClass = (CNodeClass*)g_ReClassApp.CreateNewNode( nt_class );
 			MakeBasicClass( pClass );
 			pArray->pNode = pClass;
 		}
 		if (Type == nt_instance)
 		{
 			CNodeClassInstance* pInstance = (CNodeClassInstance*)pNewNode;
-			CNodeClass*			pClass = (CNodeClass*)theApp.CreateNewNode( nt_class );
+			CNodeClass*			pClass = (CNodeClass*)g_ReClassApp.CreateNewNode( nt_class );
 			MakeBasicClass( pClass );
 			pInstance->pNode = pClass;
 		}
@@ -1525,7 +1461,7 @@ void CChildView::ReplaceSelectedWithType( NodeType Type )
 		newSelected[i]->Select( );
 		CNodeClass* pClass = (CNodeClass*)newSelected[i]->GetParent( );
 
-		CHotSpot spot;
+		HotSpot spot;
 		spot.Address = pClass->GetOffset( ) + newSelected[i]->GetOffset( );
 		spot.object = newSelected[i];
 		Selected.push_back( spot );
@@ -1843,7 +1779,7 @@ void CChildView::OnModifyDelete( )
 		if (idx != MAX_NODES)
 		{
 			pClass->DeleteNode( idx );
-			theApp.CalcAllOffsets( );
+			g_ReClassApp.CalcAllOffsets( );
 		}
 	}
 	Selected.clear( );
@@ -1856,7 +1792,7 @@ void CChildView::OnUpdateModifyDelete( CCmdUI *pCmdUI )
 
 void CChildView::OnModifyShow( )
 {
-	theApp.ClearHidden( );
+	g_ReClassApp.ClearHidden( );
 }
 
 void CChildView::OnUpdateModifyShow( CCmdUI *pCmdUI )
@@ -1904,18 +1840,18 @@ BOOL CChildView::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 
 			if (pNode->GetType( ) == nt_array)
 			{
-				((CNodeArray*)pNode)->pNode = theApp.Classes[idx];
+				((CNodeArray*)pNode)->pNode = g_ReClassApp.Classes[idx];
 			}
 			if (pNode->GetType( ) == nt_instance)
 			{
-				((CNodeClassInstance*)pNode)->pNode = theApp.Classes[idx];
+				((CNodeClassInstance*)pNode)->pNode = g_ReClassApp.Classes[idx];
 			}
 			if (pNode->GetType( ) == nt_pointer)
 			{
-				((CNodePtr*)pNode)->pNode = theApp.Classes[idx];
+				((CNodePtr*)pNode)->pNode = g_ReClassApp.Classes[idx];
 			}
 
-			theApp.CalcAllOffsets( );
+			g_ReClassApp.CalcAllOffsets( );
 
 			return TRUE;
 		}

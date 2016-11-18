@@ -7,7 +7,7 @@ class CNodeFunction : public CNodeBase
 public:
 	CNodeFunction( );
 
-	virtual void Update( CHotSpot& Spot );
+	virtual void Update( HotSpot& Spot );
 
 	virtual int GetMemorySize( ) { return memsize; }
 

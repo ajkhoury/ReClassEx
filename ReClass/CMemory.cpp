@@ -1,19 +1,20 @@
 #include "stdafx.h"
 
-CMemory::CMemory() : 
-	MemorySize(0),
-	pMemory(0)
+CMemory::CMemory( ) :
+	MemorySize( 0 ),
+	pMemory( 0 )
 {
 }
 
-CMemory::~CMemory()
+CMemory::~CMemory( )
 {
-	if (pMemory) {
+	if (pMemory)
+	{
 		delete[] pMemory;
 	}
 }
 
-void CMemory::SetSize(unsigned long Size)
+void CMemory::SetSize( unsigned long Size )
 {
 	if ((!pMemory) || (Size != MemorySize))
 	{

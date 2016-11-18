@@ -5,11 +5,11 @@
 class CNodeQWORD : public CNodeBase
 {
 public:
-	CNodeQWORD();
+	CNodeQWORD( );
 
-	virtual void Update(CHotSpot& Spot);
+	virtual void Update( HotSpot& Spot );
 
-	virtual int GetMemorySize() { return sizeof(unsigned long long); }
+	virtual int GetMemorySize( ) { return sizeof( unsigned long long ); }
 
-	virtual int Draw(ViewInfo& View, int x, int y);
+	virtual int Draw( ViewInfo& View, int x, int y );
 };

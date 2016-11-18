@@ -2,35 +2,10 @@
 
 #define MAX_NODES 32768
 
-class CMemory;
+#include "CMemory.h"
 
-class myCEdit : public CEdit
-{
-public:
-	virtual BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
-
-	DECLARE_MESSAGE_MAP()
-	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
-	afx_msg void OnEnChange();
-	afx_msg HBRUSH CtlColor(CDC* /*pDC*/, UINT /*nCtlColor*/);
-
-public:
-	CHotSpot spot;
-	int MinWidth;
-	HBRUSH m_brBackGnd;
-};
-
-class myCToolTip : public CEdit
-{
-public:
-	virtual BOOL Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID);
-
-	DECLARE_MESSAGE_MAP()
-	afx_msg HBRUSH CtlColor(CDC* pDC, UINT nCtlColor);
-
-public:
-	HBRUSH m_brBackGnd;
-};
+#include "CCustomEdit.h"
+#include "CCustomToolTip.h"
 
 // CChildView window
 class CChildView : public CWnd
@@ -231,13 +206,13 @@ public:
 	CNodeClass* m_pClass;
 	CMemory Memory;
 
-	std::vector<CHotSpot> HotSpots;
-	std::vector<CHotSpot> Selected;
-	CHotSpot ExchangeTarget;
+	std::vector<HotSpot> HotSpots;
+	std::vector<HotSpot> Selected;
+	HotSpot ExchangeTarget;
 
-	//Controls
-	myCEdit m_Edit;
-	myCToolTip m_ToolTip;
+	// Controls
+	CCustomEdit m_Edit;
+	CCustomToolTip m_ToolTip;
 
 	CScrollBar m_Scroll;
 

@@ -5,11 +5,11 @@
 class CNodeFloat : public CNodeBase
 {
 public:
-	CNodeFloat();
+	CNodeFloat( );
 
-	virtual void Update(CHotSpot& Spot);
+	virtual void Update( HotSpot& Spot );
 
-	virtual int GetMemorySize() { return sizeof(float); }
+	virtual int GetMemorySize( ) { return sizeof( float ); }
 
-	virtual int Draw(ViewInfo& View, int x, int y);
+	virtual int Draw( ViewInfo& View, int x, int y );
 };

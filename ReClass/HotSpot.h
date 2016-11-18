@@ -18,9 +18,8 @@
 #define HS_NAME 69
 #define HS_COMMENT 70
 
-class CHotSpot
+struct HotSpot
 {
-public:
 	CRect Rect;
 	CString Text;
 	size_t Address;

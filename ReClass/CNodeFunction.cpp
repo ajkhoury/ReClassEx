@@ -4,10 +4,10 @@
 
 CNodeFunction::CNodeFunction( )
 {
-	memsize = sizeof(size_t);
+	memsize = sizeof( size_t );
 }
 
-void CNodeFunction::Update( CHotSpot & Spot )
+void CNodeFunction::Update( HotSpot & Spot )
 {
 	StandardUpdate( Spot );
 
@@ -30,12 +30,12 @@ int CNodeFunction::Draw( ViewInfo & View, int x, int y )
 	int ax = tx;
 	tx = AddAddressOffset( View, tx, y );
 
-	tx = AddText( View, tx, y, crType, HS_NONE, _T( "Function" ) );
+	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Function" ) );
 
 	tx = AddIcon( View, tx, y, ICON_CAMERA, HS_EDIT, HS_CLICK );
 	tx += g_FontWidth;
 
-	tx = AddText( View, tx, y, crName, HS_NAME, _T( "%s" ), m_strName );
+	tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
 	tx += g_FontWidth;
 
 	if (Assembly.size( ) > 0)
@@ -50,7 +50,7 @@ int CNodeFunction::Draw( ViewInfo & View, int x, int y )
 		for (size_t i = 0; i < Assembly.size( ); i++)
 		{
 			y += g_FontHeight;
-			AddText( View, ax, y, crHex, HS_EDIT, "%s", Assembly[i].GetBuffer( ) );
+			AddText( View, ax, y, g_crHex, HS_EDIT, "%s", Assembly[i].GetBuffer( ) );
 		}
 	}
 

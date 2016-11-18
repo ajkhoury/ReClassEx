@@ -312,7 +312,8 @@
     <None Include="res\writesmall.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\SQLite\CppSQLite3.h" />
+    <ClInclude Include="CCustomEdit.h" />
+    <ClInclude Include="CCustomToolTip.h" />
     <ClInclude Include="CNodeArray.h" />
     <ClInclude Include="CNodeBase.h" />
     <ClInclude Include="CNodeBits.h" />
@@ -347,9 +348,9 @@
     <ClInclude Include="CNodeWCharPtr.h" />
     <ClInclude Include="CNodeWORD.h" />
     <ClInclude Include="DialogAbout.h" />
-    <ClInclude Include="CBitArray.h" />
-    <ClInclude Include="ChildFrame.h" />
-    <ClInclude Include="ChildView.h" />
+    <ClInclude Include="BitArray.h" />
+    <ClInclude Include="CChildFrame.h" />
+    <ClInclude Include="CChildView.h" />
     <ClInclude Include="Classes.h" />
     <ClInclude Include="CMemory.h" />
     <ClInclude Include="Debug.h" />
@@ -361,8 +362,8 @@
     <ClInclude Include="DialogProcSelect.h" />
     <ClInclude Include="DialogProgress.h" />
     <ClInclude Include="DialogTypes.h" />
-    <ClInclude Include="CHotSpot.h" />
-    <ClInclude Include="MainFrame.h" />
+    <ClInclude Include="HotSpot.h" />
+    <ClInclude Include="CMainFrame.h" />
     <ClInclude Include="NodeType.h" />
     <ClInclude Include="NtDll.h" />
     <ClInclude Include="nt_ddk.h" />
@@ -377,9 +378,10 @@
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\SQLite\CppSQLite3.cpp" />
-    <ClCompile Include="ChildFrame.cpp" />
-    <ClCompile Include="ChildView.cpp" />
+    <ClCompile Include="CCustomEdit.cpp" />
+    <ClCompile Include="CCustomToolTip.cpp" />
+    <ClCompile Include="CChildFrame.cpp" />
+    <ClCompile Include="CChildView.cpp" />
     <ClCompile Include="CMemory.cpp" />
     <ClCompile Include="CNodeArray.cpp" />
     <ClCompile Include="CNodeBase.cpp" />
@@ -423,7 +425,7 @@
     <ClCompile Include="DialogProcSelect.cpp" />
     <ClCompile Include="DialogProgress.cpp" />
     <ClCompile Include="DialogTypes.cpp" />
-    <ClCompile Include="MainFrame.cpp" />
+    <ClCompile Include="CMainFrame.cpp" />
     <ClCompile Include="NtDll.cpp" />
     <ClCompile Include="SymbolReader.cpp" />
     <ClCompile Include="ReClass2016.cpp" />

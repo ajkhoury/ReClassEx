@@ -7,7 +7,7 @@ CNodeFunctionPtr::CNodeFunctionPtr( )
 	m_strName = _T( "" );
 }
 
-void CNodeFunctionPtr::Update( CHotSpot & Spot )
+void CNodeFunctionPtr::Update( HotSpot & Spot )
 {
 	StandardUpdate( Spot );
 	if (Spot.ID == 0)
@@ -77,17 +77,17 @@ int CNodeFunctionPtr::Draw( ViewInfo & View, int x, int y )
 	tx = AddAddressOffset( View, tx, y );
 
 	if (m_pParentNode->GetType( ) != nt_vtable)
-		tx = AddText( View, tx, y, crType, HS_NONE, _T( "FunctionPtr" ) );
+		tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "FunctionPtr" ) );
 	else
-		tx = AddText( View, tx, y, crFunction, HS_NONE, _T( "(%i)" ), m_Offset / sizeof( size_t ) );
+		tx = AddText( View, tx, y, g_crFunction, HS_NONE, _T( "(%i)" ), m_Offset / sizeof( size_t ) );
 
 	tx = AddIcon( View, tx, y, ICON_CAMERA, HS_EDIT, HS_CLICK );
 	tx += g_FontWidth;
 
 	if (m_strName.IsEmpty( ))
-		tx = AddText( View, tx, y, crName, HS_NAME, _T( "Function_%i" ), m_Offset / sizeof( size_t ) );
+		tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "Function_%i" ), m_Offset / sizeof( size_t ) );
 	else
-		tx = AddText( View, tx, y, crName, HS_NAME, _T( "%s" ), m_strName );
+		tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
 
 	tx += g_FontWidth;
 
@@ -103,7 +103,7 @@ int CNodeFunctionPtr::Draw( ViewInfo & View, int x, int y )
 		for (size_t i = 0; i < Assembly.size( ); i++)
 		{
 			y += g_FontHeight;
-			AddText( View, ax, y, crHex, HS_EDIT, "%s", Assembly[i].GetBuffer( ) );
+			AddText( View, ax, y, g_crHex, HS_EDIT, "%s", Assembly[i].GetBuffer( ) );
 		}
 	}
 

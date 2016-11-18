@@ -13,20 +13,20 @@ public:
 
 	virtual void GetCurrentFilePath(LPTSTR szPath)
 	{
-		if (theApp.CurrentFilePath.GetLength() > 0)
-			_tcscpy(szPath, theApp.CurrentFilePath.GetBuffer());
+		if (g_ReClassApp.CurrentFilePath.GetLength() > 0)
+			_tcscpy(szPath, g_ReClassApp.CurrentFilePath.GetBuffer());
 	}
 
 	virtual size_t GetClassCount()
 	{
-		return theApp.Classes.size();
+		return g_ReClassApp.Classes.size();
 	}
 
 	virtual size_t GetNodeCount(unsigned int classId)
 	{
-		if (classId < theApp.Classes.size())
+		if (classId < g_ReClassApp.Classes.size())
 		{
-			CNodeBase* pBase = theApp.Classes.at(classId);
+			CNodeBase* pBase = g_ReClassApp.Classes.at(classId);
 			if (pBase)
 				return pBase->NodeCount();
 		}
@@ -46,38 +46,38 @@ public:
 		// Create Class
 		CNodeClass* pClass = new CNodeClass;
 		pClass->SetName(szName);
-		theApp.Classes.push_back(pClass);
+		g_ReClassApp.Classes.push_back(pClass);
 
 		// Open GUI Child Frame
 		CMainFrame*  pFrame = STATIC_DOWNCAST(CMainFrame, AfxGetApp()->m_pMainWnd);
-		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel);
+		CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel);
 		pChild->m_wndView.m_pClass = pClass;
 
 		pClass->pChildWindow = pChild;
-		theApp.Classes.push_back(pClass);
+		g_ReClassApp.Classes.push_back(pClass);
 
 		// Terrible; Fix this later
-		return theApp.Classes.size() - 1;
+		return g_ReClassApp.Classes.size() - 1;
 
 		//FindClassByName( szName );
 		//FindClassByName( szName );
-		// theApp.Classes.back( )
+		// g_ReClassApp.Classes.back( )
 		//
 	}
 
 	virtual int FindClassByName(LPTSTR szName, bool caseSensitive = true)
 	{
 		unsigned int id = 0;
-		while (++id < theApp.Classes.size())
+		while (++id < g_ReClassApp.Classes.size())
 		{
 			if (caseSensitive)
 			{
-				if (_tcscmp(theApp.Classes[id]->GetName(), szName) == 0)
+				if (_tcscmp(g_ReClassApp.Classes[id]->GetName(), szName) == 0)
 					return id;
 			}
 			else
 			{
-				if (_tcsicmp(theApp.Classes[id]->GetName(), szName) == 0)
+				if (_tcsicmp(g_ReClassApp.Classes[id]->GetName(), szName) == 0)
 					return id;
 			}
 		}
@@ -95,7 +95,7 @@ public:
 
 		if (type != nt_vtable && type != nt_pointer)
 		{
-			CNodeBase* pNode = theApp.CreateNewNode(type);
+			CNodeBase* pNode = g_ReClassApp.CreateNewNode(type);
 			// CNodeHex64* pNode = new CNodeHex64;
 			pNode->SetParent(pBase);
 			pNode->SetName(szName);
@@ -127,8 +127,8 @@ private:
 	{
 		unsigned int id = 0;
 
-		while (++id < theApp.Classes.size())
-			if (theApp.Classes.at(id)->GetParent() == pBase)
+		while (++id < g_ReClassApp.Classes.size())
+			if (g_ReClassApp.Classes.at(id)->GetParent() == pBase)
 				return id;
 
 		return -1;
@@ -136,8 +136,8 @@ private:
 
 	CNodeBase* FindPointerByClassId(int Id)
 	{
-		if (Id < theApp.Classes.size())
-			return theApp.Classes.at(Id);
+		if (Id < g_ReClassApp.Classes.size())
+			return g_ReClassApp.Classes.at(Id);
 
 		return NULL;
 	}

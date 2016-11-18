@@ -5,11 +5,11 @@
 class CNodeHex16 : public CNodeBase
 {
 public:
-	CNodeHex16();
+	CNodeHex16( );
 
-	virtual void Update(CHotSpot& Spot);
+	virtual void Update( HotSpot& Spot );
 
-	virtual int GetMemorySize() { return 2; }
+	virtual int GetMemorySize( ) { return 2; }
 
-	virtual int Draw(ViewInfo& View, int x, int y);
+	virtual int Draw( ViewInfo& View, int x, int y );
 };

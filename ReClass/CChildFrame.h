@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ChildView.h"
+#include "CChildView.h"
 
 class CChildFrame : public CMDIChildWndEx
 {
@@ -23,7 +23,9 @@ public:
 public:
 	// view for the client area of the frame.
 	CChildView m_wndView;
+
 	virtual ~CChildFrame();
+
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;

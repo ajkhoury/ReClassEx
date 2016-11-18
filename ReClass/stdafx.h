@@ -114,32 +114,30 @@ extern DWORD  g_AttachedProcessSize;
 extern CString g_ProcessName;
 extern Symbols* g_SymLoader;
 
-extern std::vector<struct MemMapInfo> MemMap;
-extern std::vector<struct MemMapInfo> MemMapCode;
-extern std::vector<struct MemMapInfo> MemMapData;
-extern std::vector<struct MemMapInfo> MemMapModule;
-extern std::vector<struct AddressName> Exports;
-extern std::vector<struct AddressName> CustomNames;
+extern std::vector<struct MemMapInfo> g_MemMap;
+extern std::vector<struct MemMapInfo> g_MemMapCode;
+extern std::vector<struct MemMapInfo> g_MemMapData;
+extern std::vector<struct MemMapInfo> g_MemMapModules;
+extern std::vector<struct AddressName> g_Exports;
+extern std::vector<struct AddressName> g_CustomNames;
 
-extern std::vector<HICON> Icons;
+extern std::vector<HICON> g_Icons;
 
-extern COLORREF crBackground;
-extern COLORREF crSelect;
-extern COLORREF crHidden;
-
-extern COLORREF crOffset;
-extern COLORREF crAddress;
-extern COLORREF crType;
-extern COLORREF crName;
-extern COLORREF crIndex;
-extern COLORREF crValue;
-extern COLORREF crComment;
-
-extern COLORREF crVTable;
-extern COLORREF crFunction;
-extern COLORREF crChar;
-extern COLORREF crCustom;
-extern COLORREF crHex;
+extern COLORREF g_crBackground;
+extern COLORREF g_crSelect;
+extern COLORREF g_crHidden;
+extern COLORREF g_crOffset;
+extern COLORREF g_crAddress;
+extern COLORREF g_crType;
+extern COLORREF g_crName;
+extern COLORREF g_crIndex;
+extern COLORREF g_crValue;
+extern COLORREF g_crComment;
+extern COLORREF g_crVTable;
+extern COLORREF g_crFunction;
+extern COLORREF g_crChar;
+extern COLORREF g_crCustom;
+extern COLORREF g_crHex;
 
 #define FONT_DEFAULT_WIDTH 8
 #define FONT_DEFAULT_HEIGHT 16
@@ -148,43 +146,42 @@ extern CFont g_ViewFont;
 extern int g_FontWidth;
 extern int g_FontHeight;
 
-extern bool gbAddress;
-extern bool gbOffset;
-extern bool gbText;
-extern bool gbRTTI;
-extern bool gbResizingFont;
-extern bool gbSymbolResolution;
-extern bool gbLoadModuleSymbol;
+extern bool g_bAddress;
+extern bool g_bOffset;
+extern bool g_bText;
+extern bool g_bRTTI;
+extern bool g_bResizingFont;
+extern bool g_bSymbolResolution;
+extern bool g_bLoadModuleSymbol;
 
-extern bool gbFloat;
-extern bool gbInt;
-extern bool gbString;
-extern bool gbPointers;
+extern bool g_bFloat;
+extern bool g_bInt;
+extern bool g_bString;
+extern bool g_bPointers;
 
-extern bool gbTop;
-extern bool gbClassBrowser;
-extern bool gbFilterProcesses;
-extern bool gbPrivatePadding;
-extern bool gbClipboardCopy;
+extern bool g_bTop;
+extern bool g_bClassBrowser;
+extern bool g_bFilterProcesses;
+extern bool g_bPrivatePadding;
+extern bool g_bClipboardCopy;
 
-extern CString tdHex;
-extern CString tdInt64;
-
-extern CString tdInt32;
-extern CString tdInt16;
-extern CString tdInt8;
-extern CString tdQWORD;
-extern CString tdDWORD;
-extern CString tdWORD;
-extern CString tdBYTE;
-extern CString tdFloat;
-extern CString tdDouble;
-extern CString tdVec2;
-extern CString tdVec3;
-extern CString tdQuat;
-extern CString tdMatrix;
-extern CString tdPChar;
-extern CString tdPWChar;
+extern CString g_tdHex;
+extern CString g_tdInt64;
+extern CString g_tdInt32;
+extern CString g_tdInt16;
+extern CString g_tdInt8;
+extern CString g_tdQWORD;
+extern CString g_tdDWORD;
+extern CString g_tdWORD;
+extern CString g_tdBYTE;
+extern CString g_tdFloat;
+extern CString g_tdDouble;
+extern CString g_tdVec2;
+extern CString g_tdVec3;
+extern CString g_tdQuat;
+extern CString g_tdMatrix;
+extern CString g_tdPChar;
+extern CString g_tdPWChar;
 
 //
 // Hotspot, Node, & Item IDs
@@ -228,10 +225,10 @@ extern CString tdPWChar;
 //
 // Global functions
 //
-bool PauseResumeThreadList( bool bResumeThread );
+BOOLEAN PauseResumeThreadList( BOOL bResumeThread );
 
-bool UpdateMemoryMap( );
-bool UpdateExports( );
+BOOLEAN UpdateMemoryMap( );
+BOOLEAN UpdateExports( );
 
 size_t GetBase( );
 bool IsCode( size_t Address );
@@ -297,13 +294,8 @@ void LoadPlugins( );
 #define RECLASS_EXPORT __declspec(dllexport) 
 #define PLUGIN_CC __stdcall
 
-typedef BOOL( PLUGIN_CC *MEMORY_OPERATION )(LPVOID, LPVOID, SIZE_T, PSIZE_T);
-typedef HANDLE( PLUGIN_CC *HANDLE_OPERATION )(DWORD, BOOL, DWORD);
-
-extern MEMORY_OPERATION g_PluginOverrideMemoryWrite;
-extern MEMORY_OPERATION g_PluginOverrideMemoryRead;
-extern HANDLE_OPERATION g_PluginOverrideHandleProcess;
-extern HANDLE_OPERATION g_PluginOverrideHandleThread;
+typedef BOOL( PLUGIN_CC *tMemoryOperation )(LPVOID, LPVOID, SIZE_T, PSIZE_T);
+typedef HANDLE( PLUGIN_CC *tHandleOperation )(DWORD, BOOL, DWORD);
 
 typedef struct _RECLASS_PLUGIN_INFO
 {
@@ -318,7 +310,7 @@ typedef struct _RECLASS_PLUGIN_INFO
 BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
 void PLUGIN_CC PluginStateChange( bool state );
 typedef BOOL( PLUGIN_CC *tPluginInit )(LPRECLASS_PLUGIN_INFO lpRCInfo);
-typedef void(PLUGIN_CC *tPluginStateChange)(bool state);
+typedef void( PLUGIN_CC *tPluginStateChange)(bool state);
 
 typedef struct _RECLASS_PLUGINS
 {
@@ -332,14 +324,19 @@ typedef struct _RECLASS_PLUGINS
 } RECLASS_PLUGINS, *LPRECLASS_PLUGINS;
 
 //Exported Functions Below
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideMemoryOperations( MEMORY_OPERATION MemWrite, MEMORY_OPERATION MemRead, BOOL bForceSet = FALSE );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideHandleOperations( HANDLE_OPERATION HandleProcess, HANDLE_OPERATION HandleThread, BOOL bForceSet = FALSE );
+RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideMemoryOperations( tMemoryOperation MemWrite, tMemoryOperation MemRead, BOOL bForceSet = FALSE );
+RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideHandleOperations( tHandleOperation HandleProcess, tHandleOperation HandleThread, BOOL bForceSet = FALSE );
 RECLASS_EXPORT void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
 RECLASS_EXPORT LPHANDLE PLUGIN_CC ReClassGetProcessHandle( );
 RECLASS_EXPORT HWND PLUGIN_CC ReClassMainWindow( );
 RECLASS_EXPORT CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface( );
 
-extern std::vector<RECLASS_PLUGINS> LoadedPlugins;
+extern tMemoryOperation g_PluginOverrideMemoryWrite;
+extern tMemoryOperation g_PluginOverrideMemoryRead;
+extern tHandleOperation g_PluginOverrideHandleProcess;
+extern tHandleOperation g_PluginOverrideHandleThread;
+
+extern std::vector<RECLASS_PLUGINS> g_LoadedPlugins;
 #pragma endregion
 
 
@@ -347,7 +344,7 @@ extern std::vector<RECLASS_PLUGINS> LoadedPlugins;
 // Main Application
 //
 #include "ReClass2016.h"
-extern CReClass2016App theApp;
+extern CReClass2016App g_ReClassApp;
 
 
 //
@@ -355,10 +352,10 @@ extern CReClass2016App theApp;
 //
 #define PrintOut(fmt, ...) { \
 do { \
-	static TCHAR s_logbuf[1024]; \
 	if (fmt) { \
+		static TCHAR s_logbuf[1024]; \
 		_sntprintf(s_logbuf, 1024, fmt, ##__VA_ARGS__); \
-		theApp.Console->PrintText(s_logbuf); \
+		g_ReClassApp.Console->PrintText(s_logbuf); \
 	} \
 } while (0);\
 }

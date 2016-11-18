@@ -3,224 +3,226 @@
 #include "DialogModules.h"
 #include "DialogProgress.h"
 
-#include "MainFrame.h"
-#include "ChildFrame.h"
+#include "CMainFrame.h"
+#include "CChildFrame.h"
 #include "SDK.h"
 
 #include "afxdialogex.h"
 
-IMPLEMENT_DYNAMIC(CDialogModules, CDialogEx)
+IMPLEMENT_DYNAMIC( CDialogModules, CDialogEx )
 
-CDialogModules::CDialogModules(CWnd* pParent)
-	: CDialogEx(CDialogModules::IDD, pParent),
-	m_bSortAscendingName(false),
-	m_bSortAscendingStart(false),
-	m_bSortAscendingEnd(false),
-	m_bSortAscendingSize(false)
-{}
-
-CDialogModules::~CDialogModules()
-{}
-
-void CDialogModules::DoDataExchange(CDataExchange* pDX)
+CDialogModules::CDialogModules( CWnd* pParent )
+	: CDialogEx( CDialogModules::IDD, pParent ),
+	m_bSortAscendingName( false ),
+	m_bSortAscendingStart( false ),
+	m_bSortAscendingEnd( false ),
+	m_bSortAscendingSize( false )
 {
-	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_MODULELIST, m_ModuleList);
-	DDX_Control(pDX, IDC_MODULENAME, m_Edit);
-	DDX_Control(pDX, IDC_MODULES_DEBUG_LOAD, m_SymbolLoad);
 }
 
-void CDialogModules::OnSize(UINT nType, int cx, int cy)
+CDialogModules::~CDialogModules( )
 {
-	CDialogEx::OnSize(nType, cx, cy);
 }
 
-void CDialogModules::OnGetMinMaxInfo(MINMAXINFO *lpinfo)
+void CDialogModules::DoDataExchange( CDataExchange* pDX )
 {
-	if (!m_OriginalSize.IsRectNull())
+	CDialogEx::DoDataExchange( pDX );
+	DDX_Control( pDX, IDC_MODULELIST, m_ModuleList );
+	DDX_Control( pDX, IDC_MODULENAME, m_Edit );
+	DDX_Control( pDX, IDC_MODULES_DEBUG_LOAD, m_SymbolLoad );
+}
+
+void CDialogModules::OnSize( UINT nType, int cx, int cy )
+{
+	CDialogEx::OnSize( nType, cx, cy );
+}
+
+void CDialogModules::OnGetMinMaxInfo( MINMAXINFO *lpinfo )
+{
+	if (!m_OriginalSize.IsRectNull( ))
 	{
-		lpinfo->ptMinTrackSize.x = m_OriginalSize.Width();
-		lpinfo->ptMinTrackSize.y = m_OriginalSize.Height();
+		lpinfo->ptMinTrackSize.x = m_OriginalSize.Width( );
+		lpinfo->ptMinTrackSize.y = m_OriginalSize.Height( );
 	}
-	CDialogEx::OnGetMinMaxInfo(lpinfo);
+	CDialogEx::OnGetMinMaxInfo( lpinfo );
 }
 
-void CDialogModules::OnContextMenu(CWnd* pWnd, CPoint pos)
+void CDialogModules::OnContextMenu( CWnd* pWnd, CPoint pos )
 {
-	CDialogEx::OnContextMenu(pWnd, pos);
+	CDialogEx::OnContextMenu( pWnd, pos );
 }
 
-BEGIN_MESSAGE_MAP(CDialogModules, CDialogEx)
-	ON_NOTIFY(NM_DBLCLK, IDC_MODULELIST, CDialogModules::OnDblClkListControl)
-	ON_NOTIFY(LVN_COLUMNCLICK, IDC_MODULELIST, CDialogModules::OnColumnClick)
-	ON_EN_CHANGE(IDC_MODULENAME, &CDialogModules::OnEnChangeModuleName)
-	ON_WM_GETMINMAXINFO()
-	ON_WM_SIZE()
-END_MESSAGE_MAP()
+BEGIN_MESSAGE_MAP( CDialogModules, CDialogEx )
+	ON_NOTIFY( NM_DBLCLK, IDC_MODULELIST, CDialogModules::OnDblClkListControl )
+	ON_NOTIFY( LVN_COLUMNCLICK, IDC_MODULELIST, CDialogModules::OnColumnClick )
+	ON_EN_CHANGE( IDC_MODULENAME, &CDialogModules::OnEnChangeModuleName )
+	ON_WM_GETMINMAXINFO( )
+	ON_WM_SIZE( )
+END_MESSAGE_MAP( )
 
-void CDialogModules::BuildList()
+void CDialogModules::BuildList( )
 {
-	for (UINT idx = 0; idx < MemMapModule.size(); idx++)
+	for (UINT idx = 0; idx < g_MemMapModules.size( ); idx++)
 	{
-		MemMapInfo moduleInfo = MemMapModule[idx];
+		MemMapInfo moduleInfo = g_MemMapModules[idx];
 
 		SHFILEINFO sfi = { 0 };
-		SHGetFileInfo(moduleInfo.Path, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
-		m_ModuleIcons.Add(sfi.hIcon);
+		SHGetFileInfo( moduleInfo.Path, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof( SHFILEINFO ), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES );
+		m_ModuleIcons.Add( sfi.hIcon );
 
-		CString uppercase_name = CString(moduleInfo.Name).MakeUpper();
-		if (m_Filter.GetLength() != 0 && uppercase_name.Find(m_Filter.MakeUpper()) == -1)
+		CString uppercase_name = CString( moduleInfo.Name ).MakeUpper( );
+		if (m_Filter.GetLength( ) != 0 && uppercase_name.Find( m_Filter.MakeUpper( ) ) == -1)
 			continue;
 
 		TCHAR strStart[64] = { 0 };
-		_stprintf_s(strStart, _T("0x%IX"), moduleInfo.Start);
+		_stprintf_s( strStart, _T( "0x%IX" ), moduleInfo.Start );
 		TCHAR strEnd[64] = { 0 };
-		_stprintf_s(strEnd, _T("0x%IX"), moduleInfo.End);
+		_stprintf_s( strEnd, _T( "0x%IX" ), moduleInfo.End );
 		TCHAR strSize[64] = { 0 };
-		_stprintf_s(strSize, _T("0x%X"), moduleInfo.Size);
+		_stprintf_s( strSize, _T( "0x%X" ), moduleInfo.Size );
 
 		AddData(
 			idx,
-			moduleInfo.Name.GetString(),
-			moduleInfo.Path.GetString(), 
-			const_cast<LPCTSTR>(strStart), 
+			moduleInfo.Name.GetString( ),
+			moduleInfo.Path.GetString( ),
+			const_cast<LPCTSTR>(strStart),
 			const_cast<LPCTSTR>(strEnd),
-			const_cast<LPCTSTR>(strSize), 
+			const_cast<LPCTSTR>(strSize),
 			static_cast<LPARAM>(moduleInfo.Start)
 		);
 	}
 }
 
-BOOL CDialogModules::OnInitDialog()
+BOOL CDialogModules::OnInitDialog( )
 {
-	CDialogEx::OnInitDialog();
+	CDialogEx::OnInitDialog( );
 
-	SetIcon(NULL, TRUE);
-	SetIcon(NULL, FALSE);
+	SetIcon( NULL, TRUE );
+	SetIcon( NULL, FALSE );
 
-	GetWindowRect(&m_OriginalSize);
-	ScreenToClient(&m_OriginalSize);
+	GetWindowRect( &m_OriginalSize );
+	ScreenToClient( &m_OriginalSize );
 
-	m_SymbolLoad.EnableWindow(gbSymbolResolution ? TRUE : FALSE);
-	m_SymbolLoad.SetCheck(gbLoadModuleSymbol ? BST_CHECKED : BST_UNCHECKED);
+	m_SymbolLoad.EnableWindow( g_bSymbolResolution ? TRUE : FALSE );
+	m_SymbolLoad.SetCheck( g_bLoadModuleSymbol ? BST_CHECKED : BST_UNCHECKED );
 
-	m_ModuleIcons.Create(15, 15, ILC_COLOR32, 1, 1);
-	m_ModuleIcons.SetBkColor(RGB(255, 255, 255));
+	m_ModuleIcons.Create( 15, 15, ILC_COLOR32, 1, 1 );
+	m_ModuleIcons.SetBkColor( RGB( 255, 255, 255 ) );
 
-	m_ModuleList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER);
+	m_ModuleList.SetExtendedStyle( LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER );
 
-	m_ModuleList.InsertColumn(COLUMN_NAME, _T("Module"), LVCFMT_LEFT, 140);
-	m_ModuleList.InsertColumn(COLUMN_PATH, _T("Path"), LVCFMT_LEFT, 200);
-	m_ModuleList.InsertColumn(COLUMN_START, _T("Start"), LVCFMT_LEFT, 100);
-	m_ModuleList.InsertColumn(COLUMN_END, _T("End"), LVCFMT_LEFT, 100);
-	m_ModuleList.InsertColumn(COLUMN_SIZE, _T("Size"), LVCFMT_LEFT, 80);
+	m_ModuleList.InsertColumn( COLUMN_NAME, _T( "Module" ), LVCFMT_LEFT, 140 );
+	m_ModuleList.InsertColumn( COLUMN_PATH, _T( "Path" ), LVCFMT_LEFT, 200 );
+	m_ModuleList.InsertColumn( COLUMN_START, _T( "Start" ), LVCFMT_LEFT, 100 );
+	m_ModuleList.InsertColumn( COLUMN_END, _T( "End" ), LVCFMT_LEFT, 100 );
+	m_ModuleList.InsertColumn( COLUMN_SIZE, _T( "Size" ), LVCFMT_LEFT, 80 );
 
-	m_ModuleList.SetImageList(&m_ModuleIcons, LVSIL_SMALL);
+	m_ModuleList.SetImageList( &m_ModuleIcons, LVSIL_SMALL );
 
-	BuildList();
+	BuildList( );
 
 	return TRUE;
 }
 
-inline int CDialogModules::FindModuleByName(const TCHAR* szName)
+inline int CDialogModules::FindModuleByName( const TCHAR* szName )
 {
-	for (UINT id = 0; id < MemMapModule.size(); id++)
+	for (UINT id = 0; id < g_MemMapModules.size( ); id++)
 	{
-		MemMapInfo moduleInfo = MemMapModule[id];
-		if (_tcsicmp(moduleInfo.Name, szName) == 0)
+		MemMapInfo moduleInfo = g_MemMapModules[id];
+		if (_tcsicmp( moduleInfo.Name, szName ) == 0)
 			return id;
 	}
 	return -1;
 }
 
-__inline CNodeClass* CDialogModules::GetClassByName(const TCHAR* szClassName)
+__inline CNodeClass* CDialogModules::GetClassByName( const TCHAR* szClassName )
 {
-	auto iter = std::find_if(theApp.Classes.begin(), theApp.Classes.end(), [szClassName](const CNodeClass* value) -> bool { return (value->GetName().CompareNoCase(szClassName) == 0); });
-	if (iter != theApp.Classes.end())
+	auto iter = std::find_if( g_ReClassApp.Classes.begin( ), g_ReClassApp.Classes.end( ), [szClassName] ( const CNodeClass* value ) -> bool { return (value->GetName( ).CompareNoCase( szClassName ) == 0); } );
+	if (iter != g_ReClassApp.Classes.end( ))
 		return *iter;
 	else
 		return nullptr;
 }
 
-void CDialogModules::SetSelected()
+void CDialogModules::SetSelected( )
 {
-	POSITION pos = m_ModuleList.GetFirstSelectedItemPosition();
+	POSITION pos = m_ModuleList.GetFirstSelectedItemPosition( );
 	while (pos)
 	{
-		int nItem = m_ModuleList.GetNextSelectedItem(pos);
-		nItem = FindModuleByName(m_ModuleList.GetItemText(nItem, 0));
+		int nItem = m_ModuleList.GetNextSelectedItem( pos );
+		nItem = FindModuleByName( m_ModuleList.GetItemText( nItem, 0 ) );
 
-		MemMapInfo mod = MemMapModule[nItem];
+		MemMapInfo mod = g_MemMapModules[nItem];
 
-		if (gbSymbolResolution && m_SymbolLoad.GetCheck() == BST_CHECKED)
-			g_SymLoader->LoadSymbolsForModule(mod.Path, mod.Start, mod.Size);
+		if (g_bSymbolResolution && m_SymbolLoad.GetCheck( ) == BST_CHECKED)
+			g_SymLoader->LoadSymbolsForModule( mod.Path, mod.Start, mod.Size );
 
-		int extension_size = mod.Name.ReverseFind('.');
+		int extension_size = mod.Name.ReverseFind( '.' );
 		if (extension_size == -1)
 			extension_size = 0;
-		else extension_size = mod.Name.GetLength() - extension_size;
+		else extension_size = mod.Name.GetLength( ) - extension_size;
 
-		CString ClassName = mod.Name.Left(mod.Name.GetLength() - extension_size) + _T("_base");
+		CString ClassName = mod.Name.Left( mod.Name.GetLength( ) - extension_size ) + _T( "_base" );
 
-		CNodeClass* pNewClass = GetClassByName(ClassName);
+		CNodeClass* pNewClass = GetClassByName( ClassName );
 
 		if (pNewClass != nullptr)
 		{
-			
-			CMDIFrameWnd* pFrame = STATIC_DOWNCAST(CMDIFrameWnd, AfxGetApp()->m_pMainWnd);
+
+			CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, AfxGetApp( )->m_pMainWnd );
 			CChildFrame* pChild = pNewClass->pChildWindow;
 
 			// Check if its a window first to dodge the assertion in IsWindowVisible
-			if (pChild && IsWindow(pChild->GetSafeHwnd()) && pChild->IsWindowVisible())
+			if (pChild && IsWindow( pChild->GetSafeHwnd( ) ) && pChild->IsWindowVisible( ))
 			{
-				static_cast<CMDIChildWnd*>(pChild)->MDIActivate();
+				static_cast<CMDIChildWnd*>(pChild)->MDIActivate( );
 			}
-			else 
+			else
 			{
-				CChildFrame* pNewChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
+				CChildFrame* pNewChild = static_cast<CChildFrame*>(pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ));
 				pNewChild->m_wndView.m_pClass = pNewClass;
 				pNewClass->pChildWindow = pNewChild;
-				pNewChild->SetTitle(pNewClass->GetName());
-				pNewChild->SetWindowText(pNewClass->GetName());
-				pFrame->UpdateFrameTitleForDocument(pNewClass->GetName());
+				pNewChild->SetTitle( pNewClass->GetName( ) );
+				pNewChild->SetWindowText( pNewClass->GetName( ) );
+				pFrame->UpdateFrameTitleForDocument( pNewClass->GetName( ) );
 			}
 		}
-		else 
+		else
 		{
-			CMainFrame* pFrame = static_cast<CMainFrame*>(AfxGetApp()->m_pMainWnd);
-			CChildFrame* pChild = static_cast<CChildFrame*>(pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel));
+			CMainFrame* pFrame = static_cast<CMainFrame*>(AfxGetApp( )->m_pMainWnd);
+			CChildFrame* pChild = static_cast<CChildFrame*>(pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ));
 
 			pNewClass = new CNodeClass;
-			pNewClass->SetName(ClassName);
+			pNewClass->SetName( ClassName );
 
 			TCHAR strStart[64];
-			_stprintf(strStart, _T("%IX"), mod.Start);
-			pNewClass->SetOffsetString(strStart);
-			pNewClass->SetOffset(mod.Start);
+			_stprintf( strStart, _T( "%IX" ), mod.Start );
+			pNewClass->SetOffsetString( strStart );
+			pNewClass->SetOffset( mod.Start );
 			pNewClass->pChildWindow = pChild;
-			pNewClass->idx = (int)theApp.Classes.size();
+			pNewClass->idx = (int)g_ReClassApp.Classes.size( );
 
-			theApp.Classes.push_back(pNewClass);
+			g_ReClassApp.Classes.push_back( pNewClass );
 
 			DWORD offset = 0;
-			for (int i = 0; i < 64 / sizeof(size_t); i++)
+			for (int i = 0; i < 64 / sizeof( size_t ); i++)
 			{
 				CNodeHex* pNode = new CNodeHex;
-				pNode->SetParent(pNewClass);
-				pNode->SetOffset(offset);
-				offset += pNode->GetMemorySize();
-				pNewClass->AddNode(pNode);
+				pNode->SetParent( pNewClass );
+				pNode->SetOffset( offset );
+				offset += pNode->GetMemorySize( );
+				pNewClass->AddNode( pNode );
 			}
 
 			pChild->m_wndView.m_pClass = pNewClass;
-			pChild->SetTitle(pNewClass->GetName());
-			pChild->SetWindowText(pNewClass->GetName());
-			pFrame->UpdateFrameTitleForDocument(pNewClass->GetName());
+			pChild->SetTitle( pNewClass->GetName( ) );
+			pChild->SetWindowText( pNewClass->GetName( ) );
+			pFrame->UpdateFrameTitleForDocument( pNewClass->GetName( ) );
 		}
 	}
 }
 
-int CALLBACK CDialogModules::CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
+int CALLBACK CDialogModules::CompareFunction( LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort )
 {
 	COMPARESTRUCT* compare = (COMPARESTRUCT*)lParamSort;
 	if (compare)
@@ -234,43 +236,43 @@ int CALLBACK CDialogModules::CompareFunction(LPARAM lParam1, LPARAM lParam2, LPA
 
 		if (column == COLUMN_START || column == COLUMN_END || column == COLUMN_SIZE)
 		{
-			CString strNum1 = pListCtrl->GetItemText(item1, column);
-			CString strNum2 = pListCtrl->GetItemText(item2, column);
+			CString strNum1 = pListCtrl->GetItemText( item1, column );
+			CString strNum2 = pListCtrl->GetItemText( item2, column );
 
-			size_t num1 = (size_t)_tcstoui64(strNum1.GetBuffer(), NULL, 16);
-			size_t num2 = (size_t)_tcstoui64(strNum2.GetBuffer(), NULL, 16);
+			size_t num1 = (size_t)_tcstoui64( strNum1.GetBuffer( ), NULL, 16 );
+			size_t num2 = (size_t)_tcstoui64( strNum2.GetBuffer( ), NULL, 16 );
 
 			return (int)(num2 - num1);
 		}
 		else if (column == COLUMN_NAME)
 		{
-			CString strModuleName1 = pListCtrl->GetItemText(item1, column);
-			CString strModuleName2 = pListCtrl->GetItemText(item2, column);
+			CString strModuleName1 = pListCtrl->GetItemText( item1, column );
+			CString strModuleName2 = pListCtrl->GetItemText( item2, column );
 
-			return _tcsicmp(strModuleName1.GetBuffer(), strModuleName2.GetBuffer());
+			return _tcsicmp( strModuleName1.GetBuffer( ), strModuleName2.GetBuffer( ) );
 		}
 		else if (column == COLUMN_PATH)
 		{
-			CString strModulePath1 = pListCtrl->GetItemText(item1, column);
-			CString strModulePath2 = pListCtrl->GetItemText(item2, column);
+			CString strModulePath1 = pListCtrl->GetItemText( item1, column );
+			CString strModulePath2 = pListCtrl->GetItemText( item2, column );
 
-			int idxSlash1 = strModulePath1.ReverseFind(_T('\\'));
+			int idxSlash1 = strModulePath1.ReverseFind( _T( '\\' ) );
 			if (!idxSlash1)
-				idxSlash1 = strModulePath1.ReverseFind(_T('/'));
-			CString strModuleFile1 = strModulePath1.Mid(++idxSlash1);
+				idxSlash1 = strModulePath1.ReverseFind( _T( '/' ) );
+			CString strModuleFile1 = strModulePath1.Mid( ++idxSlash1 );
 
-			int idxSlash2 = strModulePath2.ReverseFind(_T('\\'));
+			int idxSlash2 = strModulePath2.ReverseFind( _T( '\\' ) );
 			if (!idxSlash2)
-				idxSlash2 = strModulePath2.ReverseFind(_T('/'));
-			CString strModuleFile2 = strModulePath2.Mid(++idxSlash2);
+				idxSlash2 = strModulePath2.ReverseFind( _T( '/' ) );
+			CString strModuleFile2 = strModulePath2.Mid( ++idxSlash2 );
 
-			return _tcsicmp(strModuleFile1.GetBuffer(), strModuleFile2.GetBuffer());
+			return _tcsicmp( strModuleFile1.GetBuffer( ), strModuleFile2.GetBuffer( ) );
 		}
 	}
 	return 0;
 }
 
-void CDialogModules::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
+void CDialogModules::OnColumnClick( NMHDR* pNMHDR, LRESULT* pResult )
 {
 	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
 
@@ -305,50 +307,50 @@ void CDialogModules::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
 		break;
 	}
 
-	m_ModuleList.SortItemsEx(CompareFunction, (LPARAM)compare);
+	m_ModuleList.SortItemsEx( CompareFunction, (LPARAM)compare );
 
 	delete compare;
 
 	*pResult = 0;
 }
 
-void CDialogModules::OnDblClkListControl(NMHDR* pNMHDR, LRESULT* pResult)
+void CDialogModules::OnDblClkListControl( NMHDR* pNMHDR, LRESULT* pResult )
 {
-	OnOK();
+	OnOK( );
 }
 
-void CDialogModules::OnOK()
+void CDialogModules::OnOK( )
 {
-	SetSelected();
-	if (m_SymbolLoad.GetCheck() == BST_CHECKED)
-		gbSymbolResolution = true;
-	CDialogEx::OnOK();
+	SetSelected( );
+	if (m_SymbolLoad.GetCheck( ) == BST_CHECKED)
+		g_bSymbolResolution = true;
+	CDialogEx::OnOK( );
 }
 
-int CDialogModules::AddData(int Index, LPCTSTR ModuleName, LPCTSTR ModulePath, LPCTSTR StartAddress, LPCTSTR EndAddress, LPCTSTR ModuleSize, LPARAM lParam)
+int CDialogModules::AddData( int Index, LPCTSTR ModuleName, LPCTSTR ModulePath, LPCTSTR StartAddress, LPCTSTR EndAddress, LPCTSTR ModuleSize, LPARAM lParam )
 {
 	LVITEM lvi = { 0 };
 
 	lvi.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM;
 	lvi.pszText = (LPTSTR)ModuleName;
-	lvi.cchTextMax = static_cast<int>(_tcslen(ModuleName)) + 1;
+	lvi.cchTextMax = static_cast<int>(_tcslen( ModuleName )) + 1;
 	lvi.iImage = Index;
 	lvi.lParam = lParam;
-	lvi.iItem = m_ModuleList.GetItemCount();
+	lvi.iItem = m_ModuleList.GetItemCount( );
 
-	int pos = m_ModuleList.InsertItem(&lvi);
+	int pos = m_ModuleList.InsertItem( &lvi );
 
-	m_ModuleList.SetItemText(pos, COLUMN_PATH, (LPCTSTR)ModulePath);
-	m_ModuleList.SetItemText(pos, COLUMN_START, (LPCTSTR)StartAddress);
-	m_ModuleList.SetItemText(pos, COLUMN_END, (LPCTSTR)EndAddress);
-	m_ModuleList.SetItemText(pos, COLUMN_SIZE, (LPCTSTR)ModuleSize);
+	m_ModuleList.SetItemText( pos, COLUMN_PATH, (LPCTSTR)ModulePath );
+	m_ModuleList.SetItemText( pos, COLUMN_START, (LPCTSTR)StartAddress );
+	m_ModuleList.SetItemText( pos, COLUMN_END, (LPCTSTR)EndAddress );
+	m_ModuleList.SetItemText( pos, COLUMN_SIZE, (LPCTSTR)ModuleSize );
 
 	return pos;
 }
 
-void CDialogModules::OnEnChangeModuleName()
+void CDialogModules::OnEnChangeModuleName( )
 {
-	m_Edit.GetWindowText(m_Filter);
-	m_ModuleList.DeleteAllItems();
-	BuildList();
+	m_Edit.GetWindowText( m_Filter );
+	m_ModuleList.DeleteAllItems( );
+	BuildList( );
 }

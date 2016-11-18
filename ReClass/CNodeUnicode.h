@@ -5,13 +5,13 @@
 class CNodeUnicode : public CNodeBase
 {
 public:
-	CNodeUnicode();
+	CNodeUnicode( );
 
-	virtual void Update(CHotSpot& Spot);
+	virtual void Update( HotSpot& Spot );
 
-	virtual int GetMemorySize(void);
+	virtual int GetMemorySize( void );
 
-	virtual int Draw(ViewInfo& View, int x, int y);
+	virtual int Draw( ViewInfo& View, int x, int y );
 
 public:
 	DWORD memsize;

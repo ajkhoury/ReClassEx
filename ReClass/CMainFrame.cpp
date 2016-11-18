@@ -1,9 +1,9 @@
-#include <afxtabctrl.h>
-
 #include "stdafx.h"
 
-#include "ChildFrame.h"
-#include "MainFrame.h"
+#include <afxtabctrl.h>
+
+#include "CChildFrame.h"
+#include "CMainFrame.h"
 
 #include "DialogClasses.h"
 #include "DialogProcSelect.h"
@@ -74,7 +74,7 @@ END_MESSAGE_MAP( )
 CMainFrame::CMainFrame( )
 {
 	// TODO: add member initialization code here
-	theApp.m_nAppLook = theApp.GetInt( _T( "ApplicationLook" ), ID_VIEW_APPLOOK_OFF_2007_BLACK );
+	g_ReClassApp.m_nAppLook = g_ReClassApp.GetInt( _T( "ApplicationLook" ), ID_VIEW_APPLOOK_OFF_2007_BLACK );
 }
 
 CMainFrame::~CMainFrame( )
@@ -87,7 +87,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 		return -1;
 
 	// set the visual manager and style based on persisted value
-	OnApplicationLook( theApp.m_nAppLook );
+	OnApplicationLook( g_ReClassApp.m_nAppLook );
 
 	// Create tabs
 	CMDITabInfo mdiTabParams;
@@ -127,21 +127,21 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 
 	//Update Colors
 	CMFCRibbonColorButton* pColor;
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CBACKGROUND );	pColor->SetColor( crBackground );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CSELECT );		pColor->SetColor( crSelect );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CHIDDEN );		pColor->SetColor( crHidden );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_COFFSET );		pColor->SetColor( crOffset );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CADDRESS );		pColor->SetColor( crAddress );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CTYPE );			pColor->SetColor( crType );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CNAME );			pColor->SetColor( crName );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CINDEX );			pColor->SetColor( crIndex );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CVALUE );			pColor->SetColor( crValue );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CCOMMENT );		pColor->SetColor( crComment );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CVTABLE );		pColor->SetColor( crVTable );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CFUNCTION );		pColor->SetColor( crFunction );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CTEXT );			pColor->SetColor( crChar );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CCUSTOM );		pColor->SetColor( crCustom );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CHEX );			pColor->SetColor( crHex );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CBACKGROUND );	pColor->SetColor( g_crBackground );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CSELECT );		pColor->SetColor( g_crSelect );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CHIDDEN );		pColor->SetColor( g_crHidden );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_COFFSET );		pColor->SetColor( g_crOffset );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CADDRESS );		pColor->SetColor( g_crAddress );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CTYPE );			pColor->SetColor( g_crType );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CNAME );			pColor->SetColor( g_crName );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CINDEX );			pColor->SetColor( g_crIndex );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CVALUE );			pColor->SetColor( g_crValue );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CCOMMENT );		pColor->SetColor( g_crComment );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CVTABLE );		pColor->SetColor( g_crVTable );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CFUNCTION );		pColor->SetColor( g_crFunction );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CTEXT );			pColor->SetColor( g_crChar );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CCUSTOM );		pColor->SetColor( g_crCustom );
+	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CHEX );			pColor->SetColor( g_crHex );
 
 	// update after 5 seconds
 	SetTimer( TIMER_MEMORYMAP_UPDATE, 5000, NULL );
@@ -150,77 +150,77 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 }
 void CMainFrame::OnButtonCBackground( )
 {
-	crBackground = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CBACKGROUND ))->GetColor( );
+	g_crBackground = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CBACKGROUND ))->GetColor( );
 }
 void CMainFrame::OnButtonCSelect( )
 {
-	crSelect = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CSELECT ))->GetColor( );
+	g_crSelect = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CSELECT ))->GetColor( );
 }
 void CMainFrame::OnButtonCHidden( )
 {
-	crHidden = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CHIDDEN ))->GetColor( );
+	g_crHidden = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CHIDDEN ))->GetColor( );
 }
 void CMainFrame::OnButtonCOffset( )
 {
-	crOffset = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_COFFSET ))->GetColor( );
+	g_crOffset = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_COFFSET ))->GetColor( );
 }
 void CMainFrame::OnButtonCAddress( )
 {
-	crAddress = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CADDRESS ))->GetColor( );
+	g_crAddress = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CADDRESS ))->GetColor( );
 }
 void CMainFrame::OnButtonCHex( )
 {
-	crHex = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CHEX ))->GetColor( );
+	g_crHex = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CHEX ))->GetColor( );
 }
 void CMainFrame::OnButtonCType( )
 {
-	crType = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CTYPE ))->GetColor( );
+	g_crType = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CTYPE ))->GetColor( );
 }
 void CMainFrame::OnButtonCName( )
 {
-	crName = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CNAME ))->GetColor( );
+	g_crName = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CNAME ))->GetColor( );
 }
 void CMainFrame::OnButtonCValue( )
 {
-	crValue = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CVALUE ))->GetColor( );
+	g_crValue = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CVALUE ))->GetColor( );
 }
 void CMainFrame::OnButtonCIndex( )
 {
-	crIndex = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CINDEX ))->GetColor( );
+	g_crIndex = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CINDEX ))->GetColor( );
 }
 void CMainFrame::OnButtonCComment( )
 {
-	crComment = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CCOMMENT ))->GetColor( );
+	g_crComment = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CCOMMENT ))->GetColor( );
 }
 void CMainFrame::OnButtonCText( )
 {
-	crChar = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CTEXT ))->GetColor( );
+	g_crChar = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CTEXT ))->GetColor( );
 }
 void CMainFrame::OnButtonCVtable( )
 {
-	crVTable = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CVTABLE ))->GetColor( );
+	g_crVTable = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CVTABLE ))->GetColor( );
 }
 void CMainFrame::OnButtonCFunction( )
 {
-	crFunction = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CFUNCTION ))->GetColor( );
+	g_crFunction = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CFUNCTION ))->GetColor( );
 }
 void CMainFrame::OnButtonCCustom( )
 {
-	crCustom = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CCUSTOM ))->GetColor( );
+	g_crCustom = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CCUSTOM ))->GetColor( );
 }
 
 BOOL CMainFrame::PreCreateWindow( CREATESTRUCT& cs )
 {
 	if (!CMDIFrameWndEx::PreCreateWindow( cs ))
 		return FALSE;
-	if (gbTop)
+	if (g_bTop)
 		cs.dwExStyle |= WS_EX_TOPMOST;
 	return TRUE;
 }
 
 BOOL CMainFrame::CreateDockingWindows( )
 {
-	SetDockingWindowIcons( theApp.m_bHiColorIcons );
+	SetDockingWindowIcons( g_ReClassApp.m_bHiColorIcons );
 	return TRUE;
 }
 
@@ -252,9 +252,9 @@ void CMainFrame::OnApplicationLook( UINT id )
 {
 	CWaitCursor wait;
 
-	theApp.m_nAppLook = id;
+	g_ReClassApp.m_nAppLook = id;
 
-	switch (theApp.m_nAppLook)
+	switch (g_ReClassApp.m_nAppLook)
 	{
 	case ID_VIEW_APPLOOK_WIN_2000:
 		CMFCVisualManager::SetDefaultManager( RUNTIME_CLASS( CMFCVisualManager ) );
@@ -297,7 +297,7 @@ void CMainFrame::OnApplicationLook( UINT id )
 		break;
 
 	default:
-		switch (theApp.m_nAppLook)
+		switch (g_ReClassApp.m_nAppLook)
 		{
 		case ID_VIEW_APPLOOK_OFF_2007_BLUE:
 			CMFCVisualManagerOffice2007::SetStyle( CMFCVisualManagerOffice2007::Office2007_LunaBlue );
@@ -323,12 +323,12 @@ void CMainFrame::OnApplicationLook( UINT id )
 	}
 
 	RedrawWindow( NULL, NULL, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE );
-	theApp.WriteInt( _T( "ApplicationLook" ), theApp.m_nAppLook );
+	g_ReClassApp.WriteInt( _T( "ApplicationLook" ), g_ReClassApp.m_nAppLook );
 }
 
 void CMainFrame::OnUpdateApplicationLook( CCmdUI* pCmdUI )
 {
-	pCmdUI->SetRadio( theApp.m_nAppLook == pCmdUI->m_nID );
+	pCmdUI->SetRadio( g_ReClassApp.m_nAppLook == pCmdUI->m_nID );
 }
 
 void CMainFrame::OnSettingChange( UINT uFlags, LPCTSTR lpszSection )
@@ -363,8 +363,8 @@ BOOL CMainFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 		{
 			UINT idx = nID - WM_CLASSMENU;
 
-			CChildFrame* pChild = static_cast<CChildFrame*>(CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, theApp.m_hMDIMenu, theApp.m_hMDIAccel ));
-			CNodeClass* pClass = theApp.Classes[idx];
+			CChildFrame* pChild = static_cast<CChildFrame*>(CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ));
+			CNodeClass* pClass = g_ReClassApp.Classes[idx];
 			pClass->pChildWindow = pChild;
 
 			pChild->SetTitle( pClass->GetName( ).GetString( ) );
@@ -377,9 +377,9 @@ BOOL CMainFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 		if (nID >= WM_DELETECLASSMENU && nID < (WM_DELETECLASSMENU + WM_MAXITEMS))
 		{
 			UINT idx = nID - WM_DELETECLASSMENU;
-			if (theApp.Classes[idx]->pChildWindow)
-				theApp.Classes[idx]->pChildWindow->SendMessage( WM_CLOSE, 0, 0 );
-			theApp.DeleteClass( theApp.Classes[idx] );
+			if (g_ReClassApp.Classes[idx]->pChildWindow)
+				g_ReClassApp.Classes[idx]->pChildWindow->SendMessage( WM_CLOSE, 0, 0 );
+			g_ReClassApp.DeleteClass( g_ReClassApp.Classes[idx] );
 			return TRUE;
 		}
 	}
@@ -389,46 +389,46 @@ BOOL CMainFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 
 void CMainFrame::OnCheckCbAddress( )
 {
-	gbAddress = !gbAddress;
+	g_bAddress = !g_bAddress;
 }
 void CMainFrame::OnUpdateCheckCbAddress( CCmdUI *pCmdUI )
 {
-	pCmdUI->SetCheck( gbAddress );
+	pCmdUI->SetCheck( g_bAddress );
 }
 
 void CMainFrame::OnCheckCbOffset( )
 {
-	gbOffset = !gbOffset;
+	g_bOffset = !g_bOffset;
 }
 void CMainFrame::OnUpdateCheckCbOffset( CCmdUI *pCmdUI )
 {
-	pCmdUI->SetCheck( gbOffset );
+	pCmdUI->SetCheck( g_bOffset );
 }
 
 void CMainFrame::OnCheckCbText( )
 {
-	gbText = !gbText;
+	g_bText = !g_bText;
 }
 void CMainFrame::OnUpdateCheckCbText( CCmdUI *pCmdUI )
 {
-	pCmdUI->SetCheck( gbText );
+	pCmdUI->SetCheck( g_bText );
 }
 
 void CMainFrame::OnCheckCbRtti( )
 {
-	gbRTTI = !gbRTTI;
+	g_bRTTI = !g_bRTTI;
 }
 
 void CMainFrame::OnUpdateCheckCbRtti( CCmdUI *pCmdUI )
 {
-	if (!gbPointers)
+	if (!g_bPointers)
 	{
 		pCmdUI->Enable( FALSE );
 	}
 	else
 	{
 		pCmdUI->Enable( TRUE );
-		pCmdUI->SetCheck( gbRTTI );
+		pCmdUI->SetCheck( g_bRTTI );
 	}
 }
 
@@ -446,7 +446,7 @@ void CMainFrame::OnButtonSelectProcess( )
 
 void CMainFrame::OnButtonEditClass( )
 {
-	if (gbClassBrowser)
+	if (g_bClassBrowser)
 	{
 		CDialogClasses dlg( this );
 		dlg.DoModal( );
@@ -462,10 +462,10 @@ void CMainFrame::OnButtonEditClass( )
 		CMenu menu;
 		menu.CreatePopupMenu( );
 
-		for (UINT m = 0; m < theApp.Classes.size( ); m++)
+		for (UINT m = 0; m < g_ReClassApp.Classes.size( ); m++)
 		{
 			CString MenuItem;
-			MenuItem.Format( _T( "%i - %s" ), m, theApp.Classes[m]->GetName( ).GetString( ) );
+			MenuItem.Format( _T( "%i - %s" ), m, g_ReClassApp.Classes[m]->GetName( ).GetString( ) );
 			menu.AppendMenu( MF_STRING | MF_ENABLED, WM_CLASSMENU + m, MenuItem );
 		}
 
@@ -475,7 +475,7 @@ void CMainFrame::OnButtonEditClass( )
 
 void CMainFrame::OnUpdateButtonEditClass( CCmdUI *pCmdUI )
 {
-	pCmdUI->Enable( (theApp.Classes.size( ) > 0) );
+	pCmdUI->Enable( (g_ReClassApp.Classes.size( ) > 0) );
 }
 
 void CMainFrame::OnButtonDeleteClass( )
@@ -487,16 +487,16 @@ void CMainFrame::OnButtonDeleteClass( )
 
 	CMenu menu;
 	menu.CreatePopupMenu( );
-	for (UINT m = 0; m < theApp.Classes.size( ); m++)
+	for (UINT m = 0; m < g_ReClassApp.Classes.size( ); m++)
 	{
-		menu.AppendMenu( MF_STRING | MF_ENABLED, WM_DELETECLASSMENU + m, theApp.Classes[m]->GetName( ) );
+		menu.AppendMenu( MF_STRING | MF_ENABLED, WM_DELETECLASSMENU + m, g_ReClassApp.Classes[m]->GetName( ) );
 	}
 	menu.TrackPopupMenu( TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this );
 }
 
 void CMainFrame::OnUpdateButtonDeleteClass( CCmdUI *pCmdUI )
 {
-	pCmdUI->Enable( (theApp.Classes.size( ) > 0) );
+	pCmdUI->Enable( (g_ReClassApp.Classes.size( ) > 0) );
 }
 
 void CMainFrame::OnTimer( UINT_PTR nIDEvent )
@@ -509,9 +509,9 @@ void CMainFrame::OnTimer( UINT_PTR nIDEvent )
 
 void CMainFrame::OnCheckTopmost( )
 {
-	gbTop = !gbTop;
+	g_bTop = !g_bTop;
 
-	if (gbTop)
+	if (g_bTop)
 		SetWindowPos( &wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE );
 	else
 		SetWindowPos( &wndNoTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE );
@@ -519,37 +519,37 @@ void CMainFrame::OnCheckTopmost( )
 
 void CMainFrame::OnUpdateCheckTopmost( CCmdUI *pCmdUI )
 {
-	pCmdUI->SetCheck( gbTop );
+	pCmdUI->SetCheck( g_bTop );
 }
 
 void CMainFrame::OnCheckClassBrowser( )
 {
-	gbClassBrowser = !gbClassBrowser;
+	g_bClassBrowser = !g_bClassBrowser;
 }
 
 void CMainFrame::OnUpdateCheckClassBrowser( CCmdUI *pCmdUI )
 {
-	pCmdUI->SetCheck( gbClassBrowser );
+	pCmdUI->SetCheck( g_bClassBrowser );
 }
 
 void CMainFrame::OnCheckPrivatePadding( )
 {
-	gbPrivatePadding = !gbPrivatePadding;
+	g_bPrivatePadding = !g_bPrivatePadding;
 }
 
 void CMainFrame::OnUpdateCheckPrivatePadding( CCmdUI *pCmdUI )
 {
-	pCmdUI->SetCheck( gbPrivatePadding );
+	pCmdUI->SetCheck( g_bPrivatePadding );
 }
 
 void CMainFrame::OnCheckClipboardCopy( )
 {
-	gbClipboardCopy = !gbClipboardCopy;
+	g_bClipboardCopy = !g_bClipboardCopy;
 }
 
 void CMainFrame::OnUpdateCheckClipboardCopy( CCmdUI *pCmdUI )
 {
-	pCmdUI->SetCheck( gbClipboardCopy );
+	pCmdUI->SetCheck( g_bClipboardCopy );
 }
 
 // Multi monitor support. Thanks timboy67678
@@ -563,7 +563,7 @@ void CMainFrame::OnButtonLeft( )
 	hMon = ::MonitorFromRect( &rc, MONITOR_DEFAULTTONEAREST );
 	::GetMonitorInfo( hMon, &mi );
 	LONG nWidth = mi.rcWork.right - mi.rcWork.left, nHeight = mi.rcWork.bottom - mi.rcWork.top;
-	SetWindowPos( gbTop ? &wndTopMost : &wndNoTopMost, mi.rcMonitor.left, mi.rcMonitor.top, nWidth / 2, nHeight, SWP_NOZORDER );
+	SetWindowPos( g_bTop ? &wndTopMost : &wndNoTopMost, mi.rcMonitor.left, mi.rcMonitor.top, nWidth / 2, nHeight, SWP_NOZORDER );
 }
 
 void CMainFrame::OnButtonRight( )
@@ -576,46 +576,46 @@ void CMainFrame::OnButtonRight( )
 	hMon = ::MonitorFromRect( &rc, MONITOR_DEFAULTTONEAREST );
 	::GetMonitorInfo( hMon, &mi );
 	LONG nWidth = mi.rcWork.right - mi.rcWork.left, nHeight = mi.rcWork.bottom - mi.rcWork.top;
-	SetWindowPos( gbTop ? &wndTopMost : &wndNoTopMost, mi.rcMonitor.left + (nWidth / 2), 0, nWidth / 2, nHeight, SWP_NOZORDER );
+	SetWindowPos( g_bTop ? &wndTopMost : &wndNoTopMost, mi.rcMonitor.left + (nWidth / 2), 0, nWidth / 2, nHeight, SWP_NOZORDER );
 }
 
 void CMainFrame::OnCheckFloat( )
 {
-	gbFloat = !gbFloat;
+	g_bFloat = !g_bFloat;
 }
 
 void CMainFrame::OnUpdateCheckFloat( CCmdUI *pCmdUI )
 {
-	pCmdUI->SetCheck( gbFloat );
+	pCmdUI->SetCheck( g_bFloat );
 }
 
 void CMainFrame::OnCheckInteger( )
 {
-	gbInt = !gbInt;
+	g_bInt = !g_bInt;
 }
 
 void CMainFrame::OnUpdateCheckInteger( CCmdUI *pCmdUI )
 {
-	pCmdUI->SetCheck( gbInt );
+	pCmdUI->SetCheck( g_bInt );
 }
 
 void CMainFrame::OnCheckString( )
 {
-	gbString = !gbString;
+	g_bString = !g_bString;
 }
 
 void CMainFrame::OnUpdateCheckString( CCmdUI *pCmdUI )
 {
-	pCmdUI->SetCheck( gbString );
+	pCmdUI->SetCheck( g_bString );
 }
 
 void CMainFrame::OnCheckPointer( )
 {
-	gbPointers = !gbPointers;
+	g_bPointers = !g_bPointers;
 }
 
 void CMainFrame::OnUpdateCheckPointer( CCmdUI *pCmdUI )
 {
-	pCmdUI->SetCheck( gbPointers );
+	pCmdUI->SetCheck( g_bPointers );
 }
 

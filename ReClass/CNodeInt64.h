@@ -5,11 +5,11 @@
 class CNodeInt64 : public CNodeBase
 {
 public:
-	CNodeInt64();
+	CNodeInt64( );
 
-	virtual void Update(CHotSpot& Spot);
+	virtual void Update( HotSpot& Spot );
 
-	virtual int GetMemorySize() { return sizeof(__int64); }
+	virtual int GetMemorySize( ) { return sizeof( __int64 ); }
 
-	virtual int Draw(ViewInfo& View, int x, int y);
+	virtual int Draw( ViewInfo& View, int x, int y );
 };
