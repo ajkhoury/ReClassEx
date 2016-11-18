@@ -23,12 +23,16 @@ typedef BOOL( PLUGIN_CC *tWriteMemoryOperation )(IN LPVOID Address, IN LPVOID Bu
 typedef HANDLE( PLUGIN_CC *tOpenProcessOperation )(IN DWORD dwDesiredAccess, IN BOOL bInheritHandle, IN DWORD dwProcessID);
 typedef HANDLE( PLUGIN_CC *tOpenThreadOperation )(IN DWORD dwDesiredAccess, IN BOOL bInheritHandle, IN DWORD dwThreadID);
 
+//
+// Plugin info structure to be filled in during initialization
+// which is passed back to ReClass to display in the plugins dialog
+//
 typedef struct _RECLASS_PLUGIN_INFO
 {
-	wchar_t Name[256];
-	wchar_t Version[256];
-	wchar_t About[2048];
-	int DialogID;
+	wchar_t Name[256];		//< Name of the plugin
+	wchar_t Version[256];	//< Plugin version
+	wchar_t About[2048];	//< Small snippet about the plugin 
+	int DialogID;			//< Identifier for the settings dialog
 } RECLASS_PLUGIN_INFO, *PRECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
 //
@@ -38,7 +42,9 @@ typedef struct _RECLASS_PLUGIN_INFO
 BOOL PLUGIN_CC PluginInit( PRECLASS_PLUGIN_INFO lpRCInfo );
 
 //
-// Callback for when the plugin state is changed (enabled or disabled)
+// Callback for when the plugin state is changed (enabled or disabled). 
+// Plugins disabled and enabled state are dependent on the implementation inside the plugin. 
+// All we do is send a state change to plugins for them to disable or enable their functionality.
 //
 VOID PLUGIN_CC PluginStateChange( BOOL state );
 
@@ -48,9 +54,7 @@ VOID PLUGIN_CC PluginStateChange( BOOL state );
 INT_PTR CALLBACK PluginSettingsDlg( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam );
 
 // 
-// Register overides for the read/write memory operations
-// returns false if a plugin has already registered it or one of the paramaters was null
-// returns true if succeeded or if force flag is set
+// Register, remove, or check overrides for the read/write memory operations.
 // 
 BOOL PLUGIN_CC ReClassOverrideReadMemoryOperation( tReadMemoryOperation MemRead );
 BOOL PLUGIN_CC ReClassOverrideWriteMemoryOperation( tWriteMemoryOperation MemWrite );
@@ -61,9 +65,8 @@ BOOL PLUGIN_CC ReClassIsReadMemoryOverriden( );
 BOOL PLUGIN_CC ReClassIsWriteMemoryOverriden( );
 
 // 
-// Register overides for the opening of handles for various process/thread operations
-// returns false if a plugin has already registered it or one of the paramaters was null
-// returns true if succeeded or if force flag is set
+// Register, remove, or check overrides for the opening of handles 
+// for various process/thread operations.
 // 
 BOOL PLUGIN_CC ReClassOverrideOpenProcessOperation( tOpenProcessOperation ProcessOpen );
 BOOL PLUGIN_CC ReClassOverrideOpenThreadOperation( tOpenThreadOperation ThreadOpen );
@@ -79,7 +82,7 @@ BOOL PLUGIN_CC ReClassIsOpenThreadOverriden( );
 VOID PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
 
 // 
-// Get the current attached process handle, null if not attached
+// Gets the current attached process handle, null if not attached
 // 
 HANDLE PLUGIN_CC ReClassGetProcessHandle( );
 
