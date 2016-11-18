@@ -31,15 +31,27 @@ typedef struct _RECLASS_PLUGIN_INFO
 	int DialogID;
 } RECLASS_PLUGIN_INFO, *PRECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
+//
+// Plugin initialization callback to fill in the RECLASS_PLUGIN_INFO struct,
+// and initialize any other plugin resources
+//
 BOOL PLUGIN_CC PluginInit( PRECLASS_PLUGIN_INFO lpRCInfo );
+
+//
+// Callback for when the plugin state is changed (enabled or disabled)
+//
 VOID PLUGIN_CC PluginStateChange( BOOL state );
+
+//
+// Window Proc for the settings dialog
+//
 INT_PTR CALLBACK PluginSettingsDlg( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam );
 
-/*
-*	Register overides for the read/write memory operations
-*	returns false if a plugin has already registered it or one of the paramaters was null
-*	returns true if succeeded or if force flag is set
-*/
+// 
+// Register overides for the read/write memory operations
+// returns false if a plugin has already registered it or one of the paramaters was null
+// returns true if succeeded or if force flag is set
+// 
 BOOL PLUGIN_CC ReClassOverrideReadMemoryOperation( tReadMemoryOperation MemRead );
 BOOL PLUGIN_CC ReClassOverrideWriteMemoryOperation( tWriteMemoryOperation MemWrite );
 BOOL PLUGIN_CC ReClassOverrideMemoryOperations( tReadMemoryOperation MemRead, tWriteMemoryOperation MemWrite );
@@ -48,11 +60,11 @@ BOOL PLUGIN_CC ReClassRemoveWriteMemoryOverride( );
 BOOL PLUGIN_CC ReClassIsReadMemoryOverriden( );
 BOOL PLUGIN_CC ReClassIsWriteMemoryOverriden( );
 
-/*
- *	Register overides for the opening of handles for various process/thread operations
- *	returns false if a plugin has already registered it or one of the paramaters was null
- *	returns true if succeeded or if force flag is set
- */
+// 
+// Register overides for the opening of handles for various process/thread operations
+// returns false if a plugin has already registered it or one of the paramaters was null
+// returns true if succeeded or if force flag is set
+// 
 BOOL PLUGIN_CC ReClassOverrideOpenProcessOperation( tOpenProcessOperation ProcessOpen );
 BOOL PLUGIN_CC ReClassOverrideOpenThreadOperation( tOpenThreadOperation ThreadOpen );
 BOOL PLUGIN_CC ReClassOverrideHandleOperations( tOpenProcessOperation ProcessOpen, tOpenThreadOperation ThreadOpen );
@@ -61,24 +73,24 @@ BOOL PLUGIN_CC ReClassRemoveOpenThreadOverride( );
 BOOL PLUGIN_CC ReClassIsOpenProcessOverriden( );
 BOOL PLUGIN_CC ReClassIsOpenThreadOverriden( );
 
-/*
-*	Print text to the ReClass console window
-*/
+// 
+// Print text to the ReClass console window
+// 
 VOID PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
 
-/*
- *	Get the current attached process handle, null if not attached
- */
+// 
+// Get the current attached process handle, null if not attached
+// 
 HANDLE PLUGIN_CC ReClassGetProcessHandle( );
 
-/*
- *	Return the main window handle for ReClass
- */
+// 
+// Return the main window handle for ReClass
+// 
 HWND PLUGIN_CC ReClassMainWindow( );
 
 #ifdef _MFC_VER 
-/*
- *	Get the ribbon interface for MFC (useful for adding custom buttons and such)
- */
+// 
+// Get the ribbon interface for MFC (useful for adding custom buttons and such)
+// 
 CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface( );
 #endif
