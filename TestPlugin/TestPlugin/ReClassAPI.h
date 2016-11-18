@@ -43,10 +43,10 @@ INT_PTR CALLBACK PluginSettingsDlg( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM l
 BOOL PLUGIN_CC ReClassOverrideReadMemoryOperation( tReadMemoryOperation MemRead );
 BOOL PLUGIN_CC ReClassOverrideWriteMemoryOperation( tWriteMemoryOperation MemWrite );
 BOOL PLUGIN_CC ReClassOverrideMemoryOperations( tReadMemoryOperation MemRead, tWriteMemoryOperation MemWrite );
-BOOL PLUGIN_CC ReClassIsReadMemoryOverriden( );
-BOOL PLUGIN_CC ReClassIsWriteMemoryOverriden( );
 BOOL PLUGIN_CC ReClassRemoveReadMemoryOverride( );
 BOOL PLUGIN_CC ReClassRemoveWriteMemoryOverride( );
+BOOL PLUGIN_CC ReClassIsReadMemoryOverriden( );
+BOOL PLUGIN_CC ReClassIsWriteMemoryOverriden( );
 
 /*
  *	Register overides for the opening of handles for various process/thread operations
@@ -56,6 +56,10 @@ BOOL PLUGIN_CC ReClassRemoveWriteMemoryOverride( );
 BOOL PLUGIN_CC ReClassOverrideOpenProcessOperation( tOpenProcessOperation ProcessOpen );
 BOOL PLUGIN_CC ReClassOverrideOpenThreadOperation( tOpenThreadOperation ThreadOpen );
 BOOL PLUGIN_CC ReClassOverrideHandleOperations( tOpenProcessOperation ProcessOpen, tOpenThreadOperation ThreadOpen );
+BOOL PLUGIN_CC ReClassRemoveOpenProcessOverride( );
+BOOL PLUGIN_CC ReClassRemoveOpenThreadOverride( );
+BOOL PLUGIN_CC ReClassIsOpenProcessOverriden( );
+BOOL PLUGIN_CC ReClassIsOpenThreadOverriden( );
 
 /*
 *	Print text to the ReClass console window
