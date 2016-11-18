@@ -16,6 +16,7 @@ std::vector<MemMapInfo> g_MemMapModules;
 std::vector<AddressName> g_Exports;
 std::vector<AddressName> g_CustomNames;
 
+
 std::vector<HICON> g_Icons;
 
 COLORREF g_crBackground = RGB( 255, 255, 255 );
@@ -82,24 +83,21 @@ CString g_tdPWChar;
 DWORD g_NodeCreateIndex = 0;
 
 #pragma region Plugins
-tMemoryOperation g_PluginOverrideMemoryWrite = nullptr;
-tMemoryOperation g_PluginOverrideMemoryRead = nullptr;
-tHandleOperation g_PluginOverrideHandleProcess = nullptr;
-tHandleOperation g_PluginOverrideHandleThread = nullptr;
+tReadMemoryOperation g_PluginOverrideReadMemory = nullptr;
+tWriteMemoryOperation g_PluginOverrideWriteMemory = nullptr;
+tOpenProcessOperation g_PluginOverrideOpenProcess = nullptr;
+tOpenThreadOperation g_PluginOverrideOpenThread = nullptr;
 
-std::vector<RECLASS_PLUGINS> g_LoadedPlugins;
+std::vector<PRECLASS_PLUGIN> g_LoadedPlugins;
 
 void LoadPlugins( )
 {
-	WIN32_FIND_DATA file_data;
-	ZeroMemory( &file_data, sizeof( WIN32_FIND_DATA ) );
-
+	WIN32_FIND_DATA file_data = { 0 };
 	#ifdef _WIN64
 	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin64" ), &file_data );
 	#else
 	HANDLE findfile_tree = FindFirstFile( _T( "plugins\\*.rc-plugin" ), &file_data );
 	#endif
-
 	if (findfile_tree != INVALID_HANDLE_VALUE)
 	{
 		CString message;
@@ -132,26 +130,26 @@ void LoadPlugins( )
 
 			auto pfnPluginSettingDlgProc = reinterpret_cast<DLGPROC>(GetProcAddress( plugin_base, "PluginSettingsDlg" ));
 
-			RECLASS_PLUGINS plugin;
-			ZeroMemory( &plugin, sizeof RECLASS_PLUGINS );
-			wcscpy_s( plugin.FileName, file_data.cFileName );
-			plugin.LoadedBase = plugin_base;
-			plugin.InitFnc = pfnPluginInit;
-			plugin.SettingDlgFnc = pfnPluginSettingDlgProc;
-			plugin.StateChangeFnc = pfnPluginStateChange;
+			PRECLASS_PLUGIN plugin = new RECLASS_PLUGIN;
+			ZeroMemory( plugin, sizeof( RECLASS_PLUGIN ) );
+			wcscpy_s( plugin->FileName, file_data.cFileName );
+			plugin->LoadedBase = plugin_base;
+			plugin->InitFnc = pfnPluginInit;
+			plugin->SettingDlgFnc = pfnPluginSettingDlgProc;
+			plugin->StateChangeFnc = pfnPluginStateChange;
 
-			if (pfnPluginInit( &plugin.Info ))
+			if (pfnPluginInit( &plugin->Info ))
 			{
 				#ifdef UNICODE
-				plugin.State = g_ReClassApp.GetProfileInt( L"PluginState", plugin.Info.Name, 1 ) == 1;
+				plugin->State = g_ReClassApp.GetProfileInt( L"PluginState", plugin->Info.Name, 1 ) == 1;
 				#else
-				plugin.State = g_ReClassApp.GetProfileInt( "PluginState", CW2A( plugin.Info.Name ), 1 ) == 1;
+				plugin->State = g_ReClassApp.GetProfileInt( "PluginState", CW2A( plugin->Info.Name ), 1 ) == 1;
 				#endif
-				if (plugin.Info.DialogID == -1)
-					plugin.SettingDlgFnc = nullptr;
-				PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), file_data.cFileName, plugin.Info.Name, plugin.Info.Version, plugin.Info.About );
-				if (plugin.StateChangeFnc != nullptr)
-					plugin.StateChangeFnc( plugin.State );
+				if (plugin->Info.DialogID == -1)
+					plugin->SettingDlgFnc = nullptr;
+				PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), file_data.cFileName, plugin->Info.Name, plugin->Info.Version, plugin->Info.About );
+				if (plugin->StateChangeFnc != nullptr)
+					plugin->StateChangeFnc( plugin->State );
 				g_LoadedPlugins.push_back( plugin );
 			}
 			else
@@ -164,41 +162,79 @@ void LoadPlugins( )
 	}
 }
 
-BOOL PLUGIN_CC ReClassOverrideMemoryOperations( tMemoryOperation MemWrite, tMemoryOperation MemRead, BOOL bForceSet )
+void UnloadPlugins( )
 {
-	if (MemWrite == nullptr || MemRead == nullptr)
-		return FALSE;
-
-	if (g_PluginOverrideMemoryRead != nullptr && g_PluginOverrideMemoryWrite != nullptr && !bForceSet)
+	for (PRECLASS_PLUGIN plugin : g_LoadedPlugins)
 	{
-		return FALSE;
+		FreeLibrary( plugin->LoadedBase );
+		delete plugin;
 	}
-	else
-	{
-		g_PluginOverrideMemoryWrite = MemWrite;
-		g_PluginOverrideMemoryRead = MemRead;
-		return TRUE;
-	}
+	g_LoadedPlugins.clear( );
 }
 
-BOOL PLUGIN_CC ReClassOverrideHandleOperations( tHandleOperation HandleProcess, tHandleOperation HandleThread, BOOL bForceSet )
+BOOL PLUGIN_CC ReClassOverrideReadMemoryOperation( tReadMemoryOperation MemRead )
 {
-	if (HandleProcess == nullptr || HandleThread == nullptr)
-		return FALSE;
-	if (g_PluginOverrideHandleProcess != nullptr && g_PluginOverrideHandleThread != nullptr && !bForceSet)
+	if (MemRead != nullptr)
 	{
-		return FALSE;
-	}
-	else
-	{
-		g_PluginOverrideHandleProcess = HandleProcess;
-		g_PluginOverrideHandleThread = HandleThread;
+		g_PluginOverrideReadMemory = MemRead;
 		return TRUE;
 	}
 	return FALSE;
 }
 
-void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... )
+BOOL PLUGIN_CC ReClassOverrideWriteMemoryOperation( tWriteMemoryOperation MemWrite )
+{
+	if (MemWrite != nullptr)
+	{
+		g_PluginOverrideWriteMemory = MemWrite;
+		return TRUE;
+	}
+	return FALSE;
+}
+
+BOOL PLUGIN_CC ReClassOverrideMemoryOperations( tReadMemoryOperation MemRead, tWriteMemoryOperation MemWrite )
+{
+	if (MemRead == nullptr && MemWrite == nullptr)
+		return FALSE;
+	if (MemRead != nullptr)
+		g_PluginOverrideReadMemory = MemRead;
+	if (MemWrite != nullptr)
+		g_PluginOverrideWriteMemory = MemWrite;
+	return TRUE;
+}
+
+BOOL PLUGIN_CC ReClassOverrideOpenProcessOperation( tOpenProcessOperation ProcessOpen )
+{
+	if (ProcessOpen != nullptr)
+	{
+		g_PluginOverrideOpenProcess = ProcessOpen;
+		return TRUE;
+	}
+	return FALSE;
+}
+
+BOOL PLUGIN_CC ReClassOverrideOpenThreadOperation( tOpenThreadOperation ThreadOpen )
+{
+	if (ThreadOpen != nullptr)
+	{
+		g_PluginOverrideOpenThread = ThreadOpen;
+		return TRUE;
+	}
+	return FALSE;
+}
+
+BOOL PLUGIN_CC ReClassOverrideHandleOperations( tOpenProcessOperation ProcessOpen, tOpenThreadOperation ThreadOpen )
+{
+	if (ProcessOpen == nullptr && ThreadOpen == nullptr)
+		return FALSE;
+	if (ProcessOpen != nullptr)
+		g_PluginOverrideOpenProcess = ProcessOpen;
+	if (ThreadOpen != nullptr)
+		g_PluginOverrideOpenThread = ThreadOpen;
+	return TRUE;
+}
+
+VOID PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... )
 {
 	wchar_t buffer[6048];
 	ZeroMemory( &buffer, sizeof( buffer ) );
@@ -215,9 +251,9 @@ void PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... )
 	#endif
 }
 
-LPHANDLE PLUGIN_CC ReClassGetProcessHandle( )
+HANDLE PLUGIN_CC ReClassGetProcessHandle( )
 {
-	return &g_hProcess;
+	return g_hProcess;
 }
 
 HWND PLUGIN_CC ReClassMainWindow( )
@@ -231,39 +267,39 @@ CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface( )
 }
 #pragma endregion
 
-BOOL ReClassReadMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read )
+BOOL ReClassReadMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T BytesRead )
 {
-	if (g_PluginOverrideMemoryRead != nullptr)
-		return g_PluginOverrideMemoryRead( Address, Buffer, Size, num_read );
+	if (g_PluginOverrideReadMemory != nullptr)
+		return g_PluginOverrideReadMemory( Address, Buffer, Size, BytesRead );
 
-	BOOL return_val = ReadProcessMemory( g_hProcess, (LPVOID)Address, Buffer, Size, num_read );
+	BOOL return_val = ReadProcessMemory( g_hProcess, (LPVOID)Address, Buffer, Size, BytesRead );
 	if (!return_val) ZeroMemory( Buffer, Size );
 	return return_val;
 }
 
-BOOL ReClassWriteMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote )
+BOOL ReClassWriteMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T BytesWritten )
 {
-	if (g_PluginOverrideMemoryWrite != nullptr)
-		return g_PluginOverrideMemoryWrite( Address, Buffer, Size, num_wrote );
+	if (g_PluginOverrideWriteMemory != nullptr)
+		return g_PluginOverrideWriteMemory( Address, Buffer, Size, BytesWritten );
 
 	DWORD OldProtect;
 	VirtualProtectEx( g_hProcess, (void*)Address, Size, PAGE_EXECUTE_READWRITE, &OldProtect );
-	BOOL ret = WriteProcessMemory( g_hProcess, (void*)Address, Buffer, Size, num_wrote );
+	BOOL ret = WriteProcessMemory( g_hProcess, (PVOID)Address, Buffer, Size, BytesWritten );
 	VirtualProtectEx( g_hProcess, (void*)Address, Size, OldProtect, NULL );
 	return ret;
 }
 
 HANDLE ReClassOpenProcess( DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessID )
 {
-	if (g_PluginOverrideHandleProcess != nullptr)
-		return g_PluginOverrideHandleProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
+	if (g_PluginOverrideOpenProcess != nullptr)
+		return g_PluginOverrideOpenProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
 	return OpenProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
 }
 
 HANDLE ReClassOpenThread( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwThreadID )
 {
-	if (g_PluginOverrideHandleThread != nullptr)
-		return g_PluginOverrideHandleThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
+	if (g_PluginOverrideOpenThread != nullptr)
+		return g_PluginOverrideOpenThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
 	return OpenThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
 }
 
@@ -885,7 +921,7 @@ BOOLEAN UpdateExports( )
 
 		// Read Process Environment Block (PEB)
 		SIZE_T dwBytesRead = 0;
-		if (ReClassReadMemory( ProcessInfo->PebBaseAddress, &Peb, sizeof( PEB ), &dwBytesRead ) == 0)
+		if (ReClassReadMemory( (LPVOID)ProcessInfo->PebBaseAddress, &Peb, sizeof( PEB ), &dwBytesRead ) == 0)
 		{
 			#ifdef _DEBUG
 			PrintOut( _T( "[UpdateExports]: Failed to read PEB! Aborting UpdateExports." ) );

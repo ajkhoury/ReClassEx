@@ -48,17 +48,17 @@ void CDialogPlugins::OnContextMenu( CWnd *pWnd, CPoint pos )
 		POSITION selected_pos = m_PluginsList.GetFirstSelectedItemPosition( );
 		if (selected_pos != nullptr && m_PluginsList.GetNextSelectedItem( selected_pos ) != -1)
 		{
-			RECLASS_PLUGINS& plugin = GetSelectedPlugin( );
+			PRECLASS_PLUGIN plugin = GetSelectedPlugin( );
 
 			CString About;
-			About.Format( _T( "About \"%ls\"" ), plugin.Info.Name );
+			About.Format( _T( "About \"%ls\"" ), plugin->Info.Name );
 
 			CMenu context_menu;
 			context_menu.CreatePopupMenu( );
-			if (plugin.SettingDlgFnc != nullptr)
+			if (plugin->SettingDlgFnc != nullptr)
 				context_menu.AppendMenu( MF_STRING, MENU_SETTINGS, _T( "Settings" ) );
-			if (plugin.StateChangeFnc != nullptr)
-				context_menu.AppendMenu( MF_STRING, MENU_STATECHANGE, plugin.State ? _T( "Disable" ) : _T( "Enable" ) );
+			if (plugin->StateChangeFnc != nullptr)
+				context_menu.AppendMenu( MF_STRING, MENU_STATECHANGE, plugin->State ? _T( "Disable" ) : _T( "Enable" ) );
 			context_menu.AppendMenu( MF_STRING, MENU_ABOUT, About );
 			context_menu.TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, pos.x, pos.y, this );
 		}
@@ -67,25 +67,25 @@ void CDialogPlugins::OnContextMenu( CWnd *pWnd, CPoint pos )
 
 void CDialogPlugins::OnPopupMenuSettings( )
 {
-	RECLASS_PLUGINS& plugin = GetSelectedPlugin( );
-	DialogBox( plugin.LoadedBase, MAKEINTRESOURCE( plugin.Info.DialogID ), GetSafeHwnd( ), plugin.SettingDlgFnc );
+	PRECLASS_PLUGIN plugin = GetSelectedPlugin( );
+	DialogBox( plugin->LoadedBase, MAKEINTRESOURCE( plugin->Info.DialogID ), GetSafeHwnd( ), plugin->SettingDlgFnc );
 }
 
 void CDialogPlugins::OnPopupMenuAbout( )
 {
-	RECLASS_PLUGINS& plugin = GetSelectedPlugin( );
+	PRECLASS_PLUGIN plugin = GetSelectedPlugin( );
 	//TODO: make cool about dialog maybe??
 	CStringW title;
-	title.Format( L"%s - About", plugin.Info.Name );
-	MessageBoxW( plugin.Info.About, title, MB_OK | MB_ICONINFORMATION );
+	title.Format( L"%s - About", plugin->Info.Name );
+	MessageBoxW( plugin->Info.About, title, MB_OK | MB_ICONINFORMATION );
 }
 
 void CDialogPlugins::OnPopupMenuChangeState( )
 {
-	RECLASS_PLUGINS& plugin = GetSelectedPlugin( );
-	plugin.StateChangeFnc( plugin.State = !plugin.State );
+	PRECLASS_PLUGIN plugin = GetSelectedPlugin( );
+	plugin->StateChangeFnc( plugin->State = !plugin->State );
 	#ifdef UNICODE
-	g_ReClassApp.WriteProfileInt( L"PluginState", plugin.Info.Name, plugin.State ? 1 : 0 );
+	g_ReClassApp.WriteProfileInt( L"PluginState", plugin->Info.Name, plugin->State ? 1 : 0 );
 	#else
 	g_ReClassApp.WriteProfileInt( "PluginState", CW2A( plugin.Info.Name ), plugin.State ? 1 : 0 );
 	#endif
@@ -98,18 +98,18 @@ void CDialogPlugins::RefreshPlugins( )
 
 	LVITEM item;
 
-	for (RECLASS_PLUGINS plugin : g_LoadedPlugins)
+	for (PRECLASS_PLUGIN plugin : g_LoadedPlugins)
 	{
 		ZeroMemory( &item, sizeof( LVITEM ) );
 
 		item.mask = LVIF_TEXT;
-		item.pszText = plugin.Info.Name;
-		item.cchTextMax = (int)wcslen( plugin.Info.Name ) + 1;
+		item.pszText = plugin->Info.Name;
+		item.cchTextMax = (int)wcslen( plugin->Info.Name ) + 1;
 		item.iItem = m_PluginsList.GetItemCount( );
 
 		int pos = m_PluginsList.InsertItem( &item );
 
-		m_PluginsList.SetItemText( pos, 1, plugin.Info.Version );
-		m_PluginsList.SetItemText( pos, 2, plugin.State ? _T( "Enabled" ) : _T( "Disabled" ) );
+		m_PluginsList.SetItemText( pos, 1, plugin->Info.Version );
+		m_PluginsList.SetItemText( pos, 2, plugin->State ? _T( "Enabled" ) : _T( "Disabled" ) );
 	}
 }

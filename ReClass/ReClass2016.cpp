@@ -324,8 +324,7 @@ int CReClass2016App::ExitInstance( )
 
 	WriteProfileInt( _T( "Misc" ), _T( "gbLoadModuleSymbol" ), g_bLoadModuleSymbol );
 
-	for (auto plugin : g_LoadedPlugins)
-		FreeLibrary( plugin.LoadedBase );
+	UnloadPlugins( );
 
 	return CWinAppEx::ExitInstance( );
 }
