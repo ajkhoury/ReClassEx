@@ -28,6 +28,7 @@ Cleaned up the code a bit and added some new features. Also got rid of a ton of 
 - Process list dialog instead of scroll menu
 - Added automatic resolving of symbols for each module in a process
 - Added Ctrl+S hotkey for file saving, and others.
+- Added Plugin API for making plugins
 
 ![Alt text](http://i.imgur.com/W6ytfG6.png "Automatic symbol resolving")
 ![Alt text](http://i.imgur.com/hBNyEFG.png "ReClass")
@@ -40,7 +41,13 @@ Cleaned up the code a bit and added some new features. Also got rid of a ton of 
 
 See wiki for instructions on how to compile:
 
-[Reclass Wiki](https://github.com/dude719/Reclass-2015/wiki)
+[Compilation Instructions](https://github.com/dude719/Reclass-2016/wiki/Compiling-ReClass-2016)
+
+## Plugins
+
+See wiki for the plugin API documentation:
+
+[Plugin Documentation](https://github.com/dude719/Reclass-2016/wiki/Creating-ReClass-plugins)
 
 ## Authors/Special Thanks
 - DrUnKeN ChEeTaH
