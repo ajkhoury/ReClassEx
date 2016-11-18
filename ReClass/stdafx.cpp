@@ -686,7 +686,7 @@ BOOLEAN UpdateMemoryMap( void )
 
 		// Read Process Environment Block (PEB)
 		SIZE_T dwBytesRead = 0;
-		if (ReClassReadMemory( ProcessInfo->PebBaseAddress, &Peb, sizeof( PEB ), &dwBytesRead ) == 0)
+		if (ReClassReadMemory( (LPVOID)ProcessInfo->PebBaseAddress, &Peb, sizeof( PEB ), &dwBytesRead ) == 0)
 		{
 			#ifdef _DEBUG
 			PrintOut( _T( "[UpdateMemoryMap]: Failed to read PEB! Aborting UpdateExports!" ) );
@@ -698,7 +698,7 @@ BOOLEAN UpdateMemoryMap( void )
 
 		// Get Ldr
 		dwBytesRead = 0;
-		if (ReClassReadMemory( Peb.Ldr, &LdrData, sizeof( LdrData ), &dwBytesRead ) == 0)
+		if (ReClassReadMemory( (LPVOID)Peb.Ldr, &LdrData, sizeof( LdrData ), &dwBytesRead ) == 0)
 		{
 			#ifdef _DEBUG
 			PrintOut( _T( "[UpdateMemoryMap]: Failed to read PEB Ldr Data! Aborting UpdateExports!" ) );
@@ -897,7 +897,7 @@ BOOLEAN UpdateExports( )
 
 		// Get Ldr
 		dwBytesRead = 0;
-		if (ReClassReadMemory( Peb.Ldr, &LdrData, sizeof( LdrData ), &dwBytesRead ) == 0)
+		if (ReClassReadMemory( (LPVOID)Peb.Ldr, &LdrData, sizeof( LdrData ), &dwBytesRead ) == 0)
 		{
 			#ifdef _DEBUG
 			PrintOut( _T( "[UpdateExports]: Failed to read PEB Ldr Data! Aborting UpdateExports." ) );

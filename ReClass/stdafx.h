@@ -310,7 +310,7 @@ typedef struct _RECLASS_PLUGIN_INFO
 BOOL PLUGIN_CC PluginInit( LPRECLASS_PLUGIN_INFO lpRCInfo );
 void PLUGIN_CC PluginStateChange( bool state );
 typedef BOOL( PLUGIN_CC *tPluginInit )(LPRECLASS_PLUGIN_INFO lpRCInfo);
-typedef void( PLUGIN_CC *tPluginStateChange)(bool state);
+typedef void(PLUGIN_CC *tPluginStateChange)(bool state);
 
 typedef struct _RECLASS_PLUGINS
 {

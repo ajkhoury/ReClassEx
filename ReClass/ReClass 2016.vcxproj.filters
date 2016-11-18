@@ -175,9 +175,6 @@
     <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="nt_ddk.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CMemory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -344,6 +341,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BitArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Intrinsics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Native.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -544,5 +547,13 @@
     <ResourceCompile Include="ReClass2016.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="Intrinsics32.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
+    <MASM Include="Intrinsics64.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>
