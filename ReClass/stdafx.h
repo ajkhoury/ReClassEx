@@ -75,19 +75,12 @@ struct SScintillaColors
 	COLORREF	rgb;
 };
 
-
 //
 // TinyXml parser
 //
 //#include "tinyxml2_unicode.h"
 #include "tinyxml2.h"
 using namespace tinyxml2;
-
-
-//
-// SQL parser
-// Not even needed until importing is done
-#include "..\\SQLite\\CppSQLite3.h"
 
 //
 // Utilities
@@ -226,7 +219,6 @@ extern CString g_tdPWChar;
 // Global functions
 //
 BOOLEAN PauseResumeThreadList( BOOL bResumeThread );
-
 BOOLEAN UpdateMemoryMap( );
 BOOLEAN UpdateExports( );
 
@@ -240,15 +232,14 @@ CString GetAddressName( size_t Address, bool bHEX );
 CString GetModuleName( size_t Address );
 size_t  GetAddressFromName( CString moduleName );
 
-BOOL ReClassReadMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_read = nullptr );
-BOOL ReClassWriteMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, SIZE_T *num_wrote = nullptr );
+BOOL ReClassReadMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T BytesRead = nullptr );
+BOOL ReClassWriteMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T BytesWritten = nullptr );
 HANDLE ReClassOpenProcess( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwProcessID );
 HANDLE ReClassOpenThread( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwThreadID );
 
 CStringA ReadMemoryStringA( size_t address, SIZE_T max = 40 );
 CStringW ReadMemoryStringW( size_t address, SIZE_T max = 40 );
 
-__int64 StrToNum( const TCHAR *udata, int udatalen, int base );
 int SplitString( const CString& input, const CString& delimiter, CStringArray& results );
 size_t ConvertStrToAddress( CString str );
 
@@ -273,9 +264,10 @@ struct AddressName
 	size_t Address;
 };
 
-// All node type classes
+//
+// Classes 
+//
 #include "Classes.h"
-
 #ifdef _WIN64
 #define CNodeHex CNodeHex64
 #else
