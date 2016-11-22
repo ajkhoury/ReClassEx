@@ -8,10 +8,13 @@ BOOL PLUGIN_CC PluginInit( PRECLASS_PLUGIN_INFO lpRCInfo )
 	wcscpy_s( lpRCInfo->About, L"This plugin is a test plugin" );
 	lpRCInfo->DialogID = IDD_SETTINGS_DLG;
 
-	if (ReClassOverrideMemoryOperations( ReadCallback, WriteCallback ) == FALSE)
+	if (!ReClassIsReadMemoryOverriden( ) && !ReClassIsWriteMemoryOverriden( ))
 	{
-		ReClassPrintConsole( L"[TestPlugin] Failed to register read/write callbacks, failing PluginInit" );
-		return FALSE;
+		if (ReClassOverrideMemoryOperations( ReadCallback, WriteCallback ) == FALSE)
+		{
+			ReClassPrintConsole( L"[TestPlugin] Failed to register read/write callbacks, failing PluginInit" );
+			return FALSE;
+		}
 	}
 
 	return TRUE;

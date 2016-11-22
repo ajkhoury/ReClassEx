@@ -37,3 +37,4 @@ Reclass2015.rar
 *.ipdb
 /ReClass/symsrv.dll
 /DriverPlugin
+/ReClass/plugins/BlackoutDrv64_dbg.sys
