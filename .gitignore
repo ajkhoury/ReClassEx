@@ -36,3 +36,4 @@ Reclass2015.rar
 *.iobj
 *.ipdb
 /ReClass/symsrv.dll
+/DriverPlugin

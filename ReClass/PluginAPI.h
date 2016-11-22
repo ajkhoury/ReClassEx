@@ -32,7 +32,7 @@ typedef struct _RECLASS_PLUGIN
 {
 	RECLASS_PLUGIN_INFO Info;
 	wchar_t FileName[MAX_PATH];
-	bool State;
+	BOOL State;
 	HMODULE LoadedBase;
 	tPluginInit InitFnc;
 	tPluginStateChange StateChangeFnc;
@@ -58,6 +58,7 @@ RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsOpenThreadOverriden( );
 
 RECLASS_EXPORT VOID PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
 RECLASS_EXPORT HANDLE PLUGIN_CC ReClassGetProcessHandle( );
+RECLASS_EXPORT DWORD PLUGIN_CC ReClassGetProcessId( );
 RECLASS_EXPORT HWND PLUGIN_CC ReClassMainWindow( );
 RECLASS_EXPORT CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface( );
 

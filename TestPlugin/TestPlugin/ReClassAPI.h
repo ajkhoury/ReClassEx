@@ -87,6 +87,11 @@ VOID PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
 HANDLE PLUGIN_CC ReClassGetProcessHandle( );
 
 // 
+// Gets the current attached process ID, 0 if not attached
+// 
+DWORD PLUGIN_CC ReClassGetProcessId( );
+
+// 
 // Return the main window handle for ReClass
 // 
 HWND PLUGIN_CC ReClassMainWindow( );

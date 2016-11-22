@@ -4,7 +4,6 @@
 
 #include "CMainFrame.h"
 #include "CChildFrame.h"
-#include "SDK.h"
 
 #include "afxdialogex.h"
 

@@ -184,7 +184,7 @@ BOOL PLUGIN_CC ReClassOverrideHandleOperations( tOpenProcessOperation ProcessOpe
 	return TRUE;
 }
 
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveOpenProcessOverride( )
+BOOL PLUGIN_CC ReClassRemoveOpenProcessOverride( )
 {
 	if (g_PluginOverrideOpenProcess != nullptr)
 	{
@@ -194,7 +194,7 @@ RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveOpenProcessOverride( )
 	return FALSE;
 }
 
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveOpenThreadOverride( )
+BOOL PLUGIN_CC ReClassRemoveOpenThreadOverride( )
 {
 	if (g_PluginOverrideOpenThread != nullptr)
 	{
@@ -204,12 +204,12 @@ RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveOpenThreadOverride( )
 	return FALSE;
 }
 
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsOpenProcessOverriden( )
+BOOL PLUGIN_CC ReClassIsOpenProcessOverriden( )
 {
 	return (g_PluginOverrideOpenProcess != nullptr) ? TRUE : FALSE;
 }
 
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsOpenThreadOverriden( )
+BOOL PLUGIN_CC ReClassIsOpenThreadOverriden( )
 {
 	return (g_PluginOverrideOpenThread != nullptr) ? TRUE : FALSE;
 }
@@ -234,6 +234,11 @@ VOID PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... )
 HANDLE PLUGIN_CC ReClassGetProcessHandle( )
 {
 	return g_hProcess;
+}
+
+DWORD PLUGIN_CC ReClassGetProcessId( )
+{
+	return g_ProcessID;
 }
 
 HWND PLUGIN_CC ReClassMainWindow( )
