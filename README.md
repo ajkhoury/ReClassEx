@@ -59,5 +59,5 @@ See wiki for the plugin API documentation:
 - [Timboy67678](https://github.com/Timboy67678)
 - [DarthTon](https://github.com/DarthTon)
 - [ReUnioN](https://github.com/ReUnioN)
-- leveln
+- [leveln](https://github.com/levelnuc)
 - [buddyfavors](https://github.com/buddyfavors)
