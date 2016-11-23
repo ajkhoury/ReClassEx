@@ -52,9 +52,13 @@ END_MESSAGE_MAP( )
 
 CReClass2016App::CReClass2016App( )
 {
+	TCHAR AppId[256] = { 0 };
+
+	LoadString( NULL, AFX_IDS_APP_ID, AppId, 256 );
+	SetAppID( AppId );
+
 	m_bHiColorIcons = TRUE;
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
-	SetAppID( _T( "ReClass 2016" ) );
 
 	g_FontWidth = FONT_DEFAULT_WIDTH;
 	g_FontHeight = FONT_DEFAULT_HEIGHT;
@@ -64,11 +68,11 @@ void CReClass2016App::ResizeMemoryFont( int font_width, int font_height )
 {
 	g_ViewFont.DeleteObject( );
 
-	HMODULE shcore_load_address = LoadLibrary( _T( "shcore.dll" ) );
-	if (shcore_load_address)
+	HMODULE hSHCoreBase = LoadLibrary( _T( "shcore.dll" ) );
+	if (hSHCoreBase)
 	{
-		auto pfnGetProcessDpiAwareness = reinterpret_cast<decltype(&GetProcessDpiAwareness)>(GetProcAddress( shcore_load_address, "GetProcessDpiAwareness" ));
-		auto pfnGetDpiForMonitor = reinterpret_cast<decltype(&GetDpiForMonitor)>(GetProcAddress( shcore_load_address, "GetDpiForMonitor" ));
+		auto pfnGetProcessDpiAwareness = reinterpret_cast<decltype(&GetProcessDpiAwareness)>(GetProcAddress( hSHCoreBase, "GetProcessDpiAwareness" ));
+		auto pfnGetDpiForMonitor = reinterpret_cast<decltype(&GetDpiForMonitor)>(GetProcAddress( hSHCoreBase, "GetDpiForMonitor" ));
 
 		if (pfnGetProcessDpiAwareness != nullptr && pfnGetDpiForMonitor != nullptr)
 		{
@@ -83,7 +87,8 @@ void CReClass2016App::ResizeMemoryFont( int font_width, int font_height )
 				g_FontHeight = MulDiv( font_height, MulDiv( dpiY, 100, 96 ), 100 );
 			}
 		}
-		FreeLibrary( shcore_load_address );
+
+		FreeLibrary( hSHCoreBase );
 	}
 	g_ViewFont.CreateFont( g_FontHeight, g_FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T( "Terminal" ) );
 }
@@ -114,7 +119,7 @@ BOOL CReClass2016App::InitInstance( )
 	}
 
 	AfxEnableControlContainer( );
-	SetRegistryKey( _T( "ReClass 2016" ) );
+	SetRegistryKey( _T( "RC16" ) );
 	EnableTaskbarInteraction( FALSE );
 	InitContextMenuManager( );
 	InitKeyboardManager( );

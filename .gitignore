@@ -38,3 +38,5 @@ Reclass2015.rar
 /ReClass/symsrv.dll
 /DriverPlugin
 /ReClass/plugins/BlackoutDrv64_dbg.sys
+DriverPlugin_dbg.lib
+DriverPlugin_dbg.rc-plugin64

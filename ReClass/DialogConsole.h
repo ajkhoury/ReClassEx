@@ -10,7 +10,7 @@ class CDialogConsole : public CDialogEx
 	DECLARE_DYNAMIC(CDialogConsole)
 
 public:
-	CDialogConsole(CString window_title, CWnd* pParent = NULL);   // standard constructor
+	CDialogConsole(CString WindowTitle, CWnd* pParent = NULL);   // standard constructor
 	virtual ~CDialogConsole();
 
 // Dialog Data
