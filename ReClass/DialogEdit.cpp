@@ -7,7 +7,7 @@
 
 
 // C++ keywords
-static const char g_cppKeyWords[] = 
+static const char g_cppKeyWords[] =
 
 	// Standard
 	"asm auto bool break case catch char class const "
@@ -35,7 +35,7 @@ static const char g_cppKeyWords[] =
 	"__virtual_inheritance";
 
 // Default color scheme
-static SScintillaColors g_rgbSyntaxCpp[] = 
+static SScintillaColors g_rgbSyntaxCpp[] =
 {
 	{ SCE_C_COMMENT,		green },
 	{ SCE_C_COMMENTLINE,	green },
@@ -50,299 +50,274 @@ static SScintillaColors g_rgbSyntaxCpp[] =
 	{ -1,					0 }
 };
 
-IMPLEMENT_DYNAMIC(CDialogEdit, CDialogEx)
+IMPLEMENT_DYNAMIC( CDialogEdit, CDialogEx )
 
-CDialogEdit::CDialogEdit(CWnd* pParent /*=NULL*/) : CDialogEx(CDialogEdit::IDD, pParent)
+CDialogEdit::CDialogEdit( CWnd* pParent /*=NULL*/ ) : CDialogEx( CDialogEdit::IDD, pParent )
 {
 	m_hwndEditor = NULL;
 }
 
-CDialogEdit::~CDialogEdit()
+CDialogEdit::~CDialogEdit( )
 {
 }
 
-void CDialogEdit::DoDataExchange(CDataExchange* pDX)
+LRESULT CDialogEdit::SendEditor( UINT Msg, WPARAM wParam, LPARAM lParam )
 {
-	CDialogEx::DoDataExchange(pDX);
+	return ::SendMessage( m_hwndEditor, Msg, wParam, lParam );
 }
 
-
-BEGIN_MESSAGE_MAP(CDialogEdit, CDialogEx)
-	ON_WM_SIZE()
-	ON_COMMAND(ID_FILE_EDITOROPEN, &CDialogEdit::OnFileEditoropen)
-	ON_COMMAND(ID_FILE_EDITORSAVEAS, &CDialogEdit::OnFileEditorsaveas)
-END_MESSAGE_MAP()
-
-BOOL CDialogEdit::Create(LPCTSTR lpszTemplateName, CWnd* pParentWnd)
+void CDialogEdit::SetAStyle( int style, COLORREF fore, COLORREF back, int size, const TCHAR * face )
 {
-	return CDialogEx::Create(lpszTemplateName, pParentWnd);
+	SendEditor( SCI_STYLESETFORE, style, fore );
+	//SendEditor(SCI_STYLESETBACK, style, back);
+	if (size >= 1)
+		SendEditor( SCI_STYLESETSIZE, style, size );
+	if (face)
+		SendEditor( SCI_STYLESETFONT, style, (LPARAM)face );
 }
 
-void CDialogEdit::InitialiseEditor() 
+void CDialogEdit::DoDataExchange( CDataExchange* pDX )
+{
+	CDialogEx::DoDataExchange( pDX );
+}
+
+BEGIN_MESSAGE_MAP( CDialogEdit, CDialogEx )
+	ON_WM_SIZE( )
+	ON_COMMAND( ID_FILE_EDITOROPEN, &CDialogEdit::OnFileEditoropen )
+	ON_COMMAND( ID_FILE_EDITORSAVEAS, &CDialogEdit::OnFileEditorsaveas )
+END_MESSAGE_MAP( )
+
+BOOL CDialogEdit::Create( LPCTSTR lpszTemplateName, CWnd* pParentWnd )
+{
+	return CDialogEx::Create( lpszTemplateName, pParentWnd );
+}
+
+void CDialogEdit::InitialiseEditor( )
 {
 	// Punt if we already have a window
-	if (::IsWindow(m_hwndEditor))
+	if (::IsWindow( m_hwndEditor ))
 		return;
 
 	// Create editor window
-	m_hwndEditor = CreateWindowEx(0, _T("Scintilla"), _T(""), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_CLIPCHILDREN,
-		0, 0, 500, 400, GetSafeHwnd(), NULL /*(HMENU)GuiID*/, AfxGetApp()->m_hInstance, NULL);	
-
+	m_hwndEditor = CreateWindowEx( 0, _T( "Scintilla" ), _T( "" ), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_CLIPCHILDREN,
+								   0, 0, 500, 400, GetSafeHwnd( ), NULL /*(HMENU)GuiID*/, AfxGetApp( )->m_hInstance, NULL );
 	// Did we get the editor window
-	if (!::IsWindow(m_hwndEditor))
-	{	
-		PrintOut(_T("Unable to create editor window"));
+	if (!::IsWindow( m_hwndEditor ))
+	{
+		PrintOut( _T( "Unable to create editor window" ) );
 		return;
 	}
 
 	// CPP lexer
-	SendEditor(SCI_SETLEXER, SCLEX_CPP);
+	SendEditor( SCI_SETLEXER, SCLEX_CPP );
 
 	// Set number of style bits to use
-	SendEditor(SCI_SETSTYLEBITS, 5);
+	SendEditor( SCI_SETSTYLEBITS, 5 );
 
 	// Set tab width
-	SendEditor(SCI_SETTABWIDTH, 4);
+	SendEditor( SCI_SETTABWIDTH, 4 );
 
 	// Use CPP keywords
-	SendEditor(SCI_SETKEYWORDS, 0, (LPARAM)g_cppKeyWords);
+	SendEditor( SCI_SETKEYWORDS, 0, (LPARAM)g_cppKeyWords );
 
 	// Set up the global default style. These attributes are used wherever no explicit choices are made.
-	SetAStyle(STYLE_DEFAULT, black, white, 10, _T("Courier New"));
+	SetAStyle( STYLE_DEFAULT, black, white, 10, _T( "Courier New" ) );
 
 	// Set caret foreground color
 	//SendEditor(SCI_SETCARETFORE, RGB(255, 255, 255));
 
 	// Set all styles
-	SendEditor(SCI_STYLECLEARALL);
+	SendEditor( SCI_STYLECLEARALL );
 
 	// Set selection color
-	SendEditor(SCI_SETSELBACK, TRUE, RGB(240, 240, 240));
+	SendEditor( SCI_SETSELBACK, TRUE, RGB( 240, 240, 240 ) );
 
 	// Set syntax colors
-	for ( long i = 0; g_rgbSyntaxCpp[i].iItem != -1; i++ )
+	for (int i = 0; g_rgbSyntaxCpp[i].iItem != -1; i++)
 	{
-		SendEditor(SCI_STYLESETFORE, g_rgbSyntaxCpp[i].iItem, g_rgbSyntaxCpp[i].rgb);
+		SendEditor( SCI_STYLESETFORE, g_rgbSyntaxCpp[i].iItem, g_rgbSyntaxCpp[i].rgb );
 	}
 
-	SendEditor(SCI_SETHSCROLLBAR, false);
+	SendEditor( SCI_SETHSCROLLBAR, false );
 	//SendEditor(SCI_SETVIEWWS, SCWS_VISIBLEALWAYS);
-	SendEditor(SCI_SETMARGINWIDTHN, 0, 32);
-	SendEditor(SCI_SETMARGINWIDTHN, 1, 0);
+	SendEditor( SCI_SETMARGINWIDTHN, 0, 32 );
+	SendEditor( SCI_SETMARGINWIDTHN, 1, 0 );
 }
 
-BOOL CDialogEdit::OnInitDialog()
+BOOL CDialogEdit::OnInitDialog( )
 {
-	CDialogEx::OnInitDialog();
+	CDialogEx::OnInitDialog( );
 
-	ShowWindow(SW_HIDE);
+	ShowWindow( SW_HIDE );
 
-	CWnd* pWnd = GetDesktopWindow();
-	CenterWindow(pWnd);
+	CWnd* pWnd = GetDesktopWindow( );
+	CenterWindow( pWnd );
 
-	SetWindowText(Title);
+	SetWindowText( Title );
 	// Create the Scintilla editor	
-	InitialiseEditor();
-	int length = Text.GetLength();
-	char* pText = new char[length + 1];
+	InitialiseEditor( );
+	int length = Text.GetLength( );
+	char* TextBuffer = new char[length + 1];
+	if (TextBuffer)
+	{
+		#ifdef UNICODE
+		size_t converted = 0;
+		wcstombs_s( &converted, TextBuffer, length + 1, Text.GetBuffer( ), length + 1 );
+		#else
+		strcpy_s( pText, length, Text.GetBuffer( ) );
+		#endif
 
-#ifdef UNICODE
-	size_t converted = 0;
-	wcstombs_s(&converted, pText, length + 1, Text.GetBuffer(), length + 1);
-#else
-	strcpy_s(pText, length, Text.GetBuffer());
-#endif
+		SendEditor( SCI_SETTEXT, 0, (WPARAM)TextBuffer );
+		ShowWindow( SW_NORMAL );
+		SizeEditor( );
+		SendEditor( SCI_SETSEL, 0, 0 );
 
-	SendEditor(SCI_SETTEXT, 0, (WPARAM)pText);
-	ShowWindow(SW_NORMAL);
-	SizeEditor();
-	SendEditor(SCI_SETSEL, 0, 0);
-
-	delete[] pText; // free memory
+		delete[] TextBuffer; // free memory
+	}
 
 	return FALSE;  // return TRUE unless you set the focus to a control
 }
 
 
-void CDialogEdit::OnCancel()
+void CDialogEdit::OnCancel( )
 {
 	// Get text length
-	UINT uSize = (UINT)SendEditor(SCI_GETLENGTH, 0, 0L);
-	if (uSize)
+	DWORD uSize = (DWORD)SendEditor( SCI_GETLENGTH, 0, 0L );
+	if (uSize > 0)
 	{
-		char *pBuf = new char[uSize + 1 + 8];
-		if (pBuf)
+		char* Buffer = new char[uSize + 1 + 8];
+		if (Buffer)
 		{
-			SendEditor(SCI_GETTEXT, uSize + 1, (LPARAM)pBuf);
-			pBuf[uSize] = '\0';
-			Text = pBuf;
-			delete[] pBuf;
+			SendEditor( SCI_GETTEXT, uSize + 1, (LPARAM)Buffer );
+			Buffer[uSize] = '\0';
+			Text = Buffer;
+			delete[] Buffer;
 		}
 	}
-	CDialogEx::OnCancel();
+	CDialogEx::OnCancel( );
 }
 
-void CDialogEdit::SizeEditor()
+void CDialogEdit::SizeEditor( )
 {
 	if (m_hwndEditor)
 	{
-		RECT rect;
-		GetClientRect(&rect);
-		CWnd *pWnd = CWnd::FromHandle(m_hwndEditor);
+		CWnd* pWnd = NULL;
+		RECT rect = { 0 };
+
+		GetClientRect( &rect );
+		pWnd = CWnd::FromHandle( m_hwndEditor );
 		if (pWnd)
-			pWnd->MoveWindow(&rect);
+		{
+			pWnd->MoveWindow( &rect );
+		}
 	}
 }
 
-void CDialogEdit::OnSize(UINT nType, int cx, int cy)
+void CDialogEdit::OnSize( UINT nType, int cx, int cy )
 {
-	CDialogEx::OnSize(nType, cx, cy);
-	SizeEditor();
+	CDialogEx::OnSize( nType, cx, cy );
+	SizeEditor( );
 }
 
-void CDialogEdit::OnFileEditoropen()
+void CDialogEdit::OnFileEditoropen( )
 {
-	TCHAR fname[MAX_PATH + 1024] = _T("");
+	TCHAR szFileName[MAX_PATH + 1024] = _T( "" );
 
 	// Open file structure
 	OPENFILENAME ofn;
-	ZeroMemory((LPVOID)&ofn, sizeof(OPENFILENAME));
+	ZeroMemory( (LPVOID)&ofn, sizeof( OPENFILENAME ) );
 	// Fill in open file structure
 	ofn.lStructSize = sizeof( OPENFILENAME );
-	ofn.lpstrFilter	= _T("All Files (*.*)\x0*.*\x0\x0");
-	ofn.lpstrTitle	= _T("Open Source File");
-	ofn.Flags		= OFN_HIDEREADONLY | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-	ofn.lpstrFile	= fname;
-	ofn.nMaxFile	= sizeof(fname);
-	ofn.lpstrDefExt	= _T("");
-	ofn.hwndOwner	= GetSafeHwnd();
+	ofn.lpstrFilter = _T( "All Files (*.*)\x0*.*\x0\x0" );
+	ofn.lpstrTitle = _T( "Open Source File" );
+	ofn.Flags = OFN_HIDEREADONLY | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	ofn.lpstrFile = szFileName;
+	ofn.nMaxFile = sizeof( szFileName );
+	ofn.lpstrDefExt = _T( "" );
+	ofn.hwndOwner = GetSafeHwnd( );
 
 	// Get user file
-	if (!::GetOpenFileName(&ofn))
-		return;
-
-	// Clear editor text
-	SendEditor(SCI_SETTEXT, 0, (WPARAM)"");
-
-	// Ensure it exists
-	if (0xFFFFFFFF == ::GetFileAttributes(fname))
+	if (::GetOpenFileName( &ofn ))
 	{
-		ShowError(_T("File does not exist"));
-		return;
-	}
-
-	try
-	{
-		// Open the file
-		CFile f;
-		if (!f.Open(fname, CFile::modeRead | CFile::shareDenyNone))
+		// Clear editor text
+		SendEditor( SCI_SETTEXT, 0, (WPARAM)"" );
+		// Ensure it exists
+		if (::GetFileAttributes( szFileName ) == 0xFFFFFFFF)
 		{
-			ShowError(_T("Error opening file"));
-			return;
+			// Open the file
+			CFile file;
+			if (file.Open( szFileName, CFile::modeRead | CFile::shareDenyNone ))
+			{
+				// Ensure length
+				DWORD uSize = (DWORD)(file.GetLength( ) & 0xFFFFFFFF);
+				if (uSize > 0)
+				{
+					// Allocate memory
+					char* Buffer = new char[uSize + 1];
+					if (Buffer)
+					{
+						// Read the data
+						if (file.Read( (void*)Buffer, (UINT)uSize ))
+						{
+							// NULL terminate
+							Buffer[uSize] = '\0';
+							// Set editor text
+							SendEditor( SCI_SETTEXT, 0, (WPARAM)Buffer );
+						}
+						// Close the file
+						file.Close( );
+						// Release memory
+						delete[] Buffer;
+					}
+				}
+			}
 		}
-
-		// Ensure length
-		UINT uSize = (UINT)(f.GetLength() & 0xFFFFFFFF);
-		if (!uSize) 
-		{
-			ShowError(_T("File of zero length"));
-			return;
-		}
-
-		// Allocate memory
-		unsigned char* pBuf = new unsigned char[uSize + 1];
-		if (!pBuf) 
-		{
-			ShowError(_T("Memory allocation error"));
-			return;
-		}
-
-		// Read the data
-		if (f.Read((void*)pBuf, (UINT)uSize))
-		{	
-			// NULL terminate
-			pBuf[uSize] = '\0';
-			// Set editor text
-			SendEditor(SCI_SETTEXT, 0, (WPARAM)pBuf);
-		}
-
-		// Close the file
-		f.Close();
-
-		// Release memory
-		delete[] pBuf;
-	}
-	catch(...) 
-	{	
-		ShowError(_T("Assertion while reading file"));
 	}
 }
 
 
-void CDialogEdit::OnFileEditorsaveas()
+void CDialogEdit::OnFileEditorsaveas( )
 {
-	TCHAR fname[MAX_PATH + 1024] = _T("");
+	TCHAR szFileName[MAX_PATH] = _T( "" );
 
 	// Open file structure
 	OPENFILENAME ofn;
-	ZeroMemory((LPVOID)&ofn, sizeof(OPENFILENAME));
-
+	ZeroMemory( (LPVOID)&ofn, sizeof( OPENFILENAME ) );
 	// Fill in open file structure
 	ofn.lStructSize = sizeof( OPENFILENAME );
-	ofn.lpstrFilter	= _T("All Files (*.*)\x0*.*\x0\x0");
-	ofn.lpstrTitle	= _T("Open Source File");
-	ofn.Flags		= OFN_HIDEREADONLY | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-	ofn.lpstrFile	= fname;
-	ofn.nMaxFile	= sizeof( fname );
-	ofn.lpstrDefExt	= _T("");
-	ofn.hwndOwner	= GetSafeHwnd();
+	ofn.lpstrFilter = _T( "All Files (*.*)\x0*.*\x0\x0" );
+	ofn.lpstrTitle = _T( "Open Source File" );
+	ofn.Flags = OFN_HIDEREADONLY | OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	ofn.lpstrFile = szFileName;
+	ofn.nMaxFile = sizeof( szFileName );
+	ofn.lpstrDefExt = _T( "" );
+	ofn.hwndOwner = GetSafeHwnd( );
 
 	// Get user file
-	if (!::GetSaveFileName(&ofn))
-		return;
-
-	try
+	if (::GetSaveFileName( &ofn ))
 	{
 		// Open the file
-		CFile f;
-		if (!f.Open(fname, CFile::modeCreate | CFile::shareExclusive | CFile::modeWrite ))
+		CFile file;
+		if (file.Open( szFileName, CFile::modeCreate | CFile::shareExclusive | CFile::modeWrite ))
 		{
-			ShowError(_T("Error creating file"));
-			return;
+			// Get text length
+			DWORD dwSize = (DWORD)SendEditor( SCI_GETLENGTH, 0, 0L );
+			if (dwSize > 0)
+			{
+				// Allocate memory
+				char* Buffer = new char[dwSize + 1 + 8];
+				if (Buffer)
+				{
+					// Get editor text
+					SendEditor( SCI_GETTEXT, dwSize + 1, (LPARAM)Buffer );
+					// NULL terminate (Probably not needed here)
+					Buffer[dwSize] = '\0';
+					// Write out the file data
+					file.Write( Buffer, dwSize );
+					// Close the file
+					file.Close( );
+				}
+			}
 		}
-
-		// Get text length
-		UINT uSize = (UINT)SendEditor(SCI_GETLENGTH, 0, 0L);
-		if (!uSize) 
-			return;
-
-		// Allocate memory
-		char *pBuf = new char[uSize + 1 + 8];
-		if (!pBuf) 
-		{	
-			ShowError(_T("Memory allocation error"));
-			return;
-		}
-
-		// Get editor text
-		SendEditor(SCI_GETTEXT, uSize + 1, (LPARAM)pBuf);
-
-		// NULL terminate ( I know this isn't needed here )
-		pBuf[uSize] = 0;
-
-		// Write out the file data
-		f.Write(pBuf, uSize);
-
-		// Close the file
-		f.Close();
 	}
-	catch( ... ) 
-	{	
-		ShowError(_T("Assertion while reading file"));
-	}
-}
-
-void CDialogEdit::ShowError(LPCTSTR pError)
-{
-	MessageBox(pError, _T("Error"), MB_OK | MB_ICONEXCLAMATION);
 }

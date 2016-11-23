@@ -52,157 +52,175 @@ static SScintillaColors g_rgbSyntaxConsole[] =
 
 // CDialogConsole dialog
 
-IMPLEMENT_DYNAMIC(CDialogConsole, CDialogEx)
+IMPLEMENT_DYNAMIC( CDialogConsole, CDialogEx )
 
-CDialogConsole::CDialogConsole(CString WindowTitle, CWnd* pParent /*=NULL*/)
-	: CDialogEx(IDD_DIALOG_CONSOLE, pParent), m_strWindowTitle( WindowTitle )
+CDialogConsole::CDialogConsole( CString WindowTitle, CWnd* pParent /*=NULL*/ )
+	: CDialogEx( IDD_DIALOG_CONSOLE, pParent ), m_strWindowTitle( WindowTitle )
 {
 	m_hwndEditWindow = NULL;
 	m_bInited = FALSE;
 }
 
-CDialogConsole::~CDialogConsole()
+CDialogConsole::~CDialogConsole( )
 {
-	EndDialog(0);
+	EndDialog( 0 );
 }
 
-void CDialogConsole::DoDataExchange(CDataExchange* pDX)
+void CDialogConsole::DoDataExchange( CDataExchange* pDX )
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDialogEx::DoDataExchange( pDX );
 }
 
-BEGIN_MESSAGE_MAP(CDialogConsole, CDialogEx)
-	ON_WM_SIZE()
-END_MESSAGE_MAP()
-
-BOOL CDialogConsole::Create(UINT nIDTemplate, CWnd* pParentWnd)
+LRESULT CDialogConsole::SendEditor( UINT Msg, WPARAM wParam, LPARAM lParam )
 {
-	return CDialogEx::Create(nIDTemplate, pParentWnd);
+	return ::SendMessage( m_hwndEditWindow, Msg, wParam, lParam );
 }
 
-void CDialogConsole::PrintText(const TCHAR * message)
+void CDialogConsole::SetStyle( int style, COLORREF fore, COLORREF back, int size, const TCHAR * face )
+{
+	SendEditor( SCI_STYLESETFORE, style, fore );
+	SendEditor( SCI_STYLESETBACK, style, back );
+	if (size >= 1)
+		SendEditor( SCI_STYLESETSIZE, style, size );
+	if (face)
+		SendEditor( SCI_STYLESETFONT, style, (LPARAM)face );
+}
+
+BEGIN_MESSAGE_MAP( CDialogConsole, CDialogEx )
+	ON_WM_SIZE( )
+END_MESSAGE_MAP( )
+
+BOOL CDialogConsole::Create( UINT nIDTemplate, CWnd* pParentWnd )
+{
+	return CDialogEx::Create( nIDTemplate, pParentWnd );
+}
+
+void CDialogConsole::PrintText( const TCHAR * message )
 {
 	// Make temporarily editable
-	SendEditor(SCI_SETREADONLY, FALSE);
+	SendEditor( SCI_SETREADONLY, FALSE );
 
-	m_strConsoleText += _T("\r\n> ");
+	m_strConsoleText += _T( "\r\n> " );
 	m_strConsoleText += message;
 
-#ifdef UNICODE
-	SendEditor(SCI_SETTEXT, 0, (LPARAM)CW2A(m_strConsoleText).m_psz);
-#else
-	SendEditor(SCI_SETTEXT, 0, (LPARAM)m_strConsoleText.GetBuffer());
-#endif
+	#ifdef UNICODE
+	SendEditor( SCI_SETTEXT, 0, (LPARAM)CW2A( m_strConsoleText ).m_psz );
+	#else
+	SendEditor( SCI_SETTEXT, 0, (LPARAM)m_strConsoleText.GetBuffer( ) );
+	#endif
 
-	// Send cursor to end of document
-	SendEditor(SCI_SETSEL, -1, -1);
+		// Send cursor to end of document
+	SendEditor( SCI_SETSEL, -1, -1 );
 
 	// Make read only
-	SendEditor(SCI_SETREADONLY, TRUE);
+	SendEditor( SCI_SETREADONLY, TRUE );
 }
 
-BOOL CDialogConsole::OnInitDialog()
+BOOL CDialogConsole::OnInitDialog( )
 {
-	CDialogEx::OnInitDialog();
+	CDialogEx::OnInitDialog( );
 
-	CWnd* pWnd = GetDesktopWindow();
-	CenterWindow(pWnd);
+	CWnd* pWnd = GetDesktopWindow( );
+	CenterWindow( pWnd );
 
-	SetWindowText(m_strWindowTitle);
+	SetWindowText( m_strWindowTitle );
 	// Create the Scintilla editor	
-	InitialiseEditor();
+	InitialiseEditor( );
 
-	SizeEditor();
-	SendEditor(SCI_SETSEL, -1, -1);
+	SizeEditor( );
+	SendEditor( SCI_SETSEL, -1, -1 );
 
-	SendEditor(SCI_SETREADONLY, FALSE);
-	m_strConsoleText += _T("[~] Console Initialized");
-	SendEditor(SCI_SETTEXT, 0, (LPARAM)"[~] Console Initialized");
-	SendEditor(SCI_SETREADONLY, TRUE);
+	SendEditor( SCI_SETREADONLY, FALSE );
+	m_strConsoleText += _T( "[~] Console Initialized" );
+	SendEditor( SCI_SETREADONLY, TRUE );
 
 	m_bInited = TRUE;
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 }
 
-void CDialogConsole::InitialiseEditor()
+void CDialogConsole::InitialiseEditor( )
 {
 	// Punt if we already have a window
-	if (::IsWindow(m_hwndEditWindow))
+	if (::IsWindow( m_hwndEditWindow ))
 		return;
 
 	// Create editor window
-	m_hwndEditWindow = CreateWindowEx(0, _T("Scintilla"), _T(""), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_CLIPCHILDREN,
-		0, 0, 700, 300, GetSafeHwnd(), NULL /*(HMENU)GuiID*/, AfxGetApp()->m_hInstance, NULL);
+	m_hwndEditWindow = CreateWindowEx( 0, _T( "Scintilla" ), _T( "" ), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_CLIPCHILDREN,
+									   0, 0, 700, 300, GetSafeHwnd( ), NULL /*(HMENU)GuiID*/, AfxGetApp( )->m_hInstance, NULL );
 
-	// Did we get the editor window
-	if (!::IsWindow(m_hwndEditWindow))
+								   // Did we get the editor window
+	if (!::IsWindow( m_hwndEditWindow ))
 	{
 		#ifdef _DEBUG
-		PrintOut(_T("Unable to create editor window"));
+		PrintOut( _T( "Unable to create editor window" ) );
 		#endif
 		return;
 	}
 
 	// CPP lexer
-	SendEditor(SCI_SETLEXER, SCLEX_CPP);
+	SendEditor( SCI_SETLEXER, SCLEX_CPP );
 
 	// Set number of style bits to use
-	SendEditor(SCI_SETSTYLEBITS, 5);
+	SendEditor( SCI_SETSTYLEBITS, 5 );
 
 	// Set tab width
-	SendEditor(SCI_SETTABWIDTH, 4);
+	SendEditor( SCI_SETTABWIDTH, 4 );
 
 	// Use CPP keywords
-	SendEditor(SCI_SETKEYWORDS, 0, (LPARAM)g_ConsoleKeyWords);
+	SendEditor( SCI_SETKEYWORDS, 0, (LPARAM)g_ConsoleKeyWords );
 
 	// Set up the global default style. These attributes are used wherever no explicit choices are made.
-	SetStyle(STYLE_DEFAULT, black, white, 10, _T("Courier New"));
+	SetStyle( STYLE_DEFAULT, black, white, 10, _T( "Segoe UI" ) );
 
 	// Set caret foreground color
 	//SendEditor(SCI_SETCARETFORE, RGB(255, 255, 255));
 
 	// Set all styles
-	SendEditor(SCI_STYLECLEARALL);
+	SendEditor( SCI_STYLECLEARALL );
 
 	// Set selection color
-	SendEditor(SCI_SETSELBACK, TRUE, RGB(240, 240, 240));
+	SendEditor( SCI_SETSELBACK, TRUE, RGB( 240, 240, 240 ) );
 
 	// Set syntax colors
-	for (long i = 0; g_rgbSyntaxConsole[i].iItem != -1; i++)
-		SendEditor(SCI_STYLESETFORE, g_rgbSyntaxConsole[i].iItem, g_rgbSyntaxConsole[i].rgb);
+	for (int i = 0; g_rgbSyntaxConsole[i].iItem != -1; i++)
+		SendEditor( SCI_STYLESETFORE, g_rgbSyntaxConsole[i].iItem, g_rgbSyntaxConsole[i].rgb );
 
-	SendEditor(SCI_SETHSCROLLBAR, TRUE);
+	SendEditor( SCI_SETHSCROLLBAR, TRUE );
 	//SendEditor(SCI_SETVIEWWS, SCWS_VISIBLEALWAYS);
-	SendEditor(SCI_SETMARGINWIDTHN, 0, 32);
-	SendEditor(SCI_SETMARGINWIDTHN, 1, 0);
+	SendEditor( SCI_SETMARGINWIDTHN, 0, 32 );
+	SendEditor( SCI_SETMARGINWIDTHN, 1, 0 );
 
 	// Make read only
-	SendEditor(SCI_SETREADONLY, TRUE);
+	SendEditor( SCI_SETREADONLY, TRUE );
 }
 
-void CDialogConsole::OnCancel()
+void CDialogConsole::OnCancel( )
 {
-	ShowWindow(SW_HIDE);
-	CDialogEx::OnCancel();
+	ShowWindow( SW_HIDE );
+	CDialogEx::OnCancel( );
 }
 
-void CDialogConsole::SizeEditor()
+void CDialogConsole::SizeEditor( )
 {
 	if (m_hwndEditWindow)
 	{
-		RECT rect;
-		GetClientRect(&rect);
-		CWnd *pWnd = CWnd::FromHandle(m_hwndEditWindow);
-		if (pWnd) 
-			pWnd->MoveWindow(&rect);
+		CWnd *pWnd = NULL;
+		RECT rect = { 0 };
+
+		GetClientRect( &rect );
+		pWnd = CWnd::FromHandle( m_hwndEditWindow );
+		if (pWnd)
+		{
+			pWnd->MoveWindow( &rect );
+		}
 	}
 }
 
-void CDialogConsole::OnSize(UINT nType, int cx, int cy)
+void CDialogConsole::OnSize( UINT nType, int cx, int cy )
 {
-	CDialogEx::OnSize(nType, cx, cy);
-	SizeEditor();
+	CDialogEx::OnSize( nType, cx, cy );
+	SizeEditor( );
 }
 
 
