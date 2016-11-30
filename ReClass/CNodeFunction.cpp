@@ -4,6 +4,7 @@
 
 CNodeFunction::CNodeFunction( )
 {
+	m_nodeType = nt_function;
 	memsize = sizeof( size_t );
 }
 
