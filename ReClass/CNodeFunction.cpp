@@ -22,6 +22,7 @@ CNodeFunction::CNodeFunction( ) :
 	m_iHeight( 0 ),
 	m_bRedrawNeeded( FALSE )
 {
+	m_nodeType = nt_function;
 	m_dwMemorySize = sizeof( ULONG_PTR );
 }
 
