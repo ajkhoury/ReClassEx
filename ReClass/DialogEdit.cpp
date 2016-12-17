@@ -6,6 +6,7 @@
 #include "afxdialogex.h"
 
 
+
 // C++ keywords
 static const char g_cppKeyWords[] =
 
@@ -21,7 +22,7 @@ static const char g_cppKeyWords[] =
 	"union unsigned using virtual void volatile "
 	"wchar_t while "
 
-	//Specific
+	// Specific
 	"__int32 __int16 __int8 DWORD WORD BYTE D3DXVECTOR2 D3DXVECTOR3 D3DXQUATERNION D3DXMATRIX "
 
 	// Extended
@@ -35,7 +36,7 @@ static const char g_cppKeyWords[] =
 	"__virtual_inheritance";
 
 // Default color scheme
-static SScintillaColors g_rgbSyntaxCpp[] =
+static ScintillaColors s_rgbSyntaxCpp[] =
 {
 	{ SCE_C_COMMENT,		green },
 	{ SCE_C_COMMENTLINE,	green },
@@ -52,28 +53,24 @@ static SScintillaColors g_rgbSyntaxCpp[] =
 
 IMPLEMENT_DYNAMIC( CDialogEdit, CDialogEx )
 
-CDialogEdit::CDialogEdit( CWnd* pParent /*=NULL*/ ) : CDialogEx( CDialogEdit::IDD, pParent )
+CDialogEdit::CDialogEdit( CWnd* pParent /*=NULL*/ ) : 
+	CDialogEx( CDialogEdit::IDD, pParent ),
+	m_hEditWindow( NULL )
 {
-	m_hwndEditor = NULL;
 }
 
 CDialogEdit::~CDialogEdit( )
 {
 }
 
-LRESULT CDialogEdit::SendEditor( UINT Msg, WPARAM wParam, LPARAM lParam )
+void CDialogEdit::SetStyle( int style, COLORREF fore, COLORREF back, int size, const char* face )
 {
-	return ::SendMessage( m_hwndEditor, Msg, wParam, lParam );
-}
-
-void CDialogEdit::SetAStyle( int style, COLORREF fore, COLORREF back, int size, const TCHAR * face )
-{
-	SendEditor( SCI_STYLESETFORE, style, fore );
-	//SendEditor(SCI_STYLESETBACK, style, back);
+	m_Edit.SetForeground( style, fore );
+	m_Edit.SetBackground( style, back );
 	if (size >= 1)
-		SendEditor( SCI_STYLESETSIZE, style, size );
+		m_Edit.SetSize( style, size );
 	if (face)
-		SendEditor( SCI_STYLESETFONT, style, (LPARAM)face );
+		m_Edit.SetFont( style, face );
 }
 
 void CDialogEdit::DoDataExchange( CDataExchange* pDX )
@@ -95,53 +92,57 @@ BOOL CDialogEdit::Create( LPCTSTR lpszTemplateName, CWnd* pParentWnd )
 void CDialogEdit::InitialiseEditor( )
 {
 	// Punt if we already have a window
-	if (::IsWindow( m_hwndEditor ))
+	if (::IsWindow( m_Edit.GetSafeHwnd( ) ))
 		return;
 
 	// Create editor window
-	m_hwndEditor = CreateWindowEx( 0, _T( "Scintilla" ), _T( "" ), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_CLIPCHILDREN,
-								   0, 0, 500, 400, GetSafeHwnd( ), NULL /*(HMENU)GuiID*/, AfxGetApp( )->m_hInstance, NULL );
+	m_Edit.Create( WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_CLIPCHILDREN, CRect( 0, 0, 500, 400 ), this, NULL );
+
 	// Did we get the editor window
-	if (!::IsWindow( m_hwndEditor ))
+	if (!::IsWindow( m_Edit.GetSafeHwnd( ) ))
 	{
 		PrintOut( _T( "Unable to create editor window" ) );
 		return;
 	}
 
+	m_hEditWindow = m_Edit.GetSafeHwnd( );
+
 	// CPP lexer
-	SendEditor( SCI_SETLEXER, SCLEX_CPP );
+	m_Edit.SetLexer( SCLEX_CPP );
 
 	// Set number of style bits to use
-	SendEditor( SCI_SETSTYLEBITS, 5 );
+	m_Edit.SetStyleBits( 5 );
 
 	// Set tab width
-	SendEditor( SCI_SETTABWIDTH, 4 );
+	m_Edit.SetTabWidth( 4 );
 
 	// Use CPP keywords
-	SendEditor( SCI_SETKEYWORDS, 0, (LPARAM)g_cppKeyWords );
+	m_Edit.SetKeywords( 0, g_cppKeyWords );
 
 	// Set up the global default style. These attributes are used wherever no explicit choices are made.
-	SetAStyle( STYLE_DEFAULT, black, white, 10, _T( "Courier New" ) );
+	SetStyle( STYLE_DEFAULT, black, white, 10, "Courier New" );
 
 	// Set caret foreground color
 	//SendEditor(SCI_SETCARETFORE, RGB(255, 255, 255));
 
 	// Set all styles
-	SendEditor( SCI_STYLECLEARALL );
+	m_Edit.SetAllStylesDefault( );
 
 	// Set selection color
-	SendEditor( SCI_SETSELBACK, TRUE, RGB( 240, 240, 240 ) );
+	m_Edit.SetSelectionBackground( TRUE, RGB( 240, 240, 240 ) );
 
 	// Set syntax colors
-	for (int i = 0; g_rgbSyntaxCpp[i].iItem != -1; i++)
+	for (int i = 0; s_rgbSyntaxCpp[i].iItem != -1; i++)
 	{
-		SendEditor( SCI_STYLESETFORE, g_rgbSyntaxCpp[i].iItem, g_rgbSyntaxCpp[i].rgb );
+		m_Edit.SetForeground( s_rgbSyntaxCpp[i].iItem, s_rgbSyntaxCpp[i].rgb );
 	}
 
-	SendEditor( SCI_SETHSCROLLBAR, false );
+	m_Edit.SetHorizontalScrollVisible( FALSE );
 	//SendEditor(SCI_SETVIEWWS, SCWS_VISIBLEALWAYS);
-	SendEditor( SCI_SETMARGINWIDTHN, 0, 32 );
-	SendEditor( SCI_SETMARGINWIDTHN, 1, 0 );
+	m_Edit.SetMarginWidth( 0, 32 );
+	m_Edit.SetMarginWidth( 1, 0 );
+
+
 }
 
 BOOL CDialogEdit::OnInitDialog( )
@@ -156,24 +157,12 @@ BOOL CDialogEdit::OnInitDialog( )
 	SetWindowText( Title );
 	// Create the Scintilla editor	
 	InitialiseEditor( );
-	int length = Text.GetLength( );
-	char* TextBuffer = new char[length + 1];
-	if (TextBuffer)
-	{
-		#ifdef UNICODE
-		size_t converted = 0;
-		wcstombs_s( &converted, TextBuffer, length + 1, Text.GetBuffer( ), length + 1 );
-		#else
-		strcpy_s( pText, length, Text.GetBuffer( ) );
-		#endif
+	m_Edit.SetText( Text );
 
-		SendEditor( SCI_SETTEXT, 0, (WPARAM)TextBuffer );
-		ShowWindow( SW_NORMAL );
-		SizeEditor( );
-		SendEditor( SCI_SETSEL, 0, 0 );
+	ShowWindow( SW_NORMAL );
+	SizeEditor( );
 
-		delete[] TextBuffer; // free memory
-	}
+	m_Edit.SetSelection( 0, 0 );
 
 	return FALSE;  // return TRUE unless you set the focus to a control
 }
@@ -181,35 +170,19 @@ BOOL CDialogEdit::OnInitDialog( )
 
 void CDialogEdit::OnCancel( )
 {
-	// Get text length
-	DWORD uSize = (DWORD)SendEditor( SCI_GETLENGTH, 0, 0L );
-	if (uSize > 0)
-	{
-		char* Buffer = new char[uSize + 1 + 8];
-		if (Buffer)
-		{
-			SendEditor( SCI_GETTEXT, uSize + 1, (LPARAM)Buffer );
-			Buffer[uSize] = '\0';
-			Text = Buffer;
-			delete[] Buffer;
-		}
-	}
+	// Get text
+	Text = m_Edit.GetText( );
 	CDialogEx::OnCancel( );
 }
 
 void CDialogEdit::SizeEditor( )
 {
-	if (m_hwndEditor)
+	if (m_hEditWindow != NULL)
 	{
 		CWnd* pWnd = NULL;
-		RECT rect = { 0 };
-
+		RECT rect;
 		GetClientRect( &rect );
-		pWnd = CWnd::FromHandle( m_hwndEditor );
-		if (pWnd)
-		{
-			pWnd->MoveWindow( &rect );
-		}
+		m_Edit.MoveWindow( &rect );
 	}
 }
 
@@ -240,7 +213,8 @@ void CDialogEdit::OnFileEditoropen( )
 	if (::GetOpenFileName( &ofn ))
 	{
 		// Clear editor text
-		SendEditor( SCI_SETTEXT, 0, (WPARAM)"" );
+		m_Edit.Clear( );
+
 		// Ensure it exists
 		if (::GetFileAttributes( szFileName ) == 0xFFFFFFFF)
 		{
@@ -259,10 +233,10 @@ void CDialogEdit::OnFileEditoropen( )
 						// Read the data
 						if (file.Read( (void*)Buffer, (UINT)uSize ))
 						{
-							// NULL terminate
+							// null terminate (probably not needed here)
 							Buffer[uSize] = '\0';
 							// Set editor text
-							SendEditor( SCI_SETTEXT, 0, (WPARAM)Buffer );
+							m_Edit.SetText( Buffer );
 						}
 						// Close the file
 						file.Close( );
@@ -301,22 +275,15 @@ void CDialogEdit::OnFileEditorsaveas( )
 		if (file.Open( szFileName, CFile::modeCreate | CFile::shareExclusive | CFile::modeWrite ))
 		{
 			// Get text length
-			DWORD dwSize = (DWORD)SendEditor( SCI_GETLENGTH, 0, 0L );
+			DWORD dwSize = m_Edit.GetLength( );
 			if (dwSize > 0)
 			{
-				// Allocate memory
-				char* Buffer = new char[dwSize + 1 + 8];
-				if (Buffer)
-				{
-					// Get editor text
-					SendEditor( SCI_GETTEXT, dwSize + 1, (LPARAM)Buffer );
-					// NULL terminate (Probably not needed here)
-					Buffer[dwSize] = '\0';
-					// Write out the file data
-					file.Write( Buffer, dwSize );
-					// Close the file
-					file.Close( );
-				}
+				// Get editor text
+				CString Text = m_Edit.GetText( );
+				// Write out the file data
+				file.Write( (const VOID*)Text.GetBuffer( ), dwSize );
+				// Close the file
+				file.Close( );	
 			}
 		}
 	}

@@ -4,14 +4,17 @@
 #include "CChildView.h"
 #include "DialogEdit.h"
 
+#include <algorithm>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 // CChildView
-CChildView::CChildView( )
+CChildView::CChildView( ) : 
+	m_pClass( NULL ),
+	m_bTracking( false )
 {
-	m_pClass = NULL;
 }
 
 CChildView::~CChildView( )
@@ -281,6 +284,10 @@ void CChildView::OnLButtonDblClk( UINT nFlags, CPoint point )
 				m_Edit.SetSel( 0, 1024 );
 				return;
 			}
+			else if (HotSpots[i].Type == HS_SCINTILLA_EDIT)
+			{
+
+			}
 		}
 	}
 }
@@ -378,10 +385,12 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 			{
 				pHitObject->ToggleLevelOpen( HotSpots[i].Level );
 			}
+
 			if (HotSpots[i].Type == HS_CLICK)
 			{
 				pHitObject->Update( HotSpots[i] );
 			}
+
 			if (HotSpots[i].Type == HS_SELECT)
 			{
 				if (nFlags == MK_LBUTTON)
@@ -448,6 +457,7 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 					}
 				}
 			}
+
 			if (HotSpots[i].Type == HS_DROP)
 			{
 				CRect client;
@@ -457,6 +467,7 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 				menu.LoadMenu( MAKEINTRESOURCE( IDR_MENU_QUICKMODIFY ) );
 				menu.GetSubMenu( 0 )->TrackPopupMenu( TPM_LEFTALIGN | TPM_HORNEGANIMATION, client.left + HotSpots[i].Rect.left, client.top + HotSpots[i].Rect.bottom, this );
 			}
+
 			if (HotSpots[i].Type == HS_DELETE)
 			{
 				//isDeleting = true; // Ghetto fix to stop crashing from OnMouseHover
@@ -473,30 +484,36 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 				Selected.clear( );
 				//isDeleting = false;
 			}
+
 			if ((HotSpots[i].Type == HS_CHANGE_A) || (HotSpots[i].Type == HS_CHANGE_X))
 			{
-				ExchangeTarget = HotSpots[i];
-				CRect pos = ExchangeTarget.Rect;
-				ClientToScreen( &pos );
-
-				CNodeBase* pNode = HotSpots[i].object;
-
 				CMenu menu;
-				menu.CreatePopupMenu( );
-
 				CImage img;
-				img.LoadFromResource( AfxGetResourceHandle( ), IDB_CLASSBITMAP );
 				CBitmap bmp;
-				bmp.Attach( img.Detach( ) );
 
 				std::vector<std::pair<CString, UINT>> classRefs;
 
-				for (UINT m = 0; m < g_ReClassApp.Classes.size( ); m++)
-				{
-					if ((HotSpots[i].Type == HS_CHANGE_X) && (pNode->GetParent( ) == g_ReClassApp.Classes[m]))
-						continue;
+				CRect pos = { 0 };
+				CNodeBase* pNode = NULL;
 
-					classRefs.push_back( std::pair<CString, UINT>( g_ReClassApp.Classes[m]->GetName( ), m ) );
+				ExchangeTarget = HotSpots[i];
+
+				pos = ExchangeTarget.Rect;
+				ClientToScreen( &pos );
+
+				pNode = HotSpots[i].object;
+
+				menu.CreatePopupMenu( );
+
+				img.LoadFromResource( AfxGetResourceHandle( ), IDB_CLASSBITMAP );
+				
+				bmp.Attach( img.Detach( ) );
+
+				for (UINT m = 0; m < g_ReClassApp.m_Classes.size( ); m++)
+				{
+					if ((HotSpots[i].Type == HS_CHANGE_X) && (pNode->GetParent( ) == g_ReClassApp.m_Classes[m]))
+						continue;
+					classRefs.push_back( std::pair<CString, UINT>( g_ReClassApp.m_Classes[m]->GetName( ), m ) );
 				}
 
 				std::vector<std::pair<wchar_t, std::vector<std::pair<CString, UINT>>>> out = ExplodeByFirstChar( classRefs );
@@ -504,6 +521,7 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 				for (UINT i = 0; i < out.size( ); i++)
 				{
 					CMenu innerMenu;
+
 					innerMenu.CreatePopupMenu( );
 
 					for (UINT j = 0; j < out[i].second.size( ); j++)
@@ -518,6 +536,7 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 
 				menu.TrackPopupMenu( TPM_LEFTALIGN | TPM_NOANIMATION, pos.left, pos.bottom, this );
 			}
+
 			Invalidate( );
 		}
 	}
@@ -564,102 +583,107 @@ void CChildView::OnRButtonDown( UINT nFlags, CPoint point )
 
 void CChildView::OnPaint( )
 {
-	CRect pos( 0, 0, 0, 0 );
-	HotSpots.clear( );
+	CRect clientRect( 0, 0, 0, 0 );
+	DWORD classSize = 0;
 
-	CPaintDC pdc( this ); // device context for painting
-	CMemDC m( pdc, this );
-	CDC& dc = m.GetDC( );
+	CPaintDC paintDC( this ); // device context for painting
+	CMemDC memDC( paintDC, this );
+	CDC& DC = memDC.GetDC( );
 
-	CRect client;
-	GetClientRect( &client );
+	//HotSpots.clear( );
 
-	dc.FillSolidRect( &client, g_crBackground );
-	if (!m_pClass)
-		return;
+	GetClientRect( &clientRect );
 
-	dc.SelectObject( &g_ViewFont );
+	DC.FillSolidRect( &clientRect, g_crBackground );
 
-	HotSpots.clear( );
-
-	DWORD classSize = m_pClass->GetMemorySize( );
-	Memory.SetSize( classSize );
-	ReClassReadMemory( (LPVOID)m_pClass->GetOffset( ), Memory.pMemory, classSize );
-
-	ViewInfo View;
-	View.Address = m_pClass->GetOffset( );
-	View.pData = Memory.pMemory;
-	View.Classes = &g_ReClassApp.Classes;
-	View.client = &client;
-	View.dc = &dc;
-	View.Level = 0;
-	View.HotSpots = &HotSpots;
-	View.bMultiSelected = (Selected.size( ) > 1) ? true : false;
-
-	if (m_Scroll.IsWindowVisible( ))
-		View.client->right -= SB_WIDTH;
-
-	int ypos = m_Scroll.GetScrollPos( ) * g_FontHeight;
-
-	int DrawMax = m_pClass->Draw( View, 0, -ypos ) + ypos;
-
-	if (m_pClass->RequestPosition != -1)
+	if (m_pClass != NULL)
 	{
-		if ((m_pClass->RequestPosition >= 0) && ((unsigned int)m_pClass->RequestPosition < g_ReClassApp.Classes.size( )))
+		ViewInfo View;
+
+		DC.SelectObject( &g_ViewFont );
+
+		HotSpots.clear( );
+
+		classSize = m_pClass->GetMemorySize( );
+		m_Memory.SetSize( classSize );
+		ReClassReadMemory( (LPVOID)m_pClass->GetOffset( ), m_Memory.Data( ), classSize );
+
+		View.pChildView = this;
+		View.Address = m_pClass->GetOffset( );
+		View.pData = m_Memory.Data( );
+		View.Classes = &g_ReClassApp.m_Classes;
+		View.client = &clientRect;
+		View.dc = &DC;
+		View.Level = 0;
+		View.HotSpots = &HotSpots;
+		View.bMultiSelected = (Selected.size( ) > 1) ? true : false;
+
+		if (m_Scroll.IsWindowVisible( ))
+			View.client->right -= SB_WIDTH;
+
+		int ypos = m_Scroll.GetScrollPos( ) * g_FontHeight;
+
+		int DrawMax = m_pClass->Draw( View, 0, -ypos ) + ypos;
+
+		if (m_pClass->RequestPosition != -1)
 		{
-			int idx = -1;
-			for (UINT i = 0; i < g_ReClassApp.Classes.size( ); i++)
+			if ((m_pClass->RequestPosition >= 0) && ((unsigned int)m_pClass->RequestPosition < g_ReClassApp.m_Classes.size( )))
 			{
-				CNodeClass* pClass = View.Classes->at( i );
-				if (m_pClass == g_ReClassApp.Classes[i])
-					idx = i;
+				int idx = -1;
+				for (UINT i = 0; i < g_ReClassApp.m_Classes.size( ); i++)
+				{
+					CNodeClass* pClass = View.Classes->at( i );
+					if (m_pClass == g_ReClassApp.m_Classes[i])
+						idx = i;
+				}
+				g_ReClassApp.m_Classes.erase( g_ReClassApp.m_Classes.begin( ) + idx );
+				g_ReClassApp.m_Classes.insert( g_ReClassApp.m_Classes.begin( ) + m_pClass->RequestPosition, m_pClass );
 			}
-			g_ReClassApp.Classes.erase( g_ReClassApp.Classes.begin( ) + idx );
-			g_ReClassApp.Classes.insert( g_ReClassApp.Classes.begin( ) + m_pClass->RequestPosition, m_pClass );
+			m_pClass->RequestPosition = -1;
 		}
-		m_pClass->RequestPosition = -1;
+
+		if (clientRect.Height( ) < DrawMax)
+		{
+			SCROLLINFO si;
+			si.cbSize = sizeof( SCROLLINFO );
+			si.fMask = SIF_PAGE | SIF_RANGE;
+			si.nMin = 0;
+			si.nMax = DrawMax / g_FontHeight;
+			si.nPage = clientRect.Height( ) / g_FontHeight;
+			m_Scroll.SetScrollInfo( &si );
+			m_Scroll.ShowScrollBar( 1 );
+		}
+		else
+		{
+			m_Scroll.SetScrollPos( 0 );
+			m_Scroll.ShowScrollBar( 0 );
+		}
+
+
+		// this makes tabs
+		CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, AfxGetApp( )->m_pMainWnd );
+		CChildFrame* pChild = STATIC_DOWNCAST( CChildFrame, pFrame->GetActiveFrame( ) );
+
+		if (pChild->m_ChildView.m_hWnd == this->m_hWnd)
+		{
+			pChild->SetWindowText( m_pClass->GetName( ).GetString( ) );
+			pChild->SetTitle( m_pClass->GetName( ).GetString( ) );
+			pFrame->UpdateFrameTitleForDocument( m_pClass->GetName( ).GetString( ) );
+
+			//char txt[256];
+			//sprintf (txt,"Total HotSpots: %i",HotSpots.size());
+
+			//dc.SetTextColor(0xFF0000);
+			//dc.SetBkColor(0x000000);
+			//dc.SetBkMode(OPAQUE);
+			//dc.DrawText(txt,-1,&CRect(0,0,0,0), DT_LEFT | DT_NOCLIP | DT_NOPREFIX);
+		}
+
+		//for (UINT i=0; i < HotSpots.size();i++)
+		//{
+		//	dc.DrawFocusRect(HotSpots[i].Rect);
+		//}
 	}
-
-	if (client.Height( ) < DrawMax)
-	{
-		SCROLLINFO si;
-		si.cbSize = sizeof( SCROLLINFO );
-		si.fMask = SIF_PAGE | SIF_RANGE;
-		si.nMin = 0;
-		si.nMax = DrawMax / g_FontHeight;
-		si.nPage = client.Height( ) / g_FontHeight;
-		m_Scroll.SetScrollInfo( &si );
-		m_Scroll.ShowScrollBar( 1 );
-	}
-	else
-	{
-		m_Scroll.SetScrollPos( 0 );
-		m_Scroll.ShowScrollBar( 0 );
-	}
-
-
-	// this makes tabs
-	CMDIFrameWnd* pFrame = (CMDIFrameWnd*)AfxGetApp( )->m_pMainWnd;
-	CChildFrame* pChild = (CChildFrame*)pFrame->GetActiveFrame( );
-	if (pChild->m_wndView.m_hWnd == this->m_hWnd)
-	{
-		pChild->SetWindowText( m_pClass->GetName( ).GetString( ) );
-		pChild->SetTitle( m_pClass->GetName( ).GetString( ) );
-		pFrame->UpdateFrameTitleForDocument( m_pClass->GetName( ).GetString( ) );
-
-		//char txt[256];
-		//sprintf (txt,"Total HotSpots: %i",HotSpots.size());
-
-		//dc.SetTextColor(0xFF0000);
-		//dc.SetBkColor(0x000000);
-		//dc.SetBkMode(OPAQUE);
-		//dc.DrawText(txt,-1,&CRect(0,0,0,0), DT_LEFT | DT_NOCLIP | DT_NOPREFIX);
-	}
-
-	//for (UINT i=0; i < HotSpots.size();i++)
-	//{
-	//	dc.DrawFocusRect(HotSpots[i].Rect);
-	//}
 }
 
 void CChildView::OnSize( UINT nType, int cx, int cy )
@@ -668,6 +692,7 @@ void CChildView::OnSize( UINT nType, int cx, int cy )
 	GetClientRect( &client );
 	m_Scroll.SetWindowPos( NULL, client.right - SB_WIDTH, 0, SB_WIDTH, client.Height( ), SWP_NOZORDER );
 	m_Edit.ShowWindow( SW_HIDE );
+
 	CWnd::OnSize( nType, cx, cy );
 }
 
@@ -679,6 +704,7 @@ void CChildView::OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar )
 		m_Scroll.SetScrollPos( nPos );
 		Invalidate( );
 	}
+
 	CWnd::OnVScroll( nSBCode, nPos, pScrollBar );
 }
 
@@ -696,6 +722,7 @@ BOOL CChildView::OnMouseWheel( UINT nFlags, short zDelta, CPoint pt )
 		m_ToolTip.ShowWindow( SW_HIDE );
 		Invalidate( );
 	}
+
 	return CWnd::OnMouseWheel( nFlags, zDelta, pt );
 }
 
@@ -757,78 +784,8 @@ __inline CStringA DisassembleCode( size_t virtualAddress, int* textHeight )
 	*textHeight += 4;
 
 	return Assembly;
-
-	//std::string strOut;
-	//
-	//DISASM disasm;
-	//memset(&disasm, 0, sizeof(DISASM));
-	//disasm.EIP = (UIntPtr)StartCodeSection;
-	//disasm.VirtualAddr = (UInt64)virtualAddress;
-	//#ifdef _WIN64
-	//disasm.Archi = 64;
-	//#else
-	//disasm.Archi = 0;
-	//#endif
-	//disasm.Options = PrefixedNumeral;
-	//
-	//UIntPtr EndCodeSection = (UIntPtr)((UIntPtr)StartCodeSection + codeSize);
-	//
-	//bool error = false;
-	//while (!error)
-	//{
-	//	disasm.SecurityBlock = (UInt32)(EndCodeSection - (UIntPtr)disasm.EIP);
-	//	int len = Disasm(&disasm);
-	//	if (len == OUT_OF_BLOCK || len == UNKNOWN_OPCODE)
-	//	{
-	//		error = true;
-	//	}
-	//	else
-	//	{
-	//		char szCompleteInstruction[256];
-	//
-	//		// Get virtual address of instruction
-	//		char strAddr[16];
-	//		sprintf_s(strAddr, "%p", (void*)disasm.VirtualAddr);
-	//
-	//		// Get bytes of instruction
-	//		char strBytes[64] = { 0 };
-	//		for (int i = 0; i < len; i++)
-	//		{
-	//			char strByte[4];
-	//			sprintf_s(strByte, "%.2X", *(unsigned char*)(disasm.EIP + i));
-	//			strcat_s(strBytes, strByte);
-	//		}
-	//
-	//		sprintf_s(szCompleteInstruction, "%-9s %-15s %s\r\n", strAddr, strBytes, disasm.CompleteInstr);
-	//		strOut += szCompleteInstruction;
-	//
-	//		disasm.EIP = disasm.EIP + len;
-	//		disasm.VirtualAddr = disasm.VirtualAddr + len;
-	//
-	//		if ((disasm.EIP >= (UIntPtr)EndCodeSection) || (disasm.Instruction.Opcode == 0xCC))
-	//		{
-	//			break;
-	//		}
-	//
-	//		*textHeight += 16;
-	//	}
-	//}
-	//
-	//*textHeight += 4;
-	//
-	//#ifdef UNICODE
-	//wchar_t Ret[8192];
-	//size_t converted = 0;
-	//mbstowcs_s(&converted, Ret, strOut.c_str(), strOut.size());
-	//#else
-	//const char* Ret = strOut.c_str();
-	//#endif
-	//
-	//return tstring(Ret);
 }
 
-bool bTracking = false;
-CPoint HoverPoint;
 void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 {
 	if (Selected.size( ) > 1)
@@ -934,17 +891,18 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 		}
 	}
 
-	bTracking = false;
-	HoverPoint = point;
+	m_bTracking = false;
+	m_HoverPoint = point;
 
 	CWnd::OnMouseHover( nFlags, point );
 }
 
 void CChildView::OnMouseMove( UINT nFlags, CPoint point )
 {
-	if (point != HoverPoint)
+	if (point != m_HoverPoint)
 		m_ToolTip.ShowWindow( SW_HIDE );
-	if (!bTracking)
+
+	if (m_bTracking == false)
 	{
 		TRACKMOUSEEVENT tme;
 		tme.cbSize = sizeof( tme );
@@ -952,7 +910,7 @@ void CChildView::OnMouseMove( UINT nFlags, CPoint point )
 		tme.hwndTrack = m_hWnd;
 		tme.dwHoverTime = HOVER_DEFAULT;
 		::TrackMouseEvent( &tme );
-		bTracking = true;
+		m_bTracking = true;
 	}
 	CWnd::OnMouseMove( nFlags, point );
 }
@@ -960,21 +918,21 @@ void CChildView::OnMouseMove( UINT nFlags, CPoint point )
 void CChildView::OnMouseLeave( )
 {
 	m_ToolTip.ShowWindow( SW_HIDE );
-	bTracking = false;
+	m_bTracking = false;
 	CWnd::OnMouseLeave( );
 }
 
 UINT CChildView::FindNodeIndex( CNodeBase* pNode )
 {
+	CNodeClass* pClass = NULL;
+	int foundIdx = -1;
+
 	if (!pNode->GetParent( ))
 		return MAX_NODES;
-	CNodeClass* pClass = (CNodeClass*)pNode->GetParent( );
-	for (UINT i = 0; i < pClass->NodeCount( ); i++)
-	{
-		if (pClass->GetNode( i ) == pNode)
-			return i;
-	}
-	return MAX_NODES;
+	
+	pClass = (CNodeClass*)pNode->GetParent( );
+	foundIdx = pClass->FindNode( pNode );
+	return (foundIdx != -1) ? foundIdx : MAX_NODES;
 }
 
 CNodeBase* CChildView::FindNodeFromIndex( CNodeBase* currentlySelectedNode, UINT index )
@@ -1018,9 +976,13 @@ void CChildView::ReplaceNode( CNodeClass* pClass, UINT idx, CNodeBase* pNewNode 
 	if (sOld != sNew)
 	{
 		if (sNew < sOld)
+		{
 			FillNodes( pClass, idx + 1, sOld - sNew );
+		}
 		else
+		{
 			RemoveNodes( pClass, idx + 1, sNew - sOld );
+		}
 	}
 
 	delete pOldNode;
@@ -1080,8 +1042,6 @@ void CChildView::FillNodes( CNodeClass* pClass, UINT idx, DWORD Length )
 			pFill->SetOffset( newOffset );
 			//pFill->Comment.Format("%i-%i",idx,Length);
 
-			//printf( "___________begin %p _______\n", pClass->Nodes.begin( ) );
-
 			pClass->InsertNode( idx, pFill );
 
 			newOffset += 8;
@@ -1127,17 +1087,19 @@ void CChildView::FillNodes( CNodeClass* pClass, UINT idx, DWORD Length )
 	}
 }
 
-void CChildView::ResizeNode( CNodeClass* pClass, UINT idx, DWORD before, DWORD After )
+void CChildView::ResizeNode( CNodeClass* pClass, UINT idx, DWORD before, DWORD after )
 {
 	if (!pClass || idx == MAX_NODES)
 		return;
 
-	if (before != After)
+	if (before != after)
 	{
-		if (After < before)
-			FillNodes( pClass, idx + 1, before - After );
+		if (after < before)
+		{
+			FillNodes( pClass, idx + 1, before - after );
+		}
 		else
-			RemoveNodes( pClass, idx + 1, After - before );
+			RemoveNodes( pClass, idx + 1, after - before );
 	}
 
 	g_ReClassApp.CalcAllOffsets( );
@@ -1380,7 +1342,7 @@ void MakeBasicClass( CNodeClass* pClass )
 		pClass->AddNode( pNode );
 	}
 	g_ReClassApp.CalcOffsets( pClass );
-	g_ReClassApp.Classes.push_back( pClass );
+	g_ReClassApp.m_Classes.push_back( pClass );
 }
 
 void CChildView::ReplaceSelectedWithType( NodeType Type )
@@ -1448,7 +1410,8 @@ void CChildView::ReplaceSelectedWithType( NodeType Type )
 		}
 		if (Type == nt_function)
 		{
-			((CNodeFunction*)pNewNode)->DisassembleBytes( Selected[i].object->GetParent( )->GetOffset( ) + Selected[i].object->GetOffset( ) );
+			CNodeFunction* pFunction = (CNodeFunction*)pNewNode;
+			pFunction->Initialize( this, Selected[i].object->GetParent( )->GetOffset( ) + Selected[i].object->GetOffset( ) );
 		}
 
 		ReplaceNode( (CNodeClass*)Selected[i].object->GetParent( ), FindNodeIndex( Selected[i].object ), pNewNode );
@@ -1840,15 +1803,15 @@ BOOL CChildView::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 
 			if (pNode->GetType( ) == nt_array)
 			{
-				((CNodeArray*)pNode)->pNode = g_ReClassApp.Classes[idx];
+				((CNodeArray*)pNode)->pNode = g_ReClassApp.m_Classes[idx];
 			}
 			if (pNode->GetType( ) == nt_instance)
 			{
-				((CNodeClassInstance*)pNode)->pNode = g_ReClassApp.Classes[idx];
+				((CNodeClassInstance*)pNode)->pNode = g_ReClassApp.m_Classes[idx];
 			}
 			if (pNode->GetType( ) == nt_pointer)
 			{
-				((CNodePtr*)pNode)->pNode = g_ReClassApp.Classes[idx];
+				((CNodePtr*)pNode)->pNode = g_ReClassApp.m_Classes[idx];
 			}
 
 			g_ReClassApp.CalcAllOffsets( );
@@ -1885,11 +1848,10 @@ void CChildView::OnButtonZero( )
 	CMemory mem;
 	for (UINT i = 0; i < Selected.size( ); i++)
 	{
-		DWORD s = Selected[i].object->GetMemorySize( );
-		DWORD_PTR a = Selected[i].Address;
-		mem.SetSize( s );
-		ZeroMemory( mem.pMemory, s );
-		ReClassWriteMemory( (LPVOID)a, mem.pMemory, s );
+		DWORD size = Selected[i].object->GetMemorySize( );
+		mem.SetSize( size );
+		SecureZeroMemory( mem.Data( ), size );
+		ReClassWriteMemory( (LPVOID)Selected[i].Address, mem.Data( ), size );
 	}
 }
 
@@ -1903,12 +1865,10 @@ void CChildView::OnButtonOne( )
 	CMemory mem;
 	for (UINT i = 0; i < Selected.size( ); i++)
 	{
-
-		DWORD s = Selected[i].object->GetMemorySize( );
-		DWORD_PTR a = Selected[i].Address;
-		mem.SetSize( s );
-		memset( mem.pMemory, 1, s );
-		ReClassWriteMemory( (LPVOID)a, mem.pMemory, s );
+		DWORD size = Selected[i].object->GetMemorySize( );
+		mem.SetSize( size );
+		memset( mem.Data( ), 1, size );
+		ReClassWriteMemory( (LPVOID)Selected[i].Address, mem.Data( ), size );
 	}
 }
 
@@ -1923,16 +1883,14 @@ void CChildView::OnButtonRandom( )
 	srand( GetTickCount( ) );
 	for (UINT i = 0; i < Selected.size( ); i++)
 	{
-		DWORD s = Selected[i].object->GetMemorySize( );
-		DWORD_PTR a = Selected[i].Address;
-		mem.SetSize( s );
-
-		for (UINT r = 0; r < s; r++)
-			mem.pMemory[r] = rand( );
-
-		ReClassWriteMemory( (LPVOID)a, mem.pMemory, s );
+		UCHAR* pMemory = NULL;
+		DWORD size = Selected[i].object->GetMemorySize( );
+		mem.SetSize( size );
+		pMemory = mem.Data( );
+		for (UINT i = 0; i < size; i++)
+			pMemory[i] = rand( );
+		ReClassWriteMemory( (LPVOID)Selected[i].Address, pMemory, size );
 	}
-
 }
 
 void CChildView::OnUpdateButtonRandom( CCmdUI *pCmdUI )
@@ -1945,15 +1903,16 @@ void CChildView::OnButtonSwap( )
 	CMemory mem;
 	for (UINT i = 0; i < Selected.size( ); i++)
 	{
-		DWORD s = Selected[i].object->GetMemorySize( );
-		DWORD_PTR a = Selected[i].Address;
-		mem.SetSize( s );
+		UCHAR* pMemory = NULL;
+		DWORD size = Selected[i].object->GetMemorySize( );
+		mem.SetSize( size );
+		pMemory = mem.Data( );
 
-		ReClassReadMemory( (LPVOID)a, mem.pMemory, s );
+		ReClassReadMemory( (LPVOID)Selected[i].Address, pMemory, size );
 
-		std::reverse( mem.pMemory, mem.pMemory + s );
+		std::reverse( pMemory, pMemory + size );
 
-		ReClassWriteMemory( (LPVOID)a, mem.pMemory, s );
+		ReClassWriteMemory( (LPVOID)Selected[i].Address, pMemory, size );
 	}
 }
 

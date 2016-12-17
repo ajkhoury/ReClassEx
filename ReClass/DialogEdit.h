@@ -1,6 +1,7 @@
 #pragma once
 
 #include "afxwin.h"
+#include "CScintillaEdit.h"
 
 class CDialogEdit : public CDialogEx
 {
@@ -12,16 +13,14 @@ public:
 	CString Title;
 	CString Text;
 
-	// Sends a message to the Scintilla editor
-	LRESULT SendEditor( UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0 );
-
 	// Sets a Scintilla style
-	void SetAStyle( int style, COLORREF fore, COLORREF back = RGB( 255, 255, 255 ), int size = -1, const TCHAR* face = 0 );
+	void SetStyle( int style, COLORREF fore, COLORREF back = RGB( 255, 255, 255 ), int size = -1, const char* face = 0 );
 
 	void InitialiseEditor();
 	void SizeEditor();
 
-	HWND m_hwndEditor;
+	HWND m_hEditWindow;
+	CScintillaEdit m_Edit;
 
 	enum { IDD = IDD_DIALOG_EDIT };
 

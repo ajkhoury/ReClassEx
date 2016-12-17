@@ -6,8 +6,10 @@
 
 // Disable warnings for type casting from HANDLE to DWORD and vice versa
 #pragma warning(disable : 4312 4311 4302 4099) 
+
 #define PSAPI_VERSION 1
 #define WIN32_LEAN_AND_MEAN
+//#define _NO_CRT_STDIO_INLINE
 
 #include "targetver.h"
 
@@ -32,13 +34,6 @@
 #include <ShellScalingApi.h>
 
 #include <vector>
-//#include <cstdarg>
-#include <Shlwapi.h>
-#include <Psapi.h>
-#include <CommCtrl.h>
-#include <algorithm>
-#include <memory>
-#include <map>
 
 //
 // BeaEngine disassembler 
@@ -61,19 +56,13 @@ const COLORREF green = RGB( 0, 200, 0 );
 const COLORREF red = RGB( 255, 0, 0 );
 const COLORREF lightred = RGB( 255, 100, 100 );
 const COLORREF blue = RGB( 0, 0, 255 );
-const COLORREF darkblue = RGB( 0, 0, 100 );
+const COLORREF darkblue = RGB( 0, 0, 150 );
 const COLORREF yellow = RGB( 255, 255, 0 );
+const COLORREF darkyellow = RGB( 100, 100, 0 );
 const COLORREF orange = RGB( 255, 175, 65 );
 const COLORREF magenta = RGB( 255, 0, 255 );
 const COLORREF cyan = RGB( 0, 255, 255 );
 const COLORREF purple = RGB( 128, 0, 255 );
-
-// Scintilla Colors structure
-struct SScintillaColors
-{
-	int			iItem;
-	COLORREF	rgb;
-};
 
 //
 // TinyXml parser
@@ -105,7 +94,6 @@ extern DWORD  g_ProcessID;
 extern size_t g_AttachedProcessAddress;
 extern DWORD  g_AttachedProcessSize;
 extern CString g_ProcessName;
-extern Symbols* g_SymLoader;
 
 extern std::vector<struct MemMapInfo> g_MemMap;
 extern std::vector<struct MemMapInfo> g_MemMapCode;
@@ -132,9 +120,11 @@ extern COLORREF g_crChar;
 extern COLORREF g_crCustom;
 extern COLORREF g_crHex;
 
-#define FONT_DEFAULT_WIDTH 8
+#define FONT_DEFAULT_WIDTH	8
 #define FONT_DEFAULT_HEIGHT 16
+#define FONT_DEFAULT_SIZE	10
 
+extern CString g_ViewFontName;
 extern CFont g_ViewFont;
 extern int g_FontWidth;
 extern int g_FontHeight;
@@ -143,6 +133,7 @@ extern bool g_bAddress;
 extern bool g_bOffset;
 extern bool g_bText;
 extern bool g_bRTTI;
+extern bool g_bRandomName;
 extern bool g_bResizingFont;
 extern bool g_bSymbolResolution;
 extern bool g_bLoadModuleSymbol;
@@ -298,7 +289,7 @@ do { \
 	if (fmt) { \
 		static TCHAR s_logbuf[1024]; \
 		_sntprintf(s_logbuf, 1024, fmt, ##__VA_ARGS__); \
-		g_ReClassApp.Console->PrintText(s_logbuf); \
+		g_ReClassApp.m_pConsole->PrintText(s_logbuf); \
 	} \
 } while (0);\
 }

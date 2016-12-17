@@ -18,6 +18,12 @@ CNodeBase::CNodeBase( ) :
 	m_strName.Format( _T( "N%0.8X" ), g_NodeCreateIndex++ );
 }
 
+int CNodeBase::FindNode( CNodeBase * pNode )
+{ 
+	auto found = std::find( Nodes.begin( ), Nodes.end( ), pNode );
+	return (found != Nodes.end( )) ? (int)(found - Nodes.begin( )) : -1;
+}
+
 // Incorrect view.address
 void CNodeBase::AddHotSpot( ViewInfo& View, CRect& Spot, CString Text, int ID, int Type )
 {
@@ -35,12 +41,12 @@ void CNodeBase::AddHotSpot( ViewInfo& View, CRect& Spot, CString Text, int ID, i
 	View.HotSpots->push_back( spot );
 }
 
-int CNodeBase::AddText( ViewInfo& View, int x, int y, DWORD color, int HitID, const wchar_t *fmt, ... )
+int CNodeBase::AddText( ViewInfo& View, int x, int y, DWORD color, int HitID, const wchar_t* fmt, ... )
 {
 	if (fmt == NULL)
 		return x;
 
-	wchar_t wcsbuf[1024];
+	wchar_t wcsbuf[1024] = { 0 };
 
 	va_list va_alist;
 	va_start( va_alist, fmt );
@@ -61,7 +67,9 @@ int CNodeBase::AddText( ViewInfo& View, int x, int y, DWORD color, int HitID, co
 
 			AddHotSpot( View, pos, wcsbuf, HitID, HS_EDIT );
 		}
+
 		pos.SetRect( x, y, 0, 0 );
+
 		View.dc->SetTextColor( color );
 		View.dc->SetBkMode( TRANSPARENT );
 		View.dc->DrawText( wcsbuf, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX );
@@ -75,17 +83,16 @@ int CNodeBase::AddText( ViewInfo& View, int x, int y, DWORD color, int HitID, co
 	char buffer[1024] = { 0 };
 	TCHAR finalBuffer[1024] = { 0 };
 
-	va_list va_alist;
-	size_t converted;
-
 	if (fmt == NULL)
 		return x;
 
+	va_list va_alist;
 	va_start( va_alist, fmt );
 	_vsnprintf_s( buffer, 1024, fmt, va_alist );
 	va_end( va_alist );
 
 	#ifdef UNICODE
+	size_t converted = 0; 
 	mbstowcs_s( &converted, finalBuffer, buffer, 1024 );
 	#else
 	memcpy( &finalBuffer, buffer, 1024 );
@@ -107,6 +114,7 @@ int CNodeBase::AddText( ViewInfo& View, int x, int y, DWORD color, int HitID, co
 		}
 
 		pos.SetRect( x, y, 0, 0 );
+
 		View.dc->SetTextColor( color );
 		View.dc->SetBkMode( TRANSPARENT );
 		View.dc->DrawText( finalBuffer, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX );
@@ -120,16 +128,16 @@ int CNodeBase::AddAddressOffset( ViewInfo& View, int x, int y )
 	if (g_bOffset)
 	{
 		#ifdef _WIN64
-				// goto 722
-				// just the left side 0000
-				// TODO: fix the ghetto rig FontWidth * x
-				// where x = characters over 8
-				//x += FontWidth; // we need this either way
-				//int numdigits = Utils::NumDigits(View.Address);
-				//if (numdigits < 8 && numdigits > 4)
-				//	x -= ((8 - numdigits) * FontWidth);
-				//if (numdigits > 8)
-				//	x += ((numdigits - 8) * FontWidth);
+		// goto 722
+		// just the left side 0000
+		// TODO: fix the ghetto rig FontWidth * x
+		// where x = characters over 8
+		//x += FontWidth; // we need this either way
+		//int numdigits = Utils::NumDigits(View.Address);
+		//if (numdigits < 8 && numdigits > 4)
+		//	x -= ((8 - numdigits) * FontWidth);
+		//if (numdigits > 8)
+		//	x += ((numdigits - 8) * FontWidth);
 
 		x = AddText( View, x, y, g_crOffset, HS_NONE, _T( "%0.4X" ), m_Offset ) + g_FontWidth;
 		#else
@@ -445,7 +453,7 @@ int CNodeBase::AddComment( ViewInfo& View, int x, int y )
 						CString moduleName = GetModuleName( uintVal );
 						if (!moduleName.IsEmpty( ))
 						{
-							SymbolReader* symbols = g_SymLoader->GetSymbolsForModule( moduleName );
+							SymbolReader* symbols = g_ReClassApp.m_pSymbolLoader->GetSymbolsForModule( moduleName );
 							if (symbols)
 							{
 								CString nameOut;
@@ -530,7 +538,7 @@ int CNodeBase::AddComment( ViewInfo& View, int x, int y )
 						CString moduleName = GetModuleName( uintVal );
 						if (!moduleName.IsEmpty( ))
 						{
-							SymbolReader* symbols = g_SymLoader->GetSymbolsForModule( moduleName );
+							SymbolReader* symbols = g_ReClassApp.m_pSymbolLoader->GetSymbolsForModule( moduleName );
 							if (symbols)
 							{
 								CString SymbolOut;
@@ -580,9 +588,6 @@ void CNodeBase::StandardUpdate( HotSpot &Spot )
 
 int CNodeBase::DrawHidden( ViewInfo& View, int x, int y )
 {
-	if (m_bSelected)
-		View.dc->FillSolidRect( 0, y, View.client->right, 1, g_crSelect );
-	else
-		View.dc->FillSolidRect( 0, y, View.client->right, 1, g_crHidden );
+	View.dc->FillSolidRect( 0, y, View.client->right, 1, (m_bSelected) ? g_crSelect : g_crHidden );
 	return y + 1;
 }

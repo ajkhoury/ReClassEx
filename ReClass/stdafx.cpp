@@ -1,5 +1,7 @@
 #include "stdafx.h"
-//#include "CMainFrame.h"
+
+#include <memory>
+#include <Psapi.h>
 
 //Globals
 HANDLE g_hProcess = NULL;
@@ -7,7 +9,6 @@ DWORD g_ProcessID = NULL;
 size_t g_AttachedProcessAddress = NULL;
 DWORD g_AttachedProcessSize = NULL;
 CString g_ProcessName;
-Symbols* g_SymLoader = nullptr;
 
 std::vector<MemMapInfo> g_MemMap;
 std::vector<MemMapInfo> g_MemMapCode;
@@ -38,6 +39,7 @@ COLORREF g_crBits = RGB( 0, 0, 255 );
 COLORREF g_crCustom = RGB( 64, 128, 64 );
 COLORREF g_crHex = RGB( 0, 0, 0 );
 
+CString g_ViewFontName;
 CFont g_ViewFont;
 
 int g_FontWidth;
@@ -47,6 +49,7 @@ bool g_bAddress = true;
 bool g_bOffset = true;
 bool g_bText = true;
 bool g_bRTTI = true;
+bool g_bRandomName = true;
 bool g_bResizingFont = true;
 bool g_bSymbolResolution = true;
 bool g_bLoadModuleSymbol = false;

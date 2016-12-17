@@ -20,30 +20,32 @@ BEGIN_MESSAGE_MAP( CMainFrame, CMDIFrameWndEx )
 	ON_COMMAND_RANGE( ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook )
 	ON_UPDATE_COMMAND_UI_RANGE( ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook )
 	//ON_COMMAND(ID_BUTTON_SHOWCLASSES, &CMainFrame::OnButtonShowclasses)
-	ON_COMMAND( ID_BUTTON_CBACKGROUND, &CMainFrame::OnButtonCBackground )
-	ON_COMMAND( ID_BUTTON_CSELECT, &CMainFrame::OnButtonCSelect )
-	ON_COMMAND( ID_BUTTON_CHIDDEN, &CMainFrame::OnButtonCHidden )
-	ON_COMMAND( ID_BUTTON_COFFSET, &CMainFrame::OnButtonCOffset )
-	ON_COMMAND( ID_BUTTON_CADDRESS, &CMainFrame::OnButtonCAddress )
-	ON_COMMAND( ID_BUTTON_CHEX, &CMainFrame::OnButtonCHex )
-	ON_COMMAND( ID_BUTTON_CTYPE, &CMainFrame::OnButtonCType )
-	ON_COMMAND( ID_BUTTON_CNAME, &CMainFrame::OnButtonCName )
-	ON_COMMAND( ID_BUTTON_CVALUE, &CMainFrame::OnButtonCValue )
-	ON_COMMAND( ID_BUTTON_CINDEX, &CMainFrame::OnButtonCIndex )
-	ON_COMMAND( ID_BUTTON_CCOMMENT, &CMainFrame::OnButtonCComment )
-	ON_COMMAND( ID_BUTTON_CTEXT, &CMainFrame::OnButtonCText )
-	ON_COMMAND( ID_BUTTON_CVTABLE, &CMainFrame::OnButtonCVtable )
-	ON_COMMAND( ID_BUTTON_CFUNCTION, &CMainFrame::OnButtonCFunction )
-	ON_COMMAND( ID_BUTTON_CCUSTOM, &CMainFrame::OnButtonCCustom )
-	ON_COMMAND( ID_CHECK_CBADDRESS, &CMainFrame::OnCheckCbAddress )
-	ON_UPDATE_COMMAND_UI( ID_CHECK_CBADDRESS, &CMainFrame::OnUpdateCheckCbAddress )
-	ON_COMMAND( ID_CHECK_CBOFFSET, &CMainFrame::OnCheckCbOffset )
-	ON_UPDATE_COMMAND_UI( ID_CHECK_CBOFFSET, &CMainFrame::OnUpdateCheckCbOffset )
+	ON_COMMAND( ID_BUTTON_CLR_BACKGROUND, &CMainFrame::OnButtonClrBackground )
+	ON_COMMAND( ID_BUTTON_CLR_SELECT, &CMainFrame::OnButtonClrSelect )
+	ON_COMMAND( ID_BUTTON_CLR_HIDDEN, &CMainFrame::OnButtonClrHidden )
+	ON_COMMAND( ID_BUTTON_CLR_OFFSET, &CMainFrame::OnButtonClrOffset )
+	ON_COMMAND( ID_BUTTON_CLR_ADDRESS, &CMainFrame::OnButtonClrAddress )
+	ON_COMMAND( ID_BUTTON_CLR_HEX, &CMainFrame::OnButtonClrHex )
+	ON_COMMAND( ID_BUTTON_CLR_TYPE, &CMainFrame::OnButtonClrType )
+	ON_COMMAND( ID_BUTTON_CLR_NAME, &CMainFrame::OnButtonClrName )
+	ON_COMMAND( ID_BUTTON_CLR_VALUE, &CMainFrame::OnButtonClrValue )
+	ON_COMMAND( ID_BUTTON_CLR_INDEX, &CMainFrame::OnButtonClrIndex )
+	ON_COMMAND( ID_BUTTON_CLR_COMMENT, &CMainFrame::OnButtonClrComment )
+	ON_COMMAND( ID_BUTTON_CLR_TEXT, &CMainFrame::OnButtonClrText )
+	ON_COMMAND( ID_BUTTON_CLR_VTABLE, &CMainFrame::OnButtonClrVtable )
+	ON_COMMAND( ID_BUTTON_CLR_FUNCTION, &CMainFrame::OnButtonClrFunction )
+	ON_COMMAND( ID_BUTTON_CLR_CUSTOM, &CMainFrame::OnButtonClrCustom )
+	ON_COMMAND( ID_CHECK_ADDRESS, &CMainFrame::OnCheckAddress )
+	ON_UPDATE_COMMAND_UI( ID_CHECK_ADDRESS, &CMainFrame::OnUpdateCheckAddress )
+	ON_COMMAND( ID_CHECK_OFFSET, &CMainFrame::OnCheckOffset )
+	ON_UPDATE_COMMAND_UI( ID_CHECK_OFFSET, &CMainFrame::OnUpdateCheckOffset )
 	ON_COMMAND( ID_BUTTON_TYPEDEF, &CMainFrame::OnButtonTypedef )
-	ON_COMMAND( ID_CHECK_CBTEXT, &CMainFrame::OnCheckCbText )
-	ON_UPDATE_COMMAND_UI( ID_CHECK_CBTEXT, &CMainFrame::OnUpdateCheckCbText )
-	ON_COMMAND( ID_CHECK_CBRTTI, &CMainFrame::OnCheckCbRtti )
-	ON_UPDATE_COMMAND_UI( ID_CHECK_CBRTTI, &CMainFrame::OnUpdateCheckCbRtti )
+	ON_COMMAND( ID_CHECK_TEXT, &CMainFrame::OnCheckText )
+	ON_UPDATE_COMMAND_UI( ID_CHECK_TEXT, &CMainFrame::OnUpdateCheckText )
+	ON_COMMAND( ID_CHECK_RTTI, &CMainFrame::OnCheckRtti )
+	ON_UPDATE_COMMAND_UI( ID_CHECK_RTTI, &CMainFrame::OnUpdateCheckRtti )
+	ON_COMMAND( ID_CHECK_RANDOM_NAME, &CMainFrame::OnCheckRandomWindowName )
+	ON_UPDATE_COMMAND_UI( ID_CHECK_RANDOM_NAME, &CMainFrame::OnUpdateCheckRandomWindowName )
 	//ON_COMMAND(ID_BUTTON_SELECT, &CMainFrame::OnButtonSelect)
 	ON_COMMAND( ID_BUTTON_SELECTPROCESS, &CMainFrame::OnButtonSelectProcess )
 	ON_COMMAND( ID_BUTTON_EDITCLASS, &CMainFrame::OnButtonEditClass )
@@ -86,12 +88,12 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	if (CMDIFrameWndEx::OnCreate( lpCreateStruct ) == -1)
 		return -1;
 
-	// set the visual manager and style based on persisted value
+	// Set the visual manager and style based on persisted value
 	OnApplicationLook( g_ReClassApp.m_nAppLook );
 
 	// Create tabs
 	CMDITabInfo mdiTabParams;
-	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D_VS2005;
+	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D_ROUNDED;
 	mdiTabParams.m_tabLocation = CMFCTabCtrl::LOCATION_TOP;
 	mdiTabParams.m_nTabBorderSize = 4;
 	mdiTabParams.m_bActiveTabCloseButton = TRUE;
@@ -101,8 +103,8 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	mdiTabParams.m_bFlatFrame = FALSE;
 	EnableMDITabbedGroups( TRUE, mdiTabParams );
 
-	m_wndRibbonBar.Create( this );
-	m_wndRibbonBar.LoadFromResource( IDR_RIBBON );
+	m_RibbonBar.Create( this );
+	m_RibbonBar.LoadFromResource( IDR_RIBBON );
 
 	// enable Visual Studio 2005 style docking window behavior
 	CDockingManager::SetDockingMode( DT_STANDARD );
@@ -116,97 +118,106 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 		return -1;
 	}
 
-	//SetTitle("Reclass 2015");
+	if (g_bRandomName)
+	{
+		TCHAR tcsRandom[16] = { 0 };
+		Utils::GenerateRandomString( tcsRandom, 16 );
+		SetTitle( tcsRandom );
+	}
+	else
+	{
+		SetTitle( _T( "ReClass 2016" ) );
+	}
 
 	// Enable enhanced windows management dialog
 	EnableWindowsDialog( ID_WINDOW_MANAGER, ID_WINDOW_MANAGER, TRUE );
 
-	// Switch the order of document name and application name on the window title bar. This
-	// improves the usability of the taskbar because the document name is visible with the thumbnail.
+	// Switch the order of document name and application name on the window title bar. 
+	// This improves the usability of the taskbar because the document name is visible with the thumbnail.
 	ModifyStyle( 0, FWS_PREFIXTITLE );
 
 	//Update Colors
 	CMFCRibbonColorButton* pColor;
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CBACKGROUND );	pColor->SetColor( g_crBackground );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CSELECT );		pColor->SetColor( g_crSelect );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CHIDDEN );		pColor->SetColor( g_crHidden );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_COFFSET );		pColor->SetColor( g_crOffset );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CADDRESS );		pColor->SetColor( g_crAddress );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CTYPE );			pColor->SetColor( g_crType );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CNAME );			pColor->SetColor( g_crName );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CINDEX );			pColor->SetColor( g_crIndex );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CVALUE );			pColor->SetColor( g_crValue );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CCOMMENT );		pColor->SetColor( g_crComment );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CVTABLE );		pColor->SetColor( g_crVTable );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CFUNCTION );		pColor->SetColor( g_crFunction );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CTEXT );			pColor->SetColor( g_crChar );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CCUSTOM );		pColor->SetColor( g_crCustom );
-	pColor = (CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CHEX );			pColor->SetColor( g_crHex );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_BACKGROUND );	pColor->SetColor( g_crBackground );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_SELECT );		pColor->SetColor( g_crSelect );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_HIDDEN );		pColor->SetColor( g_crHidden );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_OFFSET );		pColor->SetColor( g_crOffset );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_ADDRESS );		pColor->SetColor( g_crAddress );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_TYPE );			pColor->SetColor( g_crType );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_NAME );			pColor->SetColor( g_crName );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_INDEX );		pColor->SetColor( g_crIndex );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_VALUE );		pColor->SetColor( g_crValue );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_COMMENT );		pColor->SetColor( g_crComment );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_VTABLE );		pColor->SetColor( g_crVTable );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_FUNCTION );		pColor->SetColor( g_crFunction );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_TEXT );			pColor->SetColor( g_crChar );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_CUSTOM );		pColor->SetColor( g_crCustom );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_HEX );			pColor->SetColor( g_crHex );
 
 	// update after 5 seconds
 	SetTimer( TIMER_MEMORYMAP_UPDATE, 5000, NULL );
 
 	return 0;
 }
-void CMainFrame::OnButtonCBackground( )
+void CMainFrame::OnButtonClrBackground( )
 {
-	g_crBackground = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CBACKGROUND ))->GetColor( );
+	g_crBackground = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_BACKGROUND ))->GetColor( );
 }
-void CMainFrame::OnButtonCSelect( )
+void CMainFrame::OnButtonClrSelect( )
 {
-	g_crSelect = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CSELECT ))->GetColor( );
+	g_crSelect = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_SELECT ))->GetColor( );
 }
-void CMainFrame::OnButtonCHidden( )
+void CMainFrame::OnButtonClrHidden( )
 {
-	g_crHidden = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CHIDDEN ))->GetColor( );
+	g_crHidden = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_HIDDEN ))->GetColor( );
 }
-void CMainFrame::OnButtonCOffset( )
+void CMainFrame::OnButtonClrOffset( )
 {
-	g_crOffset = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_COFFSET ))->GetColor( );
+	g_crOffset = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_OFFSET ))->GetColor( );
 }
-void CMainFrame::OnButtonCAddress( )
+void CMainFrame::OnButtonClrAddress( )
 {
-	g_crAddress = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CADDRESS ))->GetColor( );
+	g_crAddress = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_ADDRESS ))->GetColor( );
 }
-void CMainFrame::OnButtonCHex( )
+void CMainFrame::OnButtonClrHex( )
 {
-	g_crHex = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CHEX ))->GetColor( );
+	g_crHex = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_HEX ))->GetColor( );
 }
-void CMainFrame::OnButtonCType( )
+void CMainFrame::OnButtonClrType( )
 {
-	g_crType = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CTYPE ))->GetColor( );
+	g_crType = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_TYPE ))->GetColor( );
 }
-void CMainFrame::OnButtonCName( )
+void CMainFrame::OnButtonClrName( )
 {
-	g_crName = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CNAME ))->GetColor( );
+	g_crName = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_NAME ))->GetColor( );
 }
-void CMainFrame::OnButtonCValue( )
+void CMainFrame::OnButtonClrValue( )
 {
-	g_crValue = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CVALUE ))->GetColor( );
+	g_crValue = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_VALUE ))->GetColor( );
 }
-void CMainFrame::OnButtonCIndex( )
+void CMainFrame::OnButtonClrIndex( )
 {
-	g_crIndex = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CINDEX ))->GetColor( );
+	g_crIndex = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_INDEX ))->GetColor( );
 }
-void CMainFrame::OnButtonCComment( )
+void CMainFrame::OnButtonClrComment( )
 {
-	g_crComment = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CCOMMENT ))->GetColor( );
+	g_crComment = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_COMMENT ))->GetColor( );
 }
-void CMainFrame::OnButtonCText( )
+void CMainFrame::OnButtonClrText( )
 {
-	g_crChar = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CTEXT ))->GetColor( );
+	g_crChar = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_TEXT ))->GetColor( );
 }
-void CMainFrame::OnButtonCVtable( )
+void CMainFrame::OnButtonClrVtable( )
 {
-	g_crVTable = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CVTABLE ))->GetColor( );
+	g_crVTable = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_VTABLE ))->GetColor( );
 }
-void CMainFrame::OnButtonCFunction( )
+void CMainFrame::OnButtonClrFunction( )
 {
-	g_crFunction = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CFUNCTION ))->GetColor( );
+	g_crFunction = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_FUNCTION ))->GetColor( );
 }
-void CMainFrame::OnButtonCCustom( )
+void CMainFrame::OnButtonClrCustom( )
 {
-	g_crCustom = ((CMFCRibbonColorButton*)m_wndRibbonBar.FindByID( ID_BUTTON_CCUSTOM ))->GetColor( );
+	g_crCustom = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_CUSTOM ))->GetColor( );
 }
 
 BOOL CMainFrame::PreCreateWindow( CREATESTRUCT& cs )
@@ -256,47 +267,63 @@ void CMainFrame::OnApplicationLook( UINT id )
 
 	switch (g_ReClassApp.m_nAppLook)
 	{
+
 	case ID_VIEW_APPLOOK_WIN_2000:
+	{
 		CMFCVisualManager::SetDefaultManager( RUNTIME_CLASS( CMFCVisualManager ) );
-		m_wndRibbonBar.SetWindows7Look( FALSE );
-		break;
+		m_RibbonBar.SetWindows7Look( FALSE );
+	}
+	break;
 
 	case ID_VIEW_APPLOOK_OFF_XP:
+	{
 		CMFCVisualManager::SetDefaultManager( RUNTIME_CLASS( CMFCVisualManagerOfficeXP ) );
-		m_wndRibbonBar.SetWindows7Look( FALSE );
-		break;
+		m_RibbonBar.SetWindows7Look( FALSE );
+	}
+	break;
 
 	case ID_VIEW_APPLOOK_WIN_XP:
+	{
 		CMFCVisualManagerWindows::m_b3DTabsXPTheme = TRUE;
 		CMFCVisualManager::SetDefaultManager( RUNTIME_CLASS( CMFCVisualManagerWindows ) );
-		m_wndRibbonBar.SetWindows7Look( FALSE );
-		break;
+		m_RibbonBar.SetWindows7Look( FALSE );
+	}
+	break;
 
 	case ID_VIEW_APPLOOK_OFF_2003:
+	{
 		CMFCVisualManager::SetDefaultManager( RUNTIME_CLASS( CMFCVisualManagerOffice2003 ) );
 		CDockingManager::SetDockingMode( DT_SMART );
-		m_wndRibbonBar.SetWindows7Look( FALSE );
-		break;
+		m_RibbonBar.SetWindows7Look( FALSE );
+	}
+	break;
 
 	case ID_VIEW_APPLOOK_VS_2005:
+	{
 		CMFCVisualManager::SetDefaultManager( RUNTIME_CLASS( CMFCVisualManagerVS2005 ) );
 		CDockingManager::SetDockingMode( DT_SMART );
-		m_wndRibbonBar.SetWindows7Look( FALSE );
-		break;
+		m_RibbonBar.SetWindows7Look( FALSE );
+	}
+	break;
 
 	case ID_VIEW_APPLOOK_VS_2008:
+	{
 		CMFCVisualManager::SetDefaultManager( RUNTIME_CLASS( CMFCVisualManagerVS2008 ) );
 		CDockingManager::SetDockingMode( DT_SMART );
-		m_wndRibbonBar.SetWindows7Look( FALSE );
-		break;
+		m_RibbonBar.SetWindows7Look( FALSE );
+	}
+	break;
 
 	case ID_VIEW_APPLOOK_WINDOWS_7:
+	{
 		CMFCVisualManager::SetDefaultManager( RUNTIME_CLASS( CMFCVisualManagerWindows7 ) );
 		CDockingManager::SetDockingMode( DT_SMART );
-		m_wndRibbonBar.SetWindows7Look( TRUE );
-		break;
+		m_RibbonBar.SetWindows7Look( TRUE );
+	}
+	break;
 
 	default:
+	{
 		switch (g_ReClassApp.m_nAppLook)
 		{
 		case ID_VIEW_APPLOOK_OFF_2007_BLUE:
@@ -318,8 +345,10 @@ void CMainFrame::OnApplicationLook( UINT id )
 
 		CMFCVisualManager::SetDefaultManager( RUNTIME_CLASS( CMFCVisualManagerOffice2007 ) );
 		CDockingManager::SetDockingMode( DT_SMART );
-		m_wndRibbonBar.SetWindows7Look( FALSE );
-		break;
+		m_RibbonBar.SetWindows7Look( FALSE );
+	}
+	break;
+
 	}
 
 	RedrawWindow( NULL, NULL, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE );
@@ -357,29 +386,38 @@ BOOL CMainFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 			return TRUE;
 		}
 	}
+
 	if (nCode == CN_COMMAND)
 	{
 		if (nID >= WM_CLASSMENU && nID < (WM_CLASSMENU + WM_MAXITEMS))
 		{
 			UINT idx = nID - WM_CLASSMENU;
-
-			CChildFrame* pChild = static_cast<CChildFrame*>(CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ));
-			CNodeClass* pClass = g_ReClassApp.Classes[idx];
-			pClass->pChildWindow = pChild;
+			
+			CChildFrame* pChild = STATIC_DOWNCAST( CChildFrame, CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
+			CNodeClass* pClass = g_ReClassApp.m_Classes[idx];
 
 			pChild->SetTitle( pClass->GetName( ).GetString( ) );
 			pChild->SetWindowText( pClass->GetName( ).GetString( ) );
+			pChild->SetClass( pClass );
+
+			pClass->SetChildFrame( pChild );
+
 			UpdateFrameTitleForDocument( pClass->GetName( ).GetString( ) );
-			pChild->m_wndView.m_pClass = pClass;
 
 			return TRUE;
 		}
+
 		if (nID >= WM_DELETECLASSMENU && nID < (WM_DELETECLASSMENU + WM_MAXITEMS))
 		{
 			UINT idx = nID - WM_DELETECLASSMENU;
-			if (g_ReClassApp.Classes[idx]->pChildWindow)
-				g_ReClassApp.Classes[idx]->pChildWindow->SendMessage( WM_CLOSE, 0, 0 );
-			g_ReClassApp.DeleteClass( g_ReClassApp.Classes[idx] );
+
+			if (g_ReClassApp.m_Classes[idx]->pChildWindow != NULL)
+			{
+				g_ReClassApp.m_Classes[idx]->pChildWindow->SendMessage( WM_CLOSE, 0, 0 );
+			}
+
+			g_ReClassApp.DeleteClass( g_ReClassApp.m_Classes[idx] );
+
 			return TRUE;
 		}
 	}
@@ -387,39 +425,39 @@ BOOL CMainFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 	return CMDIFrameWndEx::OnCmdMsg( nID, nCode, pExtra, pHandlerInfo );
 }
 
-void CMainFrame::OnCheckCbAddress( )
+void CMainFrame::OnCheckAddress( )
 {
 	g_bAddress = !g_bAddress;
 }
-void CMainFrame::OnUpdateCheckCbAddress( CCmdUI *pCmdUI )
+void CMainFrame::OnUpdateCheckAddress( CCmdUI *pCmdUI )
 {
 	pCmdUI->SetCheck( g_bAddress );
 }
 
-void CMainFrame::OnCheckCbOffset( )
+void CMainFrame::OnCheckOffset( )
 {
 	g_bOffset = !g_bOffset;
 }
-void CMainFrame::OnUpdateCheckCbOffset( CCmdUI *pCmdUI )
+void CMainFrame::OnUpdateCheckOffset( CCmdUI *pCmdUI )
 {
 	pCmdUI->SetCheck( g_bOffset );
 }
 
-void CMainFrame::OnCheckCbText( )
+void CMainFrame::OnCheckText( )
 {
 	g_bText = !g_bText;
 }
-void CMainFrame::OnUpdateCheckCbText( CCmdUI *pCmdUI )
+void CMainFrame::OnUpdateCheckText( CCmdUI *pCmdUI )
 {
 	pCmdUI->SetCheck( g_bText );
 }
 
-void CMainFrame::OnCheckCbRtti( )
+void CMainFrame::OnCheckRtti( )
 {
 	g_bRTTI = !g_bRTTI;
 }
 
-void CMainFrame::OnUpdateCheckCbRtti( CCmdUI *pCmdUI )
+void CMainFrame::OnUpdateCheckRtti( CCmdUI *pCmdUI )
 {
 	if (!g_bPointers)
 	{
@@ -430,6 +468,30 @@ void CMainFrame::OnUpdateCheckCbRtti( CCmdUI *pCmdUI )
 		pCmdUI->Enable( TRUE );
 		pCmdUI->SetCheck( g_bRTTI );
 	}
+}
+
+void CMainFrame::OnCheckRandomWindowName( )
+{
+	g_bRandomName = !g_bRandomName;
+
+	if (g_bRandomName)
+	{
+		TCHAR tcsRandom[16] = { 0 };
+		Utils::GenerateRandomString( tcsRandom, 16 );
+		SetTitle( tcsRandom );
+	}
+	else
+	{
+		SetTitle( _T( "ReClass 2016" ) );
+	}
+
+	// Invalidate window to force a change to the window text
+	Invalidate( );
+}
+
+void CMainFrame::OnUpdateCheckRandomWindowName( CCmdUI * pCmdUI )
+{
+	pCmdUI->SetCheck( g_bRandomName );
 }
 
 void CMainFrame::OnButtonTypedef( )
@@ -453,20 +515,18 @@ void CMainFrame::OnButtonEditClass( )
 	}
 	else
 	{
-		// TODO: instead of menu popup a window
-		CMFCRibbonBaseElement* pButton = m_wndRibbonBar.FindByID( ID_BUTTON_EDITCLASS );
-
+		CMFCRibbonBaseElement* pButton = m_RibbonBar.FindByID( ID_BUTTON_EDITCLASS );
 		CRect pos = pButton->GetRect( );
 		ClientToScreen( &pos );
 
 		CMenu menu;
 		menu.CreatePopupMenu( );
 
-		for (UINT m = 0; m < g_ReClassApp.Classes.size( ); m++)
+		for (UINT i = 0; i < g_ReClassApp.m_Classes.size( ); i++)
 		{
 			CString MenuItem;
-			MenuItem.Format( _T( "%i - %s" ), m, g_ReClassApp.Classes[m]->GetName( ).GetString( ) );
-			menu.AppendMenu( MF_STRING | MF_ENABLED, WM_CLASSMENU + m, MenuItem );
+			MenuItem.Format( _T( "%i - %s" ), i, g_ReClassApp.m_Classes[i]->GetName( ).GetString( ) );
+			menu.AppendMenu( MF_STRING | MF_ENABLED, WM_CLASSMENU + i, MenuItem );
 		}
 
 		menu.TrackPopupMenu( TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this );
@@ -475,28 +535,30 @@ void CMainFrame::OnButtonEditClass( )
 
 void CMainFrame::OnUpdateButtonEditClass( CCmdUI *pCmdUI )
 {
-	pCmdUI->Enable( (g_ReClassApp.Classes.size( ) > 0) );
+	pCmdUI->Enable( (g_ReClassApp.m_Classes.size( ) > 0) );
 }
 
 void CMainFrame::OnButtonDeleteClass( )
 {
-	CMFCRibbonBaseElement* pButton = m_wndRibbonBar.FindByID( ID_BUTTON_DELETECLASS );
-
+	CMenu menu;
+	CMFCRibbonBaseElement* pButton = m_RibbonBar.FindByID( ID_BUTTON_DELETECLASS );
 	CRect pos = pButton->GetRect( );
+	
 	ClientToScreen( &pos );
 
-	CMenu menu;
 	menu.CreatePopupMenu( );
-	for (UINT m = 0; m < g_ReClassApp.Classes.size( ); m++)
+
+	for (UINT i = 0; i < g_ReClassApp.m_Classes.size( ); i++)
 	{
-		menu.AppendMenu( MF_STRING | MF_ENABLED, WM_DELETECLASSMENU + m, g_ReClassApp.Classes[m]->GetName( ) );
+		menu.AppendMenu( MF_STRING | MF_ENABLED, WM_DELETECLASSMENU + i, g_ReClassApp.m_Classes[i]->GetName( ) );
 	}
+
 	menu.TrackPopupMenu( TPM_LEFTALIGN | TPM_HORNEGANIMATION, pos.left, pos.bottom, this );
 }
 
 void CMainFrame::OnUpdateButtonDeleteClass( CCmdUI *pCmdUI )
 {
-	pCmdUI->Enable( (g_ReClassApp.Classes.size( ) > 0) );
+	pCmdUI->Enable( (g_ReClassApp.m_Classes.size( ) > 0) ? TRUE : FALSE );
 }
 
 void CMainFrame::OnTimer( UINT_PTR nIDEvent )
@@ -510,11 +572,7 @@ void CMainFrame::OnTimer( UINT_PTR nIDEvent )
 void CMainFrame::OnCheckTopmost( )
 {
 	g_bTop = !g_bTop;
-
-	if (g_bTop)
-		SetWindowPos( &wndTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE );
-	else
-		SetWindowPos( &wndNoTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE );
+	SetWindowPos( g_bTop ? &wndTopMost : &wndNoTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE );
 }
 
 void CMainFrame::OnUpdateCheckTopmost( CCmdUI *pCmdUI )
@@ -555,27 +613,43 @@ void CMainFrame::OnUpdateCheckClipboardCopy( CCmdUI *pCmdUI )
 // Multi monitor support. Thanks timboy67678
 void CMainFrame::OnButtonLeft( )
 {
-	RECT rc; HMONITOR hMon;
+	RECT rc;
+	LONG nWidth, nHeight;
+	HMONITOR hMon;
 	MONITORINFO mi;
+
 	ZeroMemory( &mi, sizeof( MONITORINFO ) );
 	mi.cbSize = sizeof( MONITORINFO );
+
 	::GetWindowRect( GetSafeHwnd( ), &rc );
+
 	hMon = ::MonitorFromRect( &rc, MONITOR_DEFAULTTONEAREST );
 	::GetMonitorInfo( hMon, &mi );
-	LONG nWidth = mi.rcWork.right - mi.rcWork.left, nHeight = mi.rcWork.bottom - mi.rcWork.top;
+
+	nWidth = mi.rcWork.right - mi.rcWork.left;
+	nHeight = mi.rcWork.bottom - mi.rcWork.top;
+
 	SetWindowPos( g_bTop ? &wndTopMost : &wndNoTopMost, mi.rcMonitor.left, mi.rcMonitor.top, nWidth / 2, nHeight, SWP_NOZORDER );
 }
 
 void CMainFrame::OnButtonRight( )
 {
-	RECT rc; HMONITOR hMon;
+	RECT rc;
+	LONG nWidth, nHeight;
+	HMONITOR hMon;
 	MONITORINFO mi;
+
 	ZeroMemory( &mi, sizeof( MONITORINFO ) );
 	mi.cbSize = sizeof( MONITORINFO );
+
 	::GetWindowRect( GetSafeHwnd( ), &rc );
+
 	hMon = ::MonitorFromRect( &rc, MONITOR_DEFAULTTONEAREST );
 	::GetMonitorInfo( hMon, &mi );
-	LONG nWidth = mi.rcWork.right - mi.rcWork.left, nHeight = mi.rcWork.bottom - mi.rcWork.top;
+
+	nWidth = mi.rcWork.right - mi.rcWork.left;
+	nHeight = mi.rcWork.bottom - mi.rcWork.top;
+
 	SetWindowPos( g_bTop ? &wndTopMost : &wndNoTopMost, mi.rcMonitor.left + (nWidth / 2), 0, nWidth / 2, nHeight, SWP_NOZORDER );
 }
 

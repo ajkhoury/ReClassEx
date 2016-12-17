@@ -2,6 +2,7 @@
 
 #include "PluginAPI.h"
 
+
 tReadMemoryOperation g_PluginOverrideReadMemory = nullptr;
 tWriteMemoryOperation g_PluginOverrideWriteMemory = nullptr;
 tOpenProcessOperation g_PluginOverrideOpenProcess = nullptr;
@@ -13,7 +14,11 @@ VOID LoadPlugins( )
 {
 	WIN32_FIND_DATA FileData = { 0 };
 	#ifdef _WIN64
+	#ifndef _DEBUG
 	HANDLE hFileTree = FindFirstFile( _T( "plugins\\*.rc-plugin64" ), &FileData );
+	#else
+	HANDLE hFileTree = FindFirstFile( _T( "plugins\\*.rc-plugin64d" ), &FileData );
+	#endif
 	#else
 	HANDLE hFileTree = FindFirstFile( _T( "plugins\\*.rc-plugin" ), &FileData );
 	#endif
@@ -208,20 +213,20 @@ BOOL PLUGIN_CC ReClassIsOpenThreadOverriden( )
 	return (g_PluginOverrideOpenThread != nullptr) ? TRUE : FALSE;
 }
 
-VOID PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... )
+VOID PLUGIN_CC ReClassPrintConsole( const WCHAR* format, ... )
 {
-	wchar_t buffer[6048];
-	ZeroMemory( &buffer, sizeof( buffer ) );
-
+	wchar_t buffer[2048];
+	ZeroMemory( buffer, 2048 );
+	
 	va_list va;
 	va_start( va, format );
-	vswprintf_s( buffer, format, va );
+	_vsnwprintf_s( buffer, 2048, format, va );
 	va_end( va );
 
 	#if defined(_UNICODE)
-	g_ReClassApp.Console->PrintText( buffer );
+	g_ReClassApp.m_pConsole->PrintText( format );
 	#else
-	g_ReClassApp.Console->PrintText( CW2A( buffer ) );
+	g_ReClassApp.m_pConsole->PrintText( CW2A( buffer ) );
 	#endif
 }
 

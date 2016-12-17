@@ -40,9 +40,9 @@ void CDialogClasses::BuildList( )
 
 	m_ClassViewList.SetImageList( &m_ImageList, LVSIL_SMALL );
 
-	for (UINT i = 0; i < g_ReClassApp.Classes.size( ); i++)
+	for (UINT i = 0; i < g_ReClassApp.m_Classes.size( ); i++)
 	{
-		CString name = g_ReClassApp.Classes[i]->GetName( );
+		CString name = g_ReClassApp.m_Classes[i]->GetName( );
 		if (m_Filter.GetLength( ) != 0 && name.MakeUpper( ).Find( m_Filter.MakeUpper( ) ) == -1)
 			continue;
 		AddData( i, 0, name );
@@ -70,9 +70,9 @@ BOOL CDialogClasses::OnInitDialog( )
 
 __inline int FindClassByName( const TCHAR* szName )
 {
-	for (int id = 0; id < g_ReClassApp.Classes.size( ); id++)
+	for (int id = 0; id < g_ReClassApp.m_Classes.size( ); id++)
 	{
-		CNodeClass* pNodeClass = g_ReClassApp.Classes[id];
+		CNodeClass* pNodeClass = g_ReClassApp.m_Classes[id];
 		if (!pNodeClass)
 			continue;
 		if (_tcsicmp( pNodeClass->GetName( ), szName ) == 0)
@@ -97,8 +97,8 @@ void CDialogClasses::OnOK( )
 		nItem = FindClassByName( szBuffer.GetBuffer( ) );
 
 		// Thanks timboy67678
-		CMainFrame*  pFrame = static_cast<CMainFrame*>(AfxGetApp( )->m_pMainWnd);
-		CChildFrame* pChild = g_ReClassApp.Classes[nItem]->pChildWindow;
+		CMainFrame*  pFrame = STATIC_DOWNCAST( CMainFrame, AfxGetApp( )->m_pMainWnd );
+		CChildFrame* pChild = g_ReClassApp.m_Classes[nItem]->pChildWindow;
 
 		// Check if its a window first to dodge the assertion in IsWindowVisible
 		if (pChild && IsWindow( pChild->GetSafeHwnd( ) ) && pChild->IsWindowVisible( ))
@@ -107,12 +107,14 @@ void CDialogClasses::OnOK( )
 		}
 		else
 		{
-			CChildFrame* pNewChild = (CChildFrame*)pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel );
-			pNewChild->m_wndView.m_pClass = g_ReClassApp.Classes[nItem];
-			g_ReClassApp.Classes[nItem]->pChildWindow = pNewChild;
-			pNewChild->SetTitle( g_ReClassApp.Classes[nItem]->GetName( ) );
-			pNewChild->SetWindowText( g_ReClassApp.Classes[nItem]->GetName( ) );
-			pFrame->UpdateFrameTitleForDocument( g_ReClassApp.Classes[nItem]->GetName( ) );
+			CChildFrame* pNewChild = STATIC_DOWNCAST( CChildFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
+			pNewChild->SetClass( g_ReClassApp.m_Classes[nItem] );
+			pNewChild->SetTitle( g_ReClassApp.m_Classes[nItem]->GetName( ) );
+			pNewChild->SetWindowText( g_ReClassApp.m_Classes[nItem]->GetName( ) );
+
+			g_ReClassApp.m_Classes[nItem]->SetChildFrame( pNewChild );
+
+			pFrame->UpdateFrameTitleForDocument( g_ReClassApp.m_Classes[nItem]->GetName( ) );
 		}
 	}
 

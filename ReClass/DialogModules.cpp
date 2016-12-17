@@ -8,6 +8,8 @@
 
 #include "afxdialogex.h"
 
+#include <algorithm>
+
 IMPLEMENT_DYNAMIC( CDialogModules, CDialogEx )
 
 CDialogModules::CDialogModules( CWnd* pParent )
@@ -136,11 +138,9 @@ inline int CDialogModules::FindModuleByName( const TCHAR* szName )
 
 __inline CNodeClass* CDialogModules::GetClassByName( const TCHAR* szClassName )
 {
-	auto iter = std::find_if( g_ReClassApp.Classes.begin( ), g_ReClassApp.Classes.end( ), [szClassName] ( const CNodeClass* value ) -> bool { return (value->GetName( ).CompareNoCase( szClassName ) == 0); } );
-	if (iter != g_ReClassApp.Classes.end( ))
-		return *iter;
-	else
-		return nullptr;
+	auto iter = std::find_if( g_ReClassApp.m_Classes.begin( ), g_ReClassApp.m_Classes.end( ), 
+							  [szClassName] ( const CNodeClass* value ) -> bool { return (value->GetName( ).CompareNoCase( szClassName ) == 0); } );
+	return (iter != g_ReClassApp.m_Classes.end( )) ? *iter : NULL;
 }
 
 void CDialogModules::SetSelected( )
@@ -154,20 +154,17 @@ void CDialogModules::SetSelected( )
 		MemMapInfo mod = g_MemMapModules[nItem];
 
 		if (g_bSymbolResolution && m_SymbolLoad.GetCheck( ) == BST_CHECKED)
-			g_SymLoader->LoadSymbolsForModule( mod.Path, mod.Start, mod.Size );
+			g_ReClassApp.m_pSymbolLoader->LoadSymbolsForModule( mod.Path, mod.Start, mod.Size );
 
 		int extension_size = mod.Name.ReverseFind( '.' );
-		if (extension_size == -1)
-			extension_size = 0;
-		else extension_size = mod.Name.GetLength( ) - extension_size;
+		extension_size = (extension_size == -1) ? 0 : (mod.Name.GetLength( ) - extension_size);
 
 		CString ClassName = mod.Name.Left( mod.Name.GetLength( ) - extension_size ) + _T( "_base" );
 
 		CNodeClass* pNewClass = GetClassByName( ClassName );
 
-		if (pNewClass != nullptr)
+		if (pNewClass != NULL)
 		{
-
 			CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, AfxGetApp( )->m_pMainWnd );
 			CChildFrame* pChild = pNewClass->pChildWindow;
 
@@ -178,11 +175,13 @@ void CDialogModules::SetSelected( )
 			}
 			else
 			{
-				CChildFrame* pNewChild = static_cast<CChildFrame*>(pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ));
-				pNewChild->m_wndView.m_pClass = pNewClass;
-				pNewClass->pChildWindow = pNewChild;
+				CChildFrame* pNewChild = STATIC_DOWNCAST( CChildFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
+				pNewChild->SetClass( pNewClass );
 				pNewChild->SetTitle( pNewClass->GetName( ) );
 				pNewChild->SetWindowText( pNewClass->GetName( ) );
+
+				pNewClass->SetChildFrame( pNewChild );
+
 				pFrame->UpdateFrameTitleForDocument( pNewClass->GetName( ) );
 			}
 		}
@@ -199,9 +198,9 @@ void CDialogModules::SetSelected( )
 			pNewClass->SetOffsetString( strStart );
 			pNewClass->SetOffset( mod.Start );
 			pNewClass->pChildWindow = pChild;
-			pNewClass->idx = (int)g_ReClassApp.Classes.size( );
+			pNewClass->idx = (int)g_ReClassApp.m_Classes.size( );
 
-			g_ReClassApp.Classes.push_back( pNewClass );
+			g_ReClassApp.m_Classes.push_back( pNewClass );
 
 			DWORD offset = 0;
 			for (int i = 0; i < 64 / sizeof( size_t ); i++)
@@ -213,7 +212,7 @@ void CDialogModules::SetSelected( )
 				pNewClass->AddNode( pNode );
 			}
 
-			pChild->m_wndView.m_pClass = pNewClass;
+			pChild->SetClass( pNewClass );
 			pChild->SetTitle( pNewClass->GetName( ) );
 			pChild->SetWindowText( pNewClass->GetName( ) );
 			pFrame->UpdateFrameTitleForDocument( pNewClass->GetName( ) );
@@ -235,13 +234,13 @@ int CALLBACK CDialogModules::CompareFunction( LPARAM lParam1, LPARAM lParam2, LP
 
 		if (column == COLUMN_START || column == COLUMN_END || column == COLUMN_SIZE)
 		{
-			CString strNum1 = pListCtrl->GetItemText( item1, column );
-			CString strNum2 = pListCtrl->GetItemText( item2, column );
+			CString strValue1 = pListCtrl->GetItemText( item1, column );
+			CString strValue2 = pListCtrl->GetItemText( item2, column );
 
-			size_t num1 = (size_t)_tcstoui64( strNum1.GetBuffer( ), NULL, 16 );
-			size_t num2 = (size_t)_tcstoui64( strNum2.GetBuffer( ), NULL, 16 );
+			size_t value1 = (size_t)_tcstoui64( strValue1.GetBuffer( ), NULL, 16 );
+			size_t value2 = (size_t)_tcstoui64( strValue2.GetBuffer( ), NULL, 16 );
 
-			return (int)(num2 - num1);
+			return (int)(value2 - value1);
 		}
 		else if (column == COLUMN_NAME)
 		{
@@ -328,8 +327,10 @@ void CDialogModules::OnOK( )
 
 int CDialogModules::AddData( int Index, LPCTSTR ModuleName, LPCTSTR ModulePath, LPCTSTR StartAddress, LPCTSTR EndAddress, LPCTSTR ModuleSize, LPARAM lParam )
 {
-	LVITEM lvi = { 0 };
-
+	LVITEM lvi;
+	int pos = 0;
+	
+	ZeroMemory( &lvi, sizeof( LVITEM ) );
 	lvi.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM;
 	lvi.pszText = (LPTSTR)ModuleName;
 	lvi.cchTextMax = static_cast<int>(_tcslen( ModuleName )) + 1;
@@ -337,7 +338,7 @@ int CDialogModules::AddData( int Index, LPCTSTR ModuleName, LPCTSTR ModulePath, 
 	lvi.lParam = lParam;
 	lvi.iItem = m_ModuleList.GetItemCount( );
 
-	int pos = m_ModuleList.InsertItem( &lvi );
+	pos = m_ModuleList.InsertItem( &lvi );
 
 	m_ModuleList.SetItemText( pos, COLUMN_PATH, (LPCTSTR)ModulePath );
 	m_ModuleList.SetItemText( pos, COLUMN_START, (LPCTSTR)StartAddress );

@@ -16,12 +16,13 @@ extern DWORD g_NodeCreateIndex;
 
 struct ViewInfo
 {
+	class CChildView* pChildView;
 	CDC* dc;
 	CRect* client;
 	std::vector<HotSpot>* HotSpots;
 	std::vector<CNodeClass*>* Classes;
 	size_t Address;
-	unsigned char* pData;
+	UCHAR* pData;
 	UINT Level;
 	bool bMultiSelected;
 };
@@ -59,6 +60,7 @@ public:
 	void AddNode( CNodeBase* newNode ) { Nodes.emplace_back( newNode ); }
 	void InsertNode( int idx, CNodeBase* newNode ) { Nodes.insert( Nodes.begin( ) + idx, newNode ); }
 	CNodeBase* GetNode( int idx ) { return (CNodeBase*)Nodes[idx]; }
+	int FindNode( CNodeBase* pNode );
 	void SetNode( int idx, CNodeBase* newNode ) { Nodes[idx] = newNode; }
 	void DeleteNode( int idx ) { if (Nodes[idx]) { delete(Nodes[idx]); RemoveNode( idx ); } }
 	void RemoveNode( int idx ) { Nodes.erase( Nodes.begin( ) + idx ); }
@@ -82,7 +84,7 @@ public:
 	// Incorrect view.address
 	void AddHotSpot( ViewInfo& View, CRect& Spot, CString Text, int ID, int Type );
 
-	int AddText( ViewInfo& View, int x, int y, DWORD color, int HitID, const wchar_t *fmt, ... );
+	int AddText( ViewInfo& View, int x, int y, DWORD color, int HitID, const wchar_t* fmt, ... );
 
 	int AddText( ViewInfo& View, int x, int y, DWORD color, int HitID, const char* fmt, ... );
 

@@ -349,6 +349,9 @@
     <ClInclude Include="PluginAPI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CScintillaEdit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -392,9 +395,6 @@
     </ClCompile>
     <ClCompile Include="CNodeHex64.cpp">
       <Filter>Source Files\Nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="CMemory.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CNodeFunctionPtr.cpp">
       <Filter>Source Files\Nodes</Filter>
@@ -517,6 +517,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PluginAPI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CScintillaEdit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -201,25 +201,23 @@
       <PreprocessorDefinitions>NDEBUG;_AMD64_;_M_AMD64;_X86AMD64_;_WIN64;_M_X64;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <StringPooling>true</StringPooling>
-      <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>..\DIA SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>BeaEngine_s_stdcall_64.lib;SciLexer_64.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
       <UACExecutionLevel>HighestAvailable</UACExecutionLevel>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <IgnoreSpecificDefaultLibraries>crt64.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
-      <ForceFileOutput>MultiplyDefinedSymbolOnly</ForceFileOutput>
       <AdditionalManifestDependencies>"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'";%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <AdditionalLibraryDirectories>..\DIA SDK\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>BeaEngine_s_stdcall_64.lib;SciLexer_64.lib;Psapi.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -249,13 +247,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>BeaEngine_s_stdcalld_64.lib;SciLexerd_64.lib;Psapi.lib;comctl32.lib</AdditionalDependencies>
       <UACExecutionLevel>HighestAvailable</UACExecutionLevel>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <IgnoreSpecificDefaultLibraries>crt64.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD.lib</IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalManifestDependencies>"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'";%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
       <AdditionalLibraryDirectories>..\DIA SDK\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>BeaEngine_s_stdcalld_64.lib;SciLexerd_64.lib;Psapi.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -362,6 +360,7 @@
     <ClInclude Include="CNodeVTable.h" />
     <ClInclude Include="CNodeWCharPtr.h" />
     <ClInclude Include="CNodeWORD.h" />
+    <ClInclude Include="CScintillaEdit.h" />
     <ClInclude Include="DialogAbout.h" />
     <ClInclude Include="BitArray.h" />
     <ClInclude Include="CChildFrame.h" />
@@ -398,7 +397,6 @@
     <ClCompile Include="CCustomToolTip.cpp" />
     <ClCompile Include="CChildFrame.cpp" />
     <ClCompile Include="CChildView.cpp" />
-    <ClCompile Include="CMemory.cpp" />
     <ClCompile Include="CNodeArray.cpp" />
     <ClCompile Include="CNodeBase.cpp" />
     <ClCompile Include="CNodeBits.cpp" />
@@ -432,6 +430,7 @@
     <ClCompile Include="CNodeVTable.cpp" />
     <ClCompile Include="CNodeWCharPtr.cpp" />
     <ClCompile Include="CNodeWORD.cpp" />
+    <ClCompile Include="CScintillaEdit.cpp" />
     <ClCompile Include="DialogAbout.cpp" />
     <ClCompile Include="DialogClasses.cpp" />
     <ClCompile Include="DialogConsole.cpp" />

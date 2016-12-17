@@ -41,10 +41,8 @@ int CNodeClass::GetMemorySize( )
 	return size;
 }
 
-int CNodeClass::Draw( ViewInfo & View, int x, int y )
+int CNodeClass::Draw( ViewInfo& View, int x, int y )
 {
-	m_Offset = ConvertStrToAddress( m_strOffset );
-
 	AddSelection( View, 0, y, g_FontHeight );
 	x = AddOpenClose( View, x, y );
 

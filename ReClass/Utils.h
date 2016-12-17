@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <io.h>
 #include <afxstr.h> // For CString
+#include <random>
 
 #include "Native.h"
 #include "Intrinsics.h"
@@ -58,14 +59,13 @@ static void FreeDbgConsole( )
 		ConsoleStream = 0;
 	}
 }
-#endif
-
 static CString GetLastErrorString( )
 {
 	TCHAR buf[256];
 	int size = FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError( ), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), buf, 256, NULL );
 	return CString( buf, size );
 }
+#endif
 
 static size_t FindPattern( size_t start_offset, DWORD size, unsigned char pattern[], int n )
 {
@@ -138,6 +138,34 @@ static CString GetVersionInfo( const TCHAR* versionKey )
 	}
 
 	return strResult;
+}
+
+template<typename T>
+static T* GenerateRandomString( T* RandomString, ULONG Length )
+{
+	std::random_device RandomDevice;
+	std::mt19937_64 RNG( RandomDevice( ) );
+	std::uniform_int_distribution<int> Distribution( '0', 'z' );
+
+	ULONG count = 0;
+	while (count < Length - 1)
+	{
+		T RandomChar = (T)Distribution( RNG );
+
+		if (
+			(RandomChar >= '0' && RandomChar <= '9') ||
+			(RandomChar >= 'A' && RandomChar <= 'Z') ||
+			(RandomChar >= 'a' && RandomChar <= 'z')
+			)
+		{
+			RandomString[count] = RandomChar;
+			count++;
+		}
+	}
+
+	RandomString[Length - 1] = L'\0';
+
+	return RandomString;
 }
 
 enum OSType

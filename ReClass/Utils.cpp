@@ -35,6 +35,10 @@ PVOID GetLocalModuleBaseW( LPCWSTR ModuleName )
 			}
 		}
 	}
+	
+	if (ModuleBase == NULL)
+		ModuleBase = LoadLibraryW( ModuleName );
+
 	return ModuleBase;
 }
 
@@ -51,6 +55,10 @@ PVOID GetLocalProcAddressA( PVOID ModuleBase, PCHAR ProcName )
 	PIMAGE_NT_HEADERS NtHdr = NULL;
 	PIMAGE_EXPORT_DIRECTORY ExportDirectory = NULL;
 	ULONG ExportSize = 0;
+	PUSHORT OrdsTable = NULL;
+	PULONG NamesTable = NULL;
+	PULONG FuncsTable = NULL;
+	
 	ULONG_PTR Address = 0;
 
 	if (ModuleBase == NULL)
@@ -73,9 +81,9 @@ PVOID GetLocalProcAddressA( PVOID ModuleBase, PCHAR ProcName )
 		ExportSize = ((PIMAGE_NT_HEADERS32)NtHdr)->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].Size;
 	}
 
-	PUSHORT OrdsTable = (PUSHORT)(ExportDirectory->AddressOfNameOrdinals + (ULONG_PTR)ModuleBase);
-	PULONG  NamesTable = (PULONG)(ExportDirectory->AddressOfNames + (ULONG_PTR)ModuleBase);
-	PULONG  FuncsTable = (PULONG)(ExportDirectory->AddressOfFunctions + (ULONG_PTR)ModuleBase);
+	OrdsTable  = (PUSHORT)((ULONG_PTR)ModuleBase + ExportDirectory->AddressOfNameOrdinals);
+	NamesTable = (PULONG) ((ULONG_PTR)ModuleBase + ExportDirectory->AddressOfNames);
+	FuncsTable = (PULONG) ((ULONG_PTR)ModuleBase + ExportDirectory->AddressOfFunctions);
 
 	for (ULONG i = 0; i < ExportDirectory->NumberOfFunctions; ++i)
 	{
@@ -90,61 +98,61 @@ PVOID GetLocalProcAddressA( PVOID ModuleBase, PCHAR ProcName )
 		// Find by name
 		else if ((ULONG_PTR)ProcName > 0xFFFF && i < ExportDirectory->NumberOfNames)
 		{
-			pName = (PCHAR)(NamesTable[i] + (ULONG_PTR)ModuleBase);
+			pName = (PCHAR)((ULONG_PTR)ModuleBase + NamesTable[i]);
 			OrdIndex = OrdsTable[i];
 		}
 		// Weird params
 		else
+		{
 			return NULL;
+		}
 
-		if (((ULONG_PTR)ProcName <= 0xFFFF && (USHORT)((ULONG_PTR)ProcName) == OrdIndex + ExportDirectory->Base) ||
+		if (((ULONG_PTR)ProcName <= 0xFFFF && (USHORT)ProcName == OrdIndex + ExportDirectory->Base) ||
 			((ULONG_PTR)ProcName > 0xFFFF && strcmp( pName, ProcName ) == 0))
 		{
 			// Found export address
-			Address = FuncsTable[OrdIndex] + (ULONG_PTR)ModuleBase;
+			Address = (ULONG_PTR)ModuleBase + FuncsTable[OrdIndex];
 
 			// Check forwarded export
 			if (Address >= (ULONG_PTR)ExportDirectory && Address <= (ULONG_PTR)ExportDirectory + ExportSize)
 			{
-				PCHAR forwarder = NULL;
-				PCHAR import = NULL;
-				CHAR dllName[256] = { 0 };
-				PVOID forwardBase = NULL;
+				PCHAR pszForwarder = NULL;
+				PCHAR pszImport = NULL;
+				CHAR szDllName[256] = { 0 };
+				PVOID ForwardBase = NULL;
 
 				// Duplicate string at address
-				forwarder = _strdup( (PCHAR)Address );
+				pszForwarder = _strdup( (PCHAR)Address );
 
 				// Get import name
-				import = strchr( forwarder, '.' );
-				*import++ = '\0';
+				pszImport = strchr( pszForwarder, '.' );
+				*pszImport++ = '\0';
 
 				// Get DLL name
-				strcpy_s( dllName, 256, (PCHAR)forwarder );
-				strcat_s( dllName, 256, ".dll" );
+				strcpy_s( szDllName, 256, pszForwarder );
+				strcat_s( szDllName, 256, ".dll" );
 
 				// Get forwarded module base 
-				forwardBase = GetLocalModuleBaseA( dllName );
-				if (!forwardBase)
-					forwardBase = LoadLibraryA( dllName );
-				if (!forwardBase) // Not found
+				ForwardBase = GetLocalModuleBaseA( szDllName );
+				if (!ForwardBase) // Not found
 				{
-					free( forwarder );
+					free( pszForwarder );
 					return NULL;
 				}
 
-				if (strchr( import, '#' ) == NULL)
+				if (strchr( pszImport, '#' ) == NULL)
 				{
 					// forwarded by name
-					Address = (ULONG_PTR)GetLocalProcAddressA( forwardBase, import );
+					Address = (ULONG_PTR)GetLocalProcAddressA( ForwardBase, pszImport );
 				}
 				else
 				{
 					// forwarded by ordinal
-					PCHAR FuncOrd = (PCHAR)atoll( import + 1 );
-					Address = (ULONG_PTR)GetLocalProcAddressA( forwardBase, FuncOrd );
+					PCHAR FuncOrd = (PCHAR)atol( pszImport + 1 );
+					Address = (ULONG_PTR)GetLocalProcAddressA( ForwardBase, FuncOrd );
 				}
 
-				free( forwarder );
+				free( pszForwarder );
 			}
 
 			break;

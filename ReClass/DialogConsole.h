@@ -2,6 +2,7 @@
 
 #include "afxwin.h"
 #include "Resource.h"
+#include "CScintillaEdit.h"
 
 // CDialogConsole dialog
 
@@ -21,10 +22,9 @@ protected:
 
 	DECLARE_MESSAGE_MAP( )
 
-	// Sends a message to the Scintilla editor
-	LRESULT SendEditor( UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0 );
+
 	// Sets a Scintilla style
-	void SetStyle( int style, COLORREF fore, COLORREF back = RGB( 255, 255, 255 ), int size = -1, const TCHAR* face = 0 );
+	void SetStyle( int style, COLORREF fore, COLORREF back = RGB( 255, 255, 255 ), int size = -1, const char* face = 0 );
 
 public:
 	afx_msg BOOL Create( UINT nIDTemplate, CWnd* pParentWnd = NULL );
@@ -32,9 +32,9 @@ public:
 	afx_msg void OnCancel( );
 	afx_msg void OnSize( UINT nType, int cx, int cy );
 
-	void PrintText( const TCHAR * message );
+	void PrintText( const TCHAR* message );
 
-	BOOL IsInitialized( ) { return m_bInited; }
+	BOOL IsInitialized( ) { return m_bInitialized; }
 
 	CString m_strWindowTitle;
 	BOOL m_bVisible;
@@ -43,7 +43,9 @@ private:
 	void InitialiseEditor( );
 	void SizeEditor( );
 
-	HWND m_hwndEditWindow;
-	CString m_strConsoleText;
-	BOOL m_bInited;
+	BOOL m_bInitialized;
+	//CString m_strConsoleText;
+
+	HWND m_hEditWindow;
+	CScintillaEdit m_Edit;
 };

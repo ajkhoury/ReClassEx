@@ -68,11 +68,11 @@ void CReClass2016App::ResizeMemoryFont( int font_width, int font_height )
 {
 	g_ViewFont.DeleteObject( );
 
-	HMODULE hSHCoreBase = LoadLibrary( _T( "shcore.dll" ) );
+	HMODULE hSHCoreBase = (HMODULE)Utils::GetLocalModuleBaseW( L"shcore.dll" );
 	if (hSHCoreBase)
 	{
-		auto pfnGetProcessDpiAwareness = reinterpret_cast<decltype(&GetProcessDpiAwareness)>(GetProcAddress( hSHCoreBase, "GetProcessDpiAwareness" ));
-		auto pfnGetDpiForMonitor = reinterpret_cast<decltype(&GetDpiForMonitor)>(GetProcAddress( hSHCoreBase, "GetDpiForMonitor" ));
+		auto pfnGetProcessDpiAwareness = reinterpret_cast<decltype(&GetProcessDpiAwareness)>(Utils::GetLocalProcAddressW( hSHCoreBase, L"GetProcessDpiAwareness" ));
+		auto pfnGetDpiForMonitor = reinterpret_cast<decltype(&GetDpiForMonitor)>(Utils::GetLocalProcAddressW( hSHCoreBase, L"GetDpiForMonitor" ));
 
 		if (pfnGetProcessDpiAwareness != nullptr && pfnGetDpiForMonitor != nullptr)
 		{
@@ -90,7 +90,8 @@ void CReClass2016App::ResizeMemoryFont( int font_width, int font_height )
 
 		FreeLibrary( hSHCoreBase );
 	}
-	g_ViewFont.CreateFont( g_FontHeight, g_FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, _T( "Terminal" ) );
+
+	g_ViewFont.CreateFont( g_FontHeight, g_FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, g_ViewFontName.GetBuffer( ) );
 }
 
 BOOL CReClass2016App::InitInstance( )
@@ -119,7 +120,6 @@ BOOL CReClass2016App::InitInstance( )
 	}
 
 	AfxEnableControlContainer( );
-	SetRegistryKey( _T( "RC16" ) );
 	EnableTaskbarInteraction( FALSE );
 	InitContextMenuManager( );
 	InitKeyboardManager( );
@@ -129,55 +129,64 @@ BOOL CReClass2016App::InitInstance( )
 	ttParams.m_bVislManagerTheme = TRUE;
 	GetTooltipManager( )->SetTooltipParams( AFX_TOOLTIP_TYPE_ALL, RUNTIME_CLASS( CMFCToolTipCtrl ), &ttParams );
 
+	// Get registry entries
+	SetRegistryKey( _T( "RC16" ) );
+
 	//Typedefs
-	g_tdHex = GetProfileString( _T( "Typedefs" ), _T( "tdHex" ), _T( "char" ) );
-	g_tdInt64 = GetProfileString( _T( "Typedefs" ), _T( "tdInt64" ), _T( "__int64" ) );
-	g_tdInt32 = GetProfileString( _T( "Typedefs" ), _T( "tdInt32" ), _T( "__int32" ) );
-	g_tdInt16 = GetProfileString( _T( "Typedefs" ), _T( "tdInt16" ), _T( "__int16" ) );
-	g_tdInt8 = GetProfileString( _T( "Typedefs" ), _T( "tdInt8" ), _T( "__int8" ) );
-	g_tdQWORD = GetProfileString( _T( "Typedefs" ), _T( "tdQWORD" ), _T( "DWORD64" ) );
-	g_tdDWORD = GetProfileString( _T( "Typedefs" ), _T( "tdDWORD" ), _T( "DWORD" ) );
-	g_tdWORD = GetProfileString( _T( "Typedefs" ), _T( "tdWORD" ), _T( "WORD" ) );
-	g_tdBYTE = GetProfileString( _T( "Typedefs" ), _T( "tdBYTE" ), _T( "unsigned char" ) );
-	g_tdFloat = GetProfileString( _T( "Typedefs" ), _T( "tdFloat" ), _T( "float" ) );
-	g_tdDouble = GetProfileString( _T( "Typedefs" ), _T( "tdDouble" ), _T( "double" ) );
-	g_tdVec2 = GetProfileString( _T( "Typedefs" ), _T( "tdVec2" ), _T( "Vector2" ) );
-	g_tdVec3 = GetProfileString( _T( "Typedefs" ), _T( "tdVec3" ), _T( "Vector3" ) );
-	g_tdQuat = GetProfileString( _T( "Typedefs" ), _T( "tdQuat" ), _T( "Vector4" ) );
-	g_tdMatrix = GetProfileString( _T( "Typedefs" ), _T( "tdMatrix" ), _T( "matrix3x4_t" ) );
-	g_tdPChar = GetProfileString( _T( "Typedefs" ), _T( "tdPChar" ), _T( "char *" ) );
-	g_tdPWChar = GetProfileString( _T( "Typedefs" ), _T( "tdPWChar" ), _T( "wchar_t *" ) );
+	g_tdHex				= GetProfileString( _T( "Typedefs" ), _T( "Hex" ), _T( "char" ) );
+	g_tdInt64			= GetProfileString( _T( "Typedefs" ), _T( "Int64" ), _T( "__int64" ) );
+	g_tdInt32			= GetProfileString( _T( "Typedefs" ), _T( "Int32" ), _T( "__int32" ) );
+	g_tdInt16			= GetProfileString( _T( "Typedefs" ), _T( "Int16" ), _T( "__int16" ) );
+	g_tdInt8			= GetProfileString( _T( "Typedefs" ), _T( "Int8" ), _T( "__int8" ) );
+	g_tdQWORD			= GetProfileString( _T( "Typedefs" ), _T( "QWORD" ), _T( "DWORD64" ) );
+	g_tdDWORD			= GetProfileString( _T( "Typedefs" ), _T( "DWORD" ), _T( "DWORD" ) );
+	g_tdWORD			= GetProfileString( _T( "Typedefs" ), _T( "WORD" ), _T( "WORD" ) );
+	g_tdBYTE			= GetProfileString( _T( "Typedefs" ), _T( "BYTE" ), _T( "unsigned char" ) );
+	g_tdFloat			= GetProfileString( _T( "Typedefs" ), _T( "Float" ), _T( "float" ) );
+	g_tdDouble			= GetProfileString( _T( "Typedefs" ), _T( "Double" ), _T( "double" ) );
+	g_tdVec2			= GetProfileString( _T( "Typedefs" ), _T( "Vec2" ), _T( "Vector2" ) );
+	g_tdVec3			= GetProfileString( _T( "Typedefs" ), _T( "Vec3" ), _T( "Vector3" ) );
+	g_tdQuat			= GetProfileString( _T( "Typedefs" ), _T( "Quat" ), _T( "Vector4" ) );
+	g_tdMatrix			= GetProfileString( _T( "Typedefs" ), _T( "Matrix" ), _T( "matrix3x4_t" ) );
+	g_tdPChar			= GetProfileString( _T( "Typedefs" ), _T( "PChar" ), _T( "char*" ) );
+	g_tdPWChar			= GetProfileString( _T( "Typedefs" ), _T( "PWChar" ), _T( "wchar_t*" ) );
 
-	g_crBackground = GetProfileInt( _T( "Colors" ), _T( "g_crBackground" ),	g_crBackground );
-	g_crSelect = GetProfileInt( _T( "Colors" ), _T( "g_crSelect" ),			g_crSelect );
-	g_crHidden = GetProfileInt( _T( "Colors" ), _T( "g_crHidden" ),			g_crHidden );
-	g_crOffset = GetProfileInt( _T( "Colors" ), _T( "g_crOffset" ),			g_crOffset );
-	g_crAddress = GetProfileInt( _T( "Colors" ), _T( "g_crAddress" ),			g_crAddress );
-	g_crType = GetProfileInt( _T( "Colors" ), _T( "g_crType" ),				g_crType );
-	g_crName = GetProfileInt( _T( "Colors" ), _T( "g_crName" ),				g_crName );
-	g_crIndex = GetProfileInt( _T( "Colors" ), _T( "g_crIndex" ),				g_crIndex );
-	g_crValue = GetProfileInt( _T( "Colors" ), _T( "g_crValue" ),				g_crValue );
-	g_crComment = GetProfileInt( _T( "Colors" ), _T( "g_crComment" ),			g_crComment );
-	g_crVTable = GetProfileInt( _T( "Colors" ), _T( "g_crVTable" ),			g_crVTable );
-	g_crFunction = GetProfileInt( _T( "Colors" ), _T( "g_crFunction" ),		g_crFunction );
-	g_crChar = GetProfileInt( _T( "Colors" ), _T( "g_crChar" ),				g_crChar );
-	g_crCustom = GetProfileInt( _T( "Colors" ), _T( "crCustom" ),			g_crCustom );
-	g_crHex = GetProfileInt( _T( "Colors" ), _T( "g_crHex" ),					g_crHex );
+	g_crBackground		= GetProfileInt( _T( "Colors" ), _T( "Background" ),	g_crBackground );
+	g_crSelect			= GetProfileInt( _T( "Colors" ), _T( "Select" ),		g_crSelect );
+	g_crHidden			= GetProfileInt( _T( "Colors" ), _T( "Hidden" ),		g_crHidden );
+	g_crOffset			= GetProfileInt( _T( "Colors" ), _T( "Offset" ),		g_crOffset );
+	g_crAddress			= GetProfileInt( _T( "Colors" ), _T( "Address" ),		g_crAddress );
+	g_crType			= GetProfileInt( _T( "Colors" ), _T( "Type" ),			g_crType );
+	g_crName			= GetProfileInt( _T( "Colors" ), _T( "Name" ),			g_crName );
+	g_crIndex			= GetProfileInt( _T( "Colors" ), _T( "Index" ),			g_crIndex );
+	g_crValue			= GetProfileInt( _T( "Colors" ), _T( "Value" ),			g_crValue );
+	g_crComment			= GetProfileInt( _T( "Colors" ), _T( "Comment" ),		g_crComment );
+	g_crVTable			= GetProfileInt( _T( "Colors" ), _T( "VTable" ),		g_crVTable );
+	g_crFunction		= GetProfileInt( _T( "Colors" ), _T( "Function" ),		g_crFunction );
+	g_crChar			= GetProfileInt( _T( "Colors" ), _T( "Char" ),			g_crChar );
+	g_crCustom			= GetProfileInt( _T( "Colors" ), _T( "Custom" ),		g_crCustom );
+	g_crHex				= GetProfileInt( _T( "Colors" ), _T( "Hex" ),			g_crHex );
 
-	g_bOffset = GetProfileInt( _T( "Display" ), _T( "g_bOffset" ), g_bOffset ) > 0 ? true : false;
-	g_bAddress = GetProfileInt( _T( "Display" ), _T( "g_bAddress" ), g_bAddress ) > 0 ? true : false;
-	g_bText = GetProfileInt( _T( "Display" ), _T( "g_bText" ), g_bText ) > 0 ? true : false;
-	g_bFloat = GetProfileInt( _T( "Display" ), _T( "g_bFloat" ), g_bFloat ) > 0 ? true : false;
-	g_bInt = GetProfileInt( _T( "Display" ), _T( "g_bInt" ), g_bInt ) > 0 ? true : false;
-	g_bString = GetProfileInt( _T( "Display" ), _T( "g_bString" ), g_bString ) > 0 ? true : false;
-	g_bPointers = GetProfileInt( _T( "Display" ), _T( "g_bPointers" ), g_bPointers ) > 0 ? true : false;
-	g_bClassBrowser = GetProfileInt( _T( "Display" ), _T( "g_bClassBrowser" ), g_bClassBrowser ) > 0 ? true : false;
-	g_bFilterProcesses = GetProfileInt( _T( "Display" ), _T( "gbFilterProcesses" ), g_bFilterProcesses ) > 0 ? true : false;
-	g_bPrivatePadding = GetProfileInt( _T( "Display" ), _T( "g_bPrivatePadding" ), g_bPrivatePadding ) > 0 ? true : false;
-	g_bClipboardCopy = GetProfileInt( _T( "Display" ), _T( "g_bClipboardCopy" ), g_bClipboardCopy ) > 0 ? true : false;
-	g_bLoadModuleSymbol = GetProfileInt( _T( "Misc" ), _T( "gbLoadModuleSymbol" ), g_bLoadModuleSymbol ) > 0 ? true : false;
-	// make toggle
-	g_bTop = false; //GetProfileInt("Display","g_bTop",g_bTop) > 0 ? true : false;
+	g_bOffset			= GetProfileInt( _T( "Display" ), _T( "Offset" ),		g_bOffset ) > 0 ? true : false;
+	g_bAddress			= GetProfileInt( _T( "Display" ), _T( "Address" ),		g_bAddress ) > 0 ? true : false;
+	g_bText				= GetProfileInt( _T( "Display" ), _T( "Text" ),			g_bText ) > 0 ? true : false;
+	g_bFloat			= GetProfileInt( _T( "Display" ), _T( "Float" ),		g_bFloat ) > 0 ? true : false;
+	g_bInt				= GetProfileInt( _T( "Display" ), _T( "Int" ),			g_bInt ) > 0 ? true : false;
+	g_bString			= GetProfileInt( _T( "Display" ), _T( "String" ),		g_bString ) > 0 ? true : false;
+	g_bPointers			= GetProfileInt( _T( "Display" ), _T( "Pointers" ),		g_bPointers ) > 0 ? true : false;
+	g_bClassBrowser		= GetProfileInt( _T( "Display" ), _T( "ClassBrowser" ), g_bClassBrowser ) > 0 ? true : false;
+	g_bFilterProcesses	= GetProfileInt( _T( "Display" ), _T( "FilterProcesses" ), g_bFilterProcesses ) > 0 ? true : false;
+
+	g_bRTTI				= GetProfileInt( _T( "Misc" ), _T( "RTTI" ),			g_bRTTI ) > 0 ? true : false;
+	g_bRandomName		= GetProfileInt( _T( "Misc" ), _T( "RandomName" ),		g_bRandomName ) > 0 ? true : false;
+	g_bLoadModuleSymbol = GetProfileInt( _T( "Misc" ), _T( "LoadModuleSymbols" ), g_bLoadModuleSymbol ) > 0 ? true : false;
+
+	g_bPrivatePadding	= GetProfileInt( _T( "Class Generation" ), _T( "PrivatePadding" ), g_bPrivatePadding ) > 0 ? true : false;
+	g_bClipboardCopy	= GetProfileInt( _T( "Class Generation" ), _T( "ClipboardCopy" ), g_bClipboardCopy ) > 0 ? true : false;
+
+	g_bTop = false; //GetProfileInt("Display", "g_bTop", g_bTop) > 0 ? true : false;
+
+	g_ViewFontName = _T( "Terminal" );
 
 	HINSTANCE hInst = AfxGetInstanceHandle( );
 	m_hMDIMenu = ::LoadMenu( hInst, MAKEINTRESOURCE( IDR_ReClass2016TYPE ) );
@@ -236,12 +245,12 @@ BOOL CReClass2016App::InitInstance( )
 		return FALSE;
 	}
 
-	Console = new CDialogConsole( _T( "Console" ) );
-	if (Console->Create( CDialogConsole::IDD, CWnd::GetDesktopWindow( ) ))
-		Console->ShowWindow( SW_HIDE );
+	m_pConsole = new CDialogConsole( _T( "Console" ) );
+	if (m_pConsole->Create( CDialogConsole::IDD, CWnd::GetDesktopWindow( ) ))
+		m_pConsole->ShowWindow( SW_HIDE );
 
-	g_SymLoader = new (std::nothrow) Symbols;
-	if (g_SymLoader != nullptr)
+	m_pSymbolLoader = new (std::nothrow) Symbols;
+	if (m_pSymbolLoader != nullptr)
 	{
 		PrintOut( _T( "Symbol resolution enabled" ) );
 		g_bSymbolResolution = true;
@@ -265,79 +274,86 @@ int CReClass2016App::ExitInstance( )
 {
 	//
 	// Free resources
-	//
 	if (m_hMDIMenu != NULL)
 		FreeResource( m_hMDIMenu );
 
 	if (m_hMDIAccel != NULL)
 		FreeResource( m_hMDIAccel );
 
-	if (Console)
-		delete Console;
+	if (m_pConsole)
+	{
+		delete m_pConsole;
+		m_pConsole = NULL;
+	}
 
-	if (g_SymLoader)
-		delete g_SymLoader;
+	if (m_pSymbolLoader) 
+	{ 
+		delete m_pSymbolLoader;
+		m_pSymbolLoader = NULL;
+	}
 
 	AfxOleTerm( FALSE );
 
 	//
 	// Release Scintilla
-	//
 	Scintilla_ReleaseResources( );
 
 	//
 	// Write settings to profile
-	//
-	WriteProfileString( _T( "Typedefs" ), _T( "tdHex" ),	g_tdHex );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdInt64" ),	g_tdInt64 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdInt32" ),	g_tdInt32 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdInt16" ),	g_tdInt16 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdInt8" ),	g_tdInt8 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdQWORD" ),	g_tdQWORD );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdDWORD" ),	g_tdDWORD );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdWORD" ),	g_tdWORD );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdBYTE" ),	g_tdBYTE );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdFloat" ),	g_tdFloat );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdDouble" ), g_tdDouble );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdVec2" ),	g_tdVec2 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdVec3" ),	g_tdVec3 );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdQuat" ),	g_tdQuat );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdMatrix" ), g_tdMatrix );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdPChar" ),	g_tdPChar );
-	WriteProfileString( _T( "Typedefs" ), _T( "tdPWChar" ), g_tdPWChar );
+	WriteProfileString( _T( "Typedefs" ), _T( "Hex" ),			g_tdHex );
+	WriteProfileString( _T( "Typedefs" ), _T( "Int64" ),		g_tdInt64 );
+	WriteProfileString( _T( "Typedefs" ), _T( "Int32" ),		g_tdInt32 );
+	WriteProfileString( _T( "Typedefs" ), _T( "Int16" ),		g_tdInt16 );
+	WriteProfileString( _T( "Typedefs" ), _T( "Int8" ),			g_tdInt8 );
+	WriteProfileString( _T( "Typedefs" ), _T( "QWORD" ),		g_tdQWORD );
+	WriteProfileString( _T( "Typedefs" ), _T( "DWORD" ),		g_tdDWORD );
+	WriteProfileString( _T( "Typedefs" ), _T( "WORD" ),			g_tdWORD );
+	WriteProfileString( _T( "Typedefs" ), _T( "BYTE" ),			g_tdBYTE );
+	WriteProfileString( _T( "Typedefs" ), _T( "Float" ),		g_tdFloat );
+	WriteProfileString( _T( "Typedefs" ), _T( "Double" ),		g_tdDouble );
+	WriteProfileString( _T( "Typedefs" ), _T( "Vec2" ),			g_tdVec2 );
+	WriteProfileString( _T( "Typedefs" ), _T( "Vec3" ),			g_tdVec3 );
+	WriteProfileString( _T( "Typedefs" ), _T( "Quat" ),			g_tdQuat );
+	WriteProfileString( _T( "Typedefs" ), _T( "Matrix" ),		g_tdMatrix );
+	WriteProfileString( _T( "Typedefs" ), _T( "PChar" ),		g_tdPChar );
+	WriteProfileString( _T( "Typedefs" ), _T( "PWChar" ),		g_tdPWChar );
 
-	WriteProfileInt( _T( "Colors" ), _T( "g_crBackground" ),	g_crBackground );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crSelect" ),		g_crSelect );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crHidden" ),		g_crHidden );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crOffset" ),		g_crOffset );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crAddress" ),		g_crAddress );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crType" ),		g_crType );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crName" ),		g_crName );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crIndex" ),		g_crIndex );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crValue" ),		g_crValue );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crComment" ),		g_crComment );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crVTable" ),		g_crVTable );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crFunction" ),	g_crFunction );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crChar" ),		g_crChar );
-	WriteProfileInt( _T( "Colors" ), _T( "crCustom" ),		g_crCustom );
-	WriteProfileInt( _T( "Colors" ), _T( "g_crHex" ),			g_crHex );
-	WriteProfileInt( _T( "Display" ), _T( "g_bOffset" ),		g_bOffset );
-	WriteProfileInt( _T( "Display" ), _T( "g_bAddress" ),	g_bAddress );
-	WriteProfileInt( _T( "Display" ), _T( "g_bText" ),		g_bText );
-	WriteProfileInt( _T( "Display" ), _T( "g_bFloat" ),		g_bFloat );
-	WriteProfileInt( _T( "Display" ), _T( "g_bInt" ),		g_bInt );
-	WriteProfileInt( _T( "Display" ), _T( "g_bString" ),		g_bString );
-	WriteProfileInt( _T( "Display" ), _T( "g_bPointers" ),	g_bPointers );
-	WriteProfileInt( _T( "Display" ), _T( "g_bTop" ),		g_bTop );
-	WriteProfileInt( _T( "Display" ), _T( "g_bClassBrowser" ), g_bClassBrowser );
-	WriteProfileInt( _T( "Display" ), _T( "gbFilterProcesses" ), g_bFilterProcesses );
-	WriteProfileInt( _T( "Display" ), _T( "g_bPrivatePadding" ), g_bPrivatePadding );
-	WriteProfileInt( _T( "Display" ), _T( "g_bClipboardCopy" ), g_bClipboardCopy );
-	WriteProfileInt( _T( "Misc" ), _T( "gbLoadModuleSymbol" ), g_bLoadModuleSymbol );
+	WriteProfileInt( _T( "Colors" ), _T( "Background" ),		g_crBackground );
+	WriteProfileInt( _T( "Colors" ), _T( "Select" ),			g_crSelect );
+	WriteProfileInt( _T( "Colors" ), _T( "Hidden" ),			g_crHidden );
+	WriteProfileInt( _T( "Colors" ), _T( "Offset" ),			g_crOffset );
+	WriteProfileInt( _T( "Colors" ), _T( "Address" ),			g_crAddress );
+	WriteProfileInt( _T( "Colors" ), _T( "Type" ),				g_crType );
+	WriteProfileInt( _T( "Colors" ), _T( "Name" ),				g_crName );
+	WriteProfileInt( _T( "Colors" ), _T( "Index" ),				g_crIndex );
+	WriteProfileInt( _T( "Colors" ), _T( "Value" ),				g_crValue );
+	WriteProfileInt( _T( "Colors" ), _T( "Comment" ),			g_crComment );
+	WriteProfileInt( _T( "Colors" ), _T( "VTable" ),			g_crVTable );
+	WriteProfileInt( _T( "Colors" ), _T( "Function" ),			g_crFunction );
+	WriteProfileInt( _T( "Colors" ), _T( "Char" ),				g_crChar );
+	WriteProfileInt( _T( "Colors" ), _T( "Custom" ),			g_crCustom );
+	WriteProfileInt( _T( "Colors" ), _T( "Hex" ),				g_crHex );
+
+	WriteProfileInt( _T( "Display" ), _T( "Offset" ),			g_bOffset );
+	WriteProfileInt( _T( "Display" ), _T( "Address" ),			g_bAddress );
+	WriteProfileInt( _T( "Display" ), _T( "Text" ),				g_bText );
+	WriteProfileInt( _T( "Display" ), _T( "Float" ),			g_bFloat );
+	WriteProfileInt( _T( "Display" ), _T( "Int" ),				g_bInt );
+	WriteProfileInt( _T( "Display" ), _T( "String" ),			g_bString );
+	WriteProfileInt( _T( "Display" ), _T( "Pointers" ),			g_bPointers );
+	WriteProfileInt( _T( "Display" ), _T( "Top" ),				g_bTop );
+	WriteProfileInt( _T( "Display" ), _T( "ClassBrowser" ),		g_bClassBrowser );
+	WriteProfileInt( _T( "Display" ), _T( "FilterProcesses" ),	g_bFilterProcesses );
+
+	WriteProfileInt( _T( "Misc" ), _T( "RTTI" ),				g_bRTTI );
+	WriteProfileInt( _T( "Misc" ), _T( "RandomName" ),			g_bRandomName );
+	WriteProfileInt( _T( "Misc" ), _T( "LoadModuleSymbols" ),	g_bLoadModuleSymbol );
+
+	WriteProfileInt( _T( "Class Generation" ), _T( "PrivatePadding" ), g_bPrivatePadding );
+	WriteProfileInt( _T( "Class Generation" ), _T( "ClipboardCopy" ), g_bClipboardCopy );
 
 	//
 	// Unload any loaded plugins
-	//
 	UnloadPlugins( );
 
 	return CWinAppEx::ExitInstance( );
@@ -352,20 +368,21 @@ void CReClass2016App::OnButtonReset( )
 	g_AttachedProcessAddress = NULL;
 
 	CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, m_pMainWnd );
-	CMDIChildWnd* wnd = pFrame->MDIGetActive( );
+	CMDIChildWnd* pChildWnd = pFrame->MDIGetActive( );
 
-	while (wnd)
+	while (pChildWnd)
 	{
-		wnd->SendMessage( WM_CLOSE, 0, 0 );
-		wnd = pFrame->MDIGetActive( );
+		pChildWnd->SendMessage( WM_CLOSE, 0, 0 );
+		pChildWnd = pFrame->MDIGetActive( );
 	}
 
-	Classes.clear( );
-	Header = _T( "" );
-	Footer = _T( "" );
-	Notes = _T( "" );
+	m_Classes.clear( );
 
-	CurrentFilePath = "";
+	m_strHeader = _T( "" );
+	m_strFooter = _T( "" );
+	m_strNotes = _T( "" );
+
+	m_strCurrentFilePath = "";
 }
 
 void CReClass2016App::OnButtonPause( )
@@ -411,20 +428,20 @@ void CReClass2016App::CalcOffsets( CNodeClass* pClass )
 
 void CReClass2016App::CalcAllOffsets( )
 {
-	for (UINT i = 0; i < Classes.size( ); i++)
-		CalcOffsets( Classes[i] );
+	for (UINT i = 0; i < m_Classes.size( ); i++)
+		CalcOffsets( m_Classes[i] );
 }
 
 void CReClass2016App::OnFileNew( )
 {
 	CMainFrame* pFrame = STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
-	CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel );
-
+	CChildFrame* pChild = STATIC_DOWNCAST( CChildFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
 	CNodeClass* pClass = new CNodeClass;
-	pClass->pChildWindow = pChild;
-	g_ReClassApp.Classes.push_back( pClass );
-	pChild->m_wndView.m_pClass = pClass;
 
+	pClass->pChildWindow = pChild;
+	pChild->SetClass( pClass );
+	g_ReClassApp.m_Classes.push_back( pClass );
+	
 	//CNodeCustom* pCust = new CNodeCustom;
 	//pCust->memsize = 18;
 	//pCust->pParent = pClass;
@@ -438,81 +455,6 @@ void CReClass2016App::OnFileNew( )
 	}
 
 	CalcOffsets( pClass );
-
-	return;
-
-	//CNodeIcon* pIcon = new CNodeIcon;
-	//pClass->Nodes.push_back(pIcon);
-
-	//CNodeVTable* pVTable = new CNodeVTable;
-	//pClass->AddNode(pVTable);
-	//for (int i = 0; i < 5; i++)
-	//{
-	//	CNodeFunctionPtr* pNode = new CNodeFunctionPtr;
-	//	pNode->SetOffset(i * pNode->GetMemorySize());
-	//	pVTable->AddNode(pNode);
-	//}
-	//
-	//pClass->AddNode(new CNodeHex64);
-	//pClass->AddNode(new CNodeHex32);
-	//pClass->AddNode(new CNodeHex16);
-	//pClass->AddNode(new CNodeHex8);
-	//pClass->AddNode(new CNodeInt64);
-	//pClass->AddNode(new CNodeInt32);
-	//pClass->AddNode(new CNodeInt64);
-	//pClass->AddNode(new CNodeInt16);
-	//pClass->AddNode(new CNodeInt8);
-	//pClass->AddNode(new CNodeDWORD);
-	//pClass->AddNode(new CNodeWORD);
-	//pClass->AddNode(new CNodeByte);
-	//pClass->AddNode(new CNodeText);
-	//pClass->AddNode(new CNodeUnicode);
-	//pClass->AddNode(new CNodeFloat);
-	//pClass->AddNode(new CNodeDouble);
-	//pClass->AddNode(new CNodeCustom);
-	//pClass->AddNode(new CNodeVec2);
-	//pClass->AddNode(new CNodeVec3);
-	//pClass->AddNode(new CNodeQuat);
-	//pClass->AddNode(new CNodeMatrix);
-	//pClass->AddNode(new CNodeCharPtr);
-	//
-	////for (int i=0; i < 2; i++)
-	//{
-	//	CNodePtr* pNode1 = new CNodePtr;
-	//	CNodePtr* pNode2 = new CNodePtr;
-	//	pNode1->pNode = pNode2;
-	//	pNode2->pNode = pClass;
-	//
-	//	pClass->AddNode(pNode1);
-	//}
-	////for (int i=0; i < 2; i++)
-	//{
-	//	// 
-	//	CNodeArray* pNode = new CNodeArray;
-	//	CNodeHex* pNode2 = new CNodeHex;
-	//	pNode->pNode = pNode2;
-	//	pClass->AddNode(pNode);
-	//}
-	//
-	//// Calc Offsets
-	//DWORD offset = 0;
-	//for (UINT i = 0; i < pClass->NodeCount(); i++)
-	//{
-	//	pClass->GetNode(i)->SetOffset(offset);
-	//	offset += pClass->GetNode(i)->GetMemorySize();
-	//}
-
-	//CNodeClassPtr* pClass2 = new CNodeClassPtr;
-	//pClass2->pClass = pClass;
-	//pClass->Nodes.push_back(pClass2);
-
-	//for (int i=0; i < 10; i++)
-	//{
-	//	CNodeHex32* pNode = new CNodeHex32;
-	//	pNode->offset = i * 4;
-	//	pClass->Nodes.push_back(pNode);
-	//}
-
 }
 
 // App command to run the dialog
@@ -524,10 +466,8 @@ void CReClass2016App::OnAppAbout( )
 
 void CReClass2016App::PreLoadState( )
 {
-	BOOL bNameValid;
 	CString strName;
-	bNameValid = strName.LoadString( IDS_EDIT_MENU );
-	ASSERT( bNameValid );
+	ASSERT( strName.LoadString( IDS_EDIT_MENU ) );
 	GetContextMenuManager( )->AddMenu( strName, IDR_POPUP_EDIT );
 }
 
@@ -539,200 +479,20 @@ void CReClass2016App::SaveCustomState( )
 {
 }
 
-class ImportNode
-{
-public:
-	CString Name;
-	CString Comment;
-	enum NodeType type;
-	int length;
-	int ref;
-	std::vector<ImportNode> Nodes;
-};
-
-// TODO: Fix this
+// TODO: Actually finish this
 void CReClass2016App::OnFileImport( )
 {
 	return;
-	//CWaitCursor wait;
-	//CString sql;
-	//CppSQLite3Table table;
-	//std::vector<ImportNode> Import;
-	//std::vector<ImportLink> Links;
-	//
-	//char szFilters[] = "ReClass (*.rdc)|*.rdc|All Files (*.*)|*.*||";
-	//CFileDialog fileDlg(TRUE, "rdc", "",OFN_FILEMUSTEXIST| OFN_HIDEREADONLY, szFilters, NULL);
-	//if( fileDlg.DoModal() == IDOK )
-	//{
-	//	CString pathName = fileDlg.GetPathName();
-	//	try
-	//	{
-	//		CppSQLite3DB db;
-	//		db.open(pathName);
-	//		table =	db.getTable("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;");
-	//		DWORD total = table.numRows()-1;
-	//
-	//		table =	db.getTable("select * from info;");table.setRow(0);
-	//		Notes = table.getStringField("notes","<ERROR>");
-	//		Header = table.getStringField("header","<ERROR>");
-	//		try{Footer = table.getStringField("footer","<ERROR>");}catch (...){}
-	//
-	//		for (UINT i=0; i < total;i++)
-	//		{
-	//			sql.Format("select * from class%i;",i);
-	//			table =	db.getTable(sql);
-	//
-	//			table.setRow(0);
-	//			ImportNode iNode;
-	//			iNode.Name		= table.getStringField("variable","<ERROR>");
-	//			iNode.Comment	= table.getStringField("comment","<ERROR>");
-	//			iNode.type		= (NodeType)table.getIntField("type",0);
-	//			iNode.length	= table.getIntField("length",0);
-	//			iNode.ref		= table.getIntField("ref",0);
-	//			
-	//			for (int c=1; c < table.numRows();c++)
-	//			{
-	//				table.setRow(c);
-	//
-	//				ImportNode sNode;
-	//				sNode.Name		= table.getStringField("variable","<ERROR>");
-	//				sNode.Comment	= table.getStringField("comment","<ERROR>");
-	//				sNode.type		= (NodeType)table.getIntField("type",0);
-	//				sNode.length	= table.getIntField("length",0);
-	//				sNode.ref		= table.getIntField("ref",0);
-	//
-	//				iNode.Nodes.push_back(sNode);
-	//			}
-	//			Import.push_back(iNode);
-	//		}
-	//
-	//		for (UINT i=0; i < Import.size();i++)
-	//		{
-	//			if (Import[i].Name == "VTABLE") continue;
-	//
-	//			CNodeClass* pClass = new CNodeClass;
-	//			pClass->Name = Import[i].Name;
-	//			pClass->Comment = Import[i].Comment;
-	//
-	//			Classes.push_back(pClass);
-	//
-	//			//CMainFrame* pFrame = STATIC_DOWNCAST(CMainFrame, m_pMainWnd);
-	//			//CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild(RUNTIME_CLASS(CChildFrame), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel);
-	//			//
-	//			//pFrame->UpdateFrameTitleForDocument(pClass->Name);
-	//			//pChild->SetTitle(pClass->Name);
-	//			//pChild->SetWindowTextA(pClass->Name);
-	//			//pChild->m_wndView.m_pClass = pClass;
-	//
-	//			CNodeBase* pNode;
-	//			for (UINT n=0; n<Import[i].NodeCount();n++)
-	//			{
-	//				NodeType t = Import[i].Nodes[n].type;
-	//				if ( t == nt_hex64 ) pNode = new CNodeHex64;
-	//				if ( t == nt_hex32 ) pNode = new CNodeHex32;
-	//				if ( t == nt_hex16 ) pNode = new CNodeHex16;
-	//				if ( t == nt_hex8  ) pNode = new CNodeHex8;
-	//
-	//				if ( t == nt_int64 ) pNode = new CNodeInt64;
-	//				if ( t == nt_int32 ) pNode = new CNodeInt32;
-	//				if ( t == nt_int16 ) pNode = new CNodeInt16;
-	//				if ( t == nt_int8  ) pNode = new CNodeInt8;
-	//
-	//				if ( t == nt_uint32   ) pNode = new CNodeDWORD;
-	//				if ( t == nt_uint16   ) pNode = new CNodeWORD;
-	//				if ( t == nt_uint8    ) pNode = new CNodeByte;
-	//				if ( t == nt_pointer  ) pNode = new CNodePtr;
-	//				if ( t == nt_float    ) pNode = new CNodeFloat;
-	//				if ( t == nt_double   ) pNode = new CNodeDouble;
-	//				if ( t == nt_function ) pNode = new CNodeFunctionPtr;
-	//				if ( t == nt_pointer  )
-	//				{
-	//					int r = Import[i].Nodes[n].ref;
-	//					if (Import[ r ].Name == "VTABLE")
-	//					{
-	//						pNode = new CNodeVTable;
-	//						for (UINT v=0; v<Import[r].NodeCount();v++)
-	//						{
-	//							CNodeFunctionPtr* pFun = new CNodeFunctionPtr;
-	//							pFun->Name = Import[r].Nodes[v].Name;
-	//							if (pFun->Name == "void function()") pFun->Name = "";
-	//							pFun->Comment = Import[r].Nodes[v].Comment;
-	//							pFun->pParent = pNode;
-	//							((CNodeVTable*)pNode)->Nodes.push_back(pFun);
-	//						}
-	//					}
-	//					else
-	//					{
-	//						pNode = new CNodePtr;
-	//						ImportLink link;
-	//						link.pNode = (CNodePtr*)pNode;
-	//						link.Name = Import[r].Name;
-	//						Links.push_back(link);
-	//					}
-	//				}
-	//				if (t == nt_text)
-	//				{
-	//					pNode = new CNodeText;
-	//					((CNodeText*)pNode)->memsize = Import[i].Nodes[n].length;
-	//				}
-	//				if (t == nt_unicode)
-	//				{
-	//					pNode = new CNodeUnicode;
-	//					((CNodeUnicode*)pNode)->memsize = Import[i].Nodes[n].length;
-	//				}
-	//				if (t == nt_custom)
-	//				{
-	//					pNode = new CNodeCustom;
-	//					((CNodeCustom*)pNode)->memsize = Import[i].Nodes[n].length;
-	//				}
-	//				if (t == nt_instance)
-	//				{
-	//					pNode = new CNodeClassInstance;
-	//
-	//					int r = Import[i].Nodes[n].ref;
-	//					ImportLink link;
-	//					link.pNode = (CNodeClassInstance*)pNode;
-	//					link.Name = Import[r].Name;
-	//					Links.push_back(link);
-	//				}
-	//
-	//				pNode->Name		= Import[i].Nodes[n].Name;
-	//				pNode->Comment	= Import[i].Nodes[n].Comment;
-	//				pNode->pParent	= pClass;
-	//				pClass->Nodes.push_back(pNode);
-	//			}
-	//		}
-	//		//Fix Links... some real ghetto code here
-	//		for (UINT i = 0; i < Links.size(); i++)
-	//		{
-	//			for (UINT c = 0; c < Classes.size(); c++)
-	//			{
-	//				if (Links[i].Name == Classes[c]->Name)
-	//				{
-	//					CNodePtr* pPointer = (CNodePtr*)Links[i].pNode;
-	//					pPointer->pNode = Classes[c];
-	//				}
-	//			}
-	//		}
-	//
-	//		CalcAllOffsets();
-	//	}
-	//	catch (CppSQLite3Exception& e)
-	//	{
-	//		MessageBox(NULL, e.errorMessage() ,"Error",MB_OK);
-	//	}
-	//
-	//}
 }
 
 void CReClass2016App::ClearSelection( )
 {
-	for (UINT i = 0; i < Classes.size( ); i++)
+	for (UINT i = 0; i < m_Classes.size( ); i++)
 	{
-		Classes[i]->Unselect( );
-		for (UINT n = 0; n < Classes[i]->NodeCount( ); n++)
+		m_Classes[i]->Unselect( );
+		for (UINT n = 0; n < m_Classes[i]->NodeCount( ); n++)
 		{
-			CNodeBase* pNode = Classes[i]->GetNode( n );
+			CNodeBase* pNode = m_Classes[i]->GetNode( n );
 			pNode->Unselect( );
 
 			NodeType nt = pNode->GetType( );
@@ -760,12 +520,12 @@ void CReClass2016App::ClearSelection( )
 
 void CReClass2016App::ClearHidden( )
 {
-	for (UINT i = 0; i < Classes.size( ); i++)
+	for (UINT i = 0; i < m_Classes.size( ); i++)
 	{
-		Classes[i]->Show( );
-		for (UINT n = 0; n < Classes[i]->NodeCount( ); n++)
+		m_Classes[i]->Show( );
+		for (UINT n = 0; n < m_Classes[i]->NodeCount( ); n++)
 		{
-			CNodeBase* pNode = Classes[i]->GetNode( n );
+			CNodeBase* pNode = m_Classes[i]->GetNode( n );
 			pNode->Show( );
 
 			NodeType nt = pNode->GetType( );
@@ -791,11 +551,11 @@ void CReClass2016App::ClearHidden( )
 
 bool CReClass2016App::IsNodeValid( CNodeBase* pCheckNode )
 {
-	for (UINT i = 0; i < Classes.size( ); i++)
+	for (UINT i = 0; i < m_Classes.size( ); i++)
 	{
-		for (UINT n = 0; n < Classes[i]->NodeCount( ); n++)
+		for (UINT n = 0; n < m_Classes[i]->NodeCount( ); n++)
 		{
-			CNodeBase* pNode = Classes[i]->GetNode( n );
+			CNodeBase* pNode = m_Classes[i]->GetNode( n );
 			if (pNode == pCheckNode)
 				return true;
 
@@ -807,7 +567,6 @@ bool CReClass2016App::IsNodeValid( CNodeBase* pCheckNode )
 				{
 					if (pVTable->GetNode( f ) == pCheckNode)
 						return true;
-
 				}
 			}
 			if (nt == nt_array)
@@ -832,13 +591,14 @@ bool CReClass2016App::IsNodeValid( CNodeBase* pCheckNode )
 void CReClass2016App::OnButtonNewClass( )
 {
 	CMainFrame* pFrame = STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
-	CChildFrame* pChild = (CChildFrame*)pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel );
-
+	CChildFrame* pChild = STATIC_DOWNCAST( CChildFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
 	CNodeClass* pClass = new CNodeClass;
-	pClass->pChildWindow = pChild;
-	pClass->idx = (int)g_ReClassApp.Classes.size( );
-	g_ReClassApp.Classes.push_back( pClass );
-	pChild->m_wndView.m_pClass = pClass;
+
+	pClass->SetChildFrame( pChild );
+	pClass->idx = (int)g_ReClassApp.m_Classes.size( );
+	pChild->SetClass( pClass );
+
+	g_ReClassApp.m_Classes.push_back( pClass );
 
 	for (int i = 0; i < 64 / sizeof( size_t ); i++)
 	{
@@ -852,7 +612,7 @@ void CReClass2016App::OnButtonNewClass( )
 
 void CReClass2016App::OnButtonSearch( )
 {
-	GetMainWnd( )->MessageBox( _T( "Coming Soon!" ), _T( "ReClass 2016" ) );
+	GetMainWnd( )->MessageBox( _T( "Coming Soon!" ), _T( "WubbaLubbaDubDub" ) );
 }
 
 void CReClass2016App::OnUpdateButtonSearch( CCmdUI *pCmdUI )
@@ -862,13 +622,12 @@ void CReClass2016App::OnUpdateButtonSearch( CCmdUI *pCmdUI )
 
 void CReClass2016App::OnButtonConsole( )
 {
-	Console->ShowWindow( SW_SHOW );
-	Console->SetForegroundWindow( );
+	m_pConsole->ShowWindow( SW_SHOW );
+	m_pConsole->SetForegroundWindow( );
 }
 
 void CReClass2016App::OnButtonModules( )
 {
-	PrintOut( _T( "OnButtonModules called" ) );
 	CDialogModules dlg;
 	dlg.DoModal( );
 }
@@ -880,12 +639,11 @@ void CReClass2016App::OnUpdateButtonModules( CCmdUI * pCmdU )
 
 void CReClass2016App::OnButtonNotes( )
 {
-	PrintOut( _T( "OnButtonNotes called" ) );
 	CDialogEdit dlg;
 	dlg.Title = _T( "Notes" );
-	dlg.Text = Notes;
+	dlg.Text = m_strNotes;
 	dlg.DoModal( );
-	Notes = dlg.Text;
+	m_strNotes = dlg.Text;
 }
 
 void CReClass2016App::OnButtonParser( )
@@ -896,32 +654,30 @@ void CReClass2016App::OnButtonParser( )
 
 void CReClass2016App::OnButtonHeader( )
 {
-	PrintOut( _T( "OnButtonHeader called" ) );
 	CDialogEdit dlg;
 	dlg.Title = _T( "Header" );
-	dlg.Text = Header;
+	dlg.Text = m_strHeader;
 	dlg.DoModal( );
-	Header = dlg.Text;
+	m_strHeader = dlg.Text;
 }
 
 void CReClass2016App::OnButtonFooter( )
 {
-	PrintOut( _T( "OnButtonFooter called" ) );
 	CDialogEdit dlg;
 	dlg.Title = _T( "Footer" );
-	dlg.Text = Footer;
+	dlg.Text = m_strFooter;
 	dlg.DoModal( );
-	Footer = dlg.Text;
+	m_strFooter = dlg.Text;
 }
 
 CMainFrame* CReClass2016App::GetMainFrame( )
 {
-	return static_cast<CMainFrame*>(g_ReClassApp.m_pMainWnd);
+	return STATIC_DOWNCAST( CMainFrame, g_ReClassApp.m_pMainWnd );
 }
 
 CMFCRibbonBar* CReClass2016App::GetRibbonBar( )
 {
-	return &GetMainFrame( )->m_wndRibbonBar;
+	return &GetMainFrame( )->m_RibbonBar;
 }
 
 CNodeBase* CReClass2016App::CreateNewNode( NodeType Type )
@@ -1027,15 +783,15 @@ void CReClass2016App::SaveXML( TCHAR* FileName )
 
 	settings = doc.NewElement( "Header" );
 	#ifdef UNICODE
-	settings->SetAttribute( "Text", CW2A( Header ) );
+	settings->SetAttribute( "Text", CW2A( m_strHeader ) );
 	root->LinkEndChild( settings );
 
 	settings = doc.NewElement( "Footer" );
-	settings->SetAttribute( "Text", CW2A( Footer ) );
+	settings->SetAttribute( "Text", CW2A( m_strFooter ) );
 	root->LinkEndChild( settings );
 
 	settings = doc.NewElement( "Notes" );
-	settings->SetAttribute( "Text", CW2A( Notes ) );
+	settings->SetAttribute( "Text", CW2A( m_strNotes ) );
 	root->LinkEndChild( settings );
 	#else
 	settings->SetAttribute( "Text", Header );
@@ -1050,9 +806,9 @@ void CReClass2016App::SaveXML( TCHAR* FileName )
 	root->LinkEndChild( settings );
 	#endif
 
-	for (UINT i = 0; i < Classes.size( ); i++)
+	for (UINT i = 0; i < m_Classes.size( ); i++)
 	{
-		CNodeClass* pClass = Classes[i];
+		CNodeClass* pClass = m_Classes[i];
 
 		#ifdef UNICODE
 		CStringA strClassName = CW2A( pClass->GetName( ) );
@@ -1172,7 +928,6 @@ void CReClass2016App::SaveXML( TCHAR* FileName )
 
 	char szFilename[MAX_PATH] = { 0 };
 	#ifdef UNICODE
-		// Convert path to mbs in unicode mode
 	size_t converted = 0;
 	wcstombs_s( &converted, szFilename, FileName, MAX_PATH );
 	#else
@@ -1191,10 +946,14 @@ void CReClass2016App::SaveXML( TCHAR* FileName )
 
 void CReClass2016App::OnFileSave( )
 {
-	if (CurrentFilePath.IsEmpty( ))
+	if (m_strCurrentFilePath.IsEmpty( ))
+	{
 		OnFileSaveAs( );
+	}
 	else
-		SaveXML( CurrentFilePath.GetBuffer( ) );
+	{
+		SaveXML( m_strCurrentFilePath.GetBuffer( ) );
+	}
 }
 
 void CReClass2016App::OnFileSaveAs( )
@@ -1205,14 +964,12 @@ void CReClass2016App::OnFileSaveAs( )
 		return;
 
 	CString pathName = fileDlg.GetPathName( );
-	CurrentFilePath = pathName;
+	m_strCurrentFilePath = pathName;
 	SaveXML( pathName.GetBuffer( ) );
 }
 
 void CReClass2016App::OnFileOpen( )
 {
-	PrintOut( _T( "OnFileOpen() called" ) );
-
 	TCHAR Filters[] = _T( "ReClass (*.reclass)|*.reclass|All Files (*.*)|*.*||" );
 	CFileDialog fileDlg( TRUE, _T( "reclass" ), _T( "" ), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, Filters, NULL );
 	if (fileDlg.DoModal( ) != IDOK)
@@ -1239,7 +996,7 @@ void CReClass2016App::OnFileOpen( )
 	if (ret != XML_NO_ERROR)
 		return;
 
-	CurrentFilePath = pathName;
+	m_strCurrentFilePath = pathName;
 
 	XMLHandle hDoc( &doc );
 	XMLHandle hRoot( 0 );
@@ -1260,15 +1017,21 @@ void CReClass2016App::OnFileOpen( )
 
 	pElem = hRoot.FirstChildElement( "Header" ).ToElement( );
 	if (pElem)
-		Header = pElem->Attribute( "Text" );
+	{
+		m_strHeader = pElem->Attribute( "Text" );
+	}
 
 	pElem = hRoot.FirstChildElement( "Footer" ).ToElement( );
 	if (pElem)
-		Footer = pElem->Attribute( "Text" );
+	{
+		m_strFooter = pElem->Attribute( "Text" );
+	}
 
 	pElem = hRoot.FirstChildElement( "Notes" ).ToElement( );
 	if (pElem)
-		Notes = pElem->Attribute( "Text" );
+	{
+		m_strNotes = pElem->Attribute( "Text" );
+	}
 
 	pElem = hRoot.FirstChildElement( "Class" ).ToElement( );
 	while (pElem)
@@ -1291,8 +1054,9 @@ void CReClass2016App::OnFileOpen( )
 
 			if (Type != nt_none)
 			{
-				int Size = -1;
 				CNodeBase* pNode = CreateNewNode( (NodeType)Type );
+				int Size = -1;
+				
 				pNode->SetName( _CA2W( pClassElem->Attribute( "Name" ) ) );
 				pNode->SetComment( _CA2W( pClassElem->Attribute( "Comment" ) ) );
 				pNode->SetHidden( atoi( pClassElem->Attribute( "bHidden" ) ) > 0 ? true : false );
@@ -1374,7 +1138,7 @@ void CReClass2016App::OnFileOpen( )
 		}
 
 
-		Classes.push_back( pClass );
+		m_Classes.push_back( pClass );
 		pElem = pElem->NextSiblingElement( "Class" );
 	}
 
@@ -1382,25 +1146,22 @@ void CReClass2016App::OnFileOpen( )
 	//for (UINT i = 0; i < Links.size(); i++)
 	for (auto it = links.begin( ); it != links.end( ); it++)
 	{
-		for (UINT c = 0; c < Classes.size( ); c++)
+		for (UINT i = 0; i < m_Classes.size( ); i++)
 		{
-			if (it->first == Classes[c]->GetName( ))
+			if (it->first == m_Classes[i]->GetName( ))
 			{
 				NodeType Type = it->second->GetType( );
 				if (Type == nt_pointer)
 				{
-					CNodePtr* pPointer = static_cast<CNodePtr*>(it->second);
-					pPointer->pNode = Classes[c];
+					static_cast<CNodePtr*>(it->second)->pNode = m_Classes[i];
 				}
 				if (Type == nt_instance)
 				{
-					CNodeClassInstance* pClassInstance = static_cast<CNodeClassInstance*>(it->second);
-					pClassInstance->pNode = Classes[c];
+					static_cast<CNodeClassInstance*>(it->second)->pNode = m_Classes[i];
 				}
 				if (Type == nt_array)
 				{
-					CNodeArray* pArray = static_cast<CNodeArray*>(it->second);
-					pArray->pNode = Classes[c];
+					static_cast<CNodeArray*>(it->second)->pNode = m_Classes[i];
 				}
 			}
 		}
@@ -1413,29 +1174,29 @@ void CReClass2016App::OnButtonGenerate( )
 {
 	PrintOut( _T( "OnButtonGenerate() called" ) );
 
-	CString generated_text, t;
+	CString strGeneratedText, t;
 
-	generated_text += _T( "// Generated using ReClass 2016\r\n\r\n" );
+	strGeneratedText += _T( "// Generated using ReClass 2016\r\n\r\n" );
 
-	if (!Header.IsEmpty( ))
-		generated_text += Header + _T( "\r\n\r\n" );
+	if (!m_strHeader.IsEmpty( ))
+		strGeneratedText += m_strHeader + _T( "\r\n\r\n" );
 
-	for (UINT c = 0; c < Classes.size( ); c++)
+	for (UINT i = 0; i < m_Classes.size( ); i++)
 	{
-		t.Format( _T( "class %s;\r\n" ), Classes[c]->GetName( ) );
-		generated_text += t;
+		t.Format( _T( "class %s;\r\n" ), m_Classes[i]->GetName( ) );
+		strGeneratedText += t;
 	}
 
-	generated_text += _T( "\r\n" );
+	strGeneratedText += _T( "\r\n" );
 
 	std::vector<CString> vfun;
 	std::vector<CString> var;
 
 	CString ClassName;
 
-	for (UINT c = 0; c < Classes.size( ); c++)
+	for (UINT c = 0; c < m_Classes.size( ); c++)
 	{
-		CNodeClass* pClass = Classes[c];
+		CNodeClass* pClass = m_Classes[c];
 
 		CalcOffsets( pClass );
 
@@ -1634,53 +1395,62 @@ void CReClass2016App::OnButtonGenerate( )
 		}
 
 		t.Format( _T( "%s\r\n{\r\npublic:\r\n" ), ClassName );
-		generated_text += t;
+		strGeneratedText += t;
 
 		for (UINT i = 0; i < vfun.size( ); i++)
-			generated_text += vfun[i];
+			strGeneratedText += vfun[i];
 
 		if (vfun.size( ) > 0)
-			generated_text += _T( "\r\n" );
+			strGeneratedText += _T( "\r\n" );
 
 		for (UINT i = 0; i < var.size( ); i++)
-			generated_text += var[i];
+			strGeneratedText += var[i];
 
 		if (var.size( ) > 0)
-			generated_text += _T( "\r\n" );
+			strGeneratedText += _T( "\r\n" );
 
 		if (pClass->Code.GetLength( ) > 0)
 		{
-			generated_text += pClass->Code;
-			generated_text += _T( "\r\n" );
+			strGeneratedText += pClass->Code;
+			strGeneratedText += _T( "\r\n" );
 		}
 
 		t.Format( _T( "}; //Size=0x%0.4X\r\n\r\n" ), pClass->GetMemorySize( ) );
-		generated_text += t;
+		strGeneratedText += t;
 	}
 
-	if (!Footer.IsEmpty( ))
-		generated_text += (Footer + _T( "\r\n" ));
+	if (!m_strFooter.IsEmpty( ))
+	{
+		strGeneratedText += (m_strFooter + _T( "\r\n" ));
+	}
 
 	if (g_bClipboardCopy)
 	{
+		int stringSize = 0;
+		HGLOBAL MemoryBlob = NULL;
+
 		::OpenClipboard( NULL );
 		::EmptyClipboard( );
-		int string_size = generated_text.GetLength( ) * sizeof( CString::StrTraits::XCHAR );
-		HGLOBAL memory_blob = ::GlobalAlloc( GMEM_FIXED, string_size );
-		memcpy( memory_blob, generated_text.GetBuffer( ), string_size );
+
+		stringSize = strGeneratedText.GetLength( ) * sizeof( CString::StrTraits::XCHAR );
+		MemoryBlob = ::GlobalAlloc( GMEM_FIXED, stringSize );
+		memcpy( MemoryBlob, strGeneratedText.GetBuffer( ), stringSize );
+
 		#ifdef UNICODE
-		::SetClipboardData( CF_UNICODETEXT, memory_blob );
+		::SetClipboardData( CF_UNICODETEXT, MemoryBlob );
 		#else
-		::SetClipboardData( CF_TEXT, memory_blob );
+		::SetClipboardData( CF_TEXT, hMemBlob );
 		#endif
+
 		::CloseClipboard( );
-		GetMainWnd( )->MessageBox( _T( "Coppied generated code to clipboard..." ), _T( "ReClass 2016" ), MB_OK | MB_ICONINFORMATION );
+		
+		GetMainWnd( )->MessageBox( _T( "Copied generated code to clipboard" ), _T( "ReClass 2016" ), MB_OK | MB_ICONINFORMATION );
 	}
 	else
 	{
 		CDialogEdit dlg;
 		dlg.Title = _T( "Class Code Generated" );
-		dlg.Text = generated_text;
+		dlg.Text = strGeneratedText;
 		dlg.DoModal( );
 	}
 }
@@ -1698,17 +1468,15 @@ void CReClass2016App::OnUpdateButtonPlugins( CCmdUI * pCmdUI )
 
 void CReClass2016App::OnOpenPDB( )
 {
-	PrintOut( _T( "OnOpenPDB() called" ) );
+	CString strConcatProcessName = g_ProcessName;
+	if (strConcatProcessName.ReverseFind( '.' ) != -1)
+		strConcatProcessName.Truncate( strConcatProcessName.ReverseFind( '.' ) );
 
-	CString concat_name = g_ProcessName;
-	if (concat_name.ReverseFind( '.' ) != -1)
-		concat_name.Truncate( concat_name.ReverseFind( '.' ) );
-
-	CFileDialog fileDlg{ TRUE, _T( "pdb" ), concat_name, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T( "PDB (*.pdb)|*.pdb|All Files (*.*)|*.*||" ), NULL };
+	CFileDialog fileDlg( TRUE, _T( "pdb" ), strConcatProcessName, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T( "PDB (*.pdb)|*.pdb|All Files (*.*)|*.*||" ), NULL );
 	if (fileDlg.DoModal( ) != IDOK)
 		return;
 
-	g_SymLoader->LoadSymbolsForPdb( fileDlg.GetPathName( ) );
+	m_pSymbolLoader->LoadSymbolsForPdb( fileDlg.GetPathName( ) );
 }
 
 void CReClass2016App::OnUpdateOpenPDB( CCmdUI *pCmdUI )
@@ -1730,11 +1498,11 @@ void CReClass2016App::DeleteClass( CNodeClass* pClass )
 		return;
 	}
 
-	for (UINT i = 0; i < Classes.size( ); i++)
+	for (UINT i = 0; i < m_Classes.size( ); i++)
 	{
-		if (Classes[i] == pClass)
+		if (m_Classes[i] == pClass)
 		{
-			Classes.erase( Classes.begin( ) + i );
+			m_Classes.erase( m_Classes.begin( ) + i );
 			return;
 		}
 	}
@@ -1742,9 +1510,9 @@ void CReClass2016App::DeleteClass( CNodeClass* pClass )
 
 CNodeBase* CReClass2016App::IsNodeRef( CNodeBase* pTestNode )
 {
-	for (UINT c = 0; c < Classes.size( ); c++)
+	for (UINT c = 0; c < m_Classes.size( ); c++)
 	{
-		CNodeClass* pClass = (CNodeClass*)Classes[c];
+		CNodeClass* pClass = (CNodeClass*)m_Classes[c];
 		for (UINT n = 0; n < pClass->NodeCount( ); n++)
 		{
 			CNodeBase* pNode = pClass->GetNode( n );
@@ -1785,18 +1553,19 @@ void CReClass2016App::OnButtonClean( )
 		wnd = pFrame->MDIGetActive( );
 	}
 
-	std::vector<CNodeClass*> toCheck;
-	for (UINT i = 0; i < Classes.size( ); i++)
+	std::vector<CNodeClass*> ClassesToCheck;
+	for (UINT i = 0; i < m_Classes.size( ); i++)
 	{
-		if (IsNodeRef( Classes[i] ) == NULL)
-			toCheck.push_back( Classes[i] );
+		if (IsNodeRef( m_Classes[i] ) == NULL)
+			ClassesToCheck.push_back( m_Classes[i] );
 	}
 
 	int count = 0;
-	for (UINT i = 0; i < toCheck.size( ); i++)
+	for (UINT i = 0; i < ClassesToCheck.size( ); i++)
 	{
-		CNodeClass* pClass = toCheck[i];
+		CNodeClass* pClass = ClassesToCheck[i];
 		bool bCanDelete = true;
+
 		for (UINT n = 0; n < pClass->NodeCount( ); n++)
 		{
 			CNodeBase* pNode = pClass->GetNode( n );
@@ -1806,8 +1575,10 @@ void CReClass2016App::OnButtonClean( )
 				continue;
 
 			bCanDelete = false;
+
 			break;
 		}
+
 		if (bCanDelete)
 		{
 			count++;
@@ -1817,11 +1588,11 @@ void CReClass2016App::OnButtonClean( )
 
 	PrintOut( _T( "Unused Classes removed: %i" ), count );
 	CString msg; msg.Format( _T( "Unused Classes removed: %i" ), count );
-	MessageBox( GetMainWnd( )->GetSafeHwnd( ), msg, _T( "Cleaner" ), MB_OK );
+	MessageBox( GetMainWnd( )->GetSafeHwnd( ), msg.GetString( ), _T( "Cleaner" ), MB_OK );
 }
 
 void CReClass2016App::OnUpdateButtonClean( CCmdUI *pCmdUI )
 {
-	pCmdUI->Enable( (g_ReClassApp.Classes.size( ) > 0) );
+	pCmdUI->Enable( (g_ReClassApp.m_Classes.size( ) > 0) );
 }
 

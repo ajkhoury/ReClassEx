@@ -45,7 +45,7 @@ int CNodePtr::Draw( ViewInfo & View, int x, int y )
 
 		ViewInfo newView;
 		newView = View;
-		newView.pData = Memory.pMemory;
+		newView.pData = Memory.Data( );
 		newView.Address = pMemory[0];
 
 		ReClassReadMemory( (LPVOID)newView.Address, newView.pData, NeededSize );

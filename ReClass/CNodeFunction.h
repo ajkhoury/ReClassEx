@@ -1,22 +1,40 @@
 #pragma once
 
 #include "CNodeBase.h"
+#include "CScintillaEdit.h"
+#include "CChildView.h"
 
 class CNodeFunction : public CNodeBase
 {
 public:
 	CNodeFunction( );
+	~CNodeFunction( );
 
 	virtual void Update( HotSpot& Spot );
 
-	virtual int GetMemorySize( ) { return memsize; }
+	virtual int GetMemorySize( ) { return m_dwMemorySize; }
 
 	virtual int Draw( ViewInfo& View, int x, int y );
 
-	void DisassembleBytes( size_t Address );
+	void Initialize( CChildView* pChild, ULONG_PTR Address );
 
-public:
-	DWORD memsize;
+private:
+	void DisassembleBytes( ULONG_PTR Address );
 
-	std::vector<CStringA> Assembly;
+private:
+	DWORD m_dwMemorySize;
+	std::vector<CStringA> m_Assembly;
+
+private:
+	CScintillaEdit* m_pEdit;
+
+	ULONG m_nLines;
+	ULONG m_nLongestLine;
+	
+	int m_iTextHeight;
+
+	int m_iWidth;
+	int m_iHeight;
+
+	BOOLEAN m_bRedrawNeeded;
 };

@@ -17,16 +17,18 @@ public:
 	CReClass2016App( );
 
 // App Globals
-	CString Header;
-	CString Footer;
-	CString Notes;
-	CString ParserInput;
+	CString m_strHeader;
+	CString m_strFooter;
+	CString m_strNotes;
+	CString m_strParserInput;
 
-	std::vector<CNodeClass*> Classes;
+	CString m_strCurrentFilePath;
 
-	CString CurrentFilePath;
+	std::vector<CNodeClass*> m_Classes;
 
-	CDialogConsole* Console;
+	CDialogConsole* m_pConsole;
+
+	Symbols* m_pSymbolLoader;
 
 // Overrides
 	virtual BOOL InitInstance( );

@@ -8,6 +8,10 @@
 #include "DialogProgress.h"
 #include "ReClass2016.h"
 
+#include <memory>
+#include <algorithm>
+#include <Psapi.h>
+
 // CDialogProcSelect dialog
 
 std::initializer_list<const wchar_t*> CommonProcesses =
@@ -63,10 +67,11 @@ void CDialogProcSelect::ListRunningProcs( )
 	m_ProcessList.DeleteAllItems( );
 	m_ProcessInfos.clear( );
 
-	PSYSTEM_PROCESS_INFORMATION proc_info = nullptr;
-	DWORD buffer_size = 0;
+	PSYSTEM_PROCESS_INFORMATION ProcessInfo = NULL;
+	std::unique_ptr<uint8_t[]> BufferArray;
+	ULONG BufferSize = 0;
 
-	if (NT_SUCCESS( ntdll::NtQuerySystemInformation( SystemProcessInformation, NULL, NULL, &buffer_size ) ))
+	if (NT_SUCCESS( ntdll::NtQuerySystemInformation( SystemProcessInformation, NULL, NULL, &BufferSize ) ))
 	{
 		#ifdef _DEBUG
 		PrintOut( _T( "[CDialogProcSelect::RefreshRunningProcesses] Failed to get size for system process list from ProcessBasicInformation" ) );
@@ -74,60 +79,67 @@ void CDialogProcSelect::ListRunningProcs( )
 		return;
 	}
 
-	auto buffer_array = std::make_unique<uint8_t[]>( buffer_size + 1 );
+	BufferArray = std::make_unique<uint8_t[]>( BufferSize + 1 );
 
-	if (NT_SUCCESS( ntdll::NtQuerySystemInformation( SystemProcessInformation, buffer_array.get( ), buffer_size, &buffer_size ) ))
+	if (NT_SUCCESS( ntdll::NtQuerySystemInformation( SystemProcessInformation, (PVOID)BufferArray.get( ), BufferSize, &BufferSize ) ))
 	{
+		int CurrentProcessIndex = 0;
+		
 		m_bLoadingProcesses = true;
-		int proc_index = 0;
 
-		proc_info = reinterpret_cast<PSYSTEM_PROCESS_INFORMATION>(buffer_array.get( ));
-		while (proc_info && proc_info->NextEntryOffset != 0)
+		ProcessInfo = (PSYSTEM_PROCESS_INFORMATION)BufferArray.get( );
+
+		while ((ProcessInfo != NULL) && (ProcessInfo->NextEntryOffset != 0))
 		{
-			if (proc_info->ImageName.Buffer && proc_info->ImageName.Length)
+			if (ProcessInfo->ImageName.Buffer && ProcessInfo->ImageName.Length)
 			{
-				if (m_FilterCheck.GetCheck( ) != BST_CHECKED || std::find_if( CommonProcesses.begin( ), CommonProcesses.end( ),
-																			  [proc_info] ( const wchar_t* proc ) { return _wcsicmp( proc, proc_info->ImageName.Buffer ) == 0; } ) == CommonProcesses.end( ))
+				if (
+					m_FilterCheck.GetCheck( ) != BST_CHECKED || 
+					CommonProcesses.end( ) == std::find_if( CommonProcesses.begin( ), CommonProcesses.end( ), 
+															[ProcessInfo] ( const wchar_t* proc ) { return _wcsnicmp( proc, ProcessInfo->ImageName.Buffer, ProcessInfo->ImageName.Length ) == 0; } )
+					)
 				{
-					HANDLE hProcess = ReClassOpenProcess( PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD)proc_info->UniqueProcessId );
+					HANDLE hProcess = ReClassOpenProcess( PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD)ProcessInfo->UniqueProcessId );
 					#ifdef _WIN64
 					if (hProcess && Utils::GetProcessPlatform( hProcess ) == Utils::ProcessPlatformX64)
-						#else
+					#else
 					if (hProcess && Utils::GetProcessPlatform( hProcess ) == Utils::ProcessPlatformX86)
-						#endif
+					#endif
 					{
-						ProcessInfoStack info;
-						info.ProcessId = (DWORD)proc_info->UniqueProcessId;
-
-						TCHAR process_path[MAX_PATH + 1] = { 0 };
-						GetModuleFileNameEx( hProcess, NULL, process_path, MAX_PATH );
-						SHFILEINFO info_shell = { 0 };
-						SHGetFileInfo( process_path, NULL, &info_shell, sizeof( SHFILEINFO ), SHGFI_ICON );
-						m_ProcessIcons.Add( info_shell.hIcon );
-
+						ProcessInfoStack Info = { 0 };
+						TCHAR tcsProcessId[16] = { 0 };
+						TCHAR tcsProcessPath[MAX_PATH] = { 0 };
+						SHFILEINFO FileInfo = { 0 };
 						LVITEM lvi = { 0 };
-						lvi.mask = LVIF_TEXT | LVIF_IMAGE;
+						int pos;
+
+						Info.dwProcessId = (DWORD)ProcessInfo->UniqueProcessId;
 						#ifdef UNICODE
-						info.Procname = proc_info->ImageName.Buffer;
+						Info.strProcessName = ProcessInfo->ImageName.Buffer;
 						#else
-						info.Procname = CW2A( proc_info->ImageName.Buffer );
+						Info.strProcessName = CW2A( proc_info->ImageName.Buffer );
 						#endif
-						lvi.pszText = info.Procname.GetBuffer( );
-						lvi.cchTextMax = info.Procname.GetLength( );
-						lvi.iImage = proc_index++;
+
+						GetModuleFileNameEx( hProcess, NULL, tcsProcessPath, MAX_PATH );
+						SHGetFileInfo( tcsProcessPath, NULL, &FileInfo, sizeof( SHFILEINFO ), SHGFI_ICON );		
+						m_ProcessIcons.Add( FileInfo.hIcon );
+	
+						lvi.mask = LVIF_TEXT | LVIF_IMAGE;
+						lvi.pszText = Info.strProcessName.GetBuffer( );
+						lvi.cchTextMax = Info.strProcessName.GetLength( );
+						lvi.iImage = CurrentProcessIndex++;
 						lvi.iItem = m_ProcessList.GetItemCount( );
-						int pos = m_ProcessList.InsertItem( &lvi );
+						pos = m_ProcessList.InsertItem( &lvi );
 
-						TCHAR strProcId[64];
-						_stprintf_s( strProcId, _T( "%d" ), info.ProcessId );
-						m_ProcessList.SetItemText( pos, COLUMN_PROCESSID, (LPTSTR)strProcId );
+						_ui64tot_s( Info.dwProcessId, tcsProcessId, 16, 10 );
+						m_ProcessList.SetItemText( pos, COLUMN_PROCESSID, (LPTSTR)tcsProcessId );
 
-						m_ProcessInfos.push_back( info );
+						m_ProcessInfos.push_back( Info );
 					}
 					CloseHandle( hProcess );
 				}
 			}
-			proc_info = reinterpret_cast<PSYSTEM_PROCESS_INFORMATION>((ULONG)proc_info + proc_info->NextEntryOffset);
+			ProcessInfo = (PSYSTEM_PROCESS_INFORMATION)((uint8_t*)ProcessInfo + ProcessInfo->NextEntryOffset);
 		}
 	}
 	m_bLoadingProcesses = false;
@@ -162,25 +174,24 @@ BOOL CDialogProcSelect::OnInitDialog( )
 
 int CALLBACK CDialogProcSelect::CompareFunction( LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort )
 {
-	COMPARESTRUCT* compare = reinterpret_cast<COMPARESTRUCT*>(lParamSort);
-	if (compare)
+	PCOMPARESTRUCT pCompare = (PCOMPARESTRUCT)lParamSort;
+	if (pCompare)
 	{
-		CListCtrl* pListCtrl = compare->pListCtrl;
-		int column = compare->iColumn;
-		bool ascending = compare->bAscending;
+		CListCtrl* pListCtrl = pCompare->pListCtrl;
+		int column = pCompare->iColumn;
+		bool ascending = pCompare->bAscending;
 
 		int item1 = ascending ? static_cast<int>(lParam1) : static_cast<int>(lParam2);
 		int item2 = ascending ? static_cast<int>(lParam2) : static_cast<int>(lParam1);
 
 		if (column == COLUMN_PROCESSID)
 		{
-			CString strNum1 = pListCtrl->GetItemText( item1, column );
-			CString strNum2 = pListCtrl->GetItemText( item2, column );
+			CString strValue1 = pListCtrl->GetItemText( item1, column );
+			CString strValue2 = pListCtrl->GetItemText( item2, column );
+			DWORD value1 = (DWORD)_tcstoul( strValue1.GetString( ), NULL, 16 );
+			DWORD value2 = (DWORD)_tcstoul( strValue2.GetString( ), NULL, 16 );
 
-			size_t num1 = (size_t)_tcstoui64( strNum1.GetBuffer( ), NULL, 16 );
-			size_t num2 = (size_t)_tcstoui64( strNum2.GetBuffer( ), NULL, 16 );
-
-			return (int)(num2 - num1);
+			return (int)(value2 - value1);
 		}
 		else if (column == COLUMN_PROCESSNAME)
 		{
@@ -226,55 +237,69 @@ void CDialogProcSelect::OnDblClkListControl( NMHDR* pNMHDR, LRESULT* pResult )
 
 void CDialogProcSelect::OnAttachButton( )
 {
-	int selected_index = m_ProcessList.GetSelectionMark( );
+	int SelectedIndex = m_ProcessList.GetSelectionMark( );
 
-	if (selected_index != -1)
+	if (SelectedIndex != -1)
 	{
-		CString selected_text = m_ProcessList.GetItemText( selected_index, 0 );
-		auto proc_info_found = std::find_if( m_ProcessInfos.begin( ), m_ProcessInfos.end( ), [selected_text] ( const ProcessInfoStack& proc ) -> bool { return proc.Procname == selected_text; } );
+		TCHAR tcsdSelectedProcessId[64] = { 0 };
+		m_ProcessList.GetItemText( SelectedIndex, COLUMN_PROCESSID, tcsdSelectedProcessId, 64 );
+		DWORD dwSelectedProcessId = _tcstoul( tcsdSelectedProcessId, NULL, 10 );
 
-		if (proc_info_found != m_ProcessInfos.end( ))
+		auto FoundProcessInfo = std::find_if( m_ProcessInfos.begin( ), m_ProcessInfos.end( ),
+											 [dwSelectedProcessId] ( const ProcessInfoStack& proc ) -> bool { return proc.dwProcessId == dwSelectedProcessId; } );
+
+		if (FoundProcessInfo != m_ProcessInfos.end( ))
 		{
-			HANDLE process_open = ReClassOpenProcess( PROCESS_ALL_ACCESS, FALSE, proc_info_found->ProcessId );
-			if (process_open == NULL || GetLastError( ) != ERROR_SUCCESS)
+			HANDLE hProcess = ReClassOpenProcess( PROCESS_ALL_ACCESS, FALSE, FoundProcessInfo->dwProcessId );
+			if (hProcess == NULL || GetLastError( ) != ERROR_SUCCESS)
 			{
 				CString message;
-				message.Format( _T( "Failed to attach to process \"%s\": %s" ), proc_info_found->Procname.GetString( ), Utils::GetLastErrorString( ).GetString( ) );
+				message.Format( _T( "Failed to attach to process \"%s\"!" ), FoundProcessInfo->strProcessName.GetString( ) );
 				MessageBox( message, _T( "ReClass 2016" ), MB_OK | MB_ICONERROR );
 			}
 			else
 			{
-				CloseHandle( g_hProcess ); //Stops leaking handles
 
-				g_hProcess = process_open;
-				g_ProcessID = proc_info_found->ProcessId;
-				g_ProcessName = proc_info_found->Procname;
+				if (g_hProcess != NULL) // Stop leaking handles!
+					CloseHandle( g_hProcess ); 
+
+				g_hProcess = hProcess;
+				g_ProcessID = FoundProcessInfo->dwProcessId;
+				g_ProcessName = FoundProcessInfo->strProcessName;
+
 				UpdateMemoryMap( );
 
 				if (g_bSymbolResolution && m_LoadAllSymbols.GetCheck( ) == BST_CHECKED)
 				{
-					int numOfModules = (int)g_MemMapModules.size( );
-
 					CDialogProgress progress;
+					ULONG nModules = (ULONG)g_MemMapModules.size( );
+
 					progress.Create( CDialogProgress::IDD, this );
 					progress.ShowWindow( SW_SHOW );
-					progress.Bar( ).SetRange32( 0, numOfModules );
+
+					progress.Bar( ).SetRange32( 0, nModules );
 					progress.Bar( ).SetStep( 1 );
 
-					for (int i = 0; i < numOfModules; i++)
+					for (ULONG i = 0; i < nModules; i++)
 					{
-						MemMapInfo mod = g_MemMapModules[i];
+						TCHAR tcsProgressText[64] = { 0 };
+						MemMapInfo CurrentModule = g_MemMapModules[i];
 
-						CString progressText;
-						progressText.Format( _T( "[%d/%d] %s" ), i + 1, numOfModules, mod.Name.GetString( ) );
-						progress.SetProgressText( progressText );
+						_stprintf_s( tcsProgressText, 128, _T( "[%d/%d] %s" ), i + 1, nModules, CurrentModule.Name.GetString( ) );
+						progress.SetProgressText( tcsProgressText );
+
+						if (g_ReClassApp.m_pSymbolLoader->LoadSymbolsForModule( CurrentModule.Path, CurrentModule.Start, CurrentModule.Size ) == FALSE)
+						{
+							PrintOut( _T( "Failed to load symbols for %s (%s)" ), 
+									  CurrentModule.Name.GetString( ), FoundProcessInfo->strProcessName.GetString( ) );
+						}
+
 						progress.Bar( ).StepIt( );
-
-						if (!g_SymLoader->LoadSymbolsForModule( mod.Path, mod.Start, mod.Size ))
-							PrintOut( _T( "Failed to load symbols for %s (%s)" ), mod.Name.GetString( ), proc_info_found->Procname.GetString( ) );
 					}
+
 					progress.EndDialog( 0 );
 				}
+
 				OnClose( );
 			}
 		}

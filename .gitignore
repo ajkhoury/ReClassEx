@@ -40,3 +40,9 @@ Reclass2015.rar
 /ReClass/plugins/BlackoutDrv64_dbg.sys
 DriverPlugin_dbg.lib
 DriverPlugin_dbg.rc-plugin64
+*.reclass
+*.sys
+/ReClass/plugins/DriverPlugin.lib
+/ReClass/plugins/DriverPlugin.rc-plugin64
+/ReClass/plugins/TestPlugin.lib
+/ReClass/plugins/TestPlugin.rc-plugin64

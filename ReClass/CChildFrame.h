@@ -15,14 +15,16 @@ public:
 public:
 
 // Overrides
-	public:
+public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	virtual BOOL OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo);
 
 // Implementation
 public:
-	// view for the client area of the frame.
-	CChildView m_wndView;
+	VOID SetClass( CNodeClass* pClass ) { m_ChildView.SetClass( pClass ); }
+
+	// View for the client area of the frame.
+	CChildView m_ChildView;
 
 	virtual ~CChildFrame();
 

@@ -65,7 +65,7 @@ int CChildFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 		return -1;
 
 	// create a view to occupy the client area of the frame
-	if (!m_wndView.Create( NULL, NULL, AFX_WS_DEFAULT_VIEW, CRect( 0, 0, 0, 0 ), this, AFX_IDW_PANE_FIRST, NULL ))
+	if (!m_ChildView.Create( NULL, NULL, AFX_WS_DEFAULT_VIEW, CRect( 0, 0, 0, 0 ), this, AFX_IDW_PANE_FIRST, NULL ))
 	{
 		TRACE0( "Failed to create view window\n" );
 		return -1;
@@ -77,13 +77,13 @@ int CChildFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 void CChildFrame::OnSetFocus( CWnd* pOldWnd )
 {
 	CMDIChildWndEx::OnSetFocus( pOldWnd );
-	m_wndView.SetFocus( );
+	m_ChildView.SetFocus( );
 }
 
 BOOL CChildFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo )
 {
 	// let the view have first crack at the command
-	if (m_wndView.OnCmdMsg( nID, nCode, pExtra, pHandlerInfo ))
+	if (m_ChildView.OnCmdMsg( nID, nCode, pExtra, pHandlerInfo ))
 		return TRUE;
 	// otherwise, do default handling
 	return CMDIChildWndEx::OnCmdMsg( nID, nCode, pExtra, pHandlerInfo );

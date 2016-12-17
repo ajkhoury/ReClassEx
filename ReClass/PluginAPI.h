@@ -56,7 +56,7 @@ RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveOpenThreadOverride( );
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsOpenProcessOverriden( );
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsOpenThreadOverriden( );
 
-RECLASS_EXPORT VOID PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... );
+RECLASS_EXPORT VOID PLUGIN_CC ReClassPrintConsole( const WCHAR* format, ... );
 RECLASS_EXPORT HANDLE PLUGIN_CC ReClassGetProcessHandle( );
 RECLASS_EXPORT DWORD PLUGIN_CC ReClassGetProcessId( );
 RECLASS_EXPORT HWND PLUGIN_CC ReClassMainWindow( );

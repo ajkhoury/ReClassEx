@@ -38,16 +38,16 @@ private:
 
 	struct ProcessInfoStack
 	{
-		DWORD ProcessId;
-		CString Procname;
+		DWORD dwProcessId;
+		CString strProcessName;
 	};
 
-	typedef struct COMPARESTRUCT 
+	typedef struct _COMPARESTRUCT 
 	{
 		CListCtrl* pListCtrl;
 		int iColumn;
 		bool bAscending;
-	} *LPCOMPARESTRUCT;
+	} COMPARESTRUCT, *PCOMPARESTRUCT, *LPCOMPARESTRUCT;
 	
 	static int CALLBACK CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
 
