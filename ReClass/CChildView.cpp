@@ -810,7 +810,7 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 										}
 
 										// Create full instruction string
-										sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
+										sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", (ULONG_PTR)MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
 										strDisassembly += szInstruction;
 
 										// Increment the text height

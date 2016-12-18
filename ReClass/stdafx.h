@@ -91,7 +91,7 @@ using namespace tinyxml2;
 //
 extern HANDLE g_hProcess;
 extern DWORD  g_ProcessID;
-extern size_t g_AttachedProcessAddress;
+extern ULONG_PTR g_AttachedProcessAddress;
 extern DWORD  g_AttachedProcessSize;
 extern CString g_ProcessName;
 

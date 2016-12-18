@@ -142,7 +142,7 @@ void CNodeFunctionPtr::Initialize( CChildView* pChild, ULONG_PTR Address )
 	m_pEdit->Create( WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, CRect( 0, 0, 0, 0 ), (CWnd*)pChild, 0 );
 
 	m_pEdit->ShowWindow( SW_HIDE ); // Hide the window until we open the level
-									//m_pEdit->EnableWindow( FALSE ); // Disables the ability to scroll
+	//m_pEdit->EnableWindow( FALSE ); // Disables the ability to scroll
 	m_pEdit->EnableScrollBarCtrl( SB_BOTH, FALSE );
 
 	m_pEdit->SetLexer( SCLEX_ASM );
@@ -232,7 +232,7 @@ void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
 				}
 
 				// Create full instruction string
-				sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
+				sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", (ULONG_PTR)MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
 				m_Assembly.emplace_back( szInstruction );
 
 				// Increment instruction length

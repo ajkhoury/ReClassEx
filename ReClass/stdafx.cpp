@@ -892,13 +892,13 @@ int SplitString( const CString& input, const CString& delimiter, CStringArray& r
 	return numFound;
 }
 
-size_t ConvertStrToAddress( CString str )
+ULONG_PTR ConvertStrToAddress( CString str )
 {
 	CStringArray chunks;
 	if (SplitString( str, "+", chunks ) == 0)
 		chunks.Add( str );
 
-	size_t Final = 0;
+	ULONG_PTR Final = 0;
 
 	for (UINT i = 0; i < (UINT)chunks.GetCount( ); i++)
 	{
@@ -927,7 +927,7 @@ size_t ConvertStrToAddress( CString str )
 			a = a.Mid( 1 );
 		}
 
-		size_t curadd = 0;
+		ULONG_PTR curadd = 0;
 
 		if (bMod)
 		{
@@ -945,7 +945,7 @@ size_t ConvertStrToAddress( CString str )
 		}
 		else
 		{
-			curadd = (size_t)_tcstoui64( a.GetBuffer( ), NULL, 16 ); //StrToNum
+			curadd = (ULONG_PTR)_tcstoui64( a.GetBuffer( ), NULL, 16 ); //StrToNum
 		}
 
 		Final += curadd;

@@ -207,7 +207,7 @@ void CNodeFunction::DisassembleBytes( ULONG_PTR Address )
 				}
 
 				// Create full instruction string
-				sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
+				sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", (ULONG_PTR)MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
 				m_Assembly.emplace_back( szInstruction );
 
 				// Increment instruction length
