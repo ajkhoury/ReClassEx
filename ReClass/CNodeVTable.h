@@ -10,10 +10,10 @@ public:
 
 	virtual void Update( HotSpot& Spot );
 
-	virtual int GetMemorySize( ) { return sizeof( size_t ); }
+	virtual ULONG GetMemorySize( ) { return sizeof( void* ); }
 
 	virtual int Draw( ViewInfo& View, int x, int y );
 
-public:
-	CMemory Memory;
+private:
+	CMemory m_Memory;
 };

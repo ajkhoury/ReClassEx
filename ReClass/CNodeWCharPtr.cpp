@@ -17,17 +17,20 @@ void CNodeWCharPtr::Update( HotSpot & Spot )
 
 int CNodeWCharPtr::Draw( ViewInfo & View, int x, int y )
 {
+	int tx = 0;
+	ULONG_PTR* pMemory = NULL;
+
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	size_t* pMemory = (size_t*)&View.pData[m_Offset];
+	pMemory = (ULONG_PTR*)&View.pData[m_Offset];
 
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
 	//AddAdd(View, x, y);
 
-	int tx = x + TXOFFSET;
+	tx = x + TXOFFSET;
 	tx = AddIcon( View, tx, y, ICON_INTEGER, HS_NONE, HS_NONE );
 	tx = AddAddressOffset( View, tx, y );
 	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "PWCHAR " ) );
@@ -51,7 +54,7 @@ int CNodeWCharPtr::Draw( ViewInfo & View, int x, int y )
 	tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( " = '" ) );
 	if (VALID( pMemory ))
 	{
-		CStringW sc = ReadMemoryStringW( (size_t)pMemory[0], 128 );
+		CStringW sc = ReadMemoryStringW( (ULONG_PTR)pMemory[0], 128 );
 		tx = AddText( View, tx, y, g_crChar, 1, "%ls", sc.GetBuffer( ) );
 	}
 

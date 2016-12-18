@@ -18,10 +18,12 @@ void CNodeBits::Update( HotSpot & Spot )
 
 int CNodeBits::Draw( ViewInfo & View, int x, int y )
 {
+	UCHAR* pMemory = NULL;
+
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	unsigned char* pMemory = (unsigned char*)&View.pData[m_Offset];
+	pMemory = (UCHAR*)&View.pData[m_Offset];
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
@@ -32,11 +34,10 @@ int CNodeBits::Draw( ViewInfo & View, int x, int y )
 
 	if (g_bText)
 	{
-		BitArray<unsigned char> bits;
+		BitArray<UCHAR> bits;
 		bits.SetValue( pMemory[0] );
 
-		char* pszBits = bits.GetBitsReverseString( );
-		tx = AddText( View, tx, y, g_crChar, HS_EDIT, "%s ", pszBits );
+		tx = AddText( View, tx, y, g_crChar, HS_EDIT, "%s ", bits.GetBitsReverseString( ) );
 	}
 
 	tx = AddText( View, tx, y, g_crHex, 0, _T( "%0.2X" ), pMemory[0] ) + g_FontWidth;

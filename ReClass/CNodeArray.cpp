@@ -4,8 +4,8 @@
 CNodeArray::CNodeArray( )
 {
 	m_nodeType = nt_array;
-	Total = 1;
-	Current = 0;
+	m_dwTotal = 1;
+	m_iCurrent = 0;
 }
 
 void CNodeArray::Update( HotSpot& Spot )
@@ -19,29 +19,29 @@ void CNodeArray::Update( HotSpot& Spot )
 	{
 		if (v == 0)
 			return;
-		Total = (DWORD)v;
+		m_dwTotal = (DWORD)v;
 	}
 	else if (Spot.ID == 1)
 	{
-		if (v >= (int)Total)
+		if (v >= (int)m_dwTotal)
 			return;
-		Current = (DWORD)v;
+		m_iCurrent = (int)v;
 	}
 	else if (Spot.ID == 2)
 	{
-		if (Current > 0)
-			Current--;
+		if (m_iCurrent > 0)
+			m_iCurrent--;
 	}
 	else if (Spot.ID == 3)
 	{
-		if (Current < Total - 1)
-			Current++;
+		if ((DWORD)m_iCurrent < m_dwTotal - 1)
+			m_iCurrent++;
 	}
 }
 
-int CNodeArray::GetMemorySize( )
+ULONG CNodeArray::GetMemorySize( )
 {
-	return pNode->GetMemorySize( ) * Total;
+	return m_pNode->GetMemorySize( ) * m_dwTotal;
 }
 
 int CNodeArray::Draw( ViewInfo & View, int x, int y )
@@ -61,16 +61,16 @@ int CNodeArray::Draw( ViewInfo & View, int x, int y )
 	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Array " ) );
 	tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "[" ) );
-	tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%i" ), Total );
+	tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%i" ), m_dwTotal );
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "]" ) );
 
 	tx = AddIcon( View, tx, y, ICON_LEFT, HS_SELECT, HS_CLICK );
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "(" ) );
-	tx = AddText( View, tx, y, g_crIndex, 1, _T( "%i" ), Current );
+	tx = AddText( View, tx, y, g_crIndex, 1, _T( "%i" ), m_iCurrent );
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( ")" ) );
 	tx = AddIcon( View, tx, y, ICON_RIGHT, HS_DROP, HS_CLICK );
 
-	tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( "<%s Size=%i>" ), pNode->GetName( ), GetMemorySize( ) );
+	tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( "<%s Size=%i>" ), m_pNode->GetName( ), GetMemorySize( ) );
 	tx = AddIcon( View, tx, y, ICON_CHANGE, HS_CLICK, HS_CHANGE_X );
 
 	tx += g_FontWidth;
@@ -79,11 +79,11 @@ int CNodeArray::Draw( ViewInfo & View, int x, int y )
 	y += g_FontHeight;
 	if (m_LevelsOpen[View.Level])
 	{
-		ViewInfo newView;
-		newView = View;
-		newView.Address = View.Address + m_Offset + pNode->GetMemorySize( ) * Current;
-		newView.pData = (unsigned char*)((size_t)View.pData + m_Offset + pNode->GetMemorySize( ) * Current);
-		y = pNode->Draw( newView, x, y );
+		ViewInfo NewView;
+		NewView = View;
+		NewView.Address = View.Address + m_Offset + m_pNode->GetMemorySize( ) * m_iCurrent;
+		NewView.pData = (UCHAR*)((ULONG_PTR)View.pData + m_Offset + m_pNode->GetMemorySize( ) * m_iCurrent);
+		y = m_pNode->Draw( NewView, x, y );
 	};
 	return y;
 }

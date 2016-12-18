@@ -213,26 +213,26 @@ BOOLEAN PauseResumeThreadList( BOOL bResumeThread );
 BOOLEAN UpdateMemoryMap( );
 BOOLEAN UpdateExports( );
 
-size_t GetBase( );
-bool IsCode( size_t Address );
-bool IsData( size_t Address );
-bool IsMemory( size_t Address );
-bool IsModule( size_t Address );
+ULONG_PTR GetBase( );
+BOOLEAN IsCode( ULONG_PTR Address );
+BOOLEAN IsData( ULONG_PTR Address );
+BOOLEAN IsMemory( ULONG_PTR Address );
+BOOLEAN IsModule( ULONG_PTR Address );
 
-CString GetAddressName( size_t Address, bool bHEX );
-CString GetModuleName( size_t Address );
-size_t  GetAddressFromName( CString moduleName );
+CString GetAddressName( ULONG_PTR Address, BOOLEAN bJustAddress );
+CString GetModuleName( ULONG_PTR Address );
+ULONG_PTR GetAddressFromName( CString moduleName );
 
 BOOL ReClassReadMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T BytesRead = nullptr );
 BOOL ReClassWriteMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T BytesWritten = nullptr );
 HANDLE ReClassOpenProcess( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwProcessID );
 HANDLE ReClassOpenThread( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwThreadID );
 
-CStringA ReadMemoryStringA( size_t address, SIZE_T max = 40 );
-CStringW ReadMemoryStringW( size_t address, SIZE_T max = 40 );
+CStringA ReadMemoryStringA( ULONG_PTR address, SIZE_T max = 40 );
+CStringW ReadMemoryStringW( ULONG_PTR address, SIZE_T max = 40 );
 
 int SplitString( const CString& input, const CString& delimiter, CStringArray& results );
-size_t ConvertStrToAddress( CString str );
+ULONG_PTR ConvertStrToAddress( CString str );
 
 
 // 
@@ -242,8 +242,8 @@ size_t ConvertStrToAddress( CString str );
 
 struct MemMapInfo
 {
-	size_t  Start;
-	size_t  End;
+	ULONG_PTR  Start;
+	ULONG_PTR  End;
 	DWORD   Size;
 	CString Name;
 	CString Path;
@@ -252,7 +252,7 @@ struct MemMapInfo
 struct AddressName
 {
 	CString Name;
-	size_t Address;
+	ULONG_PTR Address;
 };
 
 //

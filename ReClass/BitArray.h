@@ -25,7 +25,7 @@ public:
 		value = 0xFF;
 		length = sizeof(T) * CHAR_BIT;
 		size = length + 1;
-		bits = (char*)malloc(size);
+		bits = new char[size];
 	}
 
 	BitArray(T num)
@@ -33,7 +33,7 @@ public:
 		value = num;
 		length = sizeof(T) * CHAR_BIT;
 		size = length + 1;
-		bits = (char*)malloc(size);
+		bits = new char[size];
 	}
 
 	~BitArray()
@@ -59,10 +59,11 @@ public:
 		for (int i = 0; i < length; i++)
 		{
 			unsigned char bit = GetBit(i);
-			bits[i] = bit + 48; // Get ascii representation of bit
+			bits[i] = bit + '0'; // Get ascii representation of bit
 		}
 
 		bits[size - 1] = '\0';
+
 		return bits;
 	}
 

@@ -93,7 +93,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 
 	// Create tabs
 	CMDITabInfo mdiTabParams;
-	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D_ROUNDED;
+	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D;
 	mdiTabParams.m_tabLocation = CMFCTabCtrl::LOCATION_TOP;
 	mdiTabParams.m_nTabBorderSize = 4;
 	mdiTabParams.m_bActiveTabCloseButton = TRUE;

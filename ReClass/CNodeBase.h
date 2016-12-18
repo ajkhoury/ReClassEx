@@ -16,12 +16,16 @@ extern DWORD g_NodeCreateIndex;
 
 struct ViewInfo
 {
+	// Temporarily added for testing
+	#ifdef _DEBUG
 	class CChildView* pChildView;
+	#endif
+
 	CDC* dc;
 	CRect* client;
 	std::vector<HotSpot>* HotSpots;
 	std::vector<CNodeClass*>* Classes;
-	size_t Address;
+	ULONG_PTR Address;
 	UCHAR* pData;
 	UINT Level;
 	bool bMultiSelected;
@@ -34,7 +38,7 @@ public:
 	~CNodeBase( ) { }
 
 	virtual int Draw( ViewInfo& View, int x, int y ) = 0;
-	virtual int GetMemorySize( ) = 0;
+	virtual ULONG GetMemorySize( ) = 0;
 	virtual void Update( HotSpot& Spot ) = 0;
 
 	NodeType GetType( ) { return m_nodeType; }
@@ -66,19 +70,19 @@ public:
 	void RemoveNode( int idx ) { Nodes.erase( Nodes.begin( ) + idx ); }
 	size_t NodeCount( ) { return Nodes.size( ); }
 
-	bool IsHidden( ) { return m_bHidden; }
+	BOOLEAN IsHidden( ) { return m_bHidden; }
 	void Show( ) { m_bHidden = false; }
 	void Hide( ) { m_bHidden = true; }
 	void SetHidden( bool hidden ) { m_bHidden = hidden; }
 	void ToggleHidden( ) { m_bHidden = !m_bHidden; }
 
-	bool IsSelected( ) { return m_bSelected; }
+	BOOLEAN IsSelected( ) { return m_bSelected; }
 	void SetSelected( bool selected ) { m_bSelected = selected; }
 	void Select( ) { m_bSelected = true; }
 	void Unselect( ) { m_bSelected = false; }
 	void ToggleSelected( ) { m_bSelected = !m_bSelected; }
 
-	bool IsLevelOpen( int idx ) { return m_LevelsOpen[idx]; }
+	BOOLEAN IsLevelOpen( int idx ) { return m_LevelsOpen[idx]; }
 	void ToggleLevelOpen( int idx ) { m_LevelsOpen[idx] = !m_LevelsOpen[idx]; }
 
 	// Incorrect view.address
@@ -102,7 +106,7 @@ public:
 
 	void AddTypeDrop( ViewInfo& View, int x, int y );
 
-	int ResolveRTTI( size_t Val, int &x, ViewInfo& View, int y );
+	int ResolveRTTI( ULONG_PTR Val, int &x, ViewInfo& View, int y );
 
 	int AddComment( ViewInfo& View, int x, int y );
 
@@ -113,7 +117,7 @@ public:
 protected:
 	NodeType m_nodeType;
 
-	size_t m_Offset;
+	size_t m_Offset; // Can also be an address
 	CString m_strOffset;
 
 	CString m_strName;
@@ -122,10 +126,10 @@ protected:
 	CNodeBase* m_pParentNode;
 	std::vector<CNodeBase*> Nodes;
 
-	bool m_bHidden;
-	bool m_bSelected;
+	BOOLEAN m_bHidden;
+	BOOLEAN m_bSelected;
 
-	std::vector<bool> m_LevelsOpen;
+	std::vector<BOOLEAN> m_LevelsOpen;
 };
 
 FORCEINLINE CStringA GetStringFromMemoryA( char* pMemory, int Length )

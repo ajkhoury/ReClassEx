@@ -3,16 +3,17 @@
 
 CNodeClass::CNodeClass( )
 {
+	TCHAR szOffset[128] = { 0 };
+
 	m_nodeType = nt_class;
 	m_Offset = GetBase( );
 
-	TCHAR szOffset[128];
 	#ifdef _WIN64
 	_ui64tot_s( m_Offset, szOffset, 128, 16 );
 	#else
 	_ultot_s( m_Offset, szOffset, 128, 16 );
 	#endif
-	m_strOffset = szOffset;
+	m_strOffset.SetString( szOffset );
 
 	RequestPosition = -1;
 	idx = 0;
@@ -33,7 +34,7 @@ void CNodeClass::Update( HotSpot & Spot )
 	}
 }
 
-int CNodeClass::GetMemorySize( )
+ULONG CNodeClass::GetMemorySize( )
 {
 	int size = 0;
 	for (UINT i = 0; i < Nodes.size( ); i++)

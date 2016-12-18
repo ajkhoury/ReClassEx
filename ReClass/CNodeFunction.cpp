@@ -1,5 +1,4 @@
 #include "stdafx.h"
-
 #include "CNodeFunction.h"
 
 static ScintillaColors s_rgbSyntaxAsm[] =
@@ -23,6 +22,7 @@ CNodeFunction::CNodeFunction( ) :
 	m_bRedrawNeeded( FALSE )
 {
 	m_nodeType = nt_function;
+	m_strName = _T( "" );
 	m_dwMemorySize = sizeof( ULONG_PTR );
 }
 
@@ -148,13 +148,10 @@ void CNodeFunction::Initialize( CChildView* pChild, ULONG_PTR Address )
 
 void CNodeFunction::DisassembleBytes( ULONG_PTR Address )
 {
-	DISASM MyDisasm;
-
 	ULONG_PTR StartAddress = Address;
 	UCHAR Code[2048] = { 0xCC }; // set max function size to 2048 bytes
 	UIntPtr EndCode = (UIntPtr)(Code + 2048);
-	BOOLEAN Error = FALSE;
-
+	
 	// Clear old disassembly info
 	if (m_pEdit)
 	{
@@ -164,68 +161,76 @@ void CNodeFunction::DisassembleBytes( ULONG_PTR Address )
 	}
 	m_Assembly.clear( );
 	m_dwMemorySize = 0;
+	m_nLongestLine = 0;
 
 	// Read in process bytes
-	ReClassReadMemory( (LPVOID)StartAddress, (LPVOID)Code, 2048 );
-
-	SecureZeroMemory( &MyDisasm, sizeof( DISASM ) );
-	MyDisasm.EIP = (UIntPtr)Code;
-	MyDisasm.VirtualAddr = (UInt64)StartAddress;
-	#ifdef _WIN64
-	MyDisasm.Archi = 64;
-	#else
-	MyDisasm.Archi = 0;
-	#endif
-	MyDisasm.Options = MasmSyntax | PrefixedNumeral | ShowSegmentRegs;
-
-	// Get assembly lines
-	while (Error == FALSE)
+	if (ReClassReadMemory( (LPVOID)StartAddress, (LPVOID)Code, 2048 ) == TRUE)
 	{
-		int disasmLen = 0;
+		DISASM MyDisasm;
+		BOOLEAN Error = FALSE;
 
-		MyDisasm.SecurityBlock = (UInt32)(EndCode - MyDisasm.EIP);
+		ZeroMemory( &MyDisasm, sizeof( DISASM ) );
+		MyDisasm.EIP = (UIntPtr)Code;
+		MyDisasm.VirtualAddr = (UInt64)StartAddress;
+		#ifdef _WIN64
+		MyDisasm.Archi = 64;
+		#else
+		MyDisasm.Archi = 0;
+		#endif
+		MyDisasm.Options = MasmSyntax | PrefixedNumeral | ShowSegmentRegs;
 
-		disasmLen = Disasm( &MyDisasm );
-		if (disasmLen == OUT_OF_BLOCK || disasmLen == UNKNOWN_OPCODE)
+		// Get assembly lines
+		while (Error == FALSE)
 		{
-			Error = TRUE;
-		}
-		else
-		{
-			CHAR szInstruction[256] = { 0 };
-			CHAR szBytes[128] = { 0 };
+			int disasmLen = 0;
 
-			// INT3 instruction usually indicates the end of a function (obviously this is temporary)
-			if (MyDisasm.Instruction.Opcode == 0xCC) 
-				break;
+			MyDisasm.SecurityBlock = (UInt32)(EndCode - MyDisasm.EIP);
 
-			// Generate instruction bytes
-			for (int i = 0; i < disasmLen; i++)
+			disasmLen = Disasm( &MyDisasm );
+			if (disasmLen == OUT_OF_BLOCK || disasmLen == UNKNOWN_OPCODE)
 			{
-				sprintf_s( szBytes + (i * 3), 128, "%02X ", *(CHAR*)(MyDisasm.EIP + i) );
+				Error = TRUE;
 			}
+			else
+			{
+				CHAR szInstruction[256] = { 0 };
+				CHAR szBytes[128] = { 0 };
 
-			// Create full instruction string
-			sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
-			m_Assembly.push_back( szInstruction );
+				// INT3 instruction usually indicates the end of a function (obviously this is temporary)
+				if (MyDisasm.Instruction.Opcode == 0xCC)
+					break;
 
-			// Increment instruction length
-			m_dwMemorySize += disasmLen;
-			MyDisasm.EIP += disasmLen;
-			MyDisasm.VirtualAddr += disasmLen;
+				// Generate instruction bytes
+				for (int i = 0; i < disasmLen; i++)
+				{
+					sprintf_s( szBytes + (i * 3), 128, "%02X ", *(UCHAR*)(MyDisasm.EIP + i) );
+				}
 
-			if (MyDisasm.EIP >= EndCode)
-				break;
+				// Create full instruction string
+				sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
+				m_Assembly.emplace_back( szInstruction );
+
+				// Increment instruction length
+				m_dwMemorySize += disasmLen;
+				MyDisasm.EIP += disasmLen;
+				MyDisasm.VirtualAddr += disasmLen;
+
+				if (MyDisasm.EIP >= EndCode)
+					break;
+			}
 		}
-	}
 
-	// Get rid of new line on last assembly instruction
-	m_Assembly.back( ).Replace( "\r\n", "\0" );
+		// Get rid of new line on last assembly instruction
+		m_Assembly.back( ).Replace( "\r\n", "\0" );
+	}
+	else
+	{
+		m_Assembly.emplace_back( "ERROR: Could not read memory" );
+		m_dwMemorySize = sizeof( void* );
+	}
 
 	// Get number of assembly lines
 	m_nLines = (ULONG)m_Assembly.size( );
-
-	m_iTextHeight = m_pEdit->TextHeight( );
 
 	// Clear any left over text
 	m_pEdit->Clear( );
@@ -246,15 +251,15 @@ void CNodeFunction::DisassembleBytes( ULONG_PTR Address )
 			m_nLongestLine = nCurrentLineLength;
 	}
 
-	// Set caret at the beginning of documents
-	m_pEdit->SetSelection( 0, 0 );
-
 	// Back to read only
 	m_pEdit->SetReadOnly( TRUE );
 
+	// Set caret at the beginning of documents
+	m_pEdit->SetSelection( 0, 0 );
+
 	// Set the editor width and height
 	m_iHeight = (m_pEdit->PointYFromPosition( m_pEdit->PositionFromLine( m_nLines ) ) - m_pEdit->PointYFromPosition( m_pEdit->PositionFromLine( 0 ) )) + g_FontHeight;
-	m_iWidth = m_nLongestLine * g_FontWidth;
+	m_iWidth = (m_nLongestLine * g_FontWidth) + g_FontWidth;
 
 	// Force a redraw
 	m_bRedrawNeeded = TRUE;

@@ -5,7 +5,7 @@ CNodeUnicode::CNodeUnicode( )
 {
 	m_nodeType = nt_unicode;
 	m_strName = _T( "Unicode" );
-	memsize = 8 * sizeof( wchar_t );
+	m_dwMemorySize = 8 * sizeof( wchar_t );
 }
 
 void CNodeUnicode::Update( HotSpot & Spot )
@@ -13,13 +13,13 @@ void CNodeUnicode::Update( HotSpot & Spot )
 	StandardUpdate( Spot );
 	if (Spot.ID == 0)
 	{
-		memsize = _ttoi( Spot.Text.GetBuffer( ) ) * sizeof( wchar_t );
+		m_dwMemorySize = _ttoi( Spot.Text.GetBuffer( ) ) * sizeof( wchar_t );
 	}
 	else if (Spot.ID == 1)
 	{
 		SIZE_T Length = Spot.Text.GetLength( );
-		if (Length > (memsize / sizeof( wchar_t )))
-			Length = (memsize / sizeof( wchar_t ));
+		if (Length > (m_dwMemorySize / sizeof( wchar_t )))
+			Length = (m_dwMemorySize / sizeof( wchar_t ));
 
 		// Has to be done this way in order to make it compatible in mbs and unicode mode (ghetto)
 		LPCTSTR pSource = Spot.Text.GetString( );
@@ -31,11 +31,6 @@ void CNodeUnicode::Update( HotSpot & Spot )
 
 		delete[] pwszConverted;
 	}
-}
-
-int CNodeUnicode::GetMemorySize( void )
-{
-	return memsize;
 }
 
 int CNodeUnicode::Draw( ViewInfo & View, int x, int y )
@@ -55,14 +50,14 @@ int CNodeUnicode::Draw( ViewInfo & View, int x, int y )
 	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Unicode " ) );
 	tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "[" ) );
-	tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%i" ), memsize / sizeof( wchar_t ) );
+	tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%i" ), m_dwMemorySize / sizeof( wchar_t ) );
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "]" ) );
 
 	if (VALID( pMemory ))
 	{
-		CStringW str = GetStringFromMemoryW( pMemory, memsize / sizeof( wchar_t ) );
+		CStringW str( GetStringFromMemoryW( pMemory, m_dwMemorySize / sizeof( wchar_t ) ) );
 		tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( " = '" ) );
-		tx = AddText( View, tx, y, g_crChar, HS_OPENCLOSE, _T( "%.150ls" ), str ); // ls cause its unicode
+		tx = AddText( View, tx, y, g_crChar, HS_OPENCLOSE, _T( "%.150ws" ), str ); // ws cause its unicode
 		tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( "' " ) ) + g_FontWidth;
 	}
 

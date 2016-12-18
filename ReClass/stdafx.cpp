@@ -6,7 +6,7 @@
 //Globals
 HANDLE g_hProcess = NULL;
 DWORD g_ProcessID = NULL;
-size_t g_AttachedProcessAddress = NULL;
+ULONG_PTR g_AttachedProcessAddress = NULL;
 DWORD g_AttachedProcessSize = NULL;
 CString g_ProcessName;
 
@@ -16,7 +16,6 @@ std::vector<MemMapInfo> g_MemMapData;
 std::vector<MemMapInfo> g_MemMapModules;
 std::vector<AddressName> g_Exports;
 std::vector<AddressName> g_CustomNames;
-
 
 std::vector<HICON> g_Icons;
 
@@ -87,17 +86,17 @@ DWORD g_NodeCreateIndex = 0;
 
 BOOL ReClassReadMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T BytesRead )
 {
-	if (g_PluginOverrideReadMemory != nullptr)
+	if (g_PluginOverrideReadMemory != NULL)
 		return g_PluginOverrideReadMemory( Address, Buffer, Size, BytesRead );
 
 	BOOL return_val = ReadProcessMemory( g_hProcess, (LPVOID)Address, Buffer, Size, BytesRead );
-	if (!return_val) ZeroMemory( Buffer, Size );
+	if (!return_val) SecureZeroMemory( Buffer, Size );
 	return return_val;
 }
 
 BOOL ReClassWriteMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T BytesWritten )
 {
-	if (g_PluginOverrideWriteMemory != nullptr)
+	if (g_PluginOverrideWriteMemory != NULL)
 		return g_PluginOverrideWriteMemory( Address, Buffer, Size, BytesWritten );
 
 	DWORD OldProtect;
@@ -109,33 +108,31 @@ BOOL ReClassWriteMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T Byt
 
 HANDLE ReClassOpenProcess( DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessID )
 {
-	if (g_PluginOverrideOpenProcess != nullptr)
+	if (g_PluginOverrideOpenProcess != NULL)
 		return g_PluginOverrideOpenProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
 	return OpenProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
 }
 
 HANDLE ReClassOpenThread( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwThreadID )
 {
-	if (g_PluginOverrideOpenThread != nullptr)
+	if (g_PluginOverrideOpenThread != NULL)
 		return g_PluginOverrideOpenThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
 	return OpenThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
 }
 
-CStringA ReadMemoryStringA( size_t address, SIZE_T max )
-{
+CStringA ReadMemoryStringA( ULONG_PTR address, SIZE_T max )
+{	
+	SIZE_T bytesRead = 0;
 	auto buffer = std::make_unique<char[]>( max + 1 );
-	SIZE_T bytesRead;
 
-	if (ReClassReadMemory( (PVOID)address, buffer.get( ), max, &bytesRead ) != 0)
+	if (ReClassReadMemory( (PVOID)address, (LPVOID)buffer.get( ), max, &bytesRead ) != 0)
 	{
 		for (int i = 0; i < bytesRead; i++)
 		{
 			if (!(isprint( buffer[i] )) && buffer[i] != '\0')
 				buffer[i] = '.';
 		}
-
 		buffer[bytesRead] = '\0';
-
 		return CStringA( buffer.get( ) );
 	}
 	else
@@ -147,11 +144,12 @@ CStringA ReadMemoryStringA( size_t address, SIZE_T max )
 	}
 }
 
-CStringW ReadMemoryStringW( size_t address, SIZE_T max )
+CStringW ReadMemoryStringW( ULONG_PTR address, SIZE_T max )
 {
+	SIZE_T bytesRead = 0;
 	auto buffer = std::make_unique<wchar_t[]>( max + 1 );
-	SIZE_T bytesRead;
-	if (ReClassReadMemory( (PVOID)address, buffer.get( ), max * sizeof( wchar_t ), &bytesRead ) != 0)
+	
+	if (ReClassReadMemory( (PVOID)address, (LPVOID)buffer.get( ), max * sizeof( wchar_t ), &bytesRead ) != 0)
 	{
 		bytesRead /= sizeof( wchar_t );
 
@@ -160,9 +158,7 @@ CStringW ReadMemoryStringW( size_t address, SIZE_T max )
 			if (!(iswprint( buffer[i] )) && buffer[i] != '\0')
 				buffer[i] = '.';
 		}
-
 		buffer[bytesRead] = '\0';
-
 		return CStringW( buffer.get( ) );
 	}
 	else
@@ -268,30 +264,30 @@ BOOLEAN PauseResumeThreadList( BOOL bResumeThread )
 	return 1;
 }
 
-size_t GetBase( )
+ULONG_PTR GetBase( )
 {
 	if (g_MemMap.size( ) > 1)
 		return g_AttachedProcessAddress;
 	#ifdef _WIN64
-	return 0x140000000;
+	return (ULONG_PTR)0x140000000;
 	#else
-	return 0x400000;
+	return (ULONG_PTR)0x400000;
 	#endif
 }
 
-bool IsCode( size_t Address )
+BOOLEAN IsCode( ULONG_PTR Address )
 {
-	for (UINT i = 0; i < g_MemMapCode.size( ); i++)
+	for (size_t i = 0; i < g_MemMapCode.size( ); i++)
 	{
 		if ((Address >= g_MemMapCode[i].Start) && (Address <= g_MemMapCode[i].End))
-			return true;
+			return TRUE;
 	}
-	return false;
+	return FALSE;
 }
 
-bool IsData( size_t Address )
+BOOLEAN IsData( ULONG_PTR Address )
 {
-	for (UINT i = 0; i < g_MemMapData.size( ); i++)
+	for (size_t i = 0; i < g_MemMapData.size( ); i++)
 	{
 		if ((Address >= g_MemMapData[i].Start) && (Address <= g_MemMapData[i].End))
 			return true;
@@ -299,9 +295,9 @@ bool IsData( size_t Address )
 	return false;
 }
 
-bool IsMemory( size_t Address )
+BOOLEAN IsMemory( ULONG_PTR Address )
 {
-	for (UINT i = 0; i < g_MemMap.size( ); i++)
+	for (size_t i = 0; i < g_MemMap.size( ); i++)
 	{
 		if ((Address >= g_MemMap[i].Start) && (Address <= g_MemMap[i].End))
 			return true;
@@ -309,9 +305,9 @@ bool IsMemory( size_t Address )
 	return false;
 }
 
-bool IsModule( size_t Address )
+BOOLEAN IsModule( ULONG_PTR Address )
 {
-	for (UINT i = 0; i < g_MemMapModules.size( ); i++)
+	for (size_t i = 0; i < g_MemMapModules.size( ); i++)
 	{
 		if (Address >= g_MemMapModules[i].Start && Address <= g_MemMapModules[i].End)
 			return true;
@@ -319,11 +315,12 @@ bool IsModule( size_t Address )
 	return false;
 }
 
-CString GetAddressName( size_t Address, bool bHEX )
+CString GetAddressName( ULONG_PTR Address, BOOLEAN bJustAddress )
 {
 	CString txt;
+	size_t i = 0;
 
-	for (UINT i = 0; i < g_CustomNames.size( ); i++)
+	for (i = 0; i < g_CustomNames.size( ); i++)
 	{
 		if (Address == g_CustomNames[i].Address)
 		{
@@ -336,7 +333,7 @@ CString GetAddressName( size_t Address, bool bHEX )
 		}
 	}
 
-	for (UINT i = 0; i < g_Exports.size( ); i++)
+	for (i = 0; i < g_Exports.size( ); i++)
 	{
 		if (Address == g_Exports[i].Address)
 		{
@@ -349,7 +346,7 @@ CString GetAddressName( size_t Address, bool bHEX )
 		}
 	}
 
-	for (UINT i = 0; i < g_MemMapCode.size( ); i++)
+	for (i = 0; i < g_MemMapCode.size( ); i++)
 	{
 		if ((Address >= g_MemMapCode[i].Start) && (Address <= g_MemMapCode[i].End))
 		{
@@ -362,7 +359,7 @@ CString GetAddressName( size_t Address, bool bHEX )
 		}
 	}
 
-	for (UINT i = 0; i < g_MemMapData.size( ); i++)
+	for (i = 0; i < g_MemMapData.size( ); i++)
 	{
 		if ((Address >= g_MemMapData[i].Start) && (Address <= g_MemMapData[i].End))
 		{
@@ -375,7 +372,7 @@ CString GetAddressName( size_t Address, bool bHEX )
 		}
 	}
 
-	for (UINT i = 0; i < g_MemMapModules.size( ); i++)
+	for (i = 0; i < g_MemMapModules.size( ); i++)
 	{
 		if ((Address >= g_MemMapModules[i].Start) && (Address <= g_MemMapModules[i].End))
 		{
@@ -388,7 +385,7 @@ CString GetAddressName( size_t Address, bool bHEX )
 		}
 	}
 
-	for (UINT i = 0; i < g_MemMap.size( ); i++)
+	for (i = 0; i < g_MemMap.size( ); i++)
 	{
 		if ((Address >= g_MemMap[i].Start) && (Address <= g_MemMap[i].End))
 		{
@@ -401,7 +398,7 @@ CString GetAddressName( size_t Address, bool bHEX )
 		}
 	}
 
-	if (bHEX)
+	if (bJustAddress)
 	{
 		#ifdef _WIN64
 		txt.Format( _T( "%IX" ), Address );
@@ -410,23 +407,22 @@ CString GetAddressName( size_t Address, bool bHEX )
 		#endif
 	}
 
-
 	return txt;
 }
 
-CString GetModuleName( size_t Address )
+CString GetModuleName( ULONG_PTR Address )
 {
 	for (size_t i = 0; i < g_MemMapModules.size( ); i++)
 	{
 		if ((Address >= g_MemMapModules[i].Start) && (Address <= g_MemMapModules[i].End))
 			return g_MemMapModules[i].Name;
 	}
-	return CString( );
+	return CString( "<unknown>" );
 }
 
-size_t GetAddressFromName( CString moduleName )
+ULONG_PTR GetAddressFromName( CString moduleName )
 {
-	size_t moduleAddress = 0;
+	ULONG_PTR moduleAddress = 0;
 	for (size_t i = 0; i < g_MemMapModules.size( ); i++)
 	{
 		if (g_MemMapModules[i].Name == moduleName)
@@ -440,9 +436,10 @@ size_t GetAddressFromName( CString moduleName )
 
 BOOLEAN IsProcessHandleValid( HANDLE hProc )
 {
+	DWORD RetVal = WAIT_FAILED;
 	if (!hProc)
 		return FALSE;
-	const DWORD RetVal = WaitForSingleObject( hProc, 0 );
+	RetVal = WaitForSingleObject( hProc, 0 );
 	if (RetVal == WAIT_FAILED)
 		return FALSE;
 	return (RetVal == WAIT_TIMEOUT) ? TRUE : FALSE;
@@ -470,16 +467,16 @@ BOOLEAN UpdateMemoryMap( void )
 	GetSystemInfo( &SysInfo );
 
 	MEMORY_BASIC_INFORMATION MemInfo;
-	size_t pMemory = (size_t)SysInfo.lpMinimumApplicationAddress;
-	while (pMemory < (size_t)SysInfo.lpMaximumApplicationAddress)
+	ULONG_PTR pMemory = (ULONG_PTR)SysInfo.lpMinimumApplicationAddress;
+	while (pMemory < (ULONG_PTR)SysInfo.lpMaximumApplicationAddress)
 	{
 		if (VirtualQueryEx( g_hProcess, (LPCVOID)pMemory, &MemInfo, sizeof( MEMORY_BASIC_INFORMATION ) ) != FALSE)
 		{
 			if (MemInfo.State == MEM_COMMIT /*&& MemInfo.Type == MEM_PRIVATE*/)
 			{
 				MemMapInfo Mem;
-				Mem.Start = (size_t)pMemory;
-				Mem.End = (size_t)pMemory + MemInfo.RegionSize - 1;
+				Mem.Start = (ULONG_PTR)pMemory;
+				Mem.End = (ULONG_PTR)pMemory + MemInfo.RegionSize - 1;
 				g_MemMap.push_back( Mem );
 			}
 			pMemory = (ULONG_PTR)MemInfo.BaseAddress + MemInfo.RegionSize;
@@ -582,11 +579,11 @@ BOOLEAN UpdateMemoryMap( void )
 
 			if (lstEntry.DllBase != NULL /*&& lstEntry.SizeOfImage != 0*/)
 			{
-				unsigned char* ModuleBase = (unsigned char*)lstEntry.DllBase;
+				UCHAR* ModuleBase = (UCHAR*)lstEntry.DllBase;
 				DWORD ModuleSize = lstEntry.SizeOfImage;
 
-				wchar_t wcsModulePath[MAX_PATH] = { 0 };
-				wchar_t* wcsModuleName = NULL;
+				WCHAR wcsModulePath[MAX_PATH] = { 0 };
+				WCHAR* wcsModuleName = NULL;
 
 				if (lstEntry.FullDllName.Length > 0)
 				{
@@ -600,11 +597,11 @@ BOOLEAN UpdateMemoryMap( void )
 
 						if (g_AttachedProcessAddress == NULL)
 						{
-							wchar_t wcsModuleFilename[MAX_PATH] = { 0 };
+							WCHAR wcsModuleFilename[MAX_PATH] = { 0 };
 							GetModuleFileNameExW( g_hProcess, NULL, wcsModuleFilename, MAX_PATH );
 							if (_wcsicmp( wcsModuleFilename, wcsModulePath ) == 0)
 							{
-								g_AttachedProcessAddress = (size_t)ModuleBase;
+								g_AttachedProcessAddress = (ULONG_PTR)ModuleBase;
 								g_AttachedProcessSize = ModuleSize;
 							}
 						}
@@ -613,7 +610,7 @@ BOOLEAN UpdateMemoryMap( void )
 
 				// module info
 				MemMapInfo Mem;
-				Mem.Start = (size_t)ModuleBase;
+				Mem.Start = (ULONG_PTR)ModuleBase;
 				Mem.End = Mem.Start + ModuleSize;
 				Mem.Size = ModuleSize;
 				#ifdef UNICODE
@@ -641,14 +638,14 @@ BOOLEAN UpdateMemoryMap( void )
 					txt.Format( _T( "%.8s" ), sections[i].Name ); txt.MakeLower( );
 					if (txt == ".text" || txt == "code")
 					{
-						Mem.Start = (size_t)ModuleBase + sections[i].VirtualAddress;
+						Mem.Start = (ULONG_PTR)ModuleBase + sections[i].VirtualAddress;
 						Mem.End = Mem.Start + sections[i].Misc.VirtualSize;
 						Mem.Name = wcsModuleName;
 						g_MemMapCode.push_back( Mem );
 					}
 					else if (txt == ".data" || txt == "data" || txt == ".rdata" || txt == ".idata")
 					{
-						Mem.Start = (size_t)ModuleBase + sections[i].VirtualAddress;
+						Mem.Start = (ULONG_PTR)ModuleBase + sections[i].VirtualAddress;
 						Mem.End = Mem.Start + sections[i].Misc.VirtualSize;
 						Mem.Name = wcsModuleName;
 						g_MemMapData.push_back( Mem );

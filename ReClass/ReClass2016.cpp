@@ -96,9 +96,9 @@ void CReClass2016App::ResizeMemoryFont( int font_width, int font_height )
 
 BOOL CReClass2016App::InitInstance( )
 {
-	#ifdef _DEBUG
-	Utils::CreateDbgConsole( _T( "dbg" ) );
-	#endif
+	//#ifdef _DEBUG
+	//Utils::CreateDbgConsole( _T( "dbg" ) );
+	//#endif
 
 	INITCOMMONCONTROLSEX InitCtrls;
 	InitCtrls.dwSize = sizeof( InitCtrls );
@@ -572,13 +572,13 @@ bool CReClass2016App::IsNodeValid( CNodeBase* pCheckNode )
 			if (nt == nt_array)
 			{
 				CNodeArray* pArray = (CNodeArray*)pNode;
-				if (pArray->pNode == pCheckNode)
+				if (pArray->GetClass( ) == pCheckNode)
 					return true;
 			}
 			if (nt == nt_pointer)
 			{
 				CNodePtr* pPtr = (CNodePtr*)pNode;
-				if (pPtr->pNode == pCheckNode)
+				if (pPtr->GetClass( ) == pCheckNode)
 					return true;
 			}
 		}
@@ -841,86 +841,90 @@ void CReClass2016App::SaveXML( TCHAR* FileName )
 			CStringA strNodeName = CW2A( pNode->GetName( ) );
 			CStringA strNodeComment = CW2A( pNode->GetComment( ) );
 			#else
-			CStringA strNodeName = pNode->Name;
-			CStringA strNodeComment = pNode->Comment;
+			CStringA strNodeName = pNode->GetName( );
+			CStringA strNodeComment = pNode->GetComment( );
 			#endif
 
-			XMLElement* node = doc.NewElement( "Node" );
-			node->SetAttribute( "Name", strNodeName );
-			node->SetAttribute( "Type", pNode->GetType( ) );
-			node->SetAttribute( "Size", pNode->GetMemorySize( ) );
-			node->SetAttribute( "bHidden", pNode->IsHidden( ) );
-			node->SetAttribute( "Comment", strNodeComment );
+			XMLElement* pXmlNode = doc.NewElement( "Node" );
+			pXmlNode->SetAttribute( "Name", strNodeName );
+			pXmlNode->SetAttribute( "Type", pNode->GetType( ) );
+			pXmlNode->SetAttribute( "Size", (UINT)pNode->GetMemorySize( ) );
+			pXmlNode->SetAttribute( "bHidden", pNode->IsHidden( ) );
+			pXmlNode->SetAttribute( "Comment", strNodeComment );
 
-			classNode->LinkEndChild( node );
+			classNode->LinkEndChild( pXmlNode );
 
 			if (pNode->GetType( ) == nt_array)
 			{
-				CNodeArray* pptr = (CNodeArray*)pNode;
-				node->SetAttribute( "Total", (UINT)pptr->Total );
+				CNodeArray* pArray = (CNodeArray*)pNode;
+				pXmlNode->SetAttribute( "Total", (UINT)pArray->GetTotal( ) );
 
 				#ifdef UNICODE
-				CStringA strArrayNodeName = CW2A( pptr->pNode->GetName( ) );
-				CStringA strArrayNodeComment = CW2A( pptr->pNode->GetComment( ) );
+				CStringA strArrayNodeName = CW2A( pArray->GetClass( )->GetName( ) );
+				CStringA strArrayNodeComment = CW2A( pArray->GetClass( )->GetComment( ) );
 				#else
-				CStringA strArrayNodeName = pptr->pNode->Name;
-				CStringA strArrayNodeComment = pptr->pNode->Comment;
+				CStringA strArrayNodeName = pArray->GetClass( )->GetName( );
+				CStringA strArrayNodeComment = pArray->pGetClass( )Node->GetComment( );
 				#endif
 
 				XMLElement *item = doc.NewElement( "Array" );
 				item->SetAttribute( "Name", strArrayNodeName );
-				item->SetAttribute( "Type", pptr->pNode->GetType( ) );
-				item->SetAttribute( "Size", pptr->pNode->GetMemorySize( ) );
+				item->SetAttribute( "Type", pArray->GetClass( )->GetType( ) );
+				item->SetAttribute( "Size", (UINT)pArray->GetClass( )->GetMemorySize( ) );
 				item->SetAttribute( "Comment", strArrayNodeComment );
-				node->LinkEndChild( item );
+				pXmlNode->LinkEndChild( item );
 			}
 			else if (pNode->GetType( ) == nt_pointer)
 			{
-				CNodePtr* pptr = (CNodePtr*)pNode;
+				CNodePtr* pPointer = (CNodePtr*)pNode;
 				#ifdef UNICODE
-				CStringA strPtrNodeName = CW2A( pptr->pNode->GetName( ) );
+				CStringA strPtrNodeName = CW2A( pPointer->GetClass( )->GetName( ) );
 				#else
-				CStringA strPtrNodeName = pptr->pNode->Name;
+				CStringA strPtrNodeName = pPointer->GetClass( )->GetName( );
 				#endif
 
-				node->SetAttribute( "Pointer", strPtrNodeName );
+				pXmlNode->SetAttribute( "Pointer", strPtrNodeName );
 			}
 			else if (pNode->GetType( ) == nt_instance)
 			{
-				CNodeClassInstance* pptr = (CNodeClassInstance*)pNode;
+				CNodeClassInstance* pClassInstance = (CNodeClassInstance*)pNode;
 				#ifdef UNICODE
-				CStringA strInstanceNodeName = CW2A( pptr->pNode->GetName( ) );
+				CStringA strInstanceNodeName = CW2A( pClassInstance->GetClass( )->GetName( ) );
 				#else
-				CStringA strInstanceNodeName = pptr->pNode->Name;
+				CStringA strInstanceNodeName = pClassInstance->GetClass( )->GetName( );
 				#endif
-				node->SetAttribute( "Instance", strInstanceNodeName );
+				pXmlNode->SetAttribute( "Instance", strInstanceNodeName );
 			}
 			else if (pNode->GetType( ) == nt_vtable)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNode;
 				for (UINT f = 0; f < pVTable->NodeCount( ); f++)
 				{
-					CNodeFunctionPtr* pNodefun = (CNodeFunctionPtr*)pVTable->GetNode( f );
+					CNodeFunctionPtr* pFunctionPtr = (CNodeFunctionPtr*)pVTable->GetNode( f );
 					#ifdef UNICODE
-					CStringA strFunctionNodeName = CW2A( pNodefun->GetName( ) );
-					CStringA strFunctionNodeComment = CW2A( pNodefun->GetComment( ) );
+					CStringA strFunctionNodeName = CW2A( pFunctionPtr->GetName( ) );
+					CStringA strFunctionNodeComment = CW2A( pFunctionPtr->GetComment( ) );
 					#else
 					CStringA strFunctionNodeName = pNodefun->Name;
-					CStringA strFunctionNodeComment = pNodefun->Comment;
+					CStringA strFunctionNodeComment = pNodefun->GetComment( );
 					#endif
 
-					XMLElement *fun = doc.NewElement( "Function" );
-					fun->SetAttribute( "Name", strFunctionNodeName );
-					fun->SetAttribute( "Comment", strFunctionNodeComment );
-					fun->SetAttribute( "bHidden", pNodefun->IsHidden( ) );
-					node->LinkEndChild( fun );
-					for (UINT as = 0; as < pNodefun->Assembly.size( ); as++)
+					XMLElement *pXmlFunctionElement = doc.NewElement( "Function" );
+					pXmlFunctionElement->SetAttribute( "Name", strFunctionNodeName );
+					pXmlFunctionElement->SetAttribute( "Comment", strFunctionNodeComment );
+					pXmlFunctionElement->SetAttribute( "bHidden", pFunctionPtr->IsHidden( ) );
+					pXmlNode->LinkEndChild( pXmlFunctionElement );
+
+					CStringA strFunctionAssembly;
+					strFunctionAssembly.Preallocate( 2048 );
+					for (UINT as = 0; as < pFunctionPtr->m_Assembly.size( ); as++)
 					{
-						XMLElement *pCode = doc.NewElement( "Code" );
-						CStringA strFunctionNodeAssembler = pNodefun->Assembly[as];
-						pCode->SetAttribute( "Assembly", strFunctionNodeAssembler );
-						fun->LinkEndChild( pCode );
+						strFunctionAssembly += pFunctionPtr->m_Assembly[as];
 					}
+
+					XMLElement* pXmlCodeElement = doc.NewElement( "Code" );
+					pXmlCodeElement->SetAttribute( "Assembly", strFunctionAssembly );
+					pXmlFunctionElement->LinkEndChild( pXmlCodeElement );
 				}
 			}
 		}
@@ -983,7 +987,7 @@ void CReClass2016App::OnFileOpen( )
 
 	#ifdef UNICODE
 	#define _CA2W(psz) CA2W(psz)
-		// Convert path to mbs in unicode mode
+	// Convert path to mbs in unicode mode
 	char szFilename[MAX_PATH] = { 0 };
 	size_t converted = 0;
 	wcstombs_s( &converted, szFilename, pathName, MAX_PATH );
@@ -1000,103 +1004,104 @@ void CReClass2016App::OnFileOpen( )
 
 	XMLHandle hDoc( &doc );
 	XMLHandle hRoot( 0 );
-	XMLElement* pElem;
+	XMLElement* pXmlCurrentElement = NULL;
 	typedef std::pair<CString, CNodeBase*> Link;
 	typedef std::vector<Link> Links;
 	Links links;
 
-	pElem = hDoc.FirstChildElement( ).ToElement( );
-	if (!pElem)
+	pXmlCurrentElement = hDoc.FirstChildElement( ).ToElement( );
+	if (!pXmlCurrentElement)
 		return;
 
-	const char* v = pElem->Value( );
-	if (_stricmp( v, "ReClass" ) != 0) // the root element value is 'ReClass'
+	const char* v = pXmlCurrentElement->Value( );
+	if (_stricmp( v, "ReClass" ) != 0) // The root element value is 'ReClass'
 		return; // Not a Reclass file
 
-	hRoot = XMLHandle( pElem );
+	hRoot = XMLHandle( pXmlCurrentElement );
 
-	pElem = hRoot.FirstChildElement( "Header" ).ToElement( );
-	if (pElem)
+	pXmlCurrentElement = hRoot.FirstChildElement( "Header" ).ToElement( );
+	if (pXmlCurrentElement)
 	{
-		m_strHeader = pElem->Attribute( "Text" );
+		m_strHeader.SetString( _CA2W( pXmlCurrentElement->Attribute( "Text" ) ) );
 	}
 
-	pElem = hRoot.FirstChildElement( "Footer" ).ToElement( );
-	if (pElem)
+	pXmlCurrentElement = hRoot.FirstChildElement( "Footer" ).ToElement( );
+	if (pXmlCurrentElement)
 	{
-		m_strFooter = pElem->Attribute( "Text" );
+		m_strFooter.SetString( _CA2W( pXmlCurrentElement->Attribute( "Text" ) ) );
 	}
 
-	pElem = hRoot.FirstChildElement( "Notes" ).ToElement( );
-	if (pElem)
+	pXmlCurrentElement = hRoot.FirstChildElement( "Notes" ).ToElement( );
+	if (pXmlCurrentElement)
 	{
-		m_strNotes = pElem->Attribute( "Text" );
+		m_strNotes.SetString( _CA2W( pXmlCurrentElement->Attribute( "Text" ) ) );
 	}
 
-	pElem = hRoot.FirstChildElement( "Class" ).ToElement( );
-	while (pElem)
+	pXmlCurrentElement = hRoot.FirstChildElement( "Class" ).ToElement( );
+	while (pXmlCurrentElement)
 	{
 		CNodeClass* pClass = new CNodeClass;
-		pClass->SetName( _CA2W( pElem->Attribute( "Name" ) ) );
-		pClass->SetComment( _CA2W( pElem->Attribute( "Comment" ) ) );
-		pClass->SetOffset( atoi( pElem->Attribute( "Offset" ) ) );
-		pClass->SetOffsetString( _CA2W( pElem->Attribute( "strOffset" ) ) );
-		pClass->Code = _CA2W( pElem->Attribute( "Code" ) );
+		pClass->SetName( _CA2W( pXmlCurrentElement->Attribute( "Name" ) ) );
+		pClass->SetComment( _CA2W( pXmlCurrentElement->Attribute( "Comment" ) ) );
+		pClass->SetOffset( atoi( pXmlCurrentElement->Attribute( "Offset" ) ) );
+		pClass->SetOffsetString( _CA2W( pXmlCurrentElement->Attribute( "strOffset" ) ) );
+		pClass->Code.SetString( _CA2W( pXmlCurrentElement->Attribute( "Code" ) ) );
 
 		if (pClass->GetOffsetString( ) == "")
-			pClass->SetOffsetString( _CA2W( pElem->Attribute( "Offset" ) ) );
+			pClass->SetOffsetString( _CA2W( pXmlCurrentElement->Attribute( "Offset" ) ) );
 
-		XMLElement* pClassElem = pElem->FirstChildElement( );
-		while (pClassElem)
+		XMLElement* pXmlClassElement = pXmlCurrentElement->FirstChildElement( );
+		while (pXmlClassElement)
 		{
 			int Type = nt_none;
-			pClassElem->QueryIntAttribute( "Type", &Type );
+			pXmlClassElement->QueryIntAttribute( "Type", &Type );
 
 			if (Type != nt_none)
 			{
 				CNodeBase* pNode = CreateNewNode( (NodeType)Type );
 				int Size = -1;
 				
-				pNode->SetName( _CA2W( pClassElem->Attribute( "Name" ) ) );
-				pNode->SetComment( _CA2W( pClassElem->Attribute( "Comment" ) ) );
-				pNode->SetHidden( atoi( pClassElem->Attribute( "bHidden" ) ) > 0 ? true : false );
+				pNode->SetName( _CA2W( pXmlClassElement->Attribute( "Name" ) ) );
+				pNode->SetComment( _CA2W( pXmlClassElement->Attribute( "Comment" ) ) );
+				pNode->SetHidden( atoi( pXmlClassElement->Attribute( "bHidden" ) ) > 0 ? true : false );
 				pNode->SetParent( pClass );
 				pClass->AddNode( pNode );
 
-				pClassElem->QueryIntAttribute( "Size", &Size );
+				pXmlClassElement->QueryIntAttribute( "Size", &Size );
 
 				if (Type == nt_custom)
 				{
-					((CNodeCustom*)pNode)->memsize = Size;
+					((CNodeCustom*)pNode)->SetSize( Size );
 				}
 				else if (Type == nt_text)
 				{
-					((CNodeText*)pNode)->memsize = Size;
+					((CNodeText*)pNode)->SetSize( Size );
 				}
 				else if (Type == nt_unicode)
 				{
-					((CNodeText*)pNode)->memsize = Size;
+					((CNodeText*)pNode)->SetSize( Size );
 				}
 				else if (Type == nt_vtable)
 				{
-					XMLElement* pVTableElem = pClassElem->FirstChildElement( );
-					while (pVTableElem)
+					XMLElement* pXmlVTableElement = pXmlClassElement->FirstChildElement( );
+					while (pXmlVTableElement)
 					{
-						CNodeFunctionPtr* pFun = new CNodeFunctionPtr;
-						pFun->SetName( _CA2W( pVTableElem->Attribute( "Name" ) ) );
-						pFun->SetComment( _CA2W( pVTableElem->Attribute( "Comment" ) ) );
-						pFun->SetHidden( atoi( pVTableElem->Attribute( "bHidden" ) ) > 0 ? true : false );
-						pFun->SetParent( pNode );
-						pNode->AddNode( pFun );
+						CNodeFunctionPtr* pFunctionPtr = new CNodeFunctionPtr;
+						pFunctionPtr->SetName( _CA2W( pXmlVTableElement->Attribute( "Name" ) ) );
+						pFunctionPtr->SetComment( _CA2W( pXmlVTableElement->Attribute( "Comment" ) ) );
+						pFunctionPtr->SetHidden( atoi( pXmlVTableElement->Attribute( "bHidden" ) ) > 0 ? true : false );
+						pFunctionPtr->SetParent( pNode );
+						pNode->AddNode( pFunctionPtr );
 
-						XMLElement* pCode = pVTableElem->FirstChildElement( );
-						while (pCode)
+						XMLElement* pXmlCodeElement = pXmlVTableElement->FirstChildElement( );
+						while (pXmlCodeElement)
 						{
-							CStringA disassembly = pCode->Attribute( "Assembly" );
-							pFun->Assembly.push_back( disassembly );
-							pCode = pCode->NextSiblingElement( );
+							CStringA strAssembly = pXmlCodeElement->Attribute( "Assembly" );
+							pFunctionPtr->m_Assembly.push_back( strAssembly );
+							pXmlCodeElement = pXmlCodeElement->NextSiblingElement( );
 						}
-						pVTableElem = pVTableElem->NextSiblingElement( );
+
+						pXmlVTableElement = pXmlVTableElement->NextSiblingElement( );
 					}
 				}
 				else if (Type == nt_array)
@@ -1104,16 +1109,18 @@ void CReClass2016App::OnFileOpen( )
 					//<Node Name="N4823" Type="23" Size="64" bHidden="0" Comment="" Total="1">
 					//<Array Name="N12DB" Type="24" Size="64" Comment="" />
 					CNodeArray* pArray = (CNodeArray*)pNode;
-					pArray->Total = (DWORD)atoi( pClassElem->Attribute( "Total" ) );
+					pArray->SetTotal( (DWORD)atoi( pXmlClassElement->Attribute( "Total" ) ) );
 
-					XMLElement* pArrayElem = pClassElem->FirstChildElement( );
-					if (pArrayElem)
+					XMLElement* pXmlArrayElement = pXmlClassElement->FirstChildElement( );
+					if (pXmlArrayElement)
 					{
-						CString Name = _CA2W( pArrayElem->Attribute( "Name" ) );
-						CString Comment = _CA2W( pArrayElem->Attribute( "Comment" ) );
-						int ArrayType = nt_none, ArraySize = 0;
-						pArrayElem->QueryIntAttribute( "Type", &ArrayType );
-						pClassElem->QueryIntAttribute( "Size", &ArraySize );
+						CString Name = _CA2W( pXmlArrayElement->Attribute( "Name" ) );
+						CString Comment = _CA2W( pXmlArrayElement->Attribute( "Comment" ) );
+						int ArrayType = nt_none;
+						int ArraySize = 0;
+
+						pXmlArrayElement->QueryIntAttribute( "Type", &ArrayType );
+						pXmlClassElement->QueryIntAttribute( "Size", &ArraySize );
 
 						if (ArrayType == nt_class)
 						{
@@ -1124,26 +1131,25 @@ void CReClass2016App::OnFileOpen( )
 				}
 				else if (Type == nt_pointer)
 				{
-					CString PointerStr = _CA2W( pClassElem->Attribute( "Pointer" ) );
+					CString PointerStr = _CA2W( pXmlClassElement->Attribute( "Pointer" ) );
 					links.push_back( Link( PointerStr, pNode ) );
 				}
 				else if (Type == nt_instance)
 				{
-					CString InstanceStr = _CA2W( pClassElem->Attribute( "Instance" ) );
-					links.push_back( Link( InstanceStr, pNode ) );
+					CString strInstance = _CA2W( pXmlClassElement->Attribute( "Instance" ) );
+					links.push_back( Link( strInstance, pNode ) );
 				}
 			}
 
-			pClassElem = pClassElem->NextSiblingElement( );
+			pXmlClassElement = pXmlClassElement->NextSiblingElement( );
 		}
 
-
 		m_Classes.push_back( pClass );
-		pElem = pElem->NextSiblingElement( "Class" );
+
+		pXmlCurrentElement = pXmlCurrentElement->NextSiblingElement( "Class" );
 	}
 
 	//Fix Links... very ghetto this whole thing is just fucked
-	//for (UINT i = 0; i < Links.size(); i++)
 	for (auto it = links.begin( ); it != links.end( ); it++)
 	{
 		for (UINT i = 0; i < m_Classes.size( ); i++)
@@ -1153,15 +1159,15 @@ void CReClass2016App::OnFileOpen( )
 				NodeType Type = it->second->GetType( );
 				if (Type == nt_pointer)
 				{
-					static_cast<CNodePtr*>(it->second)->pNode = m_Classes[i];
+					static_cast<CNodePtr*>(it->second)->SetClass( m_Classes[i] );
 				}
 				if (Type == nt_instance)
 				{
-					static_cast<CNodeClassInstance*>(it->second)->pNode = m_Classes[i];
+					static_cast<CNodeClassInstance*>(it->second)->SetClass( m_Classes[i] );
 				}
 				if (Type == nt_array)
 				{
-					static_cast<CNodeArray*>(it->second)->pNode = m_Classes[i];
+					static_cast<CNodeArray*>(it->second)->SetClass( m_Classes[i] );
 				}
 			}
 		}
@@ -1320,13 +1326,13 @@ void CReClass2016App::OnButtonGenerate( )
 			if (Type == nt_text)
 			{
 				CNodeText* pText = (CNodeText*)pNode;
-				t.Format( _T( "\tchar %s[%i]; //0x%0.4X %s\r\n" ), pText->GetName( ), pText->memsize, pText->GetComment( ), pText->GetComment( ) );
+				t.Format( _T( "\tchar %s[%i]; //0x%0.4X %s\r\n" ), pText->GetName( ), pText->GetMemorySize( ), pText->GetComment( ), pText->GetComment( ) );
 				var.push_back( t );
 			}
 			if (Type == nt_unicode)
 			{
 				CNodeUnicode* pText = (CNodeUnicode*)pNode;
-				t.Format( _T( "\twchar_t %s[%i]; //0x%0.4X %s\r\n" ), pText->GetName( ), pText->memsize / sizeof( wchar_t ), pText->GetOffset( ), pText->GetComment( ) );
+				t.Format( _T( "\twchar_t %s[%i]; //0x%0.4X %s\r\n" ), pText->GetName( ), pText->GetMemorySize( ) / sizeof( wchar_t ), pText->GetOffset( ), pText->GetComment( ) );
 				var.push_back( t );
 			}
 
@@ -1356,21 +1362,21 @@ void CReClass2016App::OnButtonGenerate( )
 			if (Type == nt_pointer)
 			{
 				CNodePtr* pPointer = (CNodePtr*)pNode;
-				t.Format( _T( "\t%s* %s; //0x%0.4X %s\r\n" ), pPointer->pNode->GetName( ), pPointer->GetName( ), pPointer->GetOffset( ), pPointer->GetComment( ) );
+				t.Format( _T( "\t%s* %s; //0x%0.4X %s\r\n" ), pPointer->GetClass( )->GetName( ), pPointer->GetName( ), pPointer->GetOffset( ), pPointer->GetComment( ) );
 				var.push_back( t );
 			}
 
 			if (Type == nt_instance)
 			{
-				CNodeClassInstance* pCls = (CNodeClassInstance*)pNode;
-				if (pCls->GetOffset( ) == 0)
+				CNodeClassInstance* pClassInstance = (CNodeClassInstance*)pNode;
+				if (pClassInstance->GetOffset( ) == 0)
 				{
-					t.Format( _T( " : public %s" ), pCls->pNode->GetName( ) ); // Inheritance
+					t.Format( _T( " : public %s" ), pClassInstance->GetClass( )->GetName( ) ); // Inheritance
 					ClassName += t;
 				}
 				else
 				{
-					t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), pCls->pNode->GetName( ), pCls->GetName( ), pCls->GetOffset( ), pCls->GetComment( ) );
+					t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), pClassInstance->GetClass( )->GetName( ), pClassInstance->GetName( ), pClassInstance->GetOffset( ), pClassInstance->GetComment( ) );
 					var.push_back( t );
 				}
 			}
@@ -1378,7 +1384,7 @@ void CReClass2016App::OnButtonGenerate( )
 			if (Type == nt_array)
 			{
 				CNodeArray* pArray = (CNodeArray*)pNode;
-				t.Format( _T( "\t%s %s[%i]; //0x%0.4X %s\r\n" ), pArray->pNode->GetName( ), pArray->GetName( ), pArray->Total, pArray->GetOffset( ), pArray->GetComment( ) );
+				t.Format( _T( "\t%s %s[%i]; //0x%0.4X %s\r\n" ), pArray->GetClass( )->GetName( ), pArray->GetName( ), pArray->GetTotal( ), pArray->GetOffset( ), pArray->GetComment( ) );
 				var.push_back( t );
 			}
 
@@ -1522,21 +1528,21 @@ CNodeBase* CReClass2016App::IsNodeRef( CNodeBase* pTestNode )
 			NodeType nt = pNode->GetType( );
 			if (nt == nt_instance)
 			{
-				CNodeClassInstance* pInstance = (CNodeClassInstance*)pNode;
-				if (pInstance->pNode == pTestNode)
-					return pInstance;
+				CNodeClassInstance* pClassInstance = (CNodeClassInstance*)pNode;
+				if (pClassInstance->GetClass( ) == pTestNode)
+					return pClassInstance;
 			}
 			else if (nt == nt_pointer)
 			{
-				CNodePtr* pInstance = (CNodePtr*)pNode;
-				if (pInstance->pNode == pTestNode)
-					return pInstance;
+				CNodePtr* pPointer = (CNodePtr*)pNode;
+				if (pPointer->GetClass( ) == pTestNode)
+					return pPointer;
 			}
 			else if (nt == nt_array)
 			{
-				CNodeArray* pInstance = (CNodeArray*)pNode;
-				if (pInstance->pNode == pTestNode)
-					return pInstance;
+				CNodeArray* pArray = (CNodeArray*)pNode;
+				if (pArray->GetClass( ) == pTestNode)
+					return pArray;
 			}
 		}
 	}

@@ -1,14 +1,12 @@
 #include "stdafx.h"
 #include "SymbolReader.h"
 
-//#include <direct.h>
-//#define GetCurrentDir getcwd
 
 SymbolReader::SymbolReader( ) :
-	m_bInitialized( false ),
-	m_pSource( nullptr ),
-	m_pSession( nullptr ),
-	m_pGlobal( nullptr )
+	m_bInitialized( FALSE ),
+	m_pSource( NULL ),
+	m_pSession( NULL ),
+	m_pGlobal( NULL )
 {
 }
 
@@ -19,7 +17,7 @@ SymbolReader::~SymbolReader( )
 	SAFE_RELEASE( m_pSource );
 }
 
-bool SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
+BOOLEAN SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
 {
 	TCHAR szExt[MAX_PATH];
 	DWORD dwMachType = 0;
@@ -30,7 +28,7 @@ bool SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
 	if (FAILED( hr ))
 	{
 		PrintOut( _T( "[LoadDataFromPdb] CoCreateInstance failed - HRESULT = %08X" ), hr );
-		return false;
+		return FALSE;
 	}
 
 	_tsplitpath_s( m_strFilePath.GetString( ), NULL, 0, NULL, 0, NULL, 0, szExt, MAX_PATH );
@@ -43,7 +41,7 @@ bool SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
 			_com_error err( hr );
 			LPCTSTR errMsg = err.ErrorMessage( );
 			PrintOut( _T( "[LoadDataFromPdb] loadDataFromPdb failed - %s" ), errMsg );
-			return false;
+			return FALSE;
 		}
 	}
 	else
@@ -77,7 +75,7 @@ bool SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
 			}
 
 			PrintOut( _T( "[LoadDataFromPdb] loadDataForExe failed - %s" ), errMsg );
-			return false;
+			return FALSE;
 		}
 	}
 
@@ -86,7 +84,7 @@ bool SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
 	if (FAILED( hr ))
 	{
 		PrintOut( _T( "[LoadDataFromPdb] openSession failed - HRESULT = %08X" ), hr );
-		return false;
+		return FALSE;
 	}
 
 	// Retrieve a reference to the global scope
@@ -94,7 +92,7 @@ bool SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
 	if (FAILED( hr ))
 	{
 		PrintOut( _T( "[LoadDataFromPdb] get_globalScope failed - HRESULT = %08X" ), hr );
-		return false;
+		return FALSE;
 	}
 
 	// Set Machine type for getting correct register names
@@ -108,7 +106,7 @@ bool SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
 		}
 	}
 
-	return true;
+	return TRUE;
 }
 
 ////////////////////////////////////////////////////////////
@@ -127,40 +125,40 @@ void SymbolReader::ReadSymTag( DWORD dwSymTag, CString& outString )
 //
 void SymbolReader::ReadName( IDiaSymbol *pSymbol, CString& outString )
 {
-	BSTR bstrName;
-	BSTR bstrUndName;
+	BSTR strName;
+	BSTR strUndName;
 
-	if (pSymbol->get_name( &bstrName ) != S_OK)
+	if (pSymbol->get_name( &strName ) != S_OK)
 	{
 		//outString += _T("(none)");
 		//wprintf(L"(none)");
 		return;
 	}
 
-	if (pSymbol->get_undecoratedName( &bstrUndName ) == S_OK)
+	if (pSymbol->get_undecoratedName( &strUndName ) == S_OK)
 	{
-		if (wcscmp( bstrName, bstrUndName ) == 0)
+		if (wcscmp( strName, strUndName ) == 0)
 		{
-			outString += bstrName;
+			outString += strName;
 			//wprintf(L"%s", bstrName);
 		}
 		else
 		{
 			CString append;
-			append.Format( _T( "%s(%s)" ), bstrUndName, bstrName );
+			append.Format( _T( "%s(%s)" ), strUndName, strName );
 			outString += append;
 			//wprintf(L"%s(%s)", bstrUndName, bstrName);
 		}
 
-		SysFreeString( bstrUndName );
+		SysFreeString( strUndName );
 	}
 	else
 	{
-		outString += bstrName;
+		outString += strName;
 		//wprintf(L"%s", bstrName);
 	}
 
-	SysFreeString( bstrName );
+	SysFreeString( strName );
 }
 
 ////////////////////////////////////////////////////////////
@@ -419,11 +417,11 @@ void SymbolReader::ReadUdtKind( IDiaSymbol *pSymbol, CString& outString )
 //
 void SymbolReader::ReadType( IDiaSymbol *pSymbol, CString& outString )
 {
-	IDiaSymbol *pBaseType;
-	IDiaEnumSymbols *pEnumSym;
-	IDiaSymbol *pSym;
-	DWORD dwTag;
-	BSTR bstrName;
+	IDiaSymbol* pBaseType = NULL;
+	IDiaEnumSymbols* pEnumSym = NULL;
+	IDiaSymbol* pSym = NULL;
+	DWORD dwTag = SymTagNull;
+	BSTR strName = NULL;
 	DWORD dwInfo;
 	BOOL bSet;
 	DWORD dwRank;
@@ -436,10 +434,10 @@ void SymbolReader::ReadType( IDiaSymbol *pSymbol, CString& outString )
 		return;
 	}
 
-	if (pSymbol->get_name( &bstrName ) != S_OK)
-		bstrName = NULL;
+	if (pSymbol->get_name( &strName ) != S_OK)
+		strName = NULL;
 
-	//wprintf(L"bstrName: %s\n", bstrName);
+	//wprintf(L"strName: %s\n", strName);
 
 	if (dwTag != SymTagPointerType)
 	{
@@ -485,8 +483,8 @@ void SymbolReader::ReadType( IDiaSymbol *pSymbol, CString& outString )
 		if (pSymbol->get_type( &pBaseType ) != S_OK)
 		{
 			PrintOut( _T( "[ReadType] ERROR - SymTagPointerType get_type" ) );
-			if (bstrName != NULL)
-				SysFreeString( bstrName );
+			if (strName != NULL)
+				SysFreeString( strName );
 			return;
 		}
 
@@ -533,7 +531,7 @@ void SymbolReader::ReadType( IDiaSymbol *pSymbol, CString& outString )
 				{
 					while (SUCCEEDED( pEnumSym->Next( 1, &pSym, &celt ) ) && (celt == 1))
 					{
-						outString += _T( "[" );
+						outString += _T( '[' );
 
 						IDiaSymbol *pBound;
 						if (pSym->get_lowerBound( &pBound ) == S_OK)
@@ -553,7 +551,7 @@ void SymbolReader::ReadType( IDiaSymbol *pSymbol, CString& outString )
 						pSym->Release( );
 						pSym = NULL;
 
-						outString += _T( "]" );
+						outString += _T( ']' );
 					}
 
 					pEnumSym->Release( );
@@ -564,9 +562,9 @@ void SymbolReader::ReadType( IDiaSymbol *pSymbol, CString& outString )
 			{
 				while (SUCCEEDED( pEnumSym->Next( 1, &pSym, &celt ) ) && (celt == 1))
 				{
-					outString += _T( "[" );
+					outString += _T( '[' );
 					ReadType( pSym, outString );
-					outString += _T( "]" );
+					outString += _T( ']' );
 
 					pSym->Release( );
 				}
@@ -609,8 +607,8 @@ void SymbolReader::ReadType( IDiaSymbol *pSymbol, CString& outString )
 		else
 		{
 			PrintOut( _T( "ERROR - SymTagArrayType get_type" ) );
-			if (bstrName != NULL)
-				SysFreeString( bstrName );
+			if (strName != NULL)
+				SysFreeString( strName );
 			return;
 		}
 	}
@@ -621,8 +619,8 @@ void SymbolReader::ReadType( IDiaSymbol *pSymbol, CString& outString )
 		if (pSymbol->get_baseType( &dwInfo ) != S_OK)
 		{
 			PrintOut( _T( "SymTagBaseType get_baseType" ) );
-			if (bstrName != NULL)
-				SysFreeString( bstrName );
+			if (strName != NULL)
+				SysFreeString( strName );
 			return;
 		}
 
@@ -761,8 +759,8 @@ void SymbolReader::ReadType( IDiaSymbol *pSymbol, CString& outString )
 		break;
 	}
 
-	if (bstrName != NULL)
-		SysFreeString( bstrName );
+	if (strName != NULL)
+		SysFreeString( strName );
 }
 
 ////////////////////////////////////////////////////////////
@@ -770,10 +768,9 @@ void SymbolReader::ReadType( IDiaSymbol *pSymbol, CString& outString )
 //
 void SymbolReader::ReadSymbolType( IDiaSymbol *pSymbol, CString& outString )
 {
-	IDiaSymbol *pType;
+	IDiaSymbol* pType = NULL;
 	if (pSymbol->get_type( &pType ) == S_OK)
 	{
-		//wprintf(L" Type: ");
 		ReadType( pType, outString );
 		pType->Release( );
 		outString += _T( ' ' );
@@ -784,10 +781,10 @@ void SymbolReader::ReadSymbolType( IDiaSymbol *pSymbol, CString& outString )
 //
 void SymbolReader::ReadData( IDiaSymbol *pSymbol, CString& outString )
 {
-	ReadLocation( pSymbol, outString );
-
 	HRESULT hr = S_OK;
-	DWORD dwDataKind;
+	DWORD dwDataKind = 0;
+
+	ReadLocation( pSymbol, outString );
 
 	hr = pSymbol->get_dataKind( &dwDataKind );
 	if (FAILED( hr ))
@@ -814,32 +811,31 @@ void SymbolReader::ReadData( IDiaSymbol *pSymbol, CString& outString )
 //
 void SymbolReader::ReadUndName( IDiaSymbol *pSymbol, CString& outString )
 {
-	BSTR bstrName;
-	if (pSymbol->get_undecoratedName( &bstrName ) != S_OK)
+	BSTR strName = NULL;
+	if (pSymbol->get_undecoratedName( &strName ) != S_OK)
 	{
-		if (pSymbol->get_name( &bstrName ) == S_OK)
+		if (pSymbol->get_name( &strName ) == S_OK)
 		{
-			// Print the name of the symbol instead
-			outString += (bstrName[0] != _T( '\0' )) ? bstrName : _T( "" );
+			// Print the name of the Symbol instead
+			outString += (strName[0] != _T( '\0' )) ? strName : _T( "" );
 			//wprintf(L"%s", (bstrName[0] != L'\0') ? bstrName : L"(none)");
-			SysFreeString( bstrName );
+			SysFreeString( strName );
 		}
-		else
-		{
-			//outString += _T("(none)");
-			//wprintf(L"(none)");
-		}
+		//else
+		//{
+		//	outString += _T("(none)");
+		//	wprintf(L"(none)");
+		//}
 
 		return;
 	}
 
-	if (bstrName[0] != _T( '\0' ))
+	if (strName[0] != _T( '\0' ))
 	{
-		outString += bstrName;
-		//wprintf(L"%s", bstrName);
+		outString += strName;
 	}
 
-	SysFreeString( bstrName );
+	SysFreeString( strName );
 }
 
 ////////////////////////////////////////////////////////////
@@ -1015,24 +1011,24 @@ void SymbolReader::ReadSymbol( IDiaSymbol *pSymbol, CString& outString )
 	//putwchar(L'\n');
 }
 
-bool SymbolReader::GetSymbolStringWithVA( size_t dwVA, CString& outString )
+BOOLEAN SymbolReader::GetSymbolStringWithVA( ULONG_PTR dwVA, CString& outString )
 {
-	IDiaSymbol *pSymbol;
-	LONG lDisplacement;
+	IDiaSymbol* pSymbol = NULL;
+	LONG lDisplacement = 0;
 
-	size_t dwBase = m_dwModuleBase ? m_dwModuleBase : g_AttachedProcessAddress;
-	size_t dwRVA = dwVA - dwBase;
+	ULONG_PTR dwBase = m_dwModuleBase ? m_dwModuleBase : g_AttachedProcessAddress;
+	ULONG_PTR dwRVA = dwVA - dwBase;
 
 	if (FAILED( m_pSession->findSymbolByRVAEx( (DWORD)dwRVA, SymTagNull, &pSymbol, &lDisplacement ) ))
-		return false;
+		return FALSE;
 
 	ReadSymbol( pSymbol, outString );
 	pSymbol->Release( );
 
-	return true;
+	return TRUE;
 }
 
-bool SymbolReader::LoadFile( CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath )
+BOOLEAN SymbolReader::LoadFile( CString FilePath, ULONG_PTR dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath )
 {
 	int idx = FilePath.ReverseFind( '/' );
 	if (idx == -1)
@@ -1040,7 +1036,7 @@ bool SymbolReader::LoadFile( CString FilePath, size_t dwBaseAddr, DWORD dwModule
 	return LoadFile( FilePath.Mid( ++idx ), FilePath, dwBaseAddr, dwModuleSize, pszSearchPath );
 }
 
-bool SymbolReader::LoadFile( CString FileName, CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath )
+BOOLEAN SymbolReader::LoadFile( CString FileName, CString FilePath, ULONG_PTR dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath )
 {
 	m_strFileName = FileName;
 	m_strFilePath = FilePath;

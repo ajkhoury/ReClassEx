@@ -13,7 +13,7 @@
 // CChildView
 CChildView::CChildView( ) : 
 	m_pClass( NULL ),
-	m_bTracking( false )
+	m_bTracking( FALSE )
 {
 }
 
@@ -165,6 +165,7 @@ int CChildView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	m_Edit.SetFont( &g_ViewFont );
 
 	m_Scroll.Create( SBS_VERT, rect, this, 0 );
+	m_Scroll.EnableScrollBar( ESB_ENABLE_BOTH );
 	m_Scroll.ShowScrollBar( );
 
 	m_ToolTip.Create( ES_MULTILINE | WS_BORDER, rect, this, 1 );
@@ -194,6 +195,7 @@ void CChildView::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 			{
 				g_ReClassApp.ClearSelection( );
 				Selected.clear( );
+
 				for (UINT i = 0; i < HotSpots.size( ); i++)
 				{
 					if (HotSpots[i].Type != HS_SELECT)
@@ -608,7 +610,9 @@ void CChildView::OnPaint( )
 		m_Memory.SetSize( classSize );
 		ReClassReadMemory( (LPVOID)m_pClass->GetOffset( ), m_Memory.Data( ), classSize );
 
-		View.pChildView = this;
+		#ifdef _DEBUG
+		View.pChildView = this; // For testing
+		#endif
 		View.Address = m_pClass->GetOffset( );
 		View.pData = m_Memory.Data( );
 		View.Classes = &g_ReClassApp.m_Classes;
@@ -651,24 +655,24 @@ void CChildView::OnPaint( )
 			si.nMax = DrawMax / g_FontHeight;
 			si.nPage = clientRect.Height( ) / g_FontHeight;
 			m_Scroll.SetScrollInfo( &si );
-			m_Scroll.ShowScrollBar( 1 );
+			m_Scroll.ShowScrollBar( TRUE );
 		}
 		else
 		{
 			m_Scroll.SetScrollPos( 0 );
-			m_Scroll.ShowScrollBar( 0 );
+			m_Scroll.ShowScrollBar( FALSE );
 		}
 
 
-		// this makes tabs
+		// This makes tabs
 		CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, AfxGetApp( )->m_pMainWnd );
 		CChildFrame* pChild = STATIC_DOWNCAST( CChildFrame, pFrame->GetActiveFrame( ) );
 
-		if (pChild->m_ChildView.m_hWnd == this->m_hWnd)
+		if (pChild->m_ChildView.m_hWnd == m_hWnd)
 		{
-			pChild->SetWindowText( m_pClass->GetName( ).GetString( ) );
-			pChild->SetTitle( m_pClass->GetName( ).GetString( ) );
-			pFrame->UpdateFrameTitleForDocument( m_pClass->GetName( ).GetString( ) );
+			pChild->SetWindowText( m_pClass->GetName( ) );
+			pChild->SetTitle( m_pClass->GetName( ) );
+			pFrame->UpdateFrameTitleForDocument( m_pClass->GetName( ) );
 
 			//char txt[256];
 			//sprintf (txt,"Total HotSpots: %i",HotSpots.size());
@@ -726,66 +730,6 @@ BOOL CChildView::OnMouseWheel( UINT nFlags, short zDelta, CPoint pt )
 	return CWnd::OnMouseWheel( nFlags, zDelta, pt );
 }
 
-__inline CStringA DisassembleCode( size_t virtualAddress, int* textHeight )
-{
-	CStringA Assembly;
-
-	size_t addy = virtualAddress;
-	ReClassReadMemory( (LPVOID)addy, &addy, sizeof( size_t ) );
-	char* code[1536]; // max 1536 lines
-	ReClassReadMemory( (LPVOID)addy, code, 1536 );
-	char** EndCodeSection = (code + 1536);
-
-	DISASM MyDisasm;
-	memset( &MyDisasm, 0, sizeof( DISASM ) );
-
-	MyDisasm.EIP = (size_t)code;
-
-	MyDisasm.VirtualAddr = (unsigned __int64)addy;
-	#ifdef _WIN64
-	MyDisasm.Archi = 64;
-	#else
-	MyDisasm.Archi = 0;
-	#endif
-	MyDisasm.Options = PrefixedNumeral;
-
-	bool Error = 0;
-	while (!Error)
-	{
-		MyDisasm.SecurityBlock = (unsigned __int32)((size_t)EndCodeSection - (size_t)MyDisasm.EIP);
-
-		int len = Disasm( &MyDisasm );
-		if (len == OUT_OF_BLOCK)
-			Error = 1;
-		else if (len == UNKNOWN_OPCODE)
-			Error = 1;
-		else
-		{
-			char szInstruction[96];
-			sprintf_s( szInstruction, "%p  %s\r\n", (void*)MyDisasm.VirtualAddr, MyDisasm.CompleteInstr );
-			//std::string strInstruction(szInstruction);
-			Assembly.Append( szInstruction );
-			//Assembly.insert(Assembly.end(), strInstruction.begin(), strInstruction.end());
-
-			*textHeight += 16;
-
-			MyDisasm.EIP = MyDisasm.EIP + len;
-			MyDisasm.VirtualAddr = MyDisasm.VirtualAddr + len;
-			if (MyDisasm.EIP >= (UIntPtr)EndCodeSection)
-				break;
-
-			unsigned char opcode;
-			ReClassReadMemory( (LPVOID)MyDisasm.VirtualAddr, &opcode, sizeof( unsigned char ) );
-			if (opcode == 0xCC) // INT3 instruction
-				break;
-		}
-	}
-
-	*textHeight += 4;
-
-	return Assembly;
-}
-
 void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 {
 	if (Selected.size( ) > 1)
@@ -794,7 +738,7 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 		DWORD size = 0;
 		for (UINT i = 0; i < Selected.size( ); i++)
 			size += Selected[i].object->GetMemorySize( );
-		msg.Format( _T( "%i selected, %i bytes" ), Selected.size( ), size );
+		msg.Format( _T( "%i selected, %d bytes" ), Selected.size( ), size );
 		m_ToolTip.EnableWindow( FALSE );
 		m_ToolTip.SetWindowText( msg );
 		m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, msg.GetLength( ) * g_FontWidth + 8, g_FontHeight + 6, SWP_NOZORDER );
@@ -810,33 +754,101 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 				if (HotSpots[i].Type == HS_SELECT)
 				{
 					CNodeBase* pNode = (CNodeBase*)HotSpots[i].object;
-					if (pNode->GetType( ) == nt_functionptr)
+					NodeType nodeType = pNode->GetType( );
+					if (nodeType == nt_functionptr)
 					{
-						if (HotSpots[i].object->IsLevelOpen( HotSpots[i].Level ))
-							continue;
+						if (HotSpots[i].object->IsLevelOpen( HotSpots[i].Level ) == FALSE)
+						{
+							
+							ULONG_PTR StartAddress = HotSpots[i].Address;
+							UCHAR Code[1024] = { 0xCC }; // set max function size to 1024] bytes
+							UIntPtr EndCode = (UIntPtr)(Code + 1024);
+							int textHeight = 0;
+							CStringA strDisassembly;
 
-						size_t addr = HotSpots[i].Address;
+							// Read in process bytes
+							if (ReClassReadMemory( (LPVOID)StartAddress, (LPVOID)Code, 1024 ) == TRUE)
+							{
+								DISASM MyDisasm;
+								BOOL Error = FALSE;
 
-						int textHeight = 0;
-						CStringA d = DisassembleCode( addr, &textHeight );
+								ZeroMemory( &MyDisasm, sizeof( DISASM ) );
+								MyDisasm.EIP = (UIntPtr)Code;
+								MyDisasm.VirtualAddr = (UInt64)StartAddress;
+								#ifdef _WIN64
+								MyDisasm.Archi = 64;
+								#else
+								MyDisasm.Archi = 0;
+								#endif
+								MyDisasm.Options = MasmSyntax | PrefixedNumeral | ShowSegmentRegs;
 
-						m_ToolTip.EnableWindow( FALSE );
-						#ifdef UNICODE
-						CStringW ws = CA2W( d );
-						m_ToolTip.SetWindowText( ws.GetString( ) );
-						#else
-						m_ToolTip.SetWindowText( d.c_str( ) );
-						#endif			
+								// Get assembly lines
+								while (Error == FALSE)
+								{
+									int disasmLen = 0;
 
-						#ifdef _WIN64
-						m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 500, textHeight, SWP_NOZORDER );
-						#else
-						m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 400, textHeight, SWP_NOZORDER );
-						#endif
+									MyDisasm.SecurityBlock = (UInt32)(EndCode - MyDisasm.EIP);
 
-						m_ToolTip.ShowWindow( SW_SHOW );
+									disasmLen = Disasm( &MyDisasm );
+									if (disasmLen == OUT_OF_BLOCK || disasmLen == UNKNOWN_OPCODE)
+									{
+										Error = TRUE;
+									}
+									else
+									{
+										CHAR szInstruction[256] = { 0 };
+										CHAR szBytes[128] = { 0 };
+
+										// INT3 instruction usually indicates the end of a function (obviously this is temporary)
+										if (MyDisasm.Instruction.Opcode == 0xCC)
+											break;
+
+										// Generate instruction bytes
+										for (int i = 0; i < disasmLen; i++)
+										{
+											sprintf_s( szBytes + (i * 3), 128, "%02X ", *(CHAR*)(MyDisasm.EIP + i) );
+										}
+
+										// Create full instruction string
+										sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
+										strDisassembly += szInstruction;
+
+										// Increment the text height
+										textHeight += g_FontHeight;
+
+										// Increment by instruction length
+										MyDisasm.EIP += disasmLen;
+										MyDisasm.VirtualAddr += disasmLen;
+
+										if (MyDisasm.EIP >= EndCode)
+											break;
+									}
+								}
+							}
+							else
+							{
+								strDisassembly = "ERROR: Could not read memory";
+								textHeight += g_FontHeight;
+							}
+
+
+							m_ToolTip.EnableWindow( FALSE );
+							#ifdef UNICODE
+							m_ToolTip.SetWindowText( CA2W( strDisassembly ).m_psz );
+							#else
+							m_ToolTip.SetWindowText( strDisassembly.GetString( ) );
+							#endif
+
+							#ifdef _WIN64
+							m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 450, textHeight, SWP_NOZORDER );
+							#else
+							m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 450, textHeight, SWP_NOZORDER );
+							#endif
+
+							m_ToolTip.ShowWindow( SW_SHOW );
+						}
 					}
-					else if (pNode->GetType( ) == nt_hex64)
+					else if (nodeType == nt_hex64)
 					{
 						CString msg;
 						ReClassReadMemory( (LPVOID)HotSpots[i].Address, data, sizeof( DWORD_PTR ) );
@@ -850,7 +862,7 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 						m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 200, 16 * 3 + 6, SWP_NOZORDER );
 						m_ToolTip.ShowWindow( SW_SHOW );
 					}
-					else if (pNode->GetType( ) == nt_hex32)
+					else if (nodeType == nt_hex32)
 					{
 						CString msg;
 						ReClassReadMemory( (LPVOID)HotSpots[i].Address, data, 4 );
@@ -863,7 +875,7 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 						m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 200, 16 * 3 + 6, SWP_NOZORDER );
 						m_ToolTip.ShowWindow( SW_SHOW );
 					}
-					else if (pNode->GetType( ) == nt_hex16)
+					else if (nodeType == nt_hex16)
 					{
 						CString msg;
 						ReClassReadMemory( (LPVOID)HotSpots[i].Address, data, 4 );
@@ -875,7 +887,7 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 						m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 200, 16 * 2 + 6, SWP_NOZORDER );
 						m_ToolTip.ShowWindow( SW_SHOW );
 					}
-					else if (pNode->GetType( ) == nt_hex8)
+					else if (nodeType == nt_hex8)
 					{
 						CString msg;
 						ReClassReadMemory( (LPVOID)HotSpots[i].Address, data, 4 );
@@ -891,7 +903,7 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 		}
 	}
 
-	m_bTracking = false;
+	m_bTracking = FALSE;
 	m_HoverPoint = point;
 
 	CWnd::OnMouseHover( nFlags, point );
@@ -902,7 +914,7 @@ void CChildView::OnMouseMove( UINT nFlags, CPoint point )
 	if (point != m_HoverPoint)
 		m_ToolTip.ShowWindow( SW_HIDE );
 
-	if (m_bTracking == false)
+	if (m_bTracking == FALSE)
 	{
 		TRACKMOUSEEVENT tme;
 		tme.cbSize = sizeof( tme );
@@ -910,7 +922,7 @@ void CChildView::OnMouseMove( UINT nFlags, CPoint point )
 		tme.hwndTrack = m_hWnd;
 		tme.dwHoverTime = HOVER_DEFAULT;
 		::TrackMouseEvent( &tme );
-		m_bTracking = true;
+		m_bTracking = TRUE;
 	}
 	CWnd::OnMouseMove( nFlags, point );
 }
@@ -918,7 +930,7 @@ void CChildView::OnMouseMove( UINT nFlags, CPoint point )
 void CChildView::OnMouseLeave( )
 {
 	m_ToolTip.ShowWindow( SW_HIDE );
-	m_bTracking = false;
+	m_bTracking = FALSE;
 	CWnd::OnMouseLeave( );
 }
 
@@ -1023,12 +1035,12 @@ void CChildView::FillNodes( CNodeClass* pClass, UINT idx, DWORD Length )
 	if (!pClass || idx >= MAX_NODES)
 		return;
 
-	size_t newOffset = 0;
+	size_t NewOffset = 0;
 
 	if (idx > 0)
 	{
 		CNodeBase* pNode = pClass->GetNode( idx - 1 );
-		newOffset = pNode->GetOffset( ) + pNode->GetMemorySize( );
+		NewOffset = pNode->GetOffset( ) + pNode->GetMemorySize( );
 	}
 
 	while (Length != 0)
@@ -1039,12 +1051,12 @@ void CChildView::FillNodes( CNodeClass* pClass, UINT idx, DWORD Length )
 		{
 			CNodeHex64* pFill = new CNodeHex64;
 			pFill->SetParent( pClass );
-			pFill->SetOffset( newOffset );
+			pFill->SetOffset( NewOffset );
 			//pFill->Comment.Format("%i-%i",idx,Length);
 
 			pClass->InsertNode( idx, pFill );
 
-			newOffset += 8;
+			NewOffset += 8;
 			Length -= 8;
 			idx++;
 		}
@@ -1053,10 +1065,10 @@ void CChildView::FillNodes( CNodeClass* pClass, UINT idx, DWORD Length )
 		{
 			CNodeHex32* pFill = new CNodeHex32;
 			pFill->SetParent( pClass );
-			pFill->SetOffset( newOffset );
+			pFill->SetOffset( NewOffset );
 			//pFill->Comment.Format("%i-%i",idx,Length);
 			pClass->InsertNode( idx, pFill );
-			newOffset += 4;
+			NewOffset += 4;
 			Length -= 4;
 			idx++;
 		}
@@ -1065,10 +1077,10 @@ void CChildView::FillNodes( CNodeClass* pClass, UINT idx, DWORD Length )
 		{
 			CNodeHex16* pFill = new CNodeHex16;
 			pFill->SetParent( pClass );
-			pFill->SetOffset( newOffset );
+			pFill->SetOffset( NewOffset );
 			//pFill->Comment.Format("%i-%i",idx,Length);
 			pClass->InsertNode( idx, pFill );
-			newOffset += 2;
+			NewOffset += 2;
 			Length -= 2;
 			idx++;
 		}
@@ -1077,10 +1089,10 @@ void CChildView::FillNodes( CNodeClass* pClass, UINT idx, DWORD Length )
 		{
 			CNodeHex8* pFill = new CNodeHex8;
 			pFill->SetParent( pClass );
-			pFill->SetOffset( newOffset );
+			pFill->SetOffset( NewOffset );
 			//pFill->Comment.Format("%i-%i",idx,Length);
 			pClass->InsertNode( idx, pFill );
-			newOffset += 1;
+			NewOffset += 1;
 			Length -= 1;
 			idx++;
 		}
@@ -1099,7 +1111,9 @@ void CChildView::ResizeNode( CNodeClass* pClass, UINT idx, DWORD before, DWORD a
 			FillNodes( pClass, idx + 1, before - after );
 		}
 		else
+		{
 			RemoveNodes( pClass, idx + 1, after - before );
+		}
 	}
 
 	g_ReClassApp.CalcAllOffsets( );
@@ -1341,6 +1355,7 @@ void MakeBasicClass( CNodeClass* pClass )
 		pNode->SetParent( pClass );
 		pClass->AddNode( pNode );
 	}
+
 	g_ReClassApp.CalcOffsets( pClass );
 	g_ReClassApp.m_Classes.push_back( pClass );
 }
@@ -1355,8 +1370,11 @@ void CChildView::ReplaceSelectedWithType( NodeType Type )
 	{
 		if (!g_ReClassApp.IsNodeValid( Selected[i].object ))
 			continue;
+
 		if (Selected[i].object->GetParent( )->GetType( ) == nt_vtable)
+		{
 			Type = nt_functionptr;
+		}
 
 		CNodeBase* pNewNode = g_ReClassApp.CreateNewNode( Type );
 
@@ -1366,15 +1384,15 @@ void CChildView::ReplaceSelectedWithType( NodeType Type )
 		}
 		if (Type == nt_custom)
 		{
-			((CNodeCustom*)pNewNode)->memsize = Selected[i].object->GetMemorySize( );
+			((CNodeCustom*)pNewNode)->SetSize( Selected[i].object->GetMemorySize( ) );
 		}
 		if (Type == nt_text)
 		{
-			((CNodeText*)pNewNode)->memsize = Selected[i].object->GetMemorySize( );
+			((CNodeText*)pNewNode)->SetSize( Selected[i].object->GetMemorySize( ) );
 		}
 		if (Type == nt_unicode)
 		{
-			((CNodeUnicode*)pNewNode)->memsize = Selected[i].object->GetMemorySize( );
+			((CNodeUnicode*)pNewNode)->SetSize( Selected[i].object->GetMemorySize( ) );
 		}
 		if (Type == nt_vtable)
 		{
@@ -1392,26 +1410,31 @@ void CChildView::ReplaceSelectedWithType( NodeType Type )
 			CNodePtr*	pPtr = (CNodePtr*)pNewNode;
 			CNodeClass* pClass = (CNodeClass*)g_ReClassApp.CreateNewNode( nt_class );
 			MakeBasicClass( pClass );
-			pPtr->pNode = pClass;
+			pPtr->SetClass( pClass );
 		}
 		if (Type == nt_array)
 		{
 			CNodeArray* pArray = (CNodeArray*)pNewNode;
 			CNodeClass* pClass = (CNodeClass*)g_ReClassApp.CreateNewNode( nt_class );
 			MakeBasicClass( pClass );
-			pArray->pNode = pClass;
+			pArray->SetClass( pClass );
 		}
 		if (Type == nt_instance)
 		{
 			CNodeClassInstance* pInstance = (CNodeClassInstance*)pNewNode;
-			CNodeClass*			pClass = (CNodeClass*)g_ReClassApp.CreateNewNode( nt_class );
+			CNodeClass* pClass = (CNodeClass*)g_ReClassApp.CreateNewNode( nt_class );
 			MakeBasicClass( pClass );
-			pInstance->pNode = pClass;
+			pInstance->SetClass( pClass );
 		}
 		if (Type == nt_function)
 		{
 			CNodeFunction* pFunction = (CNodeFunction*)pNewNode;
 			pFunction->Initialize( this, Selected[i].object->GetParent( )->GetOffset( ) + Selected[i].object->GetOffset( ) );
+		}
+		if (Type == nt_functionptr)
+		{
+			CNodeFunctionPtr* pFunctionPtr = (CNodeFunctionPtr*)pNewNode;
+			pFunctionPtr->Initialize( this, Selected[i].object->GetParent( )->GetOffset( ) + Selected[i].object->GetOffset( ) );
 		}
 
 		ReplaceNode( (CNodeClass*)Selected[i].object->GetParent( ), FindNodeIndex( Selected[i].object ), pNewNode );
@@ -1803,15 +1826,15 @@ BOOL CChildView::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 
 			if (pNode->GetType( ) == nt_array)
 			{
-				((CNodeArray*)pNode)->pNode = g_ReClassApp.m_Classes[idx];
+				((CNodeArray*)pNode)->SetClass( g_ReClassApp.m_Classes[idx] );
 			}
 			if (pNode->GetType( ) == nt_instance)
 			{
-				((CNodeClassInstance*)pNode)->pNode = g_ReClassApp.m_Classes[idx];
+				((CNodeClassInstance*)pNode)->SetClass( g_ReClassApp.m_Classes[idx] );
 			}
 			if (pNode->GetType( ) == nt_pointer)
 			{
-				((CNodePtr*)pNode)->pNode = g_ReClassApp.m_Classes[idx];
+				((CNodePtr*)pNode)->SetClass( g_ReClassApp.m_Classes[idx] );
 			}
 
 			g_ReClassApp.CalcAllOffsets( );

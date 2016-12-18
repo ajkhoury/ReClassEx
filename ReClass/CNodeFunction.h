@@ -12,7 +12,7 @@ public:
 
 	virtual void Update( HotSpot& Spot );
 
-	virtual int GetMemorySize( ) { return m_dwMemorySize; }
+	virtual ULONG GetMemorySize( ) { return m_dwMemorySize; }
 
 	virtual int Draw( ViewInfo& View, int x, int y );
 
@@ -30,8 +30,6 @@ private:
 
 	ULONG m_nLines;
 	ULONG m_nLongestLine;
-	
-	int m_iTextHeight;
 
 	int m_iWidth;
 	int m_iHeight;

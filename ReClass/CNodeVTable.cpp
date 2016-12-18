@@ -16,7 +16,7 @@ int CNodeVTable::Draw( ViewInfo & View, int x, int y )
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	size_t* pMemory = (size_t*)&View.pData[m_Offset];
+	ULONG_PTR* pMemory = (ULONG_PTR*)&View.pData[m_Offset];
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
@@ -38,21 +38,21 @@ int CNodeVTable::Draw( ViewInfo & View, int x, int y )
 	y += g_FontHeight;
 	if (m_LevelsOpen[View.Level])
 	{
-		// vtable stuff
-		DWORD NeededSize = (int)Nodes.size( ) * sizeof( size_t );
+		ViewInfo NewView;
+		DWORD NeededSize = (DWORD)Nodes.size( ) * sizeof( ULONG_PTR );
 
-		Memory.SetSize( NeededSize );
-		ViewInfo newView;
-		newView = View;
-		newView.pData = Memory.Data( );
+		m_Memory.SetSize( NeededSize );
+		
+		NewView = View;
+		NewView.pData = m_Memory.Data( );
+		NewView.Address = pMemory[0];
 
-		newView.Address = pMemory[0];
-		ReClassReadMemory( (LPVOID)newView.Address, newView.pData, NeededSize );
+		ReClassReadMemory( (LPVOID)NewView.Address, NewView.pData, NeededSize );
 
 		for (UINT i = 0; i < Nodes.size( ); i++)
 		{
 			Nodes[i]->SetOffset( i * sizeof( size_t ) );
-			y = Nodes[i]->Draw( newView, tx, y );
+			y = Nodes[i]->Draw( NewView, tx, y );
 		}
 	}
 

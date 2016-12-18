@@ -156,7 +156,7 @@ static const TCHAR* const rgCallingConvention[] =
 
 #define MAXELEMS(x)     (sizeof(x)/sizeof(x[0]))
 #define SafeDRef(a, i)  ((i < MAXELEMS(a)) ? a[i] : _T("(none)"))
-#define SAFE_RELEASE(x) if(x){ (x)->Release(); (x) = nullptr; }
+#define SAFE_RELEASE(x) if(x){ (x)->Release(); (x) = NULL; }
 
 class SymbolReader
 {
@@ -164,15 +164,15 @@ public:
 	SymbolReader( );
 	~SymbolReader( );
 
-	bool IsInitialized( ) { return m_bInitialized; }
+	BOOLEAN IsInitialized( ) { return m_bInitialized; }
 
-	bool LoadFile( CString FilePath, size_t dwBaseAddr = 0, DWORD dwModuleSize = 0, const TCHAR* pszSearchPath = 0 );
-	bool LoadFile( CString FileName, CString FilePath, size_t dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath = 0 );
+	BOOLEAN LoadFile( CString FilePath, ULONG_PTR dwBaseAddr = 0, DWORD dwModuleSize = 0, const TCHAR* pszSearchPath = 0 );
+	BOOLEAN LoadFile( CString FileName, CString FilePath, ULONG_PTR dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath = 0 );
 
-	bool GetSymbolStringWithVA( size_t dwVA, CString& outString );
+	BOOLEAN GetSymbolStringWithVA( ULONG_PTR dwVA, CString& outString );
 
 private:
-	bool LoadSymbolData( const TCHAR* pszSearchPath = 0 );
+	BOOLEAN LoadSymbolData( const TCHAR* pszSearchPath = 0 );
 
 	void ReadSymTag( DWORD dwSymTag, CString& outString );
 
@@ -199,7 +199,7 @@ private:
 	void ReadSymbol( IDiaSymbol *pSymbol, CString& outString );
 
 private:
-	bool			m_bInitialized;
+	BOOLEAN			m_bInitialized;
 
 	// Source
 	IDiaDataSource* m_pSource;
@@ -211,6 +211,6 @@ private:
 
 	CString			m_strFileName;
 	CString			m_strFilePath;
-	size_t			m_dwModuleBase;
+	ULONG_PTR		m_dwModuleBase;
 	DWORD			m_dwModuleSize;
 };

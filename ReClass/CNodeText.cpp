@@ -5,41 +5,38 @@ CNodeText::CNodeText( )
 {
 	m_nodeType = nt_text;
 	m_strName = _T( "Text" );
-	memsize = 16;
+	m_dwMemorySize = 16;
 }
 
-void CNodeText::Update( HotSpot & Spot )
+void CNodeText::Update( HotSpot& Spot )
 {
 	StandardUpdate( Spot );
+
 	if (Spot.ID == 0)
 	{
-		memsize = _ttoi( Spot.Text.GetBuffer( ) );
+		m_dwMemorySize = _ttoi( Spot.Text.GetBuffer( ) );
 	}
 	else if (Spot.ID == 1)
 	{
 		SIZE_T Length = Spot.Text.GetLength( ) + 1;
-		if (Length > memsize)
-			Length = memsize;
+		if (Length > m_dwMemorySize)
+			Length = m_dwMemorySize;
 		ReClassWriteMemory( (LPVOID)Spot.Address, (LPVOID)Spot.Text.GetBuffer( ), Length );
 	}
 }
 
-int CNodeText::GetMemorySize( )
+int CNodeText::Draw( ViewInfo& View, int x, int y )
 {
-	return memsize;
-}
+	PCHAR pMemory = NULL;
 
-int CNodeText::Draw( ViewInfo & View, int x, int y )
-{
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	char* pMemory = (char*)&View.pData[m_Offset];
+	pMemory = (PCHAR)&View.pData[m_Offset];
 
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
-	//AddAdd(View,x,y);
 
 	int tx = x + TXOFFSET;
 	tx = AddIcon( View, tx, y, ICON_TEXT, HS_NONE, HS_NONE );
@@ -52,7 +49,7 @@ int CNodeText::Draw( ViewInfo & View, int x, int y )
 
 	if (VALID( pMemory ))
 	{
-		CStringA str = GetStringFromMemoryA( pMemory, GetMemorySize( ) );
+		CStringA str( GetStringFromMemoryA( pMemory, GetMemorySize( ) ) );
 		tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( " = '" ) );
 		tx = AddText( View, tx, y, g_crChar, 1, "%.150s", str.GetBuffer( ) );
 		tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( "' " ) ) + g_FontWidth;

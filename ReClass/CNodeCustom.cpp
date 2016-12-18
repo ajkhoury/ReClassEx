@@ -5,19 +5,19 @@ CNodeCustom::CNodeCustom( )
 {
 	m_nodeType = nt_custom;
 	m_strName = _T( "Custom" );
-	memsize = sizeof( size_t );
+	m_dwMemorySize = sizeof( void* );
 }
 
-void CNodeCustom::Update( HotSpot & Spot )
+void CNodeCustom::Update( HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	if (Spot.ID == 0)
-		memsize = _ttoi( Spot.Text.GetString( ) );
+		m_dwMemorySize = _ttoi( Spot.Text.GetString( ) );
 }
 
-int CNodeCustom::GetMemorySize( )
+ULONG CNodeCustom::GetMemorySize( )
 {
-	return memsize;
+	return m_dwMemorySize;
 }
 
 int CNodeCustom::Draw( ViewInfo & View, int x, int y )
@@ -35,7 +35,7 @@ int CNodeCustom::Draw( ViewInfo & View, int x, int y )
 	tx = AddAddressOffset( View, tx, y );
 	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Custom " ) );
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "[" ) );
-	tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%i" ), memsize );
+	tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%i" ), m_dwMemorySize );
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "] " ) );
 	tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName ) + g_FontWidth;
 	tx = AddComment( View, tx, y );

@@ -216,10 +216,11 @@ void CNodeBase::AddTypeDrop( ViewInfo& View, int x, int y )
 		AddIcon( View, 0, y, ICON_DROPARROW, 0, HS_DROP );
 }
 
-int CNodeBase::ResolveRTTI( size_t Val, int &x, ViewInfo& View, int y )
+int CNodeBase::ResolveRTTI( ULONG_PTR Val, int &x, ViewInfo& View, int y )
 {
 	#ifdef _WIN64
-	size_t ModuleBase = 0x0;
+	ULONG_PTR ModuleBase = 0;
+
 	//Find module Val is in, then get module base
 	for (int i = 0; i < g_MemMapModules.size( ); i++)
 	{
@@ -231,7 +232,7 @@ int CNodeBase::ResolveRTTI( size_t Val, int &x, ViewInfo& View, int y )
 		}
 	}
 
-	size_t pRTTIObjectLocator = Val - 8; //Val is Ptr to first VFunc, pRTTI is at -0x8
+	ULONG_PTR pRTTIObjectLocator = Val - 8; //Val is Ptr to first VFunc, pRTTI is at -0x8
 	if (!IsValidPtr( pRTTIObjectLocator ))
 		return x;
 
@@ -245,7 +246,6 @@ int CNodeBase::ResolveRTTI( size_t Val, int &x, ViewInfo& View, int y )
 	DWORD dwObjectBaseOffset;
 	ReClassReadMemory( (LPVOID)(RTTIObjectLocator + 0x14), &dwObjectBaseOffset, sizeof( DWORD ) );
 	size_t ObjectBase = ModuleBase + dwObjectBaseOffset;
-
 
 	DWORD dwClassHierarchyDescriptorOffset;
 	ReClassReadMemory( (LPVOID)(RTTIObjectLocator + 0x10), &dwClassHierarchyDescriptorOffset, sizeof( DWORD ) );
@@ -434,16 +434,16 @@ int CNodeBase::AddComment( ViewInfo& View, int x, int y )
 		}
 
 		// *** this is probably broken, let's fix it after
-		size_t uintVal = (size_t)intVal;
-		CString a( GetAddressName( uintVal, false ) );
-		if (a.GetLength( ) > 0)
+		ULONG_PTR uintVal = (ULONG_PTR)intVal;
+		CString strAddress( GetAddressName( uintVal, FALSE ) );
+		if (strAddress.GetLength( ) > 0)
 		{
 			if (g_bPointers)
 			{
 				//printf( "<%p> here\n", Val );
 				if (uintVal > 0x6FFFFFFF && uintVal < 0x7FFFFFFFFFFF)
 				{
-					x = AddText( View, x, y, g_crOffset, HS_EDIT, _T( "*->%s " ), a );
+					x = AddText( View, x, y, g_crOffset, HS_EDIT, _T( "*->%s " ), strAddress.GetString( ) );
 					if (g_bRTTI)
 						x = ResolveRTTI( uintVal, x, View, y );
 
@@ -518,8 +518,8 @@ int CNodeBase::AddComment( ViewInfo& View, int x, int y )
 
 		// *** this is probably broken, let's fix it after
 		size_t uintVal = (size_t)intVal;
-		CString addressStr( GetAddressName( uintVal, false ) );
-		if (addressStr.GetLength( ) > 0)
+		CString strAddress( GetAddressName( uintVal, FALSE ) );
+		if (strAddress.GetLength( ) > 0)
 		{
 			if (g_bPointers)
 			{
@@ -528,7 +528,7 @@ int CNodeBase::AddComment( ViewInfo& View, int x, int y )
 				// Set to 0x110000000 instead
 				if (uintVal > 0x400000 && uintVal < 0x110000000)
 				{
-					x = AddText( View, x, y, g_crOffset, HS_EDIT, _T( "*->%s " ), addressStr );
+					x = AddText( View, x, y, g_crOffset, HS_EDIT, _T( "*->%s " ), strAddress.GetString( ) );
 					if (g_bRTTI)
 						x = ResolveRTTI( uintVal, x, View, y );
 
@@ -538,12 +538,12 @@ int CNodeBase::AddComment( ViewInfo& View, int x, int y )
 						CString moduleName = GetModuleName( uintVal );
 						if (!moduleName.IsEmpty( ))
 						{
-							SymbolReader* symbols = g_ReClassApp.m_pSymbolLoader->GetSymbolsForModule( moduleName );
-							if (symbols)
+							SymbolReader* pSymbols = g_ReClassApp.m_pSymbolLoader->GetSymbolsForModule( moduleName );
+							if (pSymbols)
 							{
 								CString SymbolOut;
 								SymbolOut.Preallocate( 1024 );
-								if (symbols->GetSymbolStringWithVA( uintVal, SymbolOut ))
+								if (pSymbols->GetSymbolStringWithVA( uintVal, SymbolOut ))
 								{
 									x = AddText( View, x, y, g_crOffset, HS_EDIT, _T( "%s " ), SymbolOut.GetString( ) );
 								}

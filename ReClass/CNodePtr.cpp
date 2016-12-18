@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CNodePtr.h"
 
-CNodePtr::CNodePtr( ) : pNode( NULL )
+CNodePtr::CNodePtr( ) : m_pNode( NULL )
 {
 	m_nodeType = nt_pointer;
 }
@@ -16,7 +16,7 @@ int CNodePtr::Draw( ViewInfo & View, int x, int y )
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	size_t* pMemory = (size_t*)&View.pData[m_Offset];
+	ULONG_PTR* pMemory = (ULONG_PTR*)&View.pData[m_Offset];
 
 	//printf( "read ptr: %p\n", View.pData );
 	AddSelection( View, 0, y, g_FontHeight );
@@ -30,7 +30,7 @@ int CNodePtr::Draw( ViewInfo & View, int x, int y )
 	tx = AddAddressOffset( View, tx, y );
 	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Ptr " ) );
 	tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
-	tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( " <%s>" ), pNode->GetName( ) );
+	tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( " <%s>" ), m_pNode->GetName( ) );
 	tx = AddIcon( View, tx, y, ICON_CHANGE, HS_CLICK, HS_CHANGE_A );
 
 	tx += g_FontWidth;
@@ -40,17 +40,17 @@ int CNodePtr::Draw( ViewInfo & View, int x, int y )
 
 	if (m_LevelsOpen[View.Level])
 	{
-		DWORD NeededSize = pNode->GetMemorySize( );
-		Memory.SetSize( NeededSize );
+		DWORD NeededSize = m_pNode->GetMemorySize( );
+		m_Memory.SetSize( NeededSize );
 
 		ViewInfo newView;
 		newView = View;
-		newView.pData = Memory.Data( );
+		newView.pData = m_Memory.Data( );
 		newView.Address = pMemory[0];
 
-		ReClassReadMemory( (LPVOID)newView.Address, newView.pData, NeededSize );
+		ReClassReadMemory( (LPVOID)newView.Address, (LPVOID)newView.pData, NeededSize );
 
-		y = pNode->Draw( newView, x, y );
+		y = m_pNode->Draw( newView, x, y );
 	}
 	return y;
 }

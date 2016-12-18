@@ -208,7 +208,7 @@ public:
 private:
 	CNodeClass* m_pClass;
 
-	bool m_bTracking;
+	BOOLEAN m_bTracking;
 	CPoint m_HoverPoint;
 
 public:

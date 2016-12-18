@@ -25,9 +25,9 @@ struct HotSpot
 {
 	CRect Rect;
 	CString Text;
-	size_t Address;
-	int ID;
-	int Type;
-	unsigned int Level;
+	ULONG_PTR Address;
+	INT ID;
+	INT Type;
+	UINT Level;
 	class CNodeBase* object;
 };

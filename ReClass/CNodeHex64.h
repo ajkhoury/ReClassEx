@@ -9,7 +9,7 @@ public:
 
 	virtual void Update( HotSpot& Spot );
 
-	virtual int GetMemorySize( ) { return 8; }
+	virtual ULONG GetMemorySize( ) { return 8; }
 
 	virtual int Draw( ViewInfo& View, int x, int y );
 };

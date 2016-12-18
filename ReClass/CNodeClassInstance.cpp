@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "CNodeClassInstance.h"
 
-CNodeClassInstance::CNodeClassInstance( ) : pNode( 0 )
+CNodeClassInstance::CNodeClassInstance( ) : 
+	m_pNode( NULL )
 {
 	m_nodeType = nt_instance;
 }
@@ -11,9 +12,9 @@ void CNodeClassInstance::Update( HotSpot & Spot )
 	StandardUpdate( Spot );
 }
 
-int CNodeClassInstance::GetMemorySize( )
+ULONG CNodeClassInstance::GetMemorySize( )
 {
-	return pNode->GetMemorySize( );
+	return m_pNode->GetMemorySize( );
 }
 
 int CNodeClassInstance::Draw( ViewInfo & View, int x, int y )
@@ -33,7 +34,7 @@ int CNodeClassInstance::Draw( ViewInfo & View, int x, int y )
 
 	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Instance " ) );
 	tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
-	tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( "<%s>" ), pNode->GetName( ) );
+	tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( "<%s>" ), m_pNode->GetName( ) );
 	tx = AddIcon( View, tx, y, ICON_CHANGE, HS_CLICK, HS_CHANGE_X );
 
 	tx += g_FontWidth;
@@ -42,11 +43,11 @@ int CNodeClassInstance::Draw( ViewInfo & View, int x, int y )
 	y += g_FontHeight;
 	if (m_LevelsOpen[View.Level])
 	{
-		ViewInfo newView;
-		newView = View;
-		newView.Address = View.Address + m_Offset;
-		newView.pData = (unsigned char*)((size_t)newView.pData + m_Offset);
-		y = pNode->Draw( newView, x, y );
+		ViewInfo NewView;
+		NewView = View;
+		NewView.Address = View.Address + m_Offset;
+		NewView.pData = (UCHAR*)((ULONG_PTR)NewView.pData + m_Offset);
+		y = m_pNode->Draw( NewView, x, y );
 	}
 
 	return y;

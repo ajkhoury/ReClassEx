@@ -16,16 +16,19 @@ void CNodeByte::Update( HotSpot & Spot )
 
 int CNodeByte::Draw( ViewInfo & View, int x, int y )
 {
+	int tx = 0;
+	UCHAR* pMemory = NULL;
+
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	unsigned char* pMemory = (unsigned char*)&View.pData[m_Offset];
+	pMemory = (UCHAR*)&View.pData[m_Offset];
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
 	//AddAdd(View,x,y);
 
-	int tx = x + TXOFFSET;
+	tx = x + TXOFFSET;
 	tx = AddIcon( View, tx, y, ICON_UNSIGNED, HS_NONE, HS_NONE );
 	tx = AddAddressOffset( View, tx, y );
 	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "BYTE  " ) );
