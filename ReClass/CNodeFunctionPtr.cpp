@@ -246,11 +246,11 @@ void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
 
 		// Get rid of new line on last assembly instruction
 		m_Assembly.back( ).Replace( "\r\n", "\0" );
-	//}
-	//else
-	//{
-	//	m_Assembly.emplace_back( "ERROR: Could not read memory" );
-	//}
+	}
+	else
+	{
+		m_Assembly.emplace_back( "ERROR: Could not read memory" );
+	}
 
 	// Get number of assembly lines
 	m_nLines = (ULONG)m_Assembly.size( );
