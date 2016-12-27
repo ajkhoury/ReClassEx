@@ -151,6 +151,16 @@ BOOL PLUGIN_CC ReClassIsWriteMemoryOverriden( )
 	return (g_PluginOverrideWriteMemory != nullptr) ? TRUE : FALSE;
 }
 
+tReadMemoryOperation PLUGIN_CC ReClassGetCurrentReadMemory( )
+{
+	return g_PluginOverrideReadMemory;
+}
+
+RECLASS_EXPORT tWriteMemoryOperation PLUGIN_CC ReClassGetCurrentWriteMemory( )
+{
+	return g_PluginOverrideWriteMemory;
+}
+
 BOOL PLUGIN_CC ReClassOverrideOpenProcessOperation( tOpenProcessOperation ProcessOpen )
 {
 	if (ProcessOpen != nullptr)
@@ -210,6 +220,16 @@ BOOL PLUGIN_CC ReClassIsOpenProcessOverriden( )
 BOOL PLUGIN_CC ReClassIsOpenThreadOverriden( )
 {
 	return (g_PluginOverrideOpenThread != nullptr) ? TRUE : FALSE;
+}
+
+tOpenProcessOperation PLUGIN_CC ReClassGetCurrentOpenProcess( )
+{
+	return g_PluginOverrideOpenProcess;
+}
+
+tOpenThreadOperation PLUGIN_CC ReClassGetCurrentOpenThread( )
+{
+	return g_PluginOverrideOpenThread;
 }
 
 VOID PLUGIN_CC ReClassPrintConsole( const WCHAR* format, ... )

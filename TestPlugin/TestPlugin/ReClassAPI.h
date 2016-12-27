@@ -39,7 +39,7 @@ typedef struct _RECLASS_PLUGIN_INFO
 // Plugin initialization callback to fill in the RECLASS_PLUGIN_INFO struct,
 // and initialize any other plugin resources
 //
-BOOL PLUGIN_CC PluginInit( PRECLASS_PLUGIN_INFO lpRCInfo );
+BOOL PLUGIN_CC PluginInit( __in PRECLASS_PLUGIN_INFO lpRCInfo );
 
 //
 // Callback for when the plugin state is changed (enabled or disabled). 
@@ -54,7 +54,7 @@ VOID PLUGIN_CC PluginStateChange( BOOL state );
 INT_PTR CALLBACK PluginSettingsDlg( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam );
 
 // 
-// Register, remove, or check overrides for the read/write memory operations.
+// Register, remove, get or check overrides for the read/write memory operations.
 // 
 BOOL PLUGIN_CC ReClassOverrideReadMemoryOperation( tReadMemoryOperation MemRead );
 BOOL PLUGIN_CC ReClassOverrideWriteMemoryOperation( tWriteMemoryOperation MemWrite );
@@ -63,9 +63,11 @@ BOOL PLUGIN_CC ReClassRemoveReadMemoryOverride( );
 BOOL PLUGIN_CC ReClassRemoveWriteMemoryOverride( );
 BOOL PLUGIN_CC ReClassIsReadMemoryOverriden( );
 BOOL PLUGIN_CC ReClassIsWriteMemoryOverriden( );
+tReadMemoryOperation PLUGIN_CC ReClassGetCurrentReadMemory( );
+tWriteMemoryOperation PLUGIN_CC ReClassGetCurrentWriteMemory( );
 
 // 
-// Register, remove, or check overrides for the opening of handles 
+// Register, remove, get or check overrides for the opening of handles 
 // for various process/thread operations.
 // 
 BOOL PLUGIN_CC ReClassOverrideOpenProcessOperation( tOpenProcessOperation ProcessOpen );
@@ -75,6 +77,8 @@ BOOL PLUGIN_CC ReClassRemoveOpenProcessOverride( );
 BOOL PLUGIN_CC ReClassRemoveOpenThreadOverride( );
 BOOL PLUGIN_CC ReClassIsOpenProcessOverriden( );
 BOOL PLUGIN_CC ReClassIsOpenThreadOverriden( );
+tOpenProcessOperation PLUGIN_CC ReClassGetCurrentOpenProcess( );
+tOpenThreadOperation PLUGIN_CC ReClassGetCurrentOpenThread( );
 
 // 
 // Print text to the ReClass console window

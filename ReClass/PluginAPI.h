@@ -47,6 +47,8 @@ RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveReadMemoryOverride( );
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveWriteMemoryOverride( );
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsReadMemoryOverriden( );
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsWriteMemoryOverriden( );
+RECLASS_EXPORT tReadMemoryOperation PLUGIN_CC ReClassGetCurrentReadMemory( );
+RECLASS_EXPORT tWriteMemoryOperation PLUGIN_CC ReClassGetCurrentWriteMemory( );
 
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideOpenProcessOperation( tOpenProcessOperation ProcessOpen );
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideOpenThreadOperation( tOpenThreadOperation ThreadOpen );
@@ -55,6 +57,8 @@ RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveOpenProcessOverride( );
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveOpenThreadOverride( );
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsOpenProcessOverriden( );
 RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsOpenThreadOverriden( );
+RECLASS_EXPORT tOpenProcessOperation PLUGIN_CC ReClassGetCurrentOpenProcess( );
+RECLASS_EXPORT tOpenThreadOperation PLUGIN_CC ReClassGetCurrentOpenThread( );
 
 RECLASS_EXPORT VOID PLUGIN_CC ReClassPrintConsole( const WCHAR* format, ... );
 RECLASS_EXPORT HANDLE PLUGIN_CC ReClassGetProcessHandle( );
