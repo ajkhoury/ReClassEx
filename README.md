@@ -50,6 +50,13 @@ See wiki for the plugin API documentation:
 
 [Plugin Documentation](https://github.com/dude719/Reclass-2016/wiki/Creating-ReClass-plugins)
 
+## TODO
+- Optimize literally everything
+- Add highlighting to bytes that change
+- Add string and byte searching feature
+- Add a kernel driver for reading and writing memory from the kernel (Already done but IS NOT SAFE!)
+- Add debugger
+
 ## Authors/Special Thanks
 - DrUnKeN ChEeTaH
 - P47R!CK
