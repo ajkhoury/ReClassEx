@@ -69,4 +69,4 @@ See wiki for the plugin API documentation:
 - [ReUnioN](https://github.com/ReUnioN)
 - [leveln](https://github.com/levelnuc)
 - [buddyfavors](https://github.com/buddyfavors)
-- [KN4CK3R](https://github.com/KN4CK3R)
+- [KN4CK3R](https://github.com/KN4CK3R) check out his .NET port [here](https://github.com/KN4CK3R/ReClass.NET)
