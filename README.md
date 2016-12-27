@@ -1,8 +1,8 @@
 # ReClassEx
 
-![Alt text](https://i.gyazo.com/485c87c45a4eae9af08d5412c5844be3.png "ReClass")
+ReClass Extended
 
-Cleaned up the code a bit and added some new features. Also got rid of a ton of bugs still crawling around.
+![Alt text](https://i.gyazo.com/485c87c45a4eae9af08d5412c5844be3.png "ReClass")
 
 ## New Features
 - Up and down arrow hotkeys to switch nodes
@@ -29,6 +29,7 @@ Cleaned up the code a bit and added some new features. Also got rid of a ton of 
 - Added automatic resolving of symbols for each module in a process
 - Added Ctrl+S hotkey for file saving, and others.
 - Added Plugin API for making plugins
+- Disassembly syntax highlighting
 
 ![Alt text](http://i.imgur.com/W6ytfG6.png "Automatic symbol resolving")
 ![Alt text](http://i.imgur.com/hBNyEFG.png "ReClass")
