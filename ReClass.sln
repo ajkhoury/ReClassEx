@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReClass", "ReClass\ReClass 2016.vcxproj", "{FA80DCEB-16C4-43D1-8451-6EE506D5FF82}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestPlugin", "TestPlugin\TestPlugin\TestPlugin.vcxproj", "{1C466572-2001-4FA9-B4EB-D4A819D802E8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FA80DCEB-16C4-43D1-8451-6EE506D5FF82} = {FA80DCEB-16C4-43D1-8451-6EE506D5FF82}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DriverPlugin", "DriverPlugin\DriverPlugin\DriverPlugin.vcxproj", "{F8C39F1D-DEEF-4224-8DC4-9C56F694DBB7}"
 EndProject

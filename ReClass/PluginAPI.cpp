@@ -49,8 +49,7 @@ VOID LoadPlugins( )
 
 			auto pfnPluginSettingDlgProc = reinterpret_cast<DLGPROC>(GetProcAddress( PluginBase, "PluginSettingsDlg" ));
 
-			PRECLASS_PLUGIN Plugin = new RECLASS_PLUGIN;
-			ZeroMemory( Plugin, sizeof( RECLASS_PLUGIN ) );
+			PRECLASS_PLUGIN Plugin = new RECLASS_PLUGIN();
 			wcscpy_s( Plugin->FileName, FileData.cFileName );
 			Plugin->LoadedBase = PluginBase;
 			Plugin->InitFnc = pfnPluginInit;
