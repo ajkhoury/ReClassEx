@@ -29,7 +29,7 @@ ReClass Extended
 - Added automatic resolving of symbols for each module in a process
 - Added Ctrl+S hotkey for file saving, and others.
 - Added Plugin API for making plugins
-- Disassembly syntax highlighting
+- Disassembly syntax highlighting (buggy)
 
 ![Alt text](http://i.imgur.com/W6ytfG6.png "Automatic symbol resolving")
 ![Alt text](http://i.imgur.com/hBNyEFG.png "ReClass")
