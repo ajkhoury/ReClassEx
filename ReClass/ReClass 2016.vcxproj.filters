@@ -346,9 +346,6 @@
     <ClInclude Include="Intrinsics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Native.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PluginAPI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -380,6 +377,9 @@
       <Filter>Header Files\Native</Filter>
     </ClInclude>
     <ClInclude Include="NativeLoader.h">
+      <Filter>Header Files\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="Native.h">
       <Filter>Header Files\Native</Filter>
     </ClInclude>
   </ItemGroup>
