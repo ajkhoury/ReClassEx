@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Dialogs">
       <UniqueIdentifier>{118d300c-034c-4bce-a7d5-c0690e474484}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Native">
+      <UniqueIdentifier>{30aaf75c-fea5-4acf-bc6f-e12b079daf19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\output_wnd.ico">
@@ -351,6 +354,33 @@
     </ClInclude>
     <ClInclude Include="CScintillaEdit.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NativeRtl.h">
+      <Filter>Header Files\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="NativeCommon.h">
+      <Filter>Header Files\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="NativeMemory.h">
+      <Filter>Header Files\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="NativeProcess.h">
+      <Filter>Header Files\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="NativeTeb.h">
+      <Filter>Header Files\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="NativePeb.h">
+      <Filter>Header Files\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="NativeInformation.h">
+      <Filter>Header Files\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="NativeObjects.h">
+      <Filter>Header Files\Native</Filter>
+    </ClInclude>
+    <ClInclude Include="NativeLoader.h">
+      <Filter>Header Files\Native</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

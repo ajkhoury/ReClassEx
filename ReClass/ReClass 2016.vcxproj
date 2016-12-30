@@ -379,6 +379,15 @@
     <ClInclude Include="HotSpot.h" />
     <ClInclude Include="CMainFrame.h" />
     <ClInclude Include="Intrinsics.h" />
+    <ClInclude Include="NativeInformation.h" />
+    <ClInclude Include="NativeMemory.h" />
+    <ClInclude Include="NativeObjects.h" />
+    <ClInclude Include="NativePeb.h" />
+    <ClInclude Include="NativeProcess.h" />
+    <ClInclude Include="NativeRtl.h" />
+    <ClInclude Include="NativeLoader.h" />
+    <ClInclude Include="NativeCommon.h" />
+    <ClInclude Include="NativeTeb.h" />
     <ClInclude Include="NodeType.h" />
     <ClInclude Include="NtDll.h" />
     <ClInclude Include="Native.h" />

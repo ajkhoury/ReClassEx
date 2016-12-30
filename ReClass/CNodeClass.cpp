@@ -6,7 +6,7 @@ CNodeClass::CNodeClass( )
 	TCHAR szOffset[128] = { 0 };
 
 	m_nodeType = nt_class;
-	m_Offset = GetBase( );
+	m_Offset = GetBaseAddress( );
 
 	#ifdef _WIN64
 	_ui64tot_s( m_Offset, szOffset, 128, 16 );

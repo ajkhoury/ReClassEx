@@ -264,7 +264,7 @@ BOOLEAN PauseResumeThreadList( BOOL bResumeThread )
 	return 1;
 }
 
-ULONG_PTR GetBase( )
+ULONG_PTR GetBaseAddress( )
 {
 	if (g_MemMap.size( ) > 1)
 		return g_AttachedProcessAddress;

@@ -1,6 +1,6 @@
 #pragma once
 
-//#include <afxribbonbar.h> //used for ribbon bar. comment this out if not used
+//#include <afxribbonbar.h> // Used for ribbon bar. comment this out if not used
 
 #ifdef _WIN64
 #ifdef _DEBUG
@@ -106,3 +106,8 @@ HWND PLUGIN_CC ReClassMainWindow( );
 // 
 CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface( );
 #endif
+
+
+//
+// Class manipulation
+// 

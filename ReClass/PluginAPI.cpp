@@ -232,7 +232,7 @@ tOpenThreadOperation PLUGIN_CC ReClassGetCurrentOpenThread( )
 	return g_PluginOverrideOpenThread;
 }
 
-VOID PLUGIN_CC ReClassPrintConsole( const WCHAR* format, ... )
+VOID PLUGIN_CC ReClassPrintConsole( const wchar_t *format, ... )
 {
 	wchar_t buffer[2048];
 	ZeroMemory( buffer, 2048 );
