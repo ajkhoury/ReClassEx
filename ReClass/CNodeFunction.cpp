@@ -30,6 +30,9 @@ CNodeFunction::~CNodeFunction( )
 {
 	if (m_pEdit != NULL)
 	{
+		m_pEdit->Clear( );
+		m_pEdit->ShowWindow( SW_HIDE );
+
 		delete m_pEdit;
 		m_pEdit = NULL;
 	}
@@ -111,6 +114,9 @@ void CNodeFunction::Initialize( CChildView* pChild, ULONG_PTR Address )
 {
 	if (m_pEdit != NULL)
 	{
+		m_pEdit->Clear( );
+		m_pEdit->ShowWindow( SW_HIDE );
+
 		delete m_pEdit;
 		m_pEdit = NULL;
 	}

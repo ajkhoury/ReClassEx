@@ -294,53 +294,37 @@ void CChildView::OnLButtonDblClk( UINT nFlags, CPoint point )
 	}
 }
 
-BOOL TransparentBlt( CImage* pSrcImage, CImage* pDstImage, int xDest, int yDest, int nDestWidth, int nDestHeight )
-{
-	BOOL bResult = FALSE;
-
-	if (pSrcImage == NULL || pDstImage == NULL)
-		return FALSE;
-	// Perform the blit
-	bResult = pSrcImage->TransparentBlt( pDstImage->GetDC( ), xDest, yDest, nDestWidth, nDestHeight );
-	// Release the destination DC
-	pDstImage->ReleaseDC( );
-
-	return bResult;
-}
-
-wchar_t GetBeginChar( CString name )
+TCHAR GetBeginChar( CString name )
 {
 	if (!name.IsEmpty( ))
 	{
-		wchar_t real = name.MakeUpper( ).GetAt( 0 );
-		if (iswalpha( real ) || iswalnum( real ))
-		{
+		TCHAR real = name.MakeUpper( ).GetAt( 0 );
+		if (_istalpha( real ) || _istalnum( real ))
 			return real;
-		}
 	}
 	return '_';
 }
 
-bool SortBeginnings( std::pair<wchar_t, std::vector<std::pair<CString, UINT>>> i, std::pair<wchar_t, std::vector<std::pair<CString, UINT>>> j )
+bool SortBeginnings( std::pair<TCHAR, std::vector<std::pair<CString, UINT>>> i, std::pair<TCHAR, std::vector<std::pair<CString, UINT>>> j )
 {
-	return i.first < j.first;
+	return (i.first < j.first);
 }
 
 bool SortClassesByName( std::pair<CString, UINT> i, std::pair<CString, UINT> j )
 {
-	return GetBeginChar( i.first ) < GetBeginChar( j.first );
+	return (GetBeginChar( i.first ) < GetBeginChar( j.first ));
 }
 
-std::vector<std::pair<wchar_t, std::vector<std::pair<CString, UINT>>>> ExplodeByFirstChar( std::vector<std::pair<CString, UINT>> classRefs )
+std::vector<std::pair<TCHAR, std::vector<std::pair<CString, UINT>>>> ExplodeByFirstChar( std::vector<std::pair<CString, UINT>> classRefs )
 {
-	std::vector<std::pair<wchar_t, std::vector<std::pair<CString, UINT>>>> out;
+	std::vector<std::pair<TCHAR, std::vector<std::pair<CString, UINT>>>> out;
 
 	for (int i = 0; i < classRefs.size( ); i++)
 	{
 		std::pair<CString, UINT>* classRef = &classRefs[i];
 
 		// determine begin char
-		wchar_t begin = GetBeginChar( classRef->first );
+		TCHAR begin = GetBeginChar( classRef->first );
 
 		// find if already in out
 		std::vector<std::pair<CString, UINT>>* outByBegin = NULL;
@@ -356,7 +340,7 @@ std::vector<std::pair<wchar_t, std::vector<std::pair<CString, UINT>>>> ExplodeBy
 		// create if missing
 		if (outByBegin == NULL)
 		{
-			out.push_back( std::pair<wchar_t, std::vector<std::pair<CString, UINT>>>( begin, std::vector<std::pair<CString, UINT>>( ) ) );
+			out.push_back( std::pair<TCHAR, std::vector<std::pair<CString, UINT>>>( begin, std::vector<std::pair<CString, UINT>>( ) ) );
 			outByBegin = &out[out.size( ) - 1].second;
 		}
 
@@ -831,7 +815,6 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 								textHeight += g_FontHeight;
 							}
 
-
 							m_ToolTip.EnableWindow( FALSE );
 							#ifdef UNICODE
 							m_ToolTip.SetWindowText( CA2W( strDisassembly ).m_psz );
@@ -851,12 +834,8 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 					else if (nodeType == nt_hex64)
 					{
 						CString msg;
-						ReClassReadMemory( (LPVOID)HotSpots[i].Address, data, sizeof( DWORD_PTR ) );
-						float* pf = (float*)data;
-						__int64* pi = (__int64*)data;
-						size_t* pd = (size_t*)data;
-						msg.Format( _T( "Int64: %i\r\nDWORD64: %u\r\nFloat: %.3f" ), *pi, *pd, *pf );
-
+						ReClassReadMemory( (LPVOID)HotSpots[i].Address, data, sizeof( __int64 ) );
+						msg.Format( _T( "Int64: %i\r\nDWORD64: %u\r\nFloat: %.3f" ), *(__int64*)data, *(ULONG64*)data, *(float*)data );
 						m_ToolTip.EnableWindow( FALSE );
 						m_ToolTip.SetWindowText( msg );
 						m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 200, 16 * 3 + 6, SWP_NOZORDER );
@@ -865,11 +844,8 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 					else if (nodeType == nt_hex32)
 					{
 						CString msg;
-						ReClassReadMemory( (LPVOID)HotSpots[i].Address, data, 4 );
-						float* pf = (float*)data;
-						int* pi = (int*)data;
-						DWORD* pd = (DWORD*)data;
-						msg.Format( _T( "Int32: %i\r\nDWORD: %u\r\nFloat: %.3f" ), *pi, *pd, *pf );
+						ReClassReadMemory( (LPVOID)HotSpots[i].Address, data, sizeof( __int32 ) );
+						msg.Format( _T( "Int32: %i\r\nDWORD: %u\r\nFloat: %.3f" ), *(int*)data, *(DWORD*)data, *(float*)data );
 						m_ToolTip.EnableWindow( FALSE );
 						m_ToolTip.SetWindowText( msg );
 						m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 200, 16 * 3 + 6, SWP_NOZORDER );
@@ -878,10 +854,8 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 					else if (nodeType == nt_hex16)
 					{
 						CString msg;
-						ReClassReadMemory( (LPVOID)HotSpots[i].Address, data, 4 );
-						__int16* pi = (__int16*)data;
-						WORD* pd = (WORD*)data;
-						msg.Format( _T( "Int16: %i\r\nWORD: %u\r\n" ), *pi, *pd );
+						ReClassReadMemory( (LPVOID)HotSpots[i].Address, data, sizeof( __int16 ) );
+						msg.Format( _T( "Int16: %i\r\nWORD: %u\r\n" ), *(__int16*)data, *(WORD*)data );
 						m_ToolTip.EnableWindow( FALSE );
 						m_ToolTip.SetWindowText( msg );
 						m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 200, 16 * 2 + 6, SWP_NOZORDER );
@@ -890,10 +864,8 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 					else if (nodeType == nt_hex8)
 					{
 						CString msg;
-						ReClassReadMemory( (LPVOID)HotSpots[i].Address, data, 4 );
-						__int8* pi = (__int8*)data;
-						BYTE* pd = (BYTE*)data;
-						msg.Format( _T( "Int8: %i\r\nBYTE: %u\r\n" ), *pi, *pd );
+						ReClassReadMemory( (LPVOID)HotSpots[i].Address, data, sizeof( __int8 ) );
+						msg.Format( _T( "Int8: %i\r\nBYTE: %u\r\n" ), *(__int8*)data, *(UCHAR*)data );
 						m_ToolTip.SetWindowText( msg );
 						m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 200, 16 * 2 + 6, SWP_NOZORDER );
 						m_ToolTip.ShowWindow( SW_SHOW );
@@ -1138,7 +1110,7 @@ void CChildView::AddBytes( CNodeClass* pClass, DWORD Length )
 		return;
 	}
 
-	for (UINT i = 0; i < Length / sizeof( size_t ); i++)
+	for (UINT i = 0; i < Length / sizeof( ULONG_PTR ); i++)
 	{
 		CNodeBase* pNode;
 		if (pClass->GetType( ) == nt_vtable)
@@ -1172,7 +1144,7 @@ void CChildView::InsertBytes( CNodeClass* pClass, UINT idx, DWORD Length )
 		return;
 	}
 
-	for (UINT i = 0; i < Length / sizeof( size_t ); i++)
+	for (UINT i = 0; i < Length / sizeof( ULONG_PTR ); i++)
 	{
 		CNodeBase* pNode;
 		if (pClass->GetType( ) == nt_vtable)
