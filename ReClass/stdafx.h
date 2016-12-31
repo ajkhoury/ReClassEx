@@ -219,6 +219,8 @@ BOOLEAN IsData( ULONG_PTR Address );
 BOOLEAN IsMemory( ULONG_PTR Address );
 BOOLEAN IsModule( ULONG_PTR Address );
 
+ULONG_PTR GetModuleBaseFromAddress( ULONG_PTR Address );
+
 CString GetAddressName( ULONG_PTR Address, BOOLEAN bJustAddress );
 CString GetModuleName( ULONG_PTR Address );
 ULONG_PTR GetAddressFromName( CString moduleName );

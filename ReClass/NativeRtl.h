@@ -466,8 +466,7 @@ typedef enum _FUNCTION_TABLE_TYPE
 typedef struct _DYNAMIC_FUNCTION_TABLE
 {
 	LIST_ENTRY ListEntry;
-	PRUNTIME_FUNCTION
-		PRUNTIME_FUNCTION FunctionTable;
+	PRUNTIME_FUNCTION FunctionTable;
 	LARGE_INTEGER TimeStamp;
 	ULONG64 MinimumAddress;
 	ULONG64 MaximumAddress;

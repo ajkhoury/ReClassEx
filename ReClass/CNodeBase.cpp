@@ -216,170 +216,176 @@ void CNodeBase::AddTypeDrop( ViewInfo& View, int x, int y )
 		AddIcon( View, 0, y, ICON_DROPARROW, 0, HS_DROP );
 }
 
-int CNodeBase::ResolveRTTI( ULONG_PTR Val, int &x, ViewInfo& View, int y )
+int CNodeBase::ResolveRTTI( ULONG_PTR Address, int &x, ViewInfo& View, int y )
 {
 	#ifdef _WIN64
 	ULONG_PTR ModuleBase = 0;
 
-	//Find module Val is in, then get module base
-	for (int i = 0; i < g_MemMapModules.size( ); i++)
-	{
-		MemMapInfo MemInfo = g_MemMapModules[i];
-		if (Val >= MemInfo.Start && Val <= MemInfo.End)
-		{
-			ModuleBase = MemInfo.Start;
-			break;
-		}
-	}
+	ULONG_PTR RTTIObjectLocatorPtr = 0;
+	ULONG_PTR RTTIObjectLocator = 0;
 
-	ULONG_PTR pRTTIObjectLocator = Val - 8; //Val is Ptr to first VFunc, pRTTI is at -0x8
-	if (!IsValidPtr( pRTTIObjectLocator ))
+	ULONG ClassHierarchyDescriptorOffset = 0;
+	ULONG_PTR ClassHierarchyDescriptor = 0;
+
+	ULONG NumBaseClasses = 0;
+
+	DWORD BaseClassArrayOffset = 0;
+	ULONG_PTR BaseClassArray = 0;
+
+	CString RTTIString;
+
+	// Get module base that this address falls in
+	ModuleBase = GetModuleBaseFromAddress( Address );
+	if (!ModuleBase)
 		return x;
 
-	size_t RTTIObjectLocator;
-	ReClassReadMemory( (LPVOID)pRTTIObjectLocator, &RTTIObjectLocator, sizeof( DWORD_PTR ) );
-
-	DWORD dwTypeDescriptorOffset;
-	ReClassReadMemory( (LPVOID)(RTTIObjectLocator + 0x0C), &dwTypeDescriptorOffset, sizeof( DWORD ) );
-	size_t TypeDescriptor = ModuleBase + dwTypeDescriptorOffset;
-
-	DWORD dwObjectBaseOffset;
-	ReClassReadMemory( (LPVOID)(RTTIObjectLocator + 0x14), &dwObjectBaseOffset, sizeof( DWORD ) );
-	size_t ObjectBase = ModuleBase + dwObjectBaseOffset;
-
-	DWORD dwClassHierarchyDescriptorOffset;
-	ReClassReadMemory( (LPVOID)(RTTIObjectLocator + 0x10), &dwClassHierarchyDescriptorOffset, sizeof( DWORD ) );
-
-	//Offsets are from base
-	size_t ClassHierarchyDescriptor = ModuleBase + dwClassHierarchyDescriptorOffset;
-	if (!IsValidPtr( ClassHierarchyDescriptor ) || !dwClassHierarchyDescriptorOffset)
+	RTTIObjectLocatorPtr = Address - sizeof( ULONG64 ); // Address is Ptr to first VFunc, pRTTI is at -0x8
+	if (!IsValidPtr( RTTIObjectLocatorPtr ))
 		return x;
 
-	DWORD NumBaseClasses;
-	ReClassReadMemory( (LPVOID)(ClassHierarchyDescriptor + 0x8), &NumBaseClasses, sizeof( DWORD ) );
+	ReClassReadMemory( (LPVOID)RTTIObjectLocatorPtr, &RTTIObjectLocator, sizeof( ULONG_PTR ) );
+
+	ReClassReadMemory( (LPVOID)(RTTIObjectLocator + 0x10), &ClassHierarchyDescriptorOffset, sizeof( ULONG ) );
+
+	ClassHierarchyDescriptor = ModuleBase + ClassHierarchyDescriptorOffset;
+	if (!IsValidPtr( ClassHierarchyDescriptor ) || !ClassHierarchyDescriptorOffset)
+		return x;
+
+	ReClassReadMemory( (LPVOID)(ClassHierarchyDescriptor + 0x8), &NumBaseClasses, sizeof( ULONG ) );
 	if (NumBaseClasses < 0 || NumBaseClasses > 25)
 		NumBaseClasses = 0;
 
-	DWORD BaseClassArrayOffset;
-	ReClassReadMemory( (LPVOID)(ClassHierarchyDescriptor + 0xC), &BaseClassArrayOffset, sizeof( DWORD ) );
+	ReClassReadMemory( (LPVOID)(ClassHierarchyDescriptor + 0xC), &BaseClassArrayOffset, sizeof( ULONG ) );
 
-	size_t BaseClassArray = ModuleBase + BaseClassArrayOffset;
+	BaseClassArray = ModuleBase + BaseClassArrayOffset;
 	if (!IsValidPtr( BaseClassArray ) || !BaseClassArrayOffset)
 		return x;
 
-	//x = AddText(View, x, y, g_crOffset, HS_NONE, " RTTI:");
-	CString RTTIString;
-	for (unsigned int i = 0; i < NumBaseClasses; i++)
+	for (ULONG i = 0; i < NumBaseClasses; i++)
 	{
+		ULONG BaseClassDescriptorOffset = 0;
+		ULONG_PTR BaseClassDescriptor = 0;
+
+		ULONG TypeDescriptorOffset = 0;
+		ULONG_PTR TypeDescriptor = 0;
+
 		if (i != 0 && i != NumBaseClasses)
 		{
-			RTTIString += _T( " : " );
-			//x = AddText(View, x, y, g_crOffset, HS_NONE, " inherits:");
+			RTTIString += TEXT( " : " ); // Base class
 		}
 
-		DWORD BaseClassDescriptorOffset;
-		ReClassReadMemory( (LPVOID)(BaseClassArray + (0x4 * i)), &BaseClassDescriptorOffset, sizeof( DWORD ) );
+		ReClassReadMemory( (LPVOID)(BaseClassArray + (sizeof( ULONG ) * i)), &BaseClassDescriptorOffset, sizeof( ULONG ) );
 
-		size_t BaseClassDescriptor = ModuleBase + BaseClassDescriptorOffset;
+		BaseClassDescriptor = ModuleBase + BaseClassDescriptorOffset;
 		if (!IsValidPtr( BaseClassDescriptor ) || !BaseClassDescriptorOffset)
 			continue;
 
-		DWORD TypeDescriptorOffset;
-		ReClassReadMemory( (LPVOID)BaseClassDescriptor, &TypeDescriptorOffset, sizeof( DWORD ) );
+		ReClassReadMemory( (LPVOID)BaseClassDescriptor, &TypeDescriptorOffset, sizeof( ULONG ) );
 
-		size_t TypeDescriptor = ModuleBase + TypeDescriptorOffset;
+		TypeDescriptor = ModuleBase + TypeDescriptorOffset;
 		if (!IsValidPtr( TypeDescriptor ) || !TypeDescriptorOffset)
 			continue;
 
 		CString RTTIName;
-		bool FoundEnd = false;
-		char LastChar = ' ';
+		BOOLEAN FoundEnd = FALSE;
+		CHAR LastChar = ' ';
 		for (int j = 1; j < 45; j++)
 		{
-			char RTTINameChar;
+			CHAR RTTINameChar;
 			ReClassReadMemory( (LPVOID)(TypeDescriptor + 0x10 + j), &RTTINameChar, 1 );
-			if (RTTINameChar == '@' && LastChar == '@') //Names seem to be ended with @@
+			if (RTTINameChar == '@' && LastChar == '@') // Names are ended with @@
 			{
-				FoundEnd = true;
+				FoundEnd = TRUE;
 				RTTIName += RTTINameChar;
 				break;
 			}
 			RTTIName += RTTINameChar;
 			LastChar = RTTINameChar;
 		}
-		//Did we find a valid rtti name or did we just reach end of loop
-		if (!FoundEnd)
-			continue;
 
-		TCHAR Demangled[MAX_PATH];
-		if (_UnDecorateSymbolName( RTTIName, Demangled, MAX_PATH, UNDNAME_NAME_ONLY ) == 0)
-			RTTIString += RTTIName;
-		else
-			RTTIString += Demangled;
-		//x = AddText(View, x, y, g_crOffset, HS_RTTI, "%s", RTTIName.c_str());
+		// Did we find a valid RTTI name or did we just reach end of loop
+		if (FoundEnd == TRUE)
+		{
+			TCHAR Demangled[MAX_PATH] = { 0 };
+			if (_UnDecorateSymbolName( RTTIName, Demangled, MAX_PATH, UNDNAME_NAME_ONLY ) == 0)
+			{
+				RTTIString += RTTIName;
+			}
+			else
+			{
+				RTTIString += Demangled;
+			}
+		}
 	}
-	x = AddText( View, x, y, g_crOffset, HS_RTTI, RTTIString );
-	return x;
 	#else	
-	size_t pRTTIObjectLocator = Val - 4;
-	if (!IsValidPtr( pRTTIObjectLocator ))
+	ULONG_PTR RTTIObjectLocatorPtr = 0;
+	ULONG_PTR RTTIObjectLocator = 0;
+
+	ULONG_PTR ClassHierarchyDescriptorPtr = 0;
+	ULONG_PTR ClassHierarchyDescriptor = 0;
+
+	ULONG NumBaseClasses = 0;
+
+	ULONG_PTR BaseClassArrayPtr = 0;
+	ULONG_PTR BaseClassArray = 0;
+
+	CString RTTIString;
+
+	RTTIObjectLocatorPtr = Address - sizeof( ULONG );
+	if (!IsValidPtr( RTTIObjectLocatorPtr ))
 		return x;
 
-	size_t RTTIObjectLocator;
-	ReClassReadMemory( (LPVOID)pRTTIObjectLocator, &RTTIObjectLocator, sizeof( size_t ) );
+	ReClassReadMemory( (LPVOID)RTTIObjectLocatorPtr, &RTTIObjectLocator, sizeof( ULONG_PTR ) );
 
-	size_t pClassHierarchyDescriptor = RTTIObjectLocator + 0x10;
-	if (!IsValidPtr( pClassHierarchyDescriptor ))
+	ClassHierarchyDescriptorPtr = RTTIObjectLocator + 0x10;
+	if (!IsValidPtr( ClassHierarchyDescriptorPtr ))
 		return x;
 
-	size_t ClassHierarchyDescriptor;
-	ReClassReadMemory( (LPVOID)pClassHierarchyDescriptor, &ClassHierarchyDescriptor, sizeof( size_t ) );
+	ReClassReadMemory( (LPVOID)ClassHierarchyDescriptorPtr, &ClassHierarchyDescriptor, sizeof( ULONG_PTR ) );
 
-	int NumBaseClasses;
-	ReClassReadMemory( (LPVOID)(ClassHierarchyDescriptor + 0x8), &NumBaseClasses, sizeof( int ) );
+	ReClassReadMemory( (LPVOID)(ClassHierarchyDescriptor + 0x8), &NumBaseClasses, sizeof( ULONG ) );
 	if (NumBaseClasses < 0 || NumBaseClasses > 25)
 		NumBaseClasses = 0;
 
-	size_t pBaseClassArray = ClassHierarchyDescriptor + 0xC;
-	if (!IsValidPtr( pBaseClassArray ))
+	BaseClassArrayPtr = ClassHierarchyDescriptor + 0xC;
+	if (!IsValidPtr( BaseClassArrayPtr ))
 		return x;
 
-	size_t BaseClassArray;
-	ReClassReadMemory( (LPVOID)pBaseClassArray, &BaseClassArray, sizeof( size_t ) );
-
-	//x = AddText(View, x, y, g_crOffset, HS_NONE, " RTTI: ");
-	CString RTTIString;
-	for (int i = 0; i < NumBaseClasses; i++)
+	ReClassReadMemory( (LPVOID)BaseClassArrayPtr, &BaseClassArray, sizeof( ULONG_PTR ) );
+	
+	for (ULONG i = 0; i < NumBaseClasses; i++)
 	{
+		ULONG_PTR BaseClassDescriptorPtr = 0;
+		ULONG_PTR BaseClassDescriptor = 0;
+
+		ULONG_PTR TypeDescriptor = 0; // Ptr at 0x00 in BaseClassDescriptor
+
 		if (i != 0 && i != NumBaseClasses)
 		{
-			RTTIString += " : ";
-			//x = AddText(View, x, y, g_crOffset, HS_RTTI, " : ");
+			RTTIString += " : "; // Base class
 		}
 
-		size_t pBaseClassDescriptor = BaseClassArray + (4 * i);
-		if (!IsValidPtr( pBaseClassDescriptor ))
+		BaseClassDescriptorPtr = BaseClassArray + (4 * i);
+		if (!IsValidPtr( BaseClassDescriptorPtr ))
 			continue;
 
-		size_t BaseClassDescriptor;
-		ReClassReadMemory( (LPVOID)pBaseClassDescriptor, &BaseClassDescriptor, sizeof( size_t ) );
-
+		ReClassReadMemory( (LPVOID)BaseClassDescriptorPtr, &BaseClassDescriptor, sizeof( ULONG_PTR ) );
 		if (!IsValidPtr( BaseClassDescriptor ))
 			continue;
 
-		size_t TypeDescriptor; //pointer at 0x00 in BaseClassDescriptor
-		ReClassReadMemory( (LPVOID)BaseClassDescriptor, &TypeDescriptor, sizeof( size_t ) );
+		ReClassReadMemory( (LPVOID)BaseClassDescriptor, &TypeDescriptor, sizeof( ULONG_PTR ) );
 
 		CString RTTIName;
-		bool FoundEnd = false;
-		char LastChar = ' ';
+		BOOLEAN FoundEnd = FALSE;
+		CHAR LastChar = ' ';
+
 		for (int j = 1; j < 45; j++)
 		{
-			char RTTINameChar;
+			CHAR RTTINameChar;
 			ReClassReadMemory( (LPVOID)(TypeDescriptor + 0x08 + j), &RTTINameChar, 1 );
 			if (RTTINameChar == '@' && LastChar == '@') // Names seem to be ended with @@
 			{
-				FoundEnd = true;
+				FoundEnd = TRUE;
 				RTTIName += RTTINameChar;
 				break;
 			}
@@ -387,21 +393,27 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Val, int &x, ViewInfo& View, int y )
 			RTTIName += RTTINameChar;
 			LastChar = RTTINameChar;
 		}
-		//Did we find a valid rtti name or did we just reach end of loop
-		if (!FoundEnd)
-			continue;
 
-		TCHAR Demangled[MAX_PATH];
-		if (_UnDecorateSymbolName( RTTIName, Demangled, MAX_PATH, UNDNAME_NAME_ONLY ) == 0)
-			RTTIString += RTTIName;
-		else
-			RTTIString += Demangled;
-		//x = AddText(View, x, y, g_crOffset, HS_RTTI, "%s", RTTIName.c_str());
+		// Did we find a valid RTTI name or did we just reach end of loop
+		if (FoundEnd == TRUE)
+		{
+			TCHAR Demangled[256] = { 0 };
+
+			if (_UnDecorateSymbolName( RTTIName.GetString( ), Demangled, 256, UNDNAME_NAME_ONLY ) == 0)
+			{
+				RTTIString += RTTIName.GetString( );
+			}
+			else
+			{
+				RTTIString += Demangled;
+			}
+		}
 	}
-
-	x = AddText( View, x, y, g_crOffset, HS_RTTI, _T( "%s" ), RTTIString );
-	return x;
 	#endif
+
+	x = AddText( View, x, y, g_crOffset, HS_RTTI, _T( "%s" ), RTTIString.GetString( ) );
+
+	return x;
 }
 
 int CNodeBase::AddComment( ViewInfo& View, int x, int y )

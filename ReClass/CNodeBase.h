@@ -31,6 +31,73 @@ struct ViewInfo
 	bool bMultiSelected;
 };
 
+typedef struct _TYPE_INFO
+{
+	ULONG_PTR VirtualTable; // type_info class vftable
+	ULONG_PTR Data;			// NULL until loaded at runtime
+	CHAR Name[1];			// Mangled name (prefix: .?AV=classes, .?AU=structs)
+
+	static BOOL IsValid( ULONG_PTR typeInfo );
+	static BOOL IsTypeName( ULONG_PTR name );
+	static int  GetName( ULONG_PTR typeInfo, __out LPSTR buffer, int bufferSize );
+	static void DoStruct( ULONG_PTR typeInfo );
+} TYPE_INFO, *PTYPE_INFO;
+typedef struct _TYPE_INFO TYPE_DESCRIPTOR;
+typedef TYPE_DESCRIPTOR* PTYPE_DESCRIPTOR;
+
+typedef struct _TYPE_INFO_DISP_INFO
+{
+	LONG MemberDisp;				// 0x00 Member displacement
+	LONG VirtualTableDisp;			// 0x04 Vftable displacement
+	LONG InternalVirtualTableDisp;	// 0x08 Displacement inside vftable
+} TYPE_INFO_DISP_INFO, *PTYPE_INFO_DISP_INFO;
+
+typedef struct _RTTI_BASE_CLASS_DESCRIPTOR
+{
+	#if defined(_M_AMD64)
+	ULONG TypeDescriptor;				// 0x00 Offset to TYPE_DESCRIPTOR of the class
+	#else
+	PTYPE_DESCRIPTOR TypeDescriptor;	// 0x00 TYPE_DESCRIPTOR of the class
+	#endif
+	ULONG ContainedBasesCount;			// 0x04 Number of nested classes in the RTTI_BASE_CLASS_ARRAY
+	TYPE_INFO_DISP_INFO DispInfo;		// 0x08 Pointer-to-member displacement info
+	ULONG Attributes;					// 0x14 Flags
+} RTTI_BASE_CLASS_DESCRIPTOR, *PRTTI_BASE_CLASS_DESCRIPTOR;
+
+#pragma warning (disable : 4200)
+typedef struct _RTTI_BASE_CLASS_ARRAY
+{
+	PRTTI_BASE_CLASS_DESCRIPTOR* BaseClassDescriptors;
+} RTTI_BASE_CLASS_ARRAY, *PRTTI_BASE_CLASS_ARRAY;
+#pragma warning (default : 4200)
+
+typedef struct _RTTI_CLASS_HIERARCHY_DESCRIPTOR
+{
+	ULONG Signature;			// 0x00 Zero until loaded
+	ULONG Attributes;			// 0x04 Flags
+	ULONG BaseClassesCount;		// 0x08 Number of classes in RTTI_BASE_CLASS_ARRAY
+	#if defined(_M_AMD64)
+	ULONG BaseClassArrayOffset; // 0x0C Offset to PRTTI_BASE_CLASS_ARRAY
+	#else
+	PRTTI_BASE_CLASS_ARRAY BaseClassArray; // 0x0C
+	#endif
+} RTTI_CLASS_HIERARCHY_DESCRIPTOR, *PRTTI_CLASS_HIERARCHY_DESCRIPTOR;
+
+typedef struct _RTTI_COMPLETE_OBJECT_LOCATOR
+{
+	ULONG Signature;				// 0x00 '0' in x86, '1' in x86_64
+	ULONG Offset;					// 0x04 Offset of this vftable in the complete class
+	ULONG ConstructorDispOffset;	// 0x08 Constructor displacement offset
+	#if defined(_M_AMD64)
+	ULONG TypeDescriptorOffset;		// 0x0C Offset to PTYPE_INFO
+	ULONG ClassDescriptorOffset;	// 0x10 Offset to PRTTI_CLASS_HIERARCHY_DESCRIPTOR which describes inheritance hierarchy
+	ULONG ObjectBase;				// 0x14 Object base offset (base = ptr col - objectBase)
+	#else
+	PTYPE_DESCRIPTOR TypeDescriptor; // 0x0C PTYPE_INFO of the complete class
+	PRTTI_CLASS_HIERARCHY_DESCRIPTOR ClassDescriptor; // 0x10
+	#endif
+} RTTI_COMPLETE_OBJECT_LOCATOR, *PRTTI_COMPLETE_OBJECT_LOCATOR;
+
 class CNodeBase
 {
 public:
@@ -106,7 +173,7 @@ public:
 
 	void AddTypeDrop( ViewInfo& View, int x, int y );
 
-	int ResolveRTTI( ULONG_PTR Val, int &x, ViewInfo& View, int y );
+	int ResolveRTTI( ULONG_PTR Address, int &x, ViewInfo& View, int y );
 
 	int AddComment( ViewInfo& View, int x, int y );
 

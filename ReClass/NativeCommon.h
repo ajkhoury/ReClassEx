@@ -57,10 +57,12 @@ typedef NTSTATUS *PNTSTATUS;
 #define NOTHING
 #endif
 
+#ifndef FASTCALL
 #ifndef _WIN64
 #define FASTCALL __fastcall
 #else
 #define FASTCALL
+#endif
 #endif
 
 
