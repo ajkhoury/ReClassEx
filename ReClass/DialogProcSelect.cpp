@@ -36,9 +36,9 @@ std::initializer_list<const wchar_t*> CommonProcesses =
 // standard constructor
 CDialogProcSelect::CDialogProcSelect( CWnd* pParent )
 	: CDialogEx( CDialogProcSelect::IDD, pParent ),
-	m_bLoadingProcesses( false ),
-	m_bSortAscendingName( false ),
-	m_bSortAscendingId( false )
+	m_bLoadingProcesses( FALSE ),
+	m_bSortAscendingName( FALSE ),
+	m_bSortAscendingId( FALSE )
 {
 }
 
@@ -85,7 +85,7 @@ void CDialogProcSelect::ListRunningProcs( )
 	{
 		int CurrentProcessIndex = 0;
 		
-		m_bLoadingProcesses = true;
+		m_bLoadingProcesses = TRUE;
 
 		ProcessInfo = (PSYSTEM_PROCESS_INFORMATION)BufferArray.get( );
 
@@ -142,7 +142,7 @@ void CDialogProcSelect::ListRunningProcs( )
 			ProcessInfo = (PSYSTEM_PROCESS_INFORMATION)((uint8_t*)ProcessInfo + ProcessInfo->NextEntryOffset);
 		}
 	}
-	m_bLoadingProcesses = false;
+	m_bLoadingProcesses = FALSE;
 }
 
 void CDialogProcSelect::DoDataExchange( CDataExchange* pDX )
@@ -178,11 +178,11 @@ int CALLBACK CDialogProcSelect::CompareFunction( LPARAM lParam1, LPARAM lParam2,
 	if (pCompare)
 	{
 		CListCtrl* pListCtrl = pCompare->pListCtrl;
-		int column = pCompare->iColumn;
-		bool ascending = pCompare->bAscending;
+		INT column = pCompare->iColumn;
+		BOOLEAN bAscending = pCompare->bAscending;
 
-		int item1 = ascending ? static_cast<int>(lParam1) : static_cast<int>(lParam2);
-		int item2 = ascending ? static_cast<int>(lParam2) : static_cast<int>(lParam1);
+		int item1 = bAscending ? static_cast<int>(lParam1) : static_cast<int>(lParam2);
+		int item2 = bAscending ? static_cast<int>(lParam2) : static_cast<int>(lParam1);
 
 		if (column == COLUMN_PROCESSID)
 		{
@@ -223,7 +223,7 @@ void CDialogProcSelect::OnColumnClick( NMHDR* pNMHDR, LRESULT* pResult )
 		compare.bAscending = m_bSortAscendingId;
 		break;
 	default:
-		compare.bAscending = false;
+		compare.bAscending = FALSE;
 		break;
 	}
 	m_ProcessList.SortItemsEx( CompareFunction, (LPARAM)&compare );
