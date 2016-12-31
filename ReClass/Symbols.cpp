@@ -3,7 +3,7 @@
 #include <fstream>
 
 Symbols::Symbols( ) :
-	m_bInitialized( false )
+	m_bInitialized( FALSE )
 {
 	ResolveSearchPath( );
 
@@ -21,7 +21,6 @@ void Symbols::ResolveSearchPath( )
 	HKEY hKey = NULL;
 
 	//C:\Users\User\AppData\Local\Temp\SymbolCache
-
 	for (int i = 14; i >= 8; i--)
 	{
 		CString regPath = _T( "Software\\Microsoft\\VisualStudio\\" );
@@ -66,7 +65,7 @@ void Symbols::ResolveSearchPath( )
 	}
 }
 
-bool Symbols::WriteSymSrvDll( )
+BOOLEAN Symbols::WriteSymSrvDll( )
 {
 	HRSRC hSymSrvRes = NULL;
 	HGLOBAL hGlobal = NULL;
@@ -96,7 +95,7 @@ bool Symbols::WriteSymSrvDll( )
 					UnlockResource( hGlobal );
 					FreeResource( hGlobal );
 
-					return true;
+					return TRUE;
 				}
 			}
 		}
@@ -105,7 +104,7 @@ bool Symbols::WriteSymSrvDll( )
 		FreeResource( hGlobal );
 	}
 
-	return false;
+	return FALSE;
 }
 
 Symbols::~Symbols( )
@@ -116,80 +115,92 @@ Symbols::~Symbols( )
 
 void Symbols::Cleanup( )
 {
-	if (m_bInitialized)
+	if (m_bInitialized == TRUE)
 	{
-		for (auto it = symbols.begin( ); it != symbols.end( ); ++it)
+		for (auto it = m_SymbolAddresses.begin( ); it != m_SymbolAddresses.end( ); ++it)
 			delete it->second;
+		m_SymbolAddresses.clear( );
 
-		symbols.clear( );
+		for (auto it = m_SymbolNames.begin( ); it != m_SymbolNames.end( ); ++it)
+			delete it->second;
+		m_SymbolNames.clear( );
+
 		CoUninitialize( );
-		m_bInitialized = false;
+
+		m_bInitialized = FALSE;
 	}
 }
 
-bool Symbols::Init( )
+BOOLEAN Symbols::Init( )
 {
-	if (!m_bInitialized)
+	if (m_bInitialized == FALSE)
 	{
 		HRESULT hr = S_OK;
 		hr = CoInitialize( NULL );
 		if (FAILED( hr ))
 		{
 			PrintOut( _T( "[Symbols::Init] CoInitialize failed - HRESULT = %08X" ), hr );
-			return false;
+			return FALSE;
 		}
-		m_bInitialized = true;
+		m_bInitialized = TRUE;
 	}
-
-	return true;
+	return TRUE;
 }
 
-bool Symbols::LoadSymbolsForModule( CString ModulePath, size_t dwBaseAddr, DWORD dwSizeOfImage )
+BOOLEAN Symbols::LoadSymbolsForModule( CString ModulePath, ULONG_PTR ModuleBaseAddress, ULONG SizeOfModule )
 {
-	int idx = ModulePath.ReverseFind( '/' );
+	int idx = -1;
+	CString ModuleName;
+	const TCHAR* szSearchPath = NULL;
+	SymbolReader* reader = NULL;
+
+	idx = ModulePath.ReverseFind( '/' );
 	if (idx == -1)
 		idx = ModulePath.ReverseFind( '\\' );
-	CString ModuleName = ModulePath.Mid( ++idx );
+	ModuleName = ModulePath.Mid( ++idx );
 
-	const TCHAR* szSearchPath = 0;
 	if (!m_strSearchPath.IsEmpty( ))
 		szSearchPath = m_strSearchPath.GetString( );
 
-	SymbolReader* reader = new SymbolReader( );
-	if (reader->LoadFile( ModuleName, ModulePath, dwBaseAddr, dwSizeOfImage, szSearchPath ))
+	reader = new SymbolReader( );
+	if (reader->LoadFile( ModuleName, ModulePath, ModuleBaseAddress, SizeOfModule, szSearchPath ))
 	{
 		PrintOut( _T( "[Symbols::LoadSymbolsForModule] Symbols for module %s loaded" ), ModuleName.GetString( ) );
-		symbols.insert( std::make_pair( ModuleName, reader ) );
-		return true;
+		m_SymbolAddresses.insert( std::make_pair( ModuleBaseAddress, reader ) );
+		return TRUE;
 	}
 
 	delete reader;
 
-	return false;
+	return FALSE;
 }
 
-bool Symbols::LoadSymbolsForPdb( CString PdbPath )
+BOOLEAN Symbols::LoadSymbolsForPdb( CString PdbPath )
 {
-	int idx = PdbPath.ReverseFind( '/' );
+	int idx = -1;
+	CString PdbFileName;
+	const TCHAR* szSearchPath = NULL;
+	SymbolReader* reader = NULL;
+
+	idx = PdbPath.ReverseFind( '/' );
 	if (idx == -1)
 		idx = PdbPath.ReverseFind( '\\' );
-	CString PdbFileName = PdbPath.Mid( ++idx );
+	PdbFileName = PdbPath.Mid( ++idx );
 
-	const TCHAR* szSearchPath = 0;
 	if (!m_strSearchPath.IsEmpty( ))
 		szSearchPath = m_strSearchPath.GetString( );
 
-	SymbolReader* reader = new SymbolReader( );
+	reader = new SymbolReader( );
 	if (reader->LoadFile( PdbFileName, PdbPath, 0, 0, szSearchPath ))
 	{
 		PrintOut( _T( "[Symbols::LoadSymbolsForPdb] Symbols for module %s loaded" ), PdbFileName.GetString( ) );
-		symbols.insert( std::make_pair( PdbFileName, reader ) );
-		return true;
+		m_SymbolNames.insert( std::make_pair( PdbFileName, reader ) );
+		return TRUE;
 	}
 
 	delete reader;
 
-	return false;
+	return FALSE;
 }
 
 //void Symbols::LoadModuleSymbols()
@@ -282,11 +293,20 @@ bool Symbols::LoadSymbolsForPdb( CString PdbPath )
 //		HeapFree(hHeap, 0, pbi);
 //}
 
-SymbolReader* Symbols::GetSymbolsForModule( CString module )
+SymbolReader* Symbols::GetSymbolsForModuleAddress( ULONG_PTR ModuleAddress )
 {
-	SymbolReader* script = nullptr;
-	auto iter = symbols.find( module );
-	if (iter != symbols.end( ))
+	SymbolReader* script = NULL;
+	auto iter = m_SymbolAddresses.find( ModuleAddress );
+	if (iter != m_SymbolAddresses.end( ))
+		script = iter->second;
+	return script;
+}
+
+SymbolReader* Symbols::GetSymbolsForModuleName( CString ModuleName )
+{
+	SymbolReader* script = NULL;
+	auto iter = m_SymbolNames.find( ModuleName );
+	if (iter != m_SymbolNames.end( ))
 		script = iter->second;
 	return script;
 }

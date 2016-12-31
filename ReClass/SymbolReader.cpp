@@ -1011,15 +1011,15 @@ void SymbolReader::ReadSymbol( IDiaSymbol *pSymbol, CString& outString )
 	//putwchar(L'\n');
 }
 
-BOOLEAN SymbolReader::GetSymbolStringWithVA( ULONG_PTR dwVA, CString& outString )
+BOOLEAN SymbolReader::GetSymbolStringFromVA( ULONG_PTR VirtualAddress, CString& outString )
 {
 	IDiaSymbol* pSymbol = NULL;
 	LONG lDisplacement = 0;
 
-	ULONG_PTR dwBase = m_dwModuleBase ? m_dwModuleBase : g_AttachedProcessAddress;
-	ULONG_PTR dwRVA = dwVA - dwBase;
+	ULONG_PTR ModuleBase = m_ModuleBase ? m_ModuleBase : g_AttachedProcessAddress;
+	ULONG SymbolRva = (ULONG)(VirtualAddress - ModuleBase);
 
-	if (FAILED( m_pSession->findSymbolByRVAEx( (DWORD)dwRVA, SymTagNull, &pSymbol, &lDisplacement ) ))
+	if (FAILED( m_pSession->findSymbolByRVAEx( (ULONG)SymbolRva, SymTagNull, &pSymbol, &lDisplacement ) ))
 		return FALSE;
 
 	ReadSymbol( pSymbol, outString );
@@ -1036,13 +1036,13 @@ BOOLEAN SymbolReader::LoadFile( CString FilePath, ULONG_PTR dwBaseAddr, DWORD dw
 	return LoadFile( FilePath.Mid( ++idx ), FilePath, dwBaseAddr, dwModuleSize, pszSearchPath );
 }
 
-BOOLEAN SymbolReader::LoadFile( CString FileName, CString FilePath, ULONG_PTR dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath )
+BOOLEAN SymbolReader::LoadFile( CString FileName, CString FilePath, ULONG_PTR ModuleBaseAddress, DWORD ModuleSize, const TCHAR* pszSearchPath )
 {
 	m_strFileName = FileName;
 	m_strFilePath = FilePath;
 
-	m_dwModuleBase = dwBaseAddr;
-	m_dwModuleSize = dwModuleSize;
+	m_ModuleBase = ModuleBaseAddress;
+	m_ModuleSize = ModuleSize;
 
 	m_bInitialized = LoadSymbolData( pszSearchPath );
 

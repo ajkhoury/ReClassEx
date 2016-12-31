@@ -238,7 +238,6 @@ void CDialogProcSelect::OnDblClkListControl( NMHDR* pNMHDR, LRESULT* pResult )
 void CDialogProcSelect::OnAttachButton( )
 {
 	int SelectedIndex = m_ProcessList.GetSelectionMark( );
-
 	if (SelectedIndex != -1)
 	{
 		TCHAR tcsdSelectedProcessId[64] = { 0 };
@@ -259,7 +258,6 @@ void CDialogProcSelect::OnAttachButton( )
 			}
 			else
 			{
-
 				if (g_hProcess != NULL) // Stop leaking handles!
 					CloseHandle( g_hProcess ); 
 
@@ -271,22 +269,22 @@ void CDialogProcSelect::OnAttachButton( )
 
 				if (g_bSymbolResolution && m_LoadAllSymbols.GetCheck( ) == BST_CHECKED)
 				{
-					CDialogProgress progress;
+					CDialogProgress* ProgressDialog = new CDialogProgress( this );
 					ULONG nModules = (ULONG)g_MemMapModules.size( );
 
-					progress.Create( CDialogProgress::IDD, this );
-					progress.ShowWindow( SW_SHOW );
+					ProgressDialog->Create( CDialogProgress::IDD, this );
+					ProgressDialog->ShowWindow( SW_SHOW );
 
-					progress.Bar( ).SetRange32( 0, nModules );
-					progress.Bar( ).SetStep( 1 );
+					ProgressDialog->Bar( ).SetRange32( 0, nModules );
+					ProgressDialog->Bar( ).SetStep( 1 );
 
 					for (ULONG i = 0; i < nModules; i++)
 					{
 						TCHAR tcsProgressText[64] = { 0 };
 						MemMapInfo CurrentModule = g_MemMapModules[i];
 
-						_stprintf_s( tcsProgressText, 128, _T( "[%d/%d] %s" ), i + 1, nModules, CurrentModule.Name.GetString( ) );
-						progress.SetProgressText( tcsProgressText );
+						_stprintf_s( tcsProgressText, 64, _T( "[%d/%d] %s" ), i + 1, nModules, CurrentModule.Name.GetString( ) );
+						ProgressDialog->SetProgressText( tcsProgressText );
 
 						if (g_ReClassApp.m_pSymbolLoader->LoadSymbolsForModule( CurrentModule.Path, CurrentModule.Start, CurrentModule.Size ) == FALSE)
 						{
@@ -294,10 +292,12 @@ void CDialogProcSelect::OnAttachButton( )
 									  CurrentModule.Name.GetString( ), FoundProcessInfo->strProcessName.GetString( ) );
 						}
 
-						progress.Bar( ).StepIt( );
+						ProgressDialog->Bar( ).StepIt( );
 					}
 
-					progress.EndDialog( 0 );
+					ProgressDialog->EndDialog( 0 );
+
+					delete ProgressDialog;
 				}
 
 				OnClose( );

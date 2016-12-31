@@ -169,7 +169,7 @@ public:
 	BOOLEAN LoadFile( CString FilePath, ULONG_PTR dwBaseAddr = 0, DWORD dwModuleSize = 0, const TCHAR* pszSearchPath = 0 );
 	BOOLEAN LoadFile( CString FileName, CString FilePath, ULONG_PTR dwBaseAddr, DWORD dwModuleSize, const TCHAR* pszSearchPath = 0 );
 
-	BOOLEAN GetSymbolStringWithVA( ULONG_PTR dwVA, CString& outString );
+	BOOLEAN GetSymbolStringFromVA( ULONG_PTR VirtualAddress, CString& outString );
 
 private:
 	BOOLEAN LoadSymbolData( const TCHAR* pszSearchPath = 0 );
@@ -211,6 +211,6 @@ private:
 
 	CString			m_strFileName;
 	CString			m_strFilePath;
-	ULONG_PTR		m_dwModuleBase;
-	DWORD			m_dwModuleSize;
+	ULONG_PTR		m_ModuleBase;
+	ULONG			m_ModuleSize;
 };

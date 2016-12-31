@@ -45,8 +45,8 @@ private:
 	typedef struct _COMPARESTRUCT 
 	{
 		CListCtrl* pListCtrl;
-		int iColumn;
-		bool bAscending;
+		INT iColumn;
+		BOOLEAN bAscending;
 	} COMPARESTRUCT, *PCOMPARESTRUCT, *LPCOMPARESTRUCT;
 	
 	static int CALLBACK CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
@@ -56,14 +56,14 @@ private:
 	CButton m_FilterCheck;
 	CButton m_LoadAllSymbols;
 
-	bool m_bSortAscendingName;
-	bool m_bSortAscendingId;
+	BOOLEAN m_bSortAscendingName;
+	BOOLEAN m_bSortAscendingId;
 
 	CRect m_OriginalSize;
 	CImageList m_ProcessIcons;
 
 	//Misc
 	std::vector<ProcessInfoStack> m_ProcessInfos;
-	volatile bool m_bLoadingProcesses;
+	volatile BOOLEAN m_bLoadingProcesses;
 	
 };

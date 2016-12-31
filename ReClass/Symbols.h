@@ -6,27 +6,29 @@
 class Symbols
 {
 public:
-	Symbols();
+	Symbols( );
 
-	void ResolveSearchPath();
-	bool WriteSymSrvDll();
+	void ResolveSearchPath( );
+	BOOLEAN WriteSymSrvDll( );
 
-	~Symbols();
+	~Symbols( );
 
-	void Cleanup();
-	bool Init();
-	bool IsInitialized() { return m_bInitialized; }
+	void Cleanup( );
+	BOOLEAN Init( );
+	BOOLEAN IsInitialized( ) { return m_bInitialized; }
 
-	bool LoadSymbolsForModule(CString szModulePath, size_t dwBaseAddr, DWORD dwSizeOfImage);
-	bool LoadSymbolsForPdb(CString szPdbPath);
+	BOOLEAN LoadSymbolsForModule( CString szModulePath, ULONG_PTR ModuleBaseAddress, ULONG SizeOfModule );
+	BOOLEAN LoadSymbolsForPdb( CString szPdbPath );
 
-	SymbolReader* GetSymbolsForModule(CString module);
+	SymbolReader* GetSymbolsForModuleAddress( ULONG_PTR ModuleAddress );
+	SymbolReader* GetSymbolsForModuleName( CString ModuleName );
 
 private:
-	//typedef std::pair<CString, size_t> key_type;
-	std::map<CString, SymbolReader*> symbols;
 
-	bool m_bInitialized;
+	std::map<CString, SymbolReader*> m_SymbolNames;
+	std::map<ULONG_PTR, SymbolReader*> m_SymbolAddresses;
+
+	BOOLEAN m_bInitialized;
 
 	CString m_strSearchPath;
 };

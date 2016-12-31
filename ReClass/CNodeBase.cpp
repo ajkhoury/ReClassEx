@@ -424,8 +424,8 @@ int CNodeBase::AddComment( ViewInfo& View, int x, int y )
 
 	if (m_nodeType == nt_hex64)
 	{
-		float flVal = *((float*)&View.pData[m_Offset]);
-		LONG_PTR intVal = *((LONG_PTR*)&View.pData[m_Offset]);
+		float flVal = *(float*)&View.pData[m_Offset];
+		LONG_PTR intVal = *(LONG_PTR*)&View.pData[m_Offset];
 
 		if (g_bFloat)
 		{
@@ -462,16 +462,27 @@ int CNodeBase::AddComment( ViewInfo& View, int x, int y )
 					// Print out info from PDB at address
 					if (g_bSymbolResolution)
 					{
-						CString moduleName = GetModuleName( uintVal );
-						if (!moduleName.IsEmpty( ))
+						ULONG_PTR ModuleAddress = 0;
+						SymbolReader* pSymbols = NULL;
+
+						ModuleAddress = GetModuleBaseFromAddress( uintVal );
+						if (ModuleAddress != 0)
 						{
-							SymbolReader* symbols = g_ReClassApp.m_pSymbolLoader->GetSymbolsForModule( moduleName );
-							if (symbols)
+							pSymbols = g_ReClassApp.m_pSymbolLoader->GetSymbolsForModuleAddress( ModuleAddress );
+							if (!pSymbols)
 							{
-								CString nameOut;
-								if (symbols->GetSymbolStringWithVA( uintVal, nameOut ))
+								CString moduleName = GetModuleName( uintVal );
+								if (!moduleName.IsEmpty( ))
+									pSymbols = g_ReClassApp.m_pSymbolLoader->GetSymbolsForModuleName( moduleName );
+							}
+
+							if (pSymbols != NULL)
+							{
+								CString SymbolOut;
+								SymbolOut.Preallocate( 1024 );
+								if (pSymbols->GetSymbolStringFromVA( uintVal, SymbolOut ))
 								{
-									x = AddText( View, x, y, g_crOffset, HS_EDIT, _T( "%s " ), nameOut );
+									x = AddText( View, x, y, g_crOffset, HS_EDIT, _T( "%s " ), SymbolOut.GetString( ) );
 								}
 							}
 						}
@@ -547,22 +558,31 @@ int CNodeBase::AddComment( ViewInfo& View, int x, int y )
 					// Print out info from PDB at address
 					if (g_bSymbolResolution)
 					{
-						CString moduleName = GetModuleName( uintVal );
-						if (!moduleName.IsEmpty( ))
+						ULONG_PTR ModuleAddress = 0;
+						SymbolReader* pSymbols = NULL;
+
+						ModuleAddress = GetModuleBaseFromAddress( uintVal );
+						if (ModuleAddress != 0)
 						{
-							SymbolReader* pSymbols = g_ReClassApp.m_pSymbolLoader->GetSymbolsForModule( moduleName );
-							if (pSymbols)
+							pSymbols = g_ReClassApp.m_pSymbolLoader->GetSymbolsForModuleAddress( ModuleAddress );
+							if (!pSymbols)
+							{
+								CString ModuleName = GetModuleName( uintVal );
+								if (!ModuleName.IsEmpty( ))
+									pSymbols = g_ReClassApp.m_pSymbolLoader->GetSymbolsForModuleName( ModuleName );
+							}
+
+							if (pSymbols != NULL)
 							{
 								CString SymbolOut;
 								SymbolOut.Preallocate( 1024 );
-								if (pSymbols->GetSymbolStringWithVA( uintVal, SymbolOut ))
+								if (pSymbols->GetSymbolStringFromVA( uintVal, SymbolOut ))
 								{
 									x = AddText( View, x, y, g_crOffset, HS_EDIT, _T( "%s " ), SymbolOut.GetString( ) );
 								}
 							}
 						}
 					}
-
 				}
 			}
 
