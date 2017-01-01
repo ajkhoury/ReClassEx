@@ -28,6 +28,8 @@ CChildFrame::~CChildFrame( )
 
 BOOL CChildFrame::PreCreateWindow( CREATESTRUCT& cs )
 {
+	//cs.cy += g_FontHeight;
+
 	// TODO: Modify the Window class or styles here by modifying the CREATESTRUCT cs
 	if (!CMDIChildWndEx::PreCreateWindow( cs ))
 		return FALSE;
@@ -61,10 +63,12 @@ void CChildFrame::OnFileClose( )
 
 int CChildFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
+	//lpCreateStruct->cy += g_FontHeight;
+
 	if (CMDIChildWndEx::OnCreate( lpCreateStruct ) == -1)
 		return -1;
 
-	// create a view to occupy the client area of the frame
+	// Create a view to occupy the client area of the frame
 	if (!m_ChildView.Create( NULL, NULL, AFX_WS_DEFAULT_VIEW, CRect( 0, 0, 0, 0 ), this, AFX_IDW_PANE_FIRST, NULL ))
 	{
 		TRACE0( "Failed to create view window\n" );
@@ -82,9 +86,9 @@ void CChildFrame::OnSetFocus( CWnd* pOldWnd )
 
 BOOL CChildFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo )
 {
-	// let the view have first crack at the command
+	// Let the view have first crack at the command
 	if (m_ChildView.OnCmdMsg( nID, nCode, pExtra, pHandlerInfo ))
 		return TRUE;
-	// otherwise, do default handling
+	// Otherwise, do default handling
 	return CMDIChildWndEx::OnCmdMsg( nID, nCode, pExtra, pHandlerInfo );
 }

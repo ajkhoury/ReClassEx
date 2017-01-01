@@ -32,6 +32,7 @@ public:
 	void		InsertBytes( CNodeClass* pClass, UINT idx, DWORD Length );
 
 	void		ReplaceSelectedWithType( NodeType Type );
+	void		ClearSelection( );
 
 	void		StandardTypeUpdate( CCmdUI *pCmdUI );
 

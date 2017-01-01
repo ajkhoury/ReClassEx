@@ -25,6 +25,7 @@ public:
 	CString m_strCurrentFilePath;
 
 	std::vector<CNodeClass*> m_Classes;
+	//std::vector<CNodeBase*> m_Selected;
 
 	CDialogConsole* m_pConsole;
 

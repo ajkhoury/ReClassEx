@@ -145,16 +145,18 @@ END_MESSAGE_MAP( )
 // CChildView message handlers
 BOOL CChildView::PreCreateWindow( CREATESTRUCT& cs )
 {
+	//cs.cy += g_FontHeight;
 	if (!CWnd::PreCreateWindow( cs ))
 		return FALSE;
-	cs.dwExStyle |= WS_EX_CLIENTEDGE;
+	cs.dwExStyle |= WS_EX_STATICEDGE;
 	cs.style &= ~WS_BORDER;
-	cs.lpszClass = AfxRegisterWndClass( CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS, ::LoadCursor( NULL, IDC_ARROW ), (HBRUSH)(COLOR_WINDOWFRAME), NULL );
+	cs.lpszClass = AfxRegisterWndClass( CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS, ::LoadCursor( NULL, IDC_ARROW ), (HBRUSH)COLOR_WINDOWFRAME, NULL );
 	return TRUE;
 }
 
 int CChildView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
+	lpCreateStruct->cy += g_FontHeight;
 	if (CWnd::OnCreate( lpCreateStruct ) == -1)
 		return -1;
 
@@ -188,65 +190,110 @@ void CChildView::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	if (nChar == VK_DOWN)
 	{
-		if (Selected.size( ) > 0)
+		auto firstSelected = Selected.begin( );
+		if (firstSelected != Selected.end( ))
 		{
-			HotSpot* firstSelected = &Selected[0];
-			if (firstSelected->Address != HotSpots[HotSpots.size( ) - 1].Address)
+			if (firstSelected->object->GetType( ) == nt_pointer)
 			{
-				g_ReClassApp.ClearSelection( );
-				Selected.clear( );
+				CNodePtr* pPtrNode = (CNodePtr*)firstSelected->object;
+				CNodeBase* pFindClassNode = (CNodeBase*)pPtrNode->GetClass( );
 
-				for (UINT i = 0; i < HotSpots.size( ); i++)
+				auto found = std::find_if( HotSpots.begin( ), HotSpots.end( ),
+										   [pFindClassNode] ( const HotSpot hs ) { return (hs.object == pFindClassNode); } );
+				if (found != HotSpots.end( ))
 				{
-					if (HotSpots[i].Type != HS_SELECT)
-						continue;
-					if (firstSelected->Address != HotSpots[i].Address)
-						continue;
-					if (HotSpots[0].object == firstSelected->object) // stop from crashing
-						continue;
+					ClearSelection( );
 
-					size_t nextAddress = HotSpots[i].Address + firstSelected->object->GetMemorySize( );
-
-					UINT newIndex = 0;
-					for (int j = 0; HotSpots[i + j].Address != nextAddress; j++)
-						newIndex = i + j + 1;
-
-					HotSpots[newIndex].object->Select( );
-					Selected.push_back( HotSpots[newIndex] );
-
-					break;
+					found->object->Select( );
+					Selected.push_back( *found );
 				}
 			}
+			else if (firstSelected->object->GetType( ) == nt_class)
+			{
+				CNodeClass* pClassNode = (CNodeClass*)firstSelected->object;
+				CNodeBase* pFindNode = (CNodeBase*)pClassNode->GetNode( 0 );
+
+				auto found = std::find_if( HotSpots.begin( ), HotSpots.end( ),
+										   [pFindNode] ( const HotSpot hs ) { return (hs.object == pFindNode); } );
+				if (found != HotSpots.end( ))
+				{
+					ClearSelection( );
+
+					found->object->Select( );
+					Selected.push_back( *found );
+				}
+			}
+			else
+			{
+				if (HotSpots[0].object != firstSelected->object)
+				{
+					ULONG_PTR findAddress = firstSelected->Address + firstSelected->object->GetMemorySize( );
+
+					auto found = std::find_if( HotSpots.begin( ), HotSpots.end( ),
+											   [findAddress] ( const HotSpot hs ) { return (hs.Address == findAddress); } );
+					if (found != HotSpots.end( ))
+					{
+						if (found->Address == HotSpots.back( ).Address)
+						{
+							if (m_Scroll.IsWindowEnabled( ))
+								m_Scroll.SetScrollPos( m_Scroll.GetScrollPos( ) + 1 );
+						}
+						
+						ClearSelection( );
+						found->object->Select( );
+						Selected.push_back( *found );
+					}
+					//else // Not found
+					//{
+					//	CNodeBase* selectedObject = firstSelected->object;
+					//	CNodeBase* selectedObjectParent = selectedObject->GetParent( );
+					//	if (selectedObjectParent->GetType( ) == nt_class)
+					//	{
+					//
+					//	}
+					//}
+				}
+			}
+
+			// Force redraw so it doesn't appear laggy
+			Invalidate( );
 		}
 	}
 	else if (nChar == VK_UP)
 	{
-		if (Selected.size( ) > 0)
+		auto firstSelected = Selected.begin( );
+		if (firstSelected != Selected.end( ))
 		{
-			HotSpot* firstSelected = &Selected[0];
-			if (firstSelected->Address != HotSpots[0].Address)
+			if (
+				firstSelected->Address == (HotSpots[0].Address + HotSpots[0].object->GetMemorySize( )) ||
+				firstSelected->object == HotSpots.begin( )->object)
 			{
-				g_ReClassApp.ClearSelection( );
-				Selected.clear( );
-
-				for (UINT i = 0; i < HotSpots.size( ); i++)
+				if (m_Scroll.IsWindowEnabled( ))
 				{
-					if (HotSpots[i].Type != HS_SELECT)
-						continue;
-					if (firstSelected->Address != HotSpots[i].Address)
-						continue;
-
-					HotSpots[i - 1].object->Select( );
-					Selected.push_back( HotSpots[i - 1] );
-
-					break;
+					INT scrollPos = m_Scroll.GetScrollPos( );
+					m_Scroll.SetScrollPos( (scrollPos != 0) ? scrollPos - 1 : 0 );
 				}
 			}
+
+			ULONG_PTR findAddress = firstSelected->Address;
+
+			auto found = std::find_if( HotSpots.begin( ), HotSpots.end( ),
+									   [findAddress] ( const HotSpot hs ) { return (hs.Address == findAddress); } );
+			if (found != HotSpots.end( ))
+			{
+				ClearSelection( );
+				if (found != HotSpots.begin( ))
+					found--;
+				found->object->Select( );
+				Selected.push_back( *found );
+			}
+
+			// Force redraw so it doesn't appear laggy
+			Invalidate( );
 		}
 	}
 	else if (nChar == VK_DELETE)
 	{
-		//isDeleting = true; // Ghetto fix to stop crashing from OnMouseHover
 		for (UINT i = 0; i < Selected.size( ); i++)
 		{
 			CNodeClass* pClass = (CNodeClass*)Selected[i].object->GetParent( );
@@ -258,7 +305,6 @@ void CChildView::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 			}
 		}
 		Selected.clear( );
-		//isDeleting = false;
 	}
 
 	CWnd::OnKeyDown( nChar, nRepCnt, nFlags );
@@ -286,10 +332,10 @@ void CChildView::OnLButtonDblClk( UINT nFlags, CPoint point )
 				m_Edit.SetSel( 0, 1024 );
 				return;
 			}
-			else if (HotSpots[i].Type == HS_SCINTILLA_EDIT)
-			{
-
-			}
+			//else if (HotSpots[i].Type == HS_SCINTILLA_EDIT)
+			//{
+			//	//(HotSpots[i].object)->
+			//}
 		}
 	}
 }
@@ -381,8 +427,10 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 			{
 				if (nFlags == MK_LBUTTON)
 				{
-					g_ReClassApp.ClearSelection( );
-					Selected.clear( );
+					//g_ReClassApp.ClearSelection( );
+					//Selected.clear( );
+					ClearSelection( );
+
 					pHitObject->Select( );
 					Selected.push_back( HotSpots[i] );
 				}
@@ -429,8 +477,10 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 							idx2 = idxTemp;
 						}
 
-						g_ReClassApp.ClearSelection( );
-						Selected.clear( );
+						//g_ReClassApp.ClearSelection( );
+						//Selected.clear( );
+						ClearSelection( );
+
 						for (UINT s = idx1; s <= idx2; s++)
 						{
 							pClass->GetNode( s )->Select( );
@@ -456,7 +506,6 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 
 			if (HotSpots[i].Type == HS_DELETE)
 			{
-				//isDeleting = true; // Ghetto fix to stop crashing from OnMouseHover
 				for (UINT i = 0; i < Selected.size( ); i++)
 				{
 					CNodeClass* pClass = (CNodeClass*)Selected[i].object->GetParent( );
@@ -468,7 +517,6 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 					}
 				}
 				Selected.clear( );
-				//isDeleting = false;
 			}
 
 			if ((HotSpots[i].Type == HS_CHANGE_A) || (HotSpots[i].Type == HS_CHANGE_X))
@@ -533,6 +581,38 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 void CChildView::OnRButtonDown( UINT nFlags, CPoint point )
 {
 	m_Edit.ShowWindow( SW_HIDE );
+
+	//for (auto hs : HotSpots)
+	//{
+	//	if (hs.Rect.PtInRect( point ))
+	//	{
+	//		CNodeBase* pHitObject = (CNodeBase*)hs.object;
+	//		if (hs.Type == HS_CLICK)
+	//		{
+	//			pHitObject->Update( hs );
+	//		}
+	//		else if (hs.Type == HS_SELECT)
+	//		{
+	//			if (nFlags == MK_RBUTTON)
+	//			{
+	//				ClearSelection( );
+	//
+	//				pHitObject->Select( );
+	//				Selected.push_back( hs );
+	//
+	//				CRect client;
+	//				GetClientRect( &client );
+	//				ClientToScreen( &client );
+	//
+	//				CMenu menu;
+	//				menu.LoadMenu( MAKEINTRESOURCE( IDR_MENU_QUICKMODIFY ) );
+	//				menu.GetSubMenu( 0 )->TrackPopupMenu( TPM_LEFTALIGN | TPM_HORNEGANIMATION, client.left + hs.Rect.left + point.x, client.top + point.y, this );
+	//			}
+	//		}
+	//		Invalidate( );
+	//	}
+	//}
+
 	for (UINT i = 0; i < HotSpots.size( ); i++)
 	{
 		if (HotSpots[i].Rect.PtInRect( point ))
@@ -546,8 +626,8 @@ void CChildView::OnRButtonDown( UINT nFlags, CPoint point )
 			{
 				if (nFlags == MK_RBUTTON)
 				{
-					g_ReClassApp.ClearSelection( );
-					Selected.clear( );
+					ClearSelection( );
+
 					pHitObject->Select( );
 					Selected.push_back( HotSpots[i] );
 
@@ -569,24 +649,18 @@ void CChildView::OnRButtonDown( UINT nFlags, CPoint point )
 
 void CChildView::OnPaint( )
 {
-	CRect clientRect( 0, 0, 0, 0 );
-	DWORD classSize = 0;
-
 	CPaintDC paintDC( this ); // device context for painting
 	CMemDC memDC( paintDC, this );
-	CDC& DC = memDC.GetDC( );
-
-	//HotSpots.clear( );
-
+	CDC& dc = memDC.GetDC( );
+	DWORD classSize = 0;
+	CRect clientRect;
 	GetClientRect( &clientRect );
-
-	DC.FillSolidRect( &clientRect, g_crBackground );
+	//clientRect.bottom += g_FontHeight;
+	dc.FillSolidRect( &clientRect, g_crBackground );
 
 	if (m_pClass != NULL)
 	{
-		ViewInfo View;
-
-		DC.SelectObject( &g_ViewFont );
+		dc.SelectObject( &g_ViewFont );
 
 		HotSpots.clear( );
 
@@ -594,6 +668,7 @@ void CChildView::OnPaint( )
 		m_Memory.SetSize( classSize );
 		ReClassReadMemory( (LPVOID)m_pClass->GetOffset( ), m_Memory.Data( ), classSize );
 
+		ViewInfo View;
 		#ifdef _DEBUG
 		View.pChildView = this; // For testing
 		#endif
@@ -601,7 +676,7 @@ void CChildView::OnPaint( )
 		View.pData = m_Memory.Data( );
 		View.Classes = &g_ReClassApp.m_Classes;
 		View.client = &clientRect;
-		View.dc = &DC;
+		View.dc = &dc;
 		View.Level = 0;
 		View.HotSpots = &HotSpots;
 		View.bMultiSelected = (Selected.size( ) > 1) ? true : false;
@@ -609,13 +684,12 @@ void CChildView::OnPaint( )
 		if (m_Scroll.IsWindowVisible( ))
 			View.client->right -= SB_WIDTH;
 
-		int ypos = m_Scroll.GetScrollPos( ) * g_FontHeight;
-
-		int DrawMax = m_pClass->Draw( View, 0, -ypos ) + ypos;
+		int ypos = (m_Scroll.GetScrollPos( ) * g_FontHeight);
+		int DrawMax = m_pClass->Draw( View, 0, -ypos ) + ypos + g_FontHeight;
 
 		if (m_pClass->RequestPosition != -1)
 		{
-			if ((m_pClass->RequestPosition >= 0) && ((unsigned int)m_pClass->RequestPosition < g_ReClassApp.m_Classes.size( )))
+			if ((m_pClass->RequestPosition >= 0) && (m_pClass->RequestPosition < (int)g_ReClassApp.m_Classes.size( )))
 			{
 				int idx = -1;
 				for (UINT i = 0; i < g_ReClassApp.m_Classes.size( ); i++)
@@ -633,6 +707,7 @@ void CChildView::OnPaint( )
 		if (clientRect.Height( ) < DrawMax)
 		{
 			SCROLLINFO si;
+			ZeroMemory( &si, sizeof( SCROLLINFO ) );
 			si.cbSize = sizeof( SCROLLINFO );
 			si.fMask = SIF_PAGE | SIF_RANGE;
 			si.nMin = 0;
@@ -647,30 +722,24 @@ void CChildView::OnPaint( )
 			m_Scroll.ShowScrollBar( FALSE );
 		}
 
-
-		// This makes tabs
 		CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, AfxGetApp( )->m_pMainWnd );
 		CChildFrame* pChild = STATIC_DOWNCAST( CChildFrame, pFrame->GetActiveFrame( ) );
-
 		if (pChild->m_ChildView.m_hWnd == m_hWnd)
 		{
 			pChild->SetWindowText( m_pClass->GetName( ) );
 			pChild->SetTitle( m_pClass->GetName( ) );
 			pFrame->UpdateFrameTitleForDocument( m_pClass->GetName( ) );
 
-			//char txt[256];
-			//sprintf (txt,"Total HotSpots: %i",HotSpots.size());
-
-			//dc.SetTextColor(0xFF0000);
-			//dc.SetBkColor(0x000000);
-			//dc.SetBkMode(OPAQUE);
-			//dc.DrawText(txt,-1,&CRect(0,0,0,0), DT_LEFT | DT_NOCLIP | DT_NOPREFIX);
+			//TCHAR txt[256] = { 0 };
+			//_tprintf_s( txt, _T( "Total HotSpots: %i" ), HotSpots.size( ) );
+			//dc.SetTextColor( 0x555556 );
+			//dc.SetBkColor( 0xFFFFFF );
+			//dc.SetBkMode( OPAQUE );
+			//dc.DrawText( txt, -1, &CRect( 0, 0, 0, 0 ), DT_LEFT | DT_NOCLIP | DT_NOPREFIX );
 		}
 
-		//for (UINT i=0; i < HotSpots.size();i++)
-		//{
+		//for (UINT i = 0; i < HotSpots.size();i++)
 		//	dc.DrawFocusRect(HotSpots[i].Rect);
-		//}
 	}
 }
 
@@ -687,9 +756,15 @@ void CChildView::OnSize( UINT nType, int cx, int cy )
 void CChildView::OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar )
 {
 	m_Edit.ShowWindow( SW_HIDE );
+
 	if (nSBCode == SB_THUMBPOSITION || nSBCode == SB_THUMBTRACK)
 	{
-		m_Scroll.SetScrollPos( nPos );
+		pScrollBar->SetScrollPos( nPos );
+		Invalidate( );
+	}
+	else if (nSBCode == SB_LINEUP || nSBCode == SB_LINEDOWN)
+	{
+		pScrollBar->SetScrollPos( pScrollBar->GetScrollPos( ) + ((nSBCode == SB_LINEUP) ? -1 : 1) );
 		Invalidate( );
 	}
 
@@ -705,7 +780,10 @@ BOOL CChildView::OnMouseWheel( UINT nFlags, short zDelta, CPoint pt )
 {
 	if (m_Scroll.IsWindowVisible( ))
 	{
-		m_Scroll.SetScrollPos( m_Scroll.GetScrollPos( ) - zDelta / g_FontHeight );
+		if (GetAsyncKeyState( VK_LCONTROL ))
+			m_Scroll.SetScrollPos( m_Scroll.GetScrollPos( ) + ((zDelta < 0) ? 1 : -1) );
+		else
+			m_Scroll.SetScrollPos( m_Scroll.GetScrollPos( ) - ((int)zDelta / g_FontHeight) );
 		m_Edit.ShowWindow( SW_HIDE );
 		m_ToolTip.ShowWindow( SW_HIDE );
 		Invalidate( );
@@ -922,9 +1000,11 @@ UINT CChildView::FindNodeIndex( CNodeBase* pNode )
 CNodeBase* CChildView::FindNodeFromIndex( CNodeBase* currentlySelectedNode, UINT index )
 {
 	CNodeBase* pNode = currentlySelectedNode;
-	if (!pNode->GetParent( ))
+	if (!pNode)
 		return NULL;
 	CNodeClass* pClass = (CNodeClass*)pNode->GetParent( );
+	if (!pClass)
+		return NULL;
 	if (index >= pClass->NodeCount( ))
 		return NULL;
 	return pClass->GetNode( index );
@@ -1428,6 +1508,13 @@ void CChildView::ReplaceSelectedWithType( NodeType Type )
 	Invalidate( FALSE );
 }
 
+void CChildView::ClearSelection( )
+{
+	for (int i = 0; i < Selected.size( ); i++)
+		Selected[i].object->Unselect( );
+	Selected.clear( );
+}
+
 void CChildView::OnTypeHex64( )
 {
 	ReplaceSelectedWithType( nt_hex64 );
@@ -1783,28 +1870,29 @@ BOOL CChildView::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 {
 	if (nCode == CN_UPDATE_COMMAND_UI)
 	{
-		if (nID >= WM_CHANGECLASSMENU && nID < (WM_CHANGECLASSMENU + WM_MAXITEMS))
+		if ((nID >= WM_CHANGECLASSMENU) && (nID < (WM_CHANGECLASSMENU + WM_MAXITEMS)))
 		{
 			((CCmdUI*)pExtra)->Enable( TRUE );
 			return TRUE;
 		}
 	}
-	if (nCode == CN_COMMAND)
+	else if (nCode == CN_COMMAND)
 	{
-		if (nID >= WM_CHANGECLASSMENU && nID < (WM_CHANGECLASSMENU + WM_MAXITEMS))
+		if ((nID >= WM_CHANGECLASSMENU) && (nID < (WM_CHANGECLASSMENU + WM_MAXITEMS)))
 		{
 			UINT idx = nID - WM_CHANGECLASSMENU;
-			CNodeBase* pNode = (CNodeBase*)ExchangeTarget.object;
+			CNodeBase* pNode = ExchangeTarget.object;
+			NodeType nodeType = pNode->GetType( );
 
-			if (pNode->GetType( ) == nt_array)
+			if (nodeType == nt_array)
 			{
 				((CNodeArray*)pNode)->SetClass( g_ReClassApp.m_Classes[idx] );
 			}
-			if (pNode->GetType( ) == nt_instance)
+			else if (nodeType == nt_instance)
 			{
 				((CNodeClassInstance*)pNode)->SetClass( g_ReClassApp.m_Classes[idx] );
 			}
-			if (pNode->GetType( ) == nt_pointer)
+			else if (nodeType == nt_pointer)
 			{
 				((CNodePtr*)pNode)->SetClass( g_ReClassApp.m_Classes[idx] );
 			}

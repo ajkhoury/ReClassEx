@@ -96,9 +96,9 @@ void CReClass2016App::ResizeMemoryFont( int font_width, int font_height )
 
 BOOL CReClass2016App::InitInstance( )
 {
-	//#ifdef _DEBUG
-	//Utils::CreateDbgConsole( _T( "dbg" ) );
-	//#endif
+	#ifdef _DEBUG
+	Utils::CreateDbgConsole( _T( "dbg" ) );
+	#endif
 
 	INITCOMMONCONTROLSEX InitCtrls;
 	InitCtrls.dwSize = sizeof( InitCtrls );
@@ -219,11 +219,10 @@ BOOL CReClass2016App::InitInstance( )
 	#undef PushIcon
 
 	CMainFrame* pFrame = new CMainFrame( );
+	if (!pFrame || !pFrame->LoadFrame( IDR_MAINFRAME ))
+		return FALSE;
+
 	m_pMainWnd = pFrame;
-	if (!pFrame)
-		return FALSE;
-	if (!pFrame->LoadFrame( IDR_MAINFRAME ))
-		return FALSE;
 
 	pFrame->m_hMenuDefault = m_hMDIMenu;
 	pFrame->m_hAccelTable = m_hMDIAccel;
@@ -238,7 +237,7 @@ BOOL CReClass2016App::InitInstance( )
 	g_ProcessID = NULL;
 	g_AttachedProcessAddress = NULL;
 
-	// Initialize the editor
+	// Initialize the Scintilla editor
 	if (!Scintilla_RegisterClasses( m_hInstance ))
 	{
 		AfxMessageBox( _T( "Scintilla failed to initiailze" ) );
@@ -672,57 +671,58 @@ void CReClass2016App::OnButtonFooter( )
 
 CMainFrame* CReClass2016App::GetMainFrame( )
 {
-	return STATIC_DOWNCAST( CMainFrame, g_ReClassApp.m_pMainWnd );
+	return STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
 }
 
 CMFCRibbonBar* CReClass2016App::GetRibbonBar( )
 {
-	return &GetMainFrame( )->m_RibbonBar;
+	return (CMFCRibbonBar*)&GetMainFrame( )->m_RibbonBar;
 }
 
 CNodeBase* CReClass2016App::CreateNewNode( NodeType Type )
 {
-	if (Type == nt_class) return new CNodeClass;
+	switch (Type)
+	{
+	case nt_class:			return new CNodeClass;
 
-	if (Type == nt_hex64) return new CNodeHex64;
-	if (Type == nt_hex32) return new CNodeHex32;
-	if (Type == nt_hex16) return new CNodeHex16;
-	if (Type == nt_hex8) return new CNodeHex8;
+	case nt_hex64:			return new CNodeHex64;
+	case nt_hex32:			return new CNodeHex32;
+	case nt_hex16:			return new CNodeHex16;
+	case nt_hex8:			return new CNodeHex8;
+	case nt_bits:			return new CNodeBits;
 
-	if (Type == nt_bits) return new CNodeBits;
+	case nt_int64:			return new CNodeInt64;
+	case nt_int32:			return new CNodeInt32;
+	case nt_int16:			return new CNodeInt16;
+	case nt_int8:			return new CNodeInt8;
 
-	if (Type == nt_int64) return new CNodeInt64;
-	if (Type == nt_int32) return new CNodeInt32;
-	if (Type == nt_int16) return new CNodeInt16;
-	if (Type == nt_int8) return new CNodeInt8;
+	case nt_uint64:			return new CNodeQWORD;
+	case nt_uint32:			return new CNodeDWORD;
+	case nt_uint16:			return new CNodeWORD;
+	case nt_uint8:			return new CNodeByte;
 
-	if (Type == nt_uint64) return new CNodeQWORD;
-	if (Type == nt_uint32) return new CNodeDWORD;
-	if (Type == nt_uint16) return new CNodeWORD;
-	if (Type == nt_uint8) return new CNodeByte;
+	case nt_vec2:			return new CNodeVec2;
+	case nt_vec3:			return new CNodeVec3;
+	case nt_quat:			return new CNodeQuat;
+	case nt_matrix:			return new CNodeMatrix;
 
-	if (Type == nt_vec2) return new CNodeVec2;
-	if (Type == nt_vec3) return new CNodeVec3;
-	if (Type == nt_quat) return new CNodeQuat;
-	if (Type == nt_matrix) return new CNodeMatrix;
+	case nt_float:			return new CNodeFloat;
+	case nt_double:			return new CNodeDouble;
 
-	if (Type == nt_float) return new CNodeFloat;
-	if (Type == nt_double) return new CNodeDouble;
+	case nt_custom:			return new CNodeCustom;
+	case nt_text:			return new CNodeText;
+	case nt_pchar:			return new CNodeCharPtr;
+	case nt_pwchar:			return new CNodeWCharPtr;
+	case nt_unicode:		return new CNodeUnicode;
 
-	if (Type == nt_custom) return new CNodeCustom;
-	if (Type == nt_text) return new CNodeText;
-	if (Type == nt_pchar) return new CNodeCharPtr;
-	if (Type == nt_pwchar) return new CNodeWCharPtr;
-	if (Type == nt_unicode) return new CNodeUnicode;
+	case nt_vtable:			return new CNodeVTable;
+	case nt_functionptr:	return new CNodeFunctionPtr;
+	case nt_function:		return new CNodeFunction;
 
-	if (Type == nt_vtable) return new CNodeVTable;
-	if (Type == nt_functionptr) return new CNodeFunctionPtr;
-	if (Type == nt_function) return new CNodeFunction;
-
-	if (Type == nt_pointer) return new CNodePtr;
-	if (Type == nt_array) return new CNodeArray;
-	if (Type == nt_instance) return new CNodeClassInstance;
-
+	case nt_pointer:		return new CNodePtr;
+	case nt_array:			return new CNodeArray;
+	case nt_instance:		return new CNodeClassInstance;
+	}
 	return NULL;
 }
 

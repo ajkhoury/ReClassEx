@@ -85,6 +85,8 @@ CMainFrame::~CMainFrame( )
 
 int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
+	//lpCreateStruct->cy += g_FontHeight * 40;
+
 	if (CMDIFrameWndEx::OnCreate( lpCreateStruct ) == -1)
 		return -1;
 
@@ -95,21 +97,22 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	CMDITabInfo mdiTabParams;
 	mdiTabParams.m_style = CMFCTabCtrl::STYLE_3D;
 	mdiTabParams.m_tabLocation = CMFCTabCtrl::LOCATION_TOP;
-	mdiTabParams.m_nTabBorderSize = 4;
+	mdiTabParams.m_nTabBorderSize = 2;
 	mdiTabParams.m_bActiveTabCloseButton = TRUE;
 	mdiTabParams.m_bTabIcons = TRUE;
 	mdiTabParams.m_bAutoColor = TRUE;
 	mdiTabParams.m_bDocumentMenu = TRUE;
-	mdiTabParams.m_bFlatFrame = FALSE;
+	mdiTabParams.m_bEnableTabSwap = TRUE;
+	mdiTabParams.m_bFlatFrame = TRUE;
 	EnableMDITabbedGroups( TRUE, mdiTabParams );
 
 	m_RibbonBar.Create( this );
 	m_RibbonBar.LoadFromResource( IDR_RIBBON );
 
 	// enable Visual Studio 2005 style docking window behavior
-	CDockingManager::SetDockingMode( DT_STANDARD );
+	CDockingManager::SetDockingMode( DT_SMART );
 	// enable Visual Studio 2005 style docking window auto-hide behavior
-	EnableAutoHidePanes( CBRS_BORDER_3D );
+	EnableAutoHidePanes( CBRS_ALIGN_TOP );
 
 	// create docking windows
 	if (!CreateDockingWindows( ))
@@ -136,21 +139,21 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	// This improves the usability of the taskbar because the document name is visible with the thumbnail.
 	ModifyStyle( 0, FWS_PREFIXTITLE );
 
-	//Update Colors
-	CMFCRibbonColorButton* pColor;
+	// Update Colors
+	CMFCRibbonColorButton* pColor = NULL;
 	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_BACKGROUND );	pColor->SetColor( g_crBackground );
 	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_SELECT );		pColor->SetColor( g_crSelect );
 	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_HIDDEN );		pColor->SetColor( g_crHidden );
 	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_OFFSET );		pColor->SetColor( g_crOffset );
 	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_ADDRESS );		pColor->SetColor( g_crAddress );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_TYPE );			pColor->SetColor( g_crType );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_NAME );			pColor->SetColor( g_crName );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_TYPE );		pColor->SetColor( g_crType );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_NAME );		pColor->SetColor( g_crName );
 	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_INDEX );		pColor->SetColor( g_crIndex );
 	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_VALUE );		pColor->SetColor( g_crValue );
 	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_COMMENT );		pColor->SetColor( g_crComment );
 	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_VTABLE );		pColor->SetColor( g_crVTable );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_FUNCTION );		pColor->SetColor( g_crFunction );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_TEXT );			pColor->SetColor( g_crChar );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_FUNCTION );	pColor->SetColor( g_crFunction );
+	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_TEXT );		pColor->SetColor( g_crChar );
 	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_CUSTOM );		pColor->SetColor( g_crCustom );
 	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_HEX );			pColor->SetColor( g_crHex );
 
@@ -222,6 +225,7 @@ void CMainFrame::OnButtonClrCustom( )
 
 BOOL CMainFrame::PreCreateWindow( CREATESTRUCT& cs )
 {
+	//cs.cy += g_FontHeight;
 	if (!CMDIFrameWndEx::PreCreateWindow( cs ))
 		return FALSE;
 	if (g_bTop)
@@ -261,10 +265,7 @@ void CMainFrame::OnWindowManager( )
 
 void CMainFrame::OnApplicationLook( UINT id )
 {
-	CWaitCursor wait;
-
 	g_ReClassApp.m_nAppLook = id;
-
 	switch (g_ReClassApp.m_nAppLook)
 	{
 
@@ -369,7 +370,7 @@ BOOL CMainFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 {
 	if (nCode == CN_UPDATE_COMMAND_UI)
 	{
-		CCmdUI* pCmdUI = static_cast<CCmdUI*>(pExtra);
+		CCmdUI* pCmdUI = (CCmdUI*)pExtra;
 		if (nID >= WM_CLASSMENU && nID < (WM_CLASSMENU + WM_MAXITEMS))
 		{
 			pCmdUI->Enable( TRUE );
@@ -389,7 +390,7 @@ BOOL CMainFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 
 	if (nCode == CN_COMMAND)
 	{
-		if (nID >= WM_CLASSMENU && nID < (WM_CLASSMENU + WM_MAXITEMS))
+		if ((nID >= WM_CLASSMENU) && (nID < (WM_CLASSMENU + WM_MAXITEMS)))
 		{
 			UINT idx = nID - WM_CLASSMENU;
 			

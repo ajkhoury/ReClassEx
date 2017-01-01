@@ -14,7 +14,6 @@ public:
 	virtual int Draw( ViewInfo& View, int x, int y );
 
 	VOID SetChildFrame( class CChildFrame* pChild ) { pChildWindow = pChild; }
-
 	class CChildFrame* GetChildFrame(  ) { return pChildWindow; }
 
 public:
