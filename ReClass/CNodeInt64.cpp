@@ -14,11 +14,12 @@ void CNodeInt64::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( __int64 ) );
 }
 
-int CNodeInt64::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeInt64::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
 	__int64 Int64 = *(__int64*)(&View.pData[m_Offset]);
 
 	AddSelection( View, 0, y, g_FontHeight );
@@ -35,5 +36,7 @@ int CNodeInt64::Draw( ViewInfo & View, int x, int y )
 	tx = AddText( View, tx, y, g_crValue, HS_EDIT, _T( "%lli" ), Int64 ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
 
-	return y += g_FontHeight;
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

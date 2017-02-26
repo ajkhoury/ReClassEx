@@ -16,11 +16,12 @@ void CNodeQuat::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)(Spot.Address + (Spot.ID * sizeof( float ))), &v, sizeof( float ) );
 }
 
-int CNodeQuat::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeQuat::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
 	float* pMemory = (float*)&View.pData[m_Offset];
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
@@ -47,5 +48,7 @@ int CNodeQuat::Draw( ViewInfo & View, int x, int y )
 	tx += g_FontWidth;
 	tx = AddComment( View, tx, y );
 
-	return y + g_FontHeight;
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

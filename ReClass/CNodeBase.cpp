@@ -618,8 +618,10 @@ void CNodeBase::StandardUpdate( HotSpot &Spot )
 		m_strComment = Spot.Text;
 }
 
-int CNodeBase::DrawHidden( ViewInfo& View, int x, int y )
+NodeSize CNodeBase::DrawHidden( ViewInfo& View, int x, int y )
 {
+	NodeSize drawnSize = { 0 };
 	View.dc->FillSolidRect( 0, y, View.client->right, 1, (m_bSelected) ? g_crSelect : g_crHidden );
-	return y + 1;
+	drawnSize.y = y;
+	return drawnSize;
 }

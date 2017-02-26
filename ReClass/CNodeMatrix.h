@@ -9,5 +9,5 @@ public:
 
 	virtual ULONG GetMemorySize( ) { return 4 * 4 * sizeof( float ); }
 
-	virtual int Draw( ViewInfo& View, int x, int y );
+	virtual NodeSize Draw( ViewInfo& View, int x, int y );
 };

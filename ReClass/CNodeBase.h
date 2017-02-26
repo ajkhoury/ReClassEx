@@ -98,13 +98,18 @@ typedef struct _RTTI_COMPLETE_OBJECT_LOCATOR
 	#endif
 } RTTI_COMPLETE_OBJECT_LOCATOR, *PRTTI_COMPLETE_OBJECT_LOCATOR;
 
+struct NodeSize {
+	int x;
+	int y;
+};
+
 class CNodeBase
 {
 public:
 	CNodeBase( );
 	~CNodeBase( ) { }
 
-	virtual int Draw( ViewInfo& View, int x, int y ) = 0;
+	virtual NodeSize Draw( ViewInfo& View, int x, int y ) = 0;
 	virtual ULONG GetMemorySize( ) = 0;
 	virtual void Update( HotSpot& Spot ) = 0;
 
@@ -179,7 +184,7 @@ public:
 
 	void StandardUpdate( HotSpot &Spot );
 
-	int DrawHidden( ViewInfo& View, int x, int y );
+	NodeSize DrawHidden( ViewInfo& View, int x, int y );
 
 protected:
 	NodeType m_nodeType;

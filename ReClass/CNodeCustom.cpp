@@ -20,11 +20,12 @@ ULONG CNodeCustom::GetMemorySize( )
 	return m_dwMemorySize;
 }
 
-int CNodeCustom::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeCustom::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
@@ -39,5 +40,8 @@ int CNodeCustom::Draw( ViewInfo & View, int x, int y )
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "] " ) );
 	tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
-	return y += g_FontHeight;
+	
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

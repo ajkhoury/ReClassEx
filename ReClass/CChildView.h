@@ -51,6 +51,7 @@ public:
 	afx_msg void OnPaint( );
 	afx_msg void OnSize( UINT nType, int cx, int cy );
 	afx_msg void OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar );
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg BOOL OnEraseBkgnd( CDC* pDC );
 	afx_msg BOOL OnMouseWheel( UINT nFlags, short zDelta, CPoint pt );
 	afx_msg void OnMouseHover( UINT nFlags, CPoint point );
@@ -224,6 +225,7 @@ public:
 	CCustomToolTip m_ToolTip;
 
 	CScrollBar m_Scroll;
+	CScrollBar m_HScroll;
 
 	bool isDeleting;
 };

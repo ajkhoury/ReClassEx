@@ -49,8 +49,9 @@ void CNodeFunctionPtr::Update( HotSpot& Spot )
 	}
 }
 
-int CNodeFunctionPtr::Draw( ViewInfo& View, int x, int y )
+NodeSize CNodeFunctionPtr::Draw( ViewInfo& View, int x, int y )
 {
+	NodeSize drawnSize;
 	int tx = 0;
 	int ax = 0;
 
@@ -129,7 +130,9 @@ int CNodeFunctionPtr::Draw( ViewInfo& View, int x, int y )
 		y += g_FontHeight;
 	}
 
-	return y;
+	drawnSize.x = tx;
+	drawnSize.y = y;
+	return drawnSize;
 }
 
 void CNodeFunctionPtr::Initialize( CChildView* pChild, ULONG_PTR Address )

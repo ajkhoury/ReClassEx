@@ -12,7 +12,7 @@ public:
 
 	virtual ULONG GetMemorySize( ) { return sizeof( void* ); }
 
-	virtual int Draw( ViewInfo& View, int x, int y );
+	virtual NodeSize Draw( ViewInfo& View, int x, int y );
 
 	void SetClass( CNodeClass* pNode ) { m_pNode = pNode; }
 	CNodeClass* GetClass( void ) { return m_pNode; }

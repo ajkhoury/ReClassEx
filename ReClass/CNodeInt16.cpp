@@ -14,11 +14,12 @@ void CNodeInt16::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( short ) );
 }
 
-int CNodeInt16::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeInt16::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
 	__int16* pMemory = (__int16*)&View.pData[m_Offset];
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
@@ -34,5 +35,7 @@ int CNodeInt16::Draw( ViewInfo & View, int x, int y )
 	tx = AddText( View, tx, y, g_crValue, HS_EDIT, _T( "%i" ), pMemory[0] ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
 
-	return y += g_FontHeight;
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

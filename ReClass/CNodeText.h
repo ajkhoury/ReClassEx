@@ -11,7 +11,7 @@ public:
 
 	virtual ULONG GetMemorySize( ) { return m_dwMemorySize; }
 
-	virtual int Draw( ViewInfo& View, int x, int y );
+	virtual NodeSize Draw( ViewInfo& View, int x, int y );
 
 	void SetSize( DWORD size ) { m_dwMemorySize = size; }
 	DWORD GetSize( void ) { return m_dwMemorySize; }

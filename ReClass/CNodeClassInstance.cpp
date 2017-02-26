@@ -17,11 +17,13 @@ ULONG CNodeClassInstance::GetMemorySize( )
 	return m_pNode->GetMemorySize( );
 }
 
-int CNodeClassInstance::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeClassInstance::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
+	NodeSize childDrawnSize;
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
@@ -47,8 +49,14 @@ int CNodeClassInstance::Draw( ViewInfo & View, int x, int y )
 		NewView = View;
 		NewView.Address = View.Address + m_Offset;
 		NewView.pData = (UCHAR*)((ULONG_PTR)NewView.pData + m_Offset);
-		y = m_pNode->Draw( NewView, x, y );
+		childDrawnSize = m_pNode->Draw( NewView, x, y );
+		y = childDrawnSize.y;
+		if (childDrawnSize.x > drawnSize.x) {
+			drawnSize.x = childDrawnSize.x;
+		}
 	}
 
-	return y;
+	drawnSize.x = tx;
+	drawnSize.y = y;
+	return drawnSize;
 }

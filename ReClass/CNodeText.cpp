@@ -25,9 +25,10 @@ void CNodeText::Update( HotSpot& Spot )
 	}
 }
 
-int CNodeText::Draw( ViewInfo& View, int x, int y )
+NodeSize CNodeText::Draw( ViewInfo& View, int x, int y )
 {
 	PCHAR pMemory = NULL;
+	NodeSize drawnSize;
 
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
@@ -56,5 +57,7 @@ int CNodeText::Draw( ViewInfo& View, int x, int y )
 	}
 
 	tx = AddComment( View, tx, y );
-	return y += g_FontHeight;
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

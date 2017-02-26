@@ -14,11 +14,12 @@ void CNodeHex64::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)(Spot.Address + Spot.ID), &v, 1 );
 }
 
-int CNodeHex64::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeHex64::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
 	unsigned char* pMemory = (unsigned char*)&View.pData[m_Offset];
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
@@ -44,5 +45,7 @@ int CNodeHex64::Draw( ViewInfo & View, int x, int y )
 	tx = AddText( View, tx, y, g_crHex, 7, _T( "%0.2X" ), pMemory[7] ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
 
-	return y += g_FontHeight;
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }
