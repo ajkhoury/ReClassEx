@@ -44,8 +44,10 @@ ULONG CNodeArray::GetMemorySize( )
 	return m_pNode->GetMemorySize( ) * m_dwTotal;
 }
 
-int CNodeArray::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeArray::Draw( ViewInfo & View, int x, int y )
 {
+	NodeSize drawnSize = { 0 };
+	NodeSize childDrawnSize;
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 	AddSelection( View, 0, y, g_FontHeight );
@@ -83,7 +85,13 @@ int CNodeArray::Draw( ViewInfo & View, int x, int y )
 		NewView = View;
 		NewView.Address = View.Address + m_Offset + m_pNode->GetMemorySize( ) * m_iCurrent;
 		NewView.pData = (UCHAR*)((ULONG_PTR)View.pData + m_Offset + m_pNode->GetMemorySize( ) * m_iCurrent);
-		y = m_pNode->Draw( NewView, x, y );
+		childDrawnSize = m_pNode->Draw( NewView, x, y );
+		y = childDrawnSize.y;
+		if (childDrawnSize.x > drawnSize.x) {
+			drawnSize.x = childDrawnSize.x;
+		}
 	};
-	return y;
+	
+	drawnSize.y = y;
+	return drawnSize;
 }

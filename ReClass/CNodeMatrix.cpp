@@ -16,11 +16,12 @@ void CNodeMatrix::Update( HotSpot & Spot )
 	}
 }
 
-int CNodeMatrix::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeMatrix::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
 	float* pMemory = (float*)&View.pData[m_Offset];
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
@@ -84,5 +85,7 @@ int CNodeMatrix::Draw( ViewInfo & View, int x, int y )
 		tx = AddText( View, tx, y, g_crName, HS_NONE, _T( "|" ) );
 	}
 
-	return y + g_FontHeight;
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

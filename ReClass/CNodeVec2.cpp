@@ -16,11 +16,12 @@ void CNodeVec2::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)(Spot.Address + (Spot.ID * 4)), &v, 4 );
 }
 
-int CNodeVec2::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeVec2::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
 	float* pMemory = (float*)&View.pData[m_Offset];
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
@@ -42,5 +43,8 @@ int CNodeVec2::Draw( ViewInfo & View, int x, int y )
 	}
 	tx += g_FontWidth;
 	tx = AddComment( View, tx, y );
-	return (y + g_FontHeight);
+
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

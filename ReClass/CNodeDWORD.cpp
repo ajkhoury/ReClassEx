@@ -14,11 +14,12 @@ void CNodeDWORD::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( unsigned long ) );
 }
 
-int CNodeDWORD::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeDWORD::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
 	DWORD* pMemory = (DWORD*)&View.pData[m_Offset];
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
@@ -34,5 +35,7 @@ int CNodeDWORD::Draw( ViewInfo & View, int x, int y )
 	tx = AddText( View, tx, y, g_crValue, HS_EDIT, _T( "%u" ), pMemory[0] ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
 
-	return y += g_FontHeight;
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

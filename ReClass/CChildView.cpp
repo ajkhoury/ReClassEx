@@ -30,6 +30,7 @@ BEGIN_MESSAGE_MAP( CChildView, CWnd )
 	ON_WM_RBUTTONDOWN( )
 	ON_WM_SIZE( )
 	ON_WM_VSCROLL( )
+	ON_WM_HSCROLL()
 	ON_WM_ERASEBKGND( )
 	ON_WM_MOUSEWHEEL( )
 	ON_WM_MOUSEHOVER( )
@@ -161,6 +162,7 @@ int CChildView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 		return -1;
 
 	CRect rect( 0, 0, 100, 100 );
+	CRect hrect(5, 5, 100, 30);
 	//m_Edit.CreateEx(WS_EX_WINDOWEDGE, _T("EDIT"),  _T(" "), WS_CHILD | WS_TABSTOP, rect, this, 1);
 	m_Edit.Create( WS_CHILD | WS_TABSTOP, rect, this, 1 );
 	m_Edit.ShowWindow( SW_HIDE );
@@ -169,6 +171,10 @@ int CChildView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	m_Scroll.Create( SBS_VERT, rect, this, 0 );
 	m_Scroll.EnableScrollBar( ESB_ENABLE_BOTH );
 	m_Scroll.ShowScrollBar( );
+
+	m_HScroll.Create(SBS_HORZ, hrect, this, 0);
+	m_HScroll.EnableScrollBar(ESB_ENABLE_BOTH);
+	m_HScroll.ShowScrollBar();
 
 	m_ToolTip.Create( ES_MULTILINE | WS_BORDER, rect, this, 1 );
 	m_ToolTip.SetFont( &g_ViewFont );
@@ -681,11 +687,17 @@ void CChildView::OnPaint( )
 		View.HotSpots = &HotSpots;
 		View.bMultiSelected = (Selected.size( ) > 1) ? true : false;
 
-		if (m_Scroll.IsWindowVisible( ))
+		if (m_Scroll.IsWindowVisible()) {
 			View.client->right -= SB_WIDTH;
+			View.client->bottom -= SB_WIDTH;
+		}
 
 		int ypos = (m_Scroll.GetScrollPos( ) * g_FontHeight);
-		int DrawMax = m_pClass->Draw( View, 0, -ypos ) + ypos + g_FontHeight;
+		int xpos = m_HScroll.GetScrollPos();
+		NodeSize DrawMax = m_pClass->Draw( View, 0 - xpos, -ypos );
+		DrawMax.y += ypos + g_FontHeight;
+		// Dirty hack, fix Draw methods
+		DrawMax.x += xpos;
 
 		if (m_pClass->RequestPosition != -1)
 		{
@@ -704,22 +716,37 @@ void CChildView::OnPaint( )
 			m_pClass->RequestPosition = -1;
 		}
 
-		if (clientRect.Height( ) < DrawMax)
+		if (clientRect.Height( ) < DrawMax.y)
 		{
 			SCROLLINFO si;
 			ZeroMemory( &si, sizeof( SCROLLINFO ) );
 			si.cbSize = sizeof( SCROLLINFO );
 			si.fMask = SIF_PAGE | SIF_RANGE;
 			si.nMin = 0;
-			si.nMax = DrawMax / g_FontHeight;
+			si.nMax = DrawMax.y / g_FontHeight;
 			si.nPage = clientRect.Height( ) / g_FontHeight;
-			m_Scroll.SetScrollInfo( &si );
+			m_Scroll.SetScrollInfo( &si );						
 			m_Scroll.ShowScrollBar( TRUE );
 		}
 		else
 		{
 			m_Scroll.SetScrollPos( 0 );
 			m_Scroll.ShowScrollBar( FALSE );
+		}
+
+		if (clientRect.Width() < DrawMax.x) {
+			SCROLLINFO si = { 0 };
+			si.cbSize = sizeof(SCROLLINFO);
+			si.fMask = SIF_PAGE | SIF_RANGE;
+			si.nMin = 0;
+			si.nMax = DrawMax.x;
+			si.nPage = clientRect.Width();
+			m_HScroll.SetScrollInfo(&si);			
+			m_HScroll.ShowScrollBar(TRUE);
+		}
+		else {
+			m_HScroll.SetScrollPos(0);
+			m_HScroll.ShowScrollBar(FALSE);
 		}
 
 		CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, AfxGetApp( )->m_pMainWnd );
@@ -747,7 +774,8 @@ void CChildView::OnSize( UINT nType, int cx, int cy )
 {
 	CRect client;
 	GetClientRect( &client );
-	m_Scroll.SetWindowPos( NULL, client.right - SB_WIDTH, 0, SB_WIDTH, client.Height( ), SWP_NOZORDER );
+	m_Scroll.SetWindowPos( NULL, client.right - SB_WIDTH, 0, SB_WIDTH, client.Height( ) - SB_WIDTH, SWP_NOZORDER );
+	m_HScroll.SetWindowPos(NULL, client.left, client.bottom - SB_WIDTH, client.Width() - SB_WIDTH, SB_WIDTH, SWP_NOZORDER);
 	m_Edit.ShowWindow( SW_HIDE );
 
 	CWnd::OnSize( nType, cx, cy );
@@ -769,6 +797,24 @@ void CChildView::OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar )
 	}
 
 	CWnd::OnVScroll( nSBCode, nPos, pScrollBar );
+}
+
+void CChildView::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	m_Edit.ShowWindow(SW_HIDE);
+
+	if (nSBCode == SB_THUMBPOSITION || nSBCode == SB_THUMBTRACK)
+	{
+		pScrollBar->SetScrollPos(nPos);
+		Invalidate();
+	}
+	else if (nSBCode == SB_LINELEFT || nSBCode == SB_LINERIGHT)
+	{
+		pScrollBar->SetScrollPos(pScrollBar->GetScrollPos() + ((nSBCode == SB_LINEUP) ? -1 : 1));
+		Invalidate();
+	}
+
+	CWnd::OnHScroll(nSBCode, nPos, pScrollBar);
 }
 
 BOOL CChildView::OnEraseBkgnd( CDC* pDC )

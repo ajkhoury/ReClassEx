@@ -5,6 +5,6 @@
 class CNodeIcon : public CNodeBase
 {
 public:
-	virtual int Draw(ViewInfo& View, int x, int y);
+	virtual NodeSize Draw(ViewInfo& View, int x, int y);
 };
 

@@ -14,11 +14,12 @@ void CNodeFloat::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, 4 );
 }
 
-int CNodeFloat::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeFloat::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
 	float* pMemory = (float*)&View.pData[m_Offset];
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
@@ -39,5 +40,7 @@ int CNodeFloat::Draw( ViewInfo & View, int x, int y )
 	tx = AddText( View, tx, y, g_crValue, HS_EDIT, _T( "%4.3f" ), pMemory[0] ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
 
-	return y += g_FontHeight;
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

@@ -49,11 +49,12 @@ void CNodeFunction::Update( HotSpot& Spot )
 	}
 }
 
-int CNodeFunction::Draw( ViewInfo& View, int x, int y )
+NodeSize CNodeFunction::Draw( ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
@@ -107,7 +108,9 @@ int CNodeFunction::Draw( ViewInfo& View, int x, int y )
 		y += g_FontHeight;
 	}
 
-	return y;
+	drawnSize.x = tx;
+	drawnSize.y = y;
+	return drawnSize;
 }
 
 void CNodeFunction::Initialize( CChildView* pChild, ULONG_PTR Address )

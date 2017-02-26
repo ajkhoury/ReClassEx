@@ -11,12 +11,14 @@ void CNodeVTable::Update( HotSpot & Spot )
 	StandardUpdate( Spot );
 }
 
-int CNodeVTable::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeVTable::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
 	ULONG_PTR* pMemory = (ULONG_PTR*)&View.pData[m_Offset];
+	NodeSize drawnSize = { 0 };
+	NodeSize childDrawnSize = { 0 };
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
@@ -36,6 +38,9 @@ int CNodeVTable::Draw( ViewInfo & View, int x, int y )
 	x = AddComment( View, x, y );
 
 	y += g_FontHeight;
+	drawnSize.x = x;
+	drawnSize.y = y;
+
 	if (m_LevelsOpen[View.Level])
 	{
 		ViewInfo NewView;
@@ -52,9 +57,15 @@ int CNodeVTable::Draw( ViewInfo & View, int x, int y )
 		for (UINT i = 0; i < Nodes.size( ); i++)
 		{
 			Nodes[i]->SetOffset( i * sizeof( size_t ) );
-			y = Nodes[i]->Draw( NewView, tx, y );
-		}
-	}
+			childDrawnSize = Nodes[i]->Draw( NewView, tx, y );
+			drawnSize.y = childDrawnSize.y;
+			if (childDrawnSize.x > drawnSize.x) {
+				drawnSize.x = childDrawnSize.x;
+			}
 
-	return y;
+			y = drawnSize.y;
+		}
+	}		
+
+	return drawnSize;
 }
