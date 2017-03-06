@@ -28,7 +28,7 @@ VOID PLUGIN_CC PluginStateChange( BOOL state );
 typedef BOOL( PLUGIN_CC *tPluginInit )(PRECLASS_PLUGIN_INFO lpRCInfo);
 typedef VOID( PLUGIN_CC *tPluginStateChange )(BOOL state);
 
-typedef struct _RECLASS_PLUGIN
+typedef DECLSPEC_ALIGN(16) struct _RECLASS_PLUGIN
 {
 	RECLASS_PLUGIN_INFO Info;
 	wchar_t FileName[MAX_PATH];
