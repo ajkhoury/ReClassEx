@@ -1502,10 +1502,11 @@ void CChildView::ReplaceSelectedWithType( NodeType Type )
 			for (int i = 0; i < 10; i++)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNewNode;
-				CNodeFunctionPtr* pFun = new CNodeFunctionPtr;
-				pFun->SetOffset( i * sizeof( size_t ) );
-				pFun->SetParent( pVTable );
-				pVTable->AddNode( pFun );
+				CNodeFunctionPtr* pFunctionPtr = new CNodeFunctionPtr;
+				pFunctionPtr->Initialize( this, pVTable->GetOffset( ) + (i * sizeof( size_t )));
+				pFunctionPtr->SetOffset( i * sizeof( size_t ) );
+				pFunctionPtr->SetParent( pVTable );
+				pVTable->AddNode( pFunctionPtr );
 			}
 		}
 		if (Type == nt_pointer)
