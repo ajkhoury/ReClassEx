@@ -136,25 +136,28 @@ public:
 	inline void AddNode( CNodeBase* newNode ) { m_ChildNodes.push_back( newNode ); }
 	inline void InsertNode( int idx, CNodeBase* newNode ) { m_ChildNodes.insert( m_ChildNodes.begin( ) + idx, newNode ); }
 	inline CNodeBase* GetNode( int idx ) { return (CNodeBase*)m_ChildNodes[idx]; }
-	inline int FindNode( CNodeBase* pNode );
+	inline int FindNode( CNodeBase* pNode ) {
+		auto found = std::find( m_ChildNodes.begin( ), m_ChildNodes.end( ), pNode );
+		return (found != m_ChildNodes.end( )) ? (int)(found - m_ChildNodes.begin( )) : -1;
+	}
 	inline void SetNode( int idx, CNodeBase* newNode ) { m_ChildNodes[idx] = newNode; }
 	inline void DeleteNode( int idx ) { if (m_ChildNodes[idx]) { delete(m_ChildNodes[idx]); RemoveNode( idx ); } }
 	inline void RemoveNode( int idx ) { m_ChildNodes.erase( m_ChildNodes.begin( ) + idx ); }
 	inline size_t NodeCount( ) const { return m_ChildNodes.size( ); }
 
-	inline BOOLEAN IsHidden( ) { return m_bHidden; }
+	inline bool IsHidden( ) { return m_bHidden; }
 	inline void Show( ) { m_bHidden = false; }
 	inline void Hide( ) { m_bHidden = true; }
 	inline void SetHidden( bool hidden ) { m_bHidden = hidden; }
 	inline void ToggleHidden( ) { m_bHidden = !m_bHidden; }
 
-	inline BOOLEAN IsSelected( ) { return m_bSelected; }
+	inline bool IsSelected( ) { return m_bSelected; }
 	inline void SetSelected( bool selected ) { m_bSelected = selected; }
 	inline void Select( ) { m_bSelected = true; }
 	inline void Unselect( ) { m_bSelected = false; }
 	inline void ToggleSelected( ) { m_bSelected = !m_bSelected; }
 
-	inline BOOLEAN IsLevelOpen( int idx ) { return m_LevelsOpen[idx]; }
+	inline bool IsLevelOpen( int idx ) { return m_LevelsOpen[idx]; }
 	inline void ToggleLevelOpen( int idx ) { m_LevelsOpen[idx] = !m_LevelsOpen[idx]; }
 
 	// Incorrect view.address
@@ -198,10 +201,10 @@ protected:
 	CNodeBase* m_pParentNode;
 	std::vector<CNodeBase*> m_ChildNodes;
 
-	BOOLEAN m_bHidden;
-	BOOLEAN m_bSelected;
+	bool m_bHidden;
+	bool m_bSelected;
 
-	std::vector<BOOLEAN> m_LevelsOpen;
+	std::vector<bool> m_LevelsOpen;
 };
 
 __forceinline CStringA GetStringFromMemoryA( char* pMemory, int Length )

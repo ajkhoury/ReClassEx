@@ -69,23 +69,25 @@ NodeSize CNodeClass::Draw( ViewInfo& View, int x, int y )
 	x = AddText( View, x, y, g_crValue, HS_NONE, _T( "[%i]" ), GetMemorySize( ) ) + g_FontWidth;
 	x = AddComment( View, x, y );
 
-	
-	drawnSize.x = x;	
+
+	drawnSize.x = x;
 	y += g_FontHeight;
 	if (m_LevelsOpen[View.Level])
 	{
 		ViewInfo nv;
 		nv = View;
 		nv.Level++;
-		
-		for (UINT i = 0; i < m_ChildNodes.size(); i++) {
-			childDrawnSize = m_ChildNodes[i]->Draw(nv, tx, y);
+
+		for (UINT i = 0; i < m_ChildNodes.size( ); i++)
+		{
+			childDrawnSize = m_ChildNodes[i]->Draw( nv, tx, y );
 			y = childDrawnSize.y;
-			if (childDrawnSize.x > drawnSize.x) {
+			if (childDrawnSize.x > drawnSize.x)
+			{
 				drawnSize.x = childDrawnSize.x;
 			}
 
-		}			
+		}
 	}
 
 	drawnSize.y = y;

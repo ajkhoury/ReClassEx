@@ -56,8 +56,9 @@ NodeSize CNodeVTable::Draw( ViewInfo & View, int x, int y )
 
 		for (UINT i = 0; i < m_ChildNodes.size( ); i++)
 		{
-			m_ChildNodes[i]->SetOffset( i * sizeof( size_t ) );
-			childDrawnSize = m_ChildNodes[i]->Draw( NewView, tx, y );
+			CNodeFunctionPtr* pFunctionPtr = static_cast<CNodeFunctionPtr*>(m_ChildNodes[i]);
+			pFunctionPtr->SetOffset( i * sizeof( size_t ) );
+			childDrawnSize = pFunctionPtr->Draw( NewView, tx, y );
 			drawnSize.y = childDrawnSize.y;
 			if (childDrawnSize.x > drawnSize.x) {
 				drawnSize.x = childDrawnSize.x;
@@ -65,7 +66,12 @@ NodeSize CNodeVTable::Draw( ViewInfo & View, int x, int y )
 
 			y = drawnSize.y;
 		}
-	}		
+	}
+	else
+	{
+		for (UINT i = 0; i < m_ChildNodes.size( ); i++)
+			static_cast<CNodeFunctionPtr*>(m_ChildNodes[i])->HideAssemblyWindow( );
+	}
 
 	return drawnSize;
 }

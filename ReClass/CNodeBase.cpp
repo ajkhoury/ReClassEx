@@ -18,12 +18,6 @@ CNodeBase::CNodeBase( ) :
 	m_strName.Format( _T( "N%0.8X" ), g_NodeCreateIndex++ );
 }
 
-int CNodeBase::FindNode( CNodeBase * pNode )
-{ 
-	auto found = std::find( m_ChildNodes.begin( ), m_ChildNodes.end( ), pNode );
-	return (found != m_ChildNodes.end( )) ? (int)(found - m_ChildNodes.begin( )) : -1;
-}
-
 // Incorrect view.address
 void CNodeBase::AddHotSpot( ViewInfo& View, CRect& Spot, CString Text, int ID, int Type )
 {
