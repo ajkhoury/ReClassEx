@@ -287,6 +287,11 @@ void CChildView::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 				found->object->Select( );
 				Selected.push_back( *found );
 			}
+			//// Bring selected node into view
+			//else
+			//{
+			//	firstSelected->Rect.top
+			//}
 
 			// Force redraw so it doesn't appear laggy
 			Invalidate( );

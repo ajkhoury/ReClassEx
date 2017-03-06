@@ -18,13 +18,9 @@
 ; .data section
 .DATA
 
-
-
 ;*********************************************************************
 ; .text section
 .CODE
-
-
 
 ;************************************
 ; UINT64 
@@ -36,6 +32,5 @@ ReadGS PROC
 	mov rax, gs:[rcx]
 	ret
 ReadGS ENDP
-
 
 END

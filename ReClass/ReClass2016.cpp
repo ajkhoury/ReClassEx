@@ -14,6 +14,7 @@
 #include "DialogPlugins.h"
 #include "DialogAbout.h"
 
+
 // The one and only CReClass2016App object
 CReClass2016App g_ReClassApp;
 
@@ -1591,7 +1592,7 @@ void CReClass2016App::OnButtonClean( )
 			DeleteClass( pClass );
 		}
 	}
-
+	
 	PrintOut( _T( "Unused Classes removed: %i" ), count );
 	CString msg; msg.Format( _T( "Unused Classes removed: %i" ), count );
 	MessageBox( GetMainWnd( )->GetSafeHwnd( ), msg.GetString( ), _T( "Cleaner" ), MB_OK );

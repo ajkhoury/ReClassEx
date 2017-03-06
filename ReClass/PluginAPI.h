@@ -14,7 +14,7 @@ typedef BOOL( PLUGIN_CC *tReadMemoryOperation )(IN LPVOID Address, IN LPVOID Buf
 typedef BOOL( PLUGIN_CC *tWriteMemoryOperation )(IN LPVOID Address, IN LPVOID Buffer, IN SIZE_T Size, OUT PSIZE_T BytesWritten);
 typedef HANDLE( PLUGIN_CC *tOpenProcessOperation )(IN DWORD dwDesiredAccess, IN BOOL bInheritHandle, IN DWORD dwProcessID);
 typedef HANDLE( PLUGIN_CC *tOpenThreadOperation )(IN DWORD dwDesiredAccess, IN BOOL bInheritHandle, IN DWORD dwThreadID);
-
+DECLSPEC_CACHEALIGN
 typedef struct _RECLASS_PLUGIN_INFO
 {
 	wchar_t Name[256];

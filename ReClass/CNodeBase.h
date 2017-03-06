@@ -128,14 +128,14 @@ public:
 	CNodeBase* GetParent( ) { return m_pParentNode; }
 	void SetParent( CNodeBase* newParentNode ) { m_pParentNode = newParentNode; }
 
-	void AddNode( CNodeBase* newNode ) { Nodes.emplace_back( newNode ); }
-	void InsertNode( int idx, CNodeBase* newNode ) { Nodes.insert( Nodes.begin( ) + idx, newNode ); }
-	CNodeBase* GetNode( int idx ) { return (CNodeBase*)Nodes[idx]; }
+	void AddNode( CNodeBase* newNode ) { m_ChildNodes.emplace_back( newNode ); }
+	void InsertNode( int idx, CNodeBase* newNode ) { m_ChildNodes.insert( m_ChildNodes.begin( ) + idx, newNode ); }
+	CNodeBase* GetNode( int idx ) { return (CNodeBase*)m_ChildNodes[idx]; }
 	int FindNode( CNodeBase* pNode );
-	void SetNode( int idx, CNodeBase* newNode ) { Nodes[idx] = newNode; }
-	void DeleteNode( int idx ) { if (Nodes[idx]) { delete(Nodes[idx]); RemoveNode( idx ); } }
-	void RemoveNode( int idx ) { Nodes.erase( Nodes.begin( ) + idx ); }
-	size_t NodeCount( ) { return Nodes.size( ); }
+	void SetNode( int idx, CNodeBase* newNode ) { m_ChildNodes[idx] = newNode; }
+	void DeleteNode( int idx ) { if (m_ChildNodes[idx]) { delete(m_ChildNodes[idx]); RemoveNode( idx ); } }
+	void RemoveNode( int idx ) { m_ChildNodes.erase( m_ChildNodes.begin( ) + idx ); }
+	size_t NodeCount( ) { return m_ChildNodes.size( ); }
 
 	BOOLEAN IsHidden( ) { return m_bHidden; }
 	void Show( ) { m_bHidden = false; }
@@ -191,7 +191,7 @@ protected:
 	CString m_strComment;
 
 	CNodeBase* m_pParentNode;
-	std::vector<CNodeBase*> Nodes;
+	std::vector<CNodeBase*> m_ChildNodes;
 
 	BOOLEAN m_bHidden;
 	BOOLEAN m_bSelected;

@@ -20,8 +20,8 @@ CNodeBase::CNodeBase( ) :
 
 int CNodeBase::FindNode( CNodeBase * pNode )
 { 
-	auto found = std::find( Nodes.begin( ), Nodes.end( ), pNode );
-	return (found != Nodes.end( )) ? (int)(found - Nodes.begin( )) : -1;
+	auto found = std::find( m_ChildNodes.begin( ), m_ChildNodes.end( ), pNode );
+	return (found != m_ChildNodes.end( )) ? (int)(found - m_ChildNodes.begin( )) : -1;
 }
 
 // Incorrect view.address
@@ -74,7 +74,7 @@ int CNodeBase::AddText( ViewInfo& View, int x, int y, DWORD color, int HitID, co
 		View.dc->SetBkMode( TRANSPARENT );
 		View.dc->DrawText( wcsbuf, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX );
 	}
-
+	
 	return x + width;
 }
 
