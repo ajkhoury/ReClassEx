@@ -11,5 +11,5 @@ public:
 
 	virtual ULONG GetMemorySize( ) { return sizeof( __int64 ); }
 
-	virtual int Draw( ViewInfo& View, int x, int y );
+	virtual NodeSize Draw( ViewInfo& View, int x, int y );
 };

@@ -14,7 +14,7 @@ public:
 
 	virtual ULONG GetMemorySize( ) { return m_dwMemorySize; }
 
-	virtual int Draw( ViewInfo& View, int x, int y );
+	virtual NodeSize Draw( ViewInfo& View, int x, int y );
 
 	void Initialize( CChildView* pChild, ULONG_PTR Address );
 

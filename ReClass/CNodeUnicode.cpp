@@ -33,11 +33,12 @@ void CNodeUnicode::Update( HotSpot & Spot )
 	}
 }
 
-int CNodeUnicode::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeUnicode::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
 	wchar_t* pMemory = (wchar_t*)&((unsigned char*)View.pData)[m_Offset];
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
@@ -62,5 +63,8 @@ int CNodeUnicode::Draw( ViewInfo & View, int x, int y )
 	}
 
 	tx = AddComment( View, tx, y );
-	return y += g_FontHeight;
+
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

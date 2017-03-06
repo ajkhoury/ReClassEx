@@ -14,10 +14,11 @@ void CNodeByte::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( unsigned char ) );
 }
 
-int CNodeByte::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeByte::Draw( ViewInfo & View, int x, int y )
 {
 	int tx = 0;
 	UCHAR* pMemory = NULL;
+	NodeSize drawnSize;
 
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
@@ -37,5 +38,7 @@ int CNodeByte::Draw( ViewInfo & View, int x, int y )
 	tx = AddText( View, tx, y, g_crValue, HS_EDIT, _T( "%u" ), pMemory[0] ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
 
-	return y += g_FontHeight;
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

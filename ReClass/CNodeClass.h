@@ -11,7 +11,7 @@ public:
 
 	virtual ULONG GetMemorySize( );
 
-	virtual int Draw( ViewInfo& View, int x, int y );
+	virtual NodeSize Draw( ViewInfo& View, int x, int y );
 
 	VOID SetChildFrame( class CChildFrame* pChild ) { pChildWindow = pChild; }
 	class CChildFrame* GetChildFrame(  ) { return pChildWindow; }

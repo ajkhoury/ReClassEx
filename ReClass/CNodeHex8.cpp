@@ -14,17 +14,18 @@ void CNodeHex8::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, 1 );
 }
 
-int CNodeHex8::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeHex8::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize;
 	unsigned char* pMemory = (unsigned char*)&((unsigned char*)View.pData)[m_Offset];
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
 	//AddAdd(View,x,y);
-
+	
 	int tx = x + TXOFFSET + 16;
 	tx = AddAddressOffset( View, tx, y );
 
@@ -38,5 +39,7 @@ int CNodeHex8::Draw( ViewInfo & View, int x, int y )
 	tx = AddText( View, tx, y, g_crHex, 0, _T( "%0.2X" ), pMemory[0] & 0xFF ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
 
-	return y += g_FontHeight;
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

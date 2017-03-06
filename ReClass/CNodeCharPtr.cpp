@@ -19,10 +19,11 @@ void CNodeCharPtr::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &ptr, sizeof( size_t ) );
 }
 
-int CNodeCharPtr::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeCharPtr::Draw( ViewInfo & View, int x, int y )
 {
 	int tx = 0;
 	ULONG_PTR* pMemory = NULL;
+	NodeSize drawnSize;
 
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
@@ -65,5 +66,7 @@ int CNodeCharPtr::Draw( ViewInfo & View, int x, int y )
 	tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( "' " ) ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
 
-	return y += g_FontHeight;
+	drawnSize.x = tx;
+	drawnSize.y = y + g_FontHeight;
+	return drawnSize;
 }

@@ -37,14 +37,16 @@ void CNodeClass::Update( HotSpot & Spot )
 ULONG CNodeClass::GetMemorySize( )
 {
 	int size = 0;
-	for (UINT i = 0; i < m_ChildNodes.size( ); i++)
-		size += m_ChildNodes[i]->GetMemorySize( );
+	for (UINT i = 0; i < Nodes.size( ); i++)
+		size += Nodes[i]->GetMemorySize( );
 	return size;
 }
 
-int CNodeClass::Draw( ViewInfo& View, int x, int y )
+NodeSize CNodeClass::Draw( ViewInfo& View, int x, int y )
 {
-	AddSelection( View, 0, y, g_FontHeight );
+	NodeSize drawnSize = { 0 };
+	NodeSize childDrawnSize;
+	AddSelection( View, x, y, g_FontHeight );
 	x = AddOpenClose( View, x, y );
 
 	// Save tx here
@@ -67,16 +69,25 @@ int CNodeClass::Draw( ViewInfo& View, int x, int y )
 	x = AddText( View, x, y, g_crValue, HS_NONE, _T( "[%i]" ), GetMemorySize( ) ) + g_FontWidth;
 	x = AddComment( View, x, y );
 
+	
+	drawnSize.x = x;	
 	y += g_FontHeight;
 	if (m_LevelsOpen[View.Level])
 	{
 		ViewInfo nv;
 		nv = View;
 		nv.Level++;
+		
+		for (UINT i = 0; i < Nodes.size(); i++) {
+			childDrawnSize = Nodes[i]->Draw(nv, tx, y);
+			y = childDrawnSize.y;
+			if (childDrawnSize.x > drawnSize.x) {
+				drawnSize.x = childDrawnSize.x;
+			}
 
-		for (size_t i = 0; i < m_ChildNodes.size( ); i++)
-			y = m_ChildNodes[i]->Draw( nv, tx, y );
+		}			
 	}
 
-	return y;
+	drawnSize.y = y;
+	return drawnSize;
 }

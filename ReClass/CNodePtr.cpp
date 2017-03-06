@@ -11,11 +11,13 @@ void CNodePtr::Update( HotSpot & Spot )
 	StandardUpdate( Spot );
 }
 
-int CNodePtr::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodePtr::Draw( ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
+	NodeSize drawnSize = { 0 };
+	NodeSize childDrawnSize;
 	ULONG_PTR* pMemory = (ULONG_PTR*)&View.pData[m_Offset];
 
 	//printf( "read ptr: %p\n", View.pData );
@@ -37,7 +39,7 @@ int CNodePtr::Draw( ViewInfo & View, int x, int y )
 	tx = AddComment( View, tx, y );
 
 	y += g_FontHeight;
-
+	drawnSize.x = tx;
 	if (m_LevelsOpen[View.Level])
 	{
 		DWORD NeededSize = m_pNode->GetMemorySize( );
@@ -50,7 +52,14 @@ int CNodePtr::Draw( ViewInfo & View, int x, int y )
 
 		ReClassReadMemory( (LPVOID)newView.Address, (LPVOID)newView.pData, NeededSize );
 
-		y = m_pNode->Draw( newView, x, y );
+		childDrawnSize = m_pNode->Draw( newView, x, y );
+		y = childDrawnSize.y;
+		if (childDrawnSize.x > drawnSize.x) {
+			drawnSize.x = childDrawnSize.x;
+		}
+
 	}
-	return y;
+
+	drawnSize.y = y;
+	return drawnSize;
 }
