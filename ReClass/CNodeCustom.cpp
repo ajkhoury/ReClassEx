@@ -8,7 +8,7 @@ CNodeCustom::CNodeCustom( )
 	m_dwMemorySize = sizeof( void* );
 }
 
-void CNodeCustom::Update( HotSpot& Spot )
+void CNodeCustom::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	if (Spot.ID == 0)
@@ -20,7 +20,7 @@ ULONG CNodeCustom::GetMemorySize( )
 	return m_dwMemorySize;
 }
 
-NodeSize CNodeCustom::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeCustom::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

@@ -38,7 +38,7 @@ CNodeFunction::~CNodeFunction( )
 	}
 }
 
-void CNodeFunction::Update( HotSpot& Spot )
+void CNodeFunction::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 
@@ -49,7 +49,7 @@ void CNodeFunction::Update( HotSpot& Spot )
 	}
 }
 
-NodeSize CNodeFunction::Draw( ViewInfo& View, int x, int y )
+NodeSize CNodeFunction::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

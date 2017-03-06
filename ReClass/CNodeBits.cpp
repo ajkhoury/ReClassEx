@@ -8,7 +8,7 @@ CNodeBits::CNodeBits( )
 	m_nodeType = nt_bits;
 }
 
-void CNodeBits::Update( HotSpot & Spot )
+void CNodeBits::Update( const HotSpot & Spot )
 {
 	StandardUpdate( Spot );
 	unsigned char v = (unsigned char)(_tcstoul( Spot.Text.GetString( ), NULL, 16 ) & 0xFF);
@@ -16,7 +16,7 @@ void CNodeBits::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, 1 );
 }
 
-NodeSize CNodeBits::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeBits::Draw( const ViewInfo & View, int x, int y )
 {
 	UCHAR* pMemory = NULL;
 	NodeSize drawnSize;

@@ -6,7 +6,7 @@ CNodeByte::CNodeByte( )
 	m_nodeType = nt_uint8;
 }
 
-void CNodeByte::Update( HotSpot & Spot )
+void CNodeByte::Update( const HotSpot & Spot )
 {
 	StandardUpdate( Spot );
 	unsigned char v = _ttoi( Spot.Text.GetString( ) );
@@ -14,7 +14,7 @@ void CNodeByte::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( unsigned char ) );
 }
 
-NodeSize CNodeByte::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeByte::Draw( const ViewInfo & View, int x, int y )
 {
 	int tx = 0;
 	UCHAR* pMemory = NULL;

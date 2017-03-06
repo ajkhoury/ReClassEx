@@ -6,7 +6,7 @@ CNodeInt64::CNodeInt64( )
 	m_nodeType = nt_int64;
 }
 
-void CNodeInt64::Update( HotSpot & Spot )
+void CNodeInt64::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	__int64 v = _ttoi64( Spot.Text.GetString( ) );
@@ -14,7 +14,7 @@ void CNodeInt64::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( __int64 ) );
 }
 
-NodeSize CNodeInt64::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeInt64::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

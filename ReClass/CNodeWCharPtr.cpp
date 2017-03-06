@@ -7,7 +7,7 @@ CNodeWCharPtr::CNodeWCharPtr( )
 	m_strName = "PWChar";
 }
 
-void CNodeWCharPtr::Update( HotSpot & Spot )
+void CNodeWCharPtr::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	__int64 v = _ttoi64( Spot.Text.GetString( ) );
@@ -15,7 +15,7 @@ void CNodeWCharPtr::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( size_t ) );
 }
 
-NodeSize CNodeWCharPtr::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeWCharPtr::Draw( const ViewInfo& View, int x, int y )
 {
 	int tx = 0;
 	ULONG_PTR* pMemory = NULL;

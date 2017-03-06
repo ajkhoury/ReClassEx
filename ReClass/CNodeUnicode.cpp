@@ -8,12 +8,12 @@ CNodeUnicode::CNodeUnicode( )
 	m_dwMemorySize = 8 * sizeof( wchar_t );
 }
 
-void CNodeUnicode::Update( HotSpot & Spot )
+void CNodeUnicode::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	if (Spot.ID == 0)
 	{
-		m_dwMemorySize = _ttoi( Spot.Text.GetBuffer( ) ) * sizeof( wchar_t );
+		m_dwMemorySize = _ttoi( Spot.Text.GetString( ) ) * sizeof( wchar_t );
 	}
 	else if (Spot.ID == 1)
 	{
@@ -33,7 +33,7 @@ void CNodeUnicode::Update( HotSpot & Spot )
 	}
 }
 
-NodeSize CNodeUnicode::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeUnicode::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

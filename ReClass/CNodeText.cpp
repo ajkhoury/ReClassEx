@@ -8,24 +8,24 @@ CNodeText::CNodeText( )
 	m_dwMemorySize = 16;
 }
 
-void CNodeText::Update( HotSpot& Spot )
+void CNodeText::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 
 	if (Spot.ID == 0)
 	{
-		m_dwMemorySize = _ttoi( Spot.Text.GetBuffer( ) );
+		m_dwMemorySize = _ttoi( Spot.Text.GetString( ) );
 	}
 	else if (Spot.ID == 1)
 	{
 		SIZE_T Length = Spot.Text.GetLength( ) + 1;
 		if (Length > m_dwMemorySize)
 			Length = m_dwMemorySize;
-		ReClassWriteMemory( (LPVOID)Spot.Address, (LPVOID)Spot.Text.GetBuffer( ), Length );
+		ReClassWriteMemory( (LPVOID)Spot.Address, (LPVOID)Spot.Text.GetString( ), Length );
 	}
 }
 
-NodeSize CNodeText::Draw( ViewInfo& View, int x, int y )
+NodeSize CNodeText::Draw( const ViewInfo& View, int x, int y )
 {
 	PCHAR pMemory = NULL;
 	NodeSize drawnSize;

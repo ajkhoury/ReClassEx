@@ -7,7 +7,7 @@ CNodeClassInstance::CNodeClassInstance( ) :
 	m_nodeType = nt_instance;
 }
 
-void CNodeClassInstance::Update( HotSpot & Spot )
+void CNodeClassInstance::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 }
@@ -17,7 +17,7 @@ ULONG CNodeClassInstance::GetMemorySize( )
 	return m_pNode->GetMemorySize( );
 }
 
-NodeSize CNodeClassInstance::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeClassInstance::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

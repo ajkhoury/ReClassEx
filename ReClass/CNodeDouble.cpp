@@ -6,7 +6,7 @@ CNodeDouble::CNodeDouble( )
 	m_nodeType = nt_double;
 }
 
-void CNodeDouble::Update( HotSpot & Spot )
+void CNodeDouble::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	double v = _ttof( Spot.Text.GetString( ) );
@@ -14,7 +14,7 @@ void CNodeDouble::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, 8 );
 }
 
-NodeSize CNodeDouble::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeDouble::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

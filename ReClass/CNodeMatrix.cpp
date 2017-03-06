@@ -6,7 +6,7 @@ CNodeMatrix::CNodeMatrix( )
 	m_nodeType = nt_matrix;
 }
 
-void CNodeMatrix::Update( HotSpot & Spot )
+void CNodeMatrix::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	if (Spot.ID < 16)
@@ -16,7 +16,7 @@ void CNodeMatrix::Update( HotSpot & Spot )
 	}
 }
 
-NodeSize CNodeMatrix::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeMatrix::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

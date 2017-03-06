@@ -1072,29 +1072,30 @@ void CReClass2016App::OnFileOpen( )
 
 				if (Type == nt_custom)
 				{
-					((CNodeCustom*)pNode)->SetSize( Size );
+					static_cast<CNodeCustom*>(pNode)->SetSize( Size );
 				}
 				else if (Type == nt_text)
 				{
-					((CNodeText*)pNode)->SetSize( Size );
+					static_cast<CNodeText*>(pNode)->SetSize( Size );
 				}
 				else if (Type == nt_unicode)
 				{
-					((CNodeText*)pNode)->SetSize( Size );
+					static_cast<CNodeText*>(pNode)->SetSize( Size );
 				}
 				else if (Type == nt_vtable)
 				{
-					XMLElement* pXmlVTableElement = pXmlClassElement->FirstChildElement( );
-					while (pXmlVTableElement)
+					XMLElement* pXmlVTableFunctionPtrElement = pXmlClassElement->FirstChildElement( );
+					while (pXmlVTableFunctionPtrElement)
 					{
+						size_t functionPtrOffset = atoi( pXmlVTableFunctionPtrElement->Attribute( "Offset" ) );
 						CNodeFunctionPtr* pFunctionPtr = new CNodeFunctionPtr;
-						pFunctionPtr->SetName( _CA2W( pXmlVTableElement->Attribute( "Name" ) ) );
-						pFunctionPtr->SetComment( _CA2W( pXmlVTableElement->Attribute( "Comment" ) ) );
-						pFunctionPtr->SetHidden( atoi( pXmlVTableElement->Attribute( "bHidden" ) ) > 0 ? true : false );
+						pFunctionPtr->SetName( _CA2W( pXmlVTableFunctionPtrElement->Attribute( "Name" ) ) );
+						pFunctionPtr->SetComment( _CA2W( pXmlVTableFunctionPtrElement->Attribute( "Comment" ) ) );
+						pFunctionPtr->SetHidden( atoi( pXmlVTableFunctionPtrElement->Attribute( "bHidden" ) ) > 0 ? true : false );
 						pFunctionPtr->SetParent( pNode );
 						pNode->AddNode( pFunctionPtr );
 
-						XMLElement* pXmlCodeElement = pXmlVTableElement->FirstChildElement( );
+						XMLElement* pXmlCodeElement = pXmlVTableFunctionPtrElement->FirstChildElement( );
 						while (pXmlCodeElement)
 						{
 							CStringA strAssembly = pXmlCodeElement->Attribute( "Assembly" );
@@ -1102,7 +1103,7 @@ void CReClass2016App::OnFileOpen( )
 							pXmlCodeElement = pXmlCodeElement->NextSiblingElement( );
 						}
 
-						pXmlVTableElement = pXmlVTableElement->NextSiblingElement( );
+						pXmlVTableFunctionPtrElement = pXmlVTableFunctionPtrElement->NextSiblingElement( );
 					}
 				}
 				else if (Type == nt_array)
@@ -1127,7 +1128,7 @@ void CReClass2016App::OnFileOpen( )
 						{
 							links.push_back( Link( Name, pNode ) );
 						}
-						//Handle other type of arrays....
+						// TODO: Handle other type of arrays....
 					}
 				}
 				else if (Type == nt_pointer)

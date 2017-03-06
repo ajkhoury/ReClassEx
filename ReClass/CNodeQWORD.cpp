@@ -6,7 +6,7 @@ CNodeQWORD::CNodeQWORD( )
 	m_nodeType = nt_uint64;
 }
 
-void CNodeQWORD::Update( HotSpot & Spot )
+void CNodeQWORD::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	DWORD64 v = _ttoi64( Spot.Text.GetString( ) );
@@ -14,7 +14,7 @@ void CNodeQWORD::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( unsigned long long ) );
 }
 
-NodeSize CNodeQWORD::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeQWORD::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

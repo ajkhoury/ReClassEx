@@ -7,7 +7,7 @@ CNodeCharPtr::CNodeCharPtr( )
 	m_strName = "PChar";
 }
 
-void CNodeCharPtr::Update( HotSpot & Spot )
+void CNodeCharPtr::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	#ifdef _WIN64
@@ -19,7 +19,7 @@ void CNodeCharPtr::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &ptr, sizeof( size_t ) );
 }
 
-NodeSize CNodeCharPtr::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeCharPtr::Draw( const ViewInfo& View, int x, int y )
 {
 	int tx = 0;
 	ULONG_PTR* pMemory = NULL;

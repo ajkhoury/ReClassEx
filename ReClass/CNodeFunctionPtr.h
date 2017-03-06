@@ -8,17 +8,19 @@ class CNodeFunctionPtr : public CNodeBase
 {
 public:
 	CNodeFunctionPtr( );
+	CNodeFunctionPtr( CChildView* pChildView, ULONG_PTR Address );
 	~CNodeFunctionPtr( );
 
-	virtual void Update( HotSpot& Spot );
+	virtual void Update( const HotSpot& Spot );
 
 	virtual ULONG GetMemorySize( ) { return sizeof( void* ); }
 
-	virtual NodeSize Draw( ViewInfo& View, int x, int y );
+	virtual NodeSize Draw( const ViewInfo& View, int x, int y );
 
-	void Initialize( CChildView* pChild, ULONG_PTR Address );
+	void Initialize( CChildView* pChildView, ULONG_PTR Address );
+
+	inline bool IsInitialized( ) { return (m_pEdit != NULL); }
 	
-	//inline void ShowAssemblyWindow( ) { if (m_pEdit != NULL) m_pEdit->ShowWindow( SW_SHOW ); }
 	inline void HideAssemblyWindow( )
 	{
 		if (m_bRedrawNeeded == FALSE)

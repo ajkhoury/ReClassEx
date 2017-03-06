@@ -6,7 +6,7 @@ CNodeHex8::CNodeHex8( )
 	m_nodeType = nt_hex8;
 }
 
-void CNodeHex8::Update( HotSpot & Spot )
+void CNodeHex8::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	unsigned char v = (unsigned char)(_tcstoul( Spot.Text.GetString( ), NULL, 16 ) & 0xFF);
@@ -14,7 +14,7 @@ void CNodeHex8::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, 1 );
 }
 
-NodeSize CNodeHex8::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeHex8::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

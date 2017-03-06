@@ -7,9 +7,9 @@ class CNodeInt64 : public CNodeBase
 public:
 	CNodeInt64( );
 
-	virtual void Update( HotSpot& Spot );
+	virtual void Update( const HotSpot& Spot );
 
 	virtual ULONG GetMemorySize( ) { return sizeof( __int64 ); }
 
-	virtual NodeSize Draw( ViewInfo& View, int x, int y );
+	virtual NodeSize Draw( const ViewInfo& View, int x, int y );
 };

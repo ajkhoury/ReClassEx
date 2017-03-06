@@ -20,7 +20,7 @@ CNodeClass::CNodeClass( )
 	pChildWindow = nullptr;
 }
 
-void CNodeClass::Update( HotSpot & Spot )
+void CNodeClass::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	if (Spot.ID == 0)
@@ -42,7 +42,7 @@ ULONG CNodeClass::GetMemorySize( )
 	return size;
 }
 
-NodeSize CNodeClass::Draw( ViewInfo& View, int x, int y )
+NodeSize CNodeClass::Draw( const ViewInfo& View, int x, int y )
 {
 	NodeSize drawnSize = { 0 };
 	NodeSize childDrawnSize;
@@ -86,7 +86,6 @@ NodeSize CNodeClass::Draw( ViewInfo& View, int x, int y )
 			{
 				drawnSize.x = childDrawnSize.x;
 			}
-
 		}
 	}
 

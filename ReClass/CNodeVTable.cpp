@@ -6,12 +6,12 @@ CNodeVTable::CNodeVTable( )
 	m_nodeType = nt_vtable;
 }
 
-void CNodeVTable::Update( HotSpot & Spot )
+void CNodeVTable::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 }
 
-NodeSize CNodeVTable::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeVTable::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

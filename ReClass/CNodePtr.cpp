@@ -6,12 +6,12 @@ CNodePtr::CNodePtr( ) : m_pNode( NULL )
 	m_nodeType = nt_pointer;
 }
 
-void CNodePtr::Update( HotSpot & Spot )
+void CNodePtr::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 }
 
-NodeSize CNodePtr::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodePtr::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

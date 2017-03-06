@@ -6,7 +6,7 @@ CNodeFloat::CNodeFloat( )
 	m_nodeType = nt_float;
 }
 
-void CNodeFloat::Update( HotSpot & Spot )
+void CNodeFloat::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	float v = (float)_ttof( Spot.Text.GetString( ) );
@@ -14,7 +14,7 @@ void CNodeFloat::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, 4 );
 }
 
-NodeSize CNodeFloat::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeFloat::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

@@ -6,7 +6,7 @@ CNodeInt8::CNodeInt8( )
 	m_nodeType = nt_int8;
 }
 
-void CNodeInt8::Update( HotSpot & Spot )
+void CNodeInt8::Update( const HotSpot & Spot )
 {
 	StandardUpdate( Spot );
 	__int8 v = _ttoi( Spot.Text.GetString( ) );
@@ -14,7 +14,7 @@ void CNodeInt8::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( char ) );
 }
 
-NodeSize CNodeInt8::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeInt8::Draw( const ViewInfo & View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

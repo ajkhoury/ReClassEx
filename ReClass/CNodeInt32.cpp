@@ -6,7 +6,7 @@ CNodeInt32::CNodeInt32( )
 	m_nodeType = nt_int32;
 }
 
-void CNodeInt32::Update( HotSpot & Spot )
+void CNodeInt32::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	__int32 v = _ttoi( Spot.Text.GetString( ) );
@@ -14,7 +14,7 @@ void CNodeInt32::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( long ) );
 }
 
-NodeSize CNodeInt32::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeInt32::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

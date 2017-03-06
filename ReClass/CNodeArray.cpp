@@ -8,7 +8,7 @@ CNodeArray::CNodeArray( )
 	m_iCurrent = 0;
 }
 
-void CNodeArray::Update( HotSpot& Spot )
+void CNodeArray::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	int v = _ttoi( Spot.Text.GetString( ) );
@@ -44,7 +44,7 @@ ULONG CNodeArray::GetMemorySize( )
 	return m_pNode->GetMemorySize( ) * m_dwTotal;
 }
 
-NodeSize CNodeArray::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeArray::Draw( const ViewInfo& View, int x, int y )
 {
 	NodeSize drawnSize = { 0 };
 	NodeSize childDrawnSize;

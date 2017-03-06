@@ -13,17 +13,22 @@ static ScintillaColors s_rgbSyntaxAsm[] =
 	{ -1,					0 }
 };
 
-
-CNodeFunctionPtr::CNodeFunctionPtr( ) :
-	m_pEdit( NULL ),
-	m_nLines( 0 ),
-	m_nLongestLine( 0 ),
-	m_iWidth( 0 ),
-	m_iHeight( 0 ),
-	m_bRedrawNeeded( FALSE )
+CNodeFunctionPtr::CNodeFunctionPtr( )
+	: m_pEdit( NULL )
+	, m_nLines( 0 )
+	, m_nLongestLine( 0 )
+	, m_iWidth( 0 )
+	, m_iHeight( 0 )
+	, m_bRedrawNeeded( FALSE )
 {
 	m_nodeType = nt_functionptr;
 	m_strName = _T( "" );
+}
+
+CNodeFunctionPtr::CNodeFunctionPtr( CChildView* pChildView, ULONG_PTR Address )
+	: CNodeFunctionPtr( )
+{
+	Initialize( pChildView, Address );
 }
 
 CNodeFunctionPtr::~CNodeFunctionPtr( )
@@ -38,7 +43,7 @@ CNodeFunctionPtr::~CNodeFunctionPtr( )
 	}
 }
 
-void CNodeFunctionPtr::Update( HotSpot& Spot )
+void CNodeFunctionPtr::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 
@@ -49,7 +54,7 @@ void CNodeFunctionPtr::Update( HotSpot& Spot )
 	}
 }
 
-NodeSize CNodeFunctionPtr::Draw( ViewInfo& View, int x, int y )
+NodeSize CNodeFunctionPtr::Draw( const ViewInfo& View, int x, int y )
 {
 	NodeSize drawnSize;
 	int tx = 0;
@@ -141,7 +146,7 @@ NodeSize CNodeFunctionPtr::Draw( ViewInfo& View, int x, int y )
 	return drawnSize;
 }
 
-void CNodeFunctionPtr::Initialize( CChildView* pChild, ULONG_PTR Address )
+void CNodeFunctionPtr::Initialize( CChildView* pChildView, ULONG_PTR Address )
 {
 	if (m_pEdit != NULL)
 	{
@@ -154,7 +159,7 @@ void CNodeFunctionPtr::Initialize( CChildView* pChild, ULONG_PTR Address )
 
 	m_pEdit = new CScintillaEdit;
 
-	m_pEdit->Create( WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, CRect( 0, 0, 0, 0 ), (CWnd*)pChild, 0 );
+	m_pEdit->Create( WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, CRect( 0, 0, 0, 0 ), static_cast<CWnd*>(pChildView), 0 );
 
 	m_pEdit->ShowWindow( SW_HIDE ); // Hide the window until we open the level
 	//m_pEdit->EnableWindow( FALSE ); // Disables the ability to scroll
@@ -182,7 +187,6 @@ void CNodeFunctionPtr::Initialize( CChildView* pChild, ULONG_PTR Address )
 	// Finally, disassemble the bytes to get the memsize, height, and width
 	DisassembleBytes( Address );
 }
-
 
 void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
 {

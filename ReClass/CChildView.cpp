@@ -11,7 +11,7 @@
 #endif
 
 // CChildView
-CChildView::CChildView( ) : 
+CChildView::CChildView( ) :
 	m_pClass( NULL ),
 	m_bTracking( FALSE )
 {
@@ -30,7 +30,7 @@ BEGIN_MESSAGE_MAP( CChildView, CWnd )
 	ON_WM_RBUTTONDOWN( )
 	ON_WM_SIZE( )
 	ON_WM_VSCROLL( )
-	ON_WM_HSCROLL()
+	ON_WM_HSCROLL( )
 	ON_WM_ERASEBKGND( )
 	ON_WM_MOUSEWHEEL( )
 	ON_WM_MOUSEHOVER( )
@@ -162,7 +162,7 @@ int CChildView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 		return -1;
 
 	CRect rect( 0, 0, 100, 100 );
-	CRect hrect(5, 5, 100, 30);
+	CRect hrect( 5, 5, 100, 30 );
 	//m_Edit.CreateEx(WS_EX_WINDOWEDGE, _T("EDIT"),  _T(" "), WS_CHILD | WS_TABSTOP, rect, this, 1);
 	m_Edit.Create( WS_CHILD | WS_TABSTOP, rect, this, 1 );
 	m_Edit.ShowWindow( SW_HIDE );
@@ -172,9 +172,9 @@ int CChildView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	m_Scroll.EnableScrollBar( ESB_ENABLE_BOTH );
 	m_Scroll.ShowScrollBar( );
 
-	m_HScroll.Create(SBS_HORZ, hrect, this, 0);
-	m_HScroll.EnableScrollBar(ESB_ENABLE_BOTH);
-	m_HScroll.ShowScrollBar();
+	m_HScroll.Create( SBS_HORZ, hrect, this, 0 );
+	m_HScroll.EnableScrollBar( ESB_ENABLE_BOTH );
+	m_HScroll.ShowScrollBar( );
 
 	m_ToolTip.Create( ES_MULTILINE | WS_BORDER, rect, this, 1 );
 	m_ToolTip.SetFont( &g_ViewFont );
@@ -205,7 +205,7 @@ void CChildView::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 				CNodeBase* pFindClassNode = (CNodeBase*)pPtrNode->GetClass( );
 
 				auto found = std::find_if( HotSpots.begin( ), HotSpots.end( ),
-										   [pFindClassNode] ( const HotSpot hs ) { return (hs.object == pFindClassNode); } );
+					[pFindClassNode] ( const HotSpot hs ) { return (hs.object == pFindClassNode); } );
 				if (found != HotSpots.end( ))
 				{
 					ClearSelection( );
@@ -220,7 +220,7 @@ void CChildView::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 				CNodeBase* pFindNode = (CNodeBase*)pClassNode->GetNode( 0 );
 
 				auto found = std::find_if( HotSpots.begin( ), HotSpots.end( ),
-										   [pFindNode] ( const HotSpot hs ) { return (hs.object == pFindNode); } );
+					[pFindNode] ( const HotSpot hs ) { return (hs.object == pFindNode); } );
 				if (found != HotSpots.end( ))
 				{
 					ClearSelection( );
@@ -236,7 +236,7 @@ void CChildView::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 					ULONG_PTR findAddress = firstSelected->Address + firstSelected->object->GetMemorySize( );
 
 					auto found = std::find_if( HotSpots.begin( ), HotSpots.end( ),
-											   [findAddress] ( const HotSpot hs ) { return (hs.Address == findAddress); } );
+						[findAddress] ( const HotSpot hs ) { return (hs.Address == findAddress); } );
 					if (found != HotSpots.end( ))
 					{
 						if (found->Address == HotSpots.back( ).Address)
@@ -244,7 +244,7 @@ void CChildView::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 							if (m_Scroll.IsWindowEnabled( ))
 								m_Scroll.SetScrollPos( m_Scroll.GetScrollPos( ) + 1 );
 						}
-						
+
 						ClearSelection( );
 						found->object->Select( );
 						Selected.push_back( *found );
@@ -284,7 +284,7 @@ void CChildView::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 			ULONG_PTR findAddress = firstSelected->Address;
 
 			auto found = std::find_if( HotSpots.begin( ), HotSpots.end( ),
-									   [findAddress] ( const HotSpot hs ) { return (hs.Address == findAddress); } );
+				[findAddress] ( const HotSpot hs ) { return (hs.Address == findAddress); } );
 			if (found != HotSpots.end( ))
 			{
 				ClearSelection( );
@@ -551,7 +551,7 @@ void CChildView::OnLButtonDown( UINT nFlags, CPoint point )
 				menu.CreatePopupMenu( );
 
 				img.LoadFromResource( AfxGetResourceHandle( ), IDB_CLASSBITMAP );
-				
+
 				bmp.Attach( img.Detach( ) );
 
 				for (UINT m = 0; m < g_ReClassApp.m_Classes.size( ); m++)
@@ -692,13 +692,14 @@ void CChildView::OnPaint( )
 		View.HotSpots = &HotSpots;
 		View.bMultiSelected = (Selected.size( ) > 1) ? true : false;
 
-		if (m_Scroll.IsWindowVisible()) {
+		if (m_Scroll.IsWindowVisible( ))
+		{
 			View.client->right -= SB_WIDTH;
 			View.client->bottom -= SB_WIDTH;
 		}
 
 		int ypos = (m_Scroll.GetScrollPos( ) * g_FontHeight);
-		int xpos = m_HScroll.GetScrollPos();
+		int xpos = m_HScroll.GetScrollPos( );
 		NodeSize DrawMax = m_pClass->Draw( View, 0 - xpos, -ypos );
 		DrawMax.y += ypos + g_FontHeight;
 		// Dirty hack, fix Draw methods
@@ -730,7 +731,7 @@ void CChildView::OnPaint( )
 			si.nMin = 0;
 			si.nMax = DrawMax.y / g_FontHeight;
 			si.nPage = clientRect.Height( ) / g_FontHeight;
-			m_Scroll.SetScrollInfo( &si );						
+			m_Scroll.SetScrollInfo( &si );
 			m_Scroll.ShowScrollBar( TRUE );
 		}
 		else
@@ -739,19 +740,21 @@ void CChildView::OnPaint( )
 			m_Scroll.ShowScrollBar( FALSE );
 		}
 
-		if (clientRect.Width() < DrawMax.x) {
+		if (clientRect.Width( ) < DrawMax.x)
+		{
 			SCROLLINFO si = { 0 };
-			si.cbSize = sizeof(SCROLLINFO);
+			si.cbSize = sizeof( SCROLLINFO );
 			si.fMask = SIF_PAGE | SIF_RANGE;
 			si.nMin = 0;
 			si.nMax = DrawMax.x;
-			si.nPage = clientRect.Width();
-			m_HScroll.SetScrollInfo(&si);			
-			m_HScroll.ShowScrollBar(TRUE);
+			si.nPage = clientRect.Width( );
+			m_HScroll.SetScrollInfo( &si );
+			m_HScroll.ShowScrollBar( TRUE );
 		}
-		else {
-			m_HScroll.SetScrollPos(0);
-			m_HScroll.ShowScrollBar(FALSE);
+		else
+		{
+			m_HScroll.SetScrollPos( 0 );
+			m_HScroll.ShowScrollBar( FALSE );
 		}
 
 		CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, AfxGetApp( )->m_pMainWnd );
@@ -780,7 +783,7 @@ void CChildView::OnSize( UINT nType, int cx, int cy )
 	CRect client;
 	GetClientRect( &client );
 	m_Scroll.SetWindowPos( NULL, client.right - SB_WIDTH, 0, SB_WIDTH, client.Height( ) - SB_WIDTH, SWP_NOZORDER );
-	m_HScroll.SetWindowPos(NULL, client.left, client.bottom - SB_WIDTH, client.Width() - SB_WIDTH, SB_WIDTH, SWP_NOZORDER);
+	m_HScroll.SetWindowPos( NULL, client.left, client.bottom - SB_WIDTH, client.Width( ) - SB_WIDTH, SB_WIDTH, SWP_NOZORDER );
 	m_Edit.ShowWindow( SW_HIDE );
 
 	CWnd::OnSize( nType, cx, cy );
@@ -804,22 +807,22 @@ void CChildView::OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar )
 	CWnd::OnVScroll( nSBCode, nPos, pScrollBar );
 }
 
-void CChildView::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+void CChildView::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar )
 {
-	m_Edit.ShowWindow(SW_HIDE);
+	m_Edit.ShowWindow( SW_HIDE );
 
 	if (nSBCode == SB_THUMBPOSITION || nSBCode == SB_THUMBTRACK)
 	{
-		pScrollBar->SetScrollPos(nPos);
-		Invalidate();
+		pScrollBar->SetScrollPos( nPos );
+		Invalidate( );
 	}
 	else if (nSBCode == SB_LINELEFT || nSBCode == SB_LINERIGHT)
 	{
-		pScrollBar->SetScrollPos(pScrollBar->GetScrollPos() + ((nSBCode == SB_LINEUP) ? -1 : 1));
-		Invalidate();
+		pScrollBar->SetScrollPos( pScrollBar->GetScrollPos( ) + ((nSBCode == SB_LINEUP) ? -1 : 1) );
+		Invalidate( );
 	}
 
-	CWnd::OnHScroll(nSBCode, nPos, pScrollBar);
+	CWnd::OnHScroll( nSBCode, nPos, pScrollBar );
 }
 
 BOOL CChildView::OnEraseBkgnd( CDC* pDC )
@@ -872,7 +875,7 @@ void CChildView::OnMouseHover( UINT nFlags, CPoint point )
 					{
 						if (HotSpots[i].object->IsLevelOpen( HotSpots[i].Level ) == FALSE)
 						{
-							
+
 							ULONG_PTR StartAddress = HotSpots[i].Address;
 							UCHAR Code[1024] = { 0xCC }; // set max function size to 1024] bytes
 							UIntPtr EndCode = (UIntPtr)(Code + 1024);
@@ -1042,7 +1045,7 @@ UINT CChildView::FindNodeIndex( CNodeBase* pNode )
 
 	if (!pNode->GetParent( ))
 		return MAX_NODES;
-	
+
 	pClass = (CNodeClass*)pNode->GetParent( );
 	foundIdx = pClass->FindNode( pNode );
 	return (foundIdx != -1) ? foundIdx : MAX_NODES;
@@ -1232,9 +1235,13 @@ void CChildView::AddBytes( CNodeClass* pClass, DWORD Length )
 	{
 		CNodeBase* pNode = 0;
 		if (pClass->GetType( ) == nt_vtable)
-			pNode = new CNodeFunctionPtr;
+		{
+			pNode = new CNodeFunctionPtr( this, pClass->GetOffset( ) + (pClass->NodeCount( ) * sizeof( size_t )) );
+		}
 		else
+		{
 			pNode = new CNodeHex32;
+		}
 		pNode->SetParent( pClass );
 		pClass->AddNode( pNode );
 		g_ReClassApp.CalcAllOffsets( );
@@ -1245,9 +1252,13 @@ void CChildView::AddBytes( CNodeClass* pClass, DWORD Length )
 	{
 		CNodeBase* pNode;
 		if (pClass->GetType( ) == nt_vtable)
-			pNode = new CNodeFunctionPtr;
+		{
+			pNode = new CNodeFunctionPtr( this, pClass->GetOffset( ) + ((pClass->NodeCount( ) + i) * sizeof( size_t )) );
+		}
 		else
+		{
 			pNode = new CNodeHex;
+		}
 
 		pNode->SetParent( pClass );
 		pClass->AddNode( pNode );
@@ -1266,12 +1277,18 @@ void CChildView::InsertBytes( CNodeClass* pClass, UINT idx, DWORD Length )
 	{
 		CNodeBase* pNode = 0;
 		if (pClass->GetType( ) == nt_vtable)
-			pNode = new CNodeFunctionPtr;
+		{
+			pNode = new CNodeFunctionPtr( this, pClass->GetOffset( ) + (pClass->NodeCount( ) * sizeof( size_t )) );
+		}
 		else
+		{
 			pNode = new CNodeHex32;
+		}
+
 		pNode->SetParent( pClass );
 		pClass->InsertNode( idx, pNode );
 		g_ReClassApp.CalcAllOffsets( );
+
 		return;
 	}
 
@@ -1279,9 +1296,13 @@ void CChildView::InsertBytes( CNodeClass* pClass, UINT idx, DWORD Length )
 	{
 		CNodeBase* pNode;
 		if (pClass->GetType( ) == nt_vtable)
-			pNode = new CNodeFunctionPtr;
+		{
+			pNode = new CNodeFunctionPtr( this, pClass->GetOffset( ) + ((pClass->NodeCount( ) + i) * sizeof( size_t )) );
+		}
 		else
+		{
 			pNode = new CNodeHex;
+		}
 
 		pNode->SetParent( pClass );
 		pClass->InsertNode( idx, pNode );
@@ -1502,8 +1523,7 @@ void CChildView::ReplaceSelectedWithType( NodeType Type )
 			for (int i = 0; i < 10; i++)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNewNode;
-				CNodeFunctionPtr* pFunctionPtr = new CNodeFunctionPtr;
-				pFunctionPtr->Initialize( this, pVTable->GetOffset( ) + (i * sizeof( size_t )));
+				CNodeFunctionPtr* pFunctionPtr = new CNodeFunctionPtr( this, pVTable->GetOffset( ) + (i * sizeof( size_t )) );
 				pFunctionPtr->SetOffset( i * sizeof( size_t ) );
 				pFunctionPtr->SetParent( pVTable );
 				pVTable->AddNode( pFunctionPtr );

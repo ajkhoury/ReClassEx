@@ -109,9 +109,9 @@ public:
 	CNodeBase( );
 	~CNodeBase( ) { }
 
-	virtual NodeSize Draw( ViewInfo& View, int x, int y ) = 0;
+	virtual NodeSize Draw( const ViewInfo& View, int x, int y ) = 0;
 	virtual ULONG GetMemorySize( ) = 0;
-	virtual void Update( HotSpot& Spot ) = 0;
+	virtual void Update( const HotSpot& Spot ) = 0;
 
 	inline NodeType GetType( ) const { return m_nodeType; }
 
@@ -161,33 +161,33 @@ public:
 	inline void ToggleLevelOpen( int idx ) { m_LevelsOpen[idx] = !m_LevelsOpen[idx]; }
 
 	// Incorrect view.address
-	void AddHotSpot( ViewInfo& View, CRect& Spot, CString Text, int ID, int Type );
+	void AddHotSpot( const ViewInfo& View, const CRect& Spot, CString Text, int ID, int Type );
 
-	int AddText( ViewInfo& View, int x, int y, DWORD color, int HitID, const wchar_t* fmt, ... );
+	int AddText( const ViewInfo& View, int x, int y, DWORD color, int HitID, const wchar_t* fmt, ... );
 
-	int AddText( ViewInfo& View, int x, int y, DWORD color, int HitID, const char* fmt, ... );
+	int AddText( const ViewInfo& View, int x, int y, DWORD color, int HitID, const char* fmt, ... );
 
-	int AddAddressOffset( ViewInfo& View, int x, int y );
+	int AddAddressOffset( const ViewInfo& View, int x, int y );
 
-	void AddSelection( ViewInfo& View, int x, int y, int Height );
+	void AddSelection( const ViewInfo& View, int x, int y, int Height );
 
-	int AddIcon( ViewInfo& View, int x, int y, int idx, int ID, int Type );
+	int AddIcon( const ViewInfo& View, int x, int y, int idx, int ID, int Type );
 
-	int AddOpenClose( ViewInfo& View, int x, int y );
+	int AddOpenClose( const ViewInfo& View, int x, int y );
 
-	void AddDelete( ViewInfo& View, int x, int y );
+	void AddDelete( const ViewInfo& View, int x, int y );
 
 	//void AddAdd(ViewInfo& View,int x,int y);
 
-	void AddTypeDrop( ViewInfo& View, int x, int y );
+	void AddTypeDrop( const ViewInfo& View, int x, int y );
 
-	int ResolveRTTI( ULONG_PTR Address, int &x, ViewInfo& View, int y );
+	int ResolveRTTI( ULONG_PTR Address, int &x, const ViewInfo& View, int y );
 
-	int AddComment( ViewInfo& View, int x, int y );
+	int AddComment( const ViewInfo& View, int x, int y );
 
-	void StandardUpdate( HotSpot &Spot );
+	void StandardUpdate( const HotSpot &Spot );
 
-	NodeSize DrawHidden( ViewInfo& View, int x, int y );
+	NodeSize DrawHidden( const ViewInfo& View, int x, int y );
 
 protected:
 	NodeType m_nodeType;

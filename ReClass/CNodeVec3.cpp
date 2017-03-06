@@ -8,7 +8,7 @@ CNodeVec3::CNodeVec3( )
 		m_LevelsOpen[i] = true;
 }
 
-void CNodeVec3::Update( HotSpot & Spot )
+void CNodeVec3::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	float v = (float)_ttof( Spot.Text.GetString( ) );
@@ -16,7 +16,7 @@ void CNodeVec3::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)(Spot.Address + (Spot.ID * sizeof( float ))), &v, sizeof( float ) );
 }
 
-NodeSize CNodeVec3::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeVec3::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );

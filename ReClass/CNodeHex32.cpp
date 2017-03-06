@@ -6,7 +6,7 @@ CNodeHex32::CNodeHex32( )
 	m_nodeType = nt_hex32;
 }
 
-void CNodeHex32::Update( HotSpot & Spot )
+void CNodeHex32::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
 	unsigned char v = (unsigned char)(_tcstoul( Spot.Text.GetString( ), NULL, 16 ) & 0xFF);
@@ -14,7 +14,7 @@ void CNodeHex32::Update( HotSpot & Spot )
 		ReClassWriteMemory( (LPVOID)(Spot.Address + Spot.ID), &v, 1 );
 }
 
-NodeSize CNodeHex32::Draw( ViewInfo & View, int x, int y )
+NodeSize CNodeHex32::Draw( const ViewInfo& View, int x, int y )
 {
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
