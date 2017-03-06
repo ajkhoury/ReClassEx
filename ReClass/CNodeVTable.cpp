@@ -28,7 +28,7 @@ NodeSize CNodeVTable::Draw( ViewInfo & View, int x, int y )
 
 	int tx = x;
 	x = AddAddressOffset( View, x, y );
-	x = AddText( View, x, y, g_crVTable, HS_NONE, _T( "VTable[%i]" ), Nodes.size( ) ) + g_FontWidth;
+	x = AddText( View, x, y, g_crVTable, HS_NONE, _T( "VTable[%i]" ), m_ChildNodes.size( ) ) + g_FontWidth;
 
 	//if (m_strName.IsEmpty())
 	x = AddText( View, x, y, g_crName, HS_NAME, _T( "%s" ), m_strName ) + g_FontWidth;
@@ -44,7 +44,7 @@ NodeSize CNodeVTable::Draw( ViewInfo & View, int x, int y )
 	if (m_LevelsOpen[View.Level])
 	{
 		ViewInfo NewView;
-		DWORD NeededSize = (DWORD)Nodes.size( ) * sizeof( ULONG_PTR );
+		DWORD NeededSize = (DWORD)m_ChildNodes.size( ) * sizeof( ULONG_PTR );
 
 		m_Memory.SetSize( NeededSize );
 		
@@ -54,10 +54,10 @@ NodeSize CNodeVTable::Draw( ViewInfo & View, int x, int y )
 
 		ReClassReadMemory( (LPVOID)NewView.Address, NewView.pData, NeededSize );
 
-		for (UINT i = 0; i < Nodes.size( ); i++)
+		for (UINT i = 0; i < m_ChildNodes.size( ); i++)
 		{
-			Nodes[i]->SetOffset( i * sizeof( size_t ) );
-			childDrawnSize = Nodes[i]->Draw( NewView, tx, y );
+			m_ChildNodes[i]->SetOffset( i * sizeof( size_t ) );
+			childDrawnSize = m_ChildNodes[i]->Draw( NewView, tx, y );
 			drawnSize.y = childDrawnSize.y;
 			if (childDrawnSize.x > drawnSize.x) {
 				drawnSize.x = childDrawnSize.x;

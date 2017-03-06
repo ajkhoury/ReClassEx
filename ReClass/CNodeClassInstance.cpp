@@ -22,8 +22,9 @@ NodeSize CNodeClassInstance::Draw( ViewInfo & View, int x, int y )
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	NodeSize drawnSize;
-	NodeSize childDrawnSize;
+	NodeSize drawnSize = { 0 };
+	NodeSize childDrawnSize = { 0 };
+
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );

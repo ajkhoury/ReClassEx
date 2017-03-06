@@ -37,8 +37,8 @@ void CNodeClass::Update( HotSpot & Spot )
 ULONG CNodeClass::GetMemorySize( )
 {
 	int size = 0;
-	for (UINT i = 0; i < Nodes.size( ); i++)
-		size += Nodes[i]->GetMemorySize( );
+	for (UINT i = 0; i < m_ChildNodes.size( ); i++)
+		size += m_ChildNodes[i]->GetMemorySize( );
 	return size;
 }
 
@@ -78,8 +78,8 @@ NodeSize CNodeClass::Draw( ViewInfo& View, int x, int y )
 		nv = View;
 		nv.Level++;
 		
-		for (UINT i = 0; i < Nodes.size(); i++) {
-			childDrawnSize = Nodes[i]->Draw(nv, tx, y);
+		for (UINT i = 0; i < m_ChildNodes.size(); i++) {
+			childDrawnSize = m_ChildNodes[i]->Draw(nv, tx, y);
 			y = childDrawnSize.y;
 			if (childDrawnSize.x > drawnSize.x) {
 				drawnSize.x = childDrawnSize.x;
