@@ -159,7 +159,7 @@ void CNodeBase::AddSelection( const ViewInfo& View, int x, int y, int Height )
 	if (m_bSelected)
 		View.dc->FillSolidRect( 0, y, View.client->right, Height, g_crSelect );
 
-	CRect pos( 0, y, 1024, y + Height );
+	CRect pos( 0, y, INT_MAX, y + Height );
 	AddHotSpot( View, pos, CString( ), 0, HS_SELECT );
 }
 
