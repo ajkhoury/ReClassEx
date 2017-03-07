@@ -594,7 +594,7 @@ int CNodeBase::AddComment( const ViewInfo& View, int x, int y )
 
 				if (bAddStr)
 				{
-					txt[64] = '\0'; // null terminte (even though we prolly dont have to)
+					txt[63] = '\0'; // null terminte (even though we prolly dont have to)
 					x = AddText( View, x, y, g_crChar, HS_NONE, _T( "'%hs'" ), txt );
 				}
 			}
