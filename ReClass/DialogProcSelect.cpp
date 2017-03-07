@@ -6,7 +6,7 @@
 
 #include "DialogProcSelect.h"
 #include "DialogProgress.h"
-#include "ReClass2016.h"
+#include "ReClassEx.h"
 
 #include <memory>
 #include <algorithm>

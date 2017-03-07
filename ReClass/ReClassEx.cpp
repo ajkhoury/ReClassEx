@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "ReClass2016.h"
+#include "ReClassEx.h"
 
 #include "afxwinappex.h"
 #include "afxdialogex.h"
@@ -16,42 +16,42 @@
 
 
 // The one and only CReClass2016App object
-CReClass2016App g_ReClassApp;
+CReClassExApp g_ReClassApp;
 
 // CReClass2016App
-BEGIN_MESSAGE_MAP( CReClass2016App, CWinAppEx )
-	ON_COMMAND( ID_APP_ABOUT, &CReClass2016App::OnAppAbout )
-	ON_COMMAND( ID_FILE_NEW, &CReClass2016App::OnFileNew )
-	ON_COMMAND( ID_FILE_SAVE, &CReClass2016App::OnFileSave )
-	ON_COMMAND( ID_FILE_SAVE_AS, &CReClass2016App::OnFileSaveAs )
-	ON_COMMAND( ID_FILE_OPEN, &CReClass2016App::OnFileOpen )
-	ON_COMMAND( ID_FILE_OPEN_PDB, &CReClass2016App::OnOpenPDB )
-	ON_COMMAND( ID_RECLASS_PLUGINS, &CReClass2016App::OnButtonPlugins )
-	ON_COMMAND( ID_BUTTON_NEWCLASS, &CReClass2016App::OnButtonNewClass )
-	ON_COMMAND( ID_BUTTON_NOTES, &CReClass2016App::OnButtonNotes )
-	ON_COMMAND( ID_BUTTON_SEARCH, &CReClass2016App::OnButtonSearch )
-	ON_COMMAND( ID_BUTTON_CONSOLE, &CReClass2016App::OnButtonConsole )
-	ON_COMMAND( ID_BUTTON_MODULES, &CReClass2016App::OnButtonModules )
-	ON_COMMAND( ID_BUTTON_PARSER, &CReClass2016App::OnButtonParser )
-	ON_COMMAND( ID_BUTTON_HEADER, &CReClass2016App::OnButtonHeader )
-	ON_COMMAND( ID_BUTTON_FOOTER, &CReClass2016App::OnButtonFooter )
-	ON_COMMAND( ID_BUTTON_RESET, &CReClass2016App::OnButtonReset )
-	ON_COMMAND( ID_BUTTON_PAUSE, &CReClass2016App::OnButtonPause )
-	ON_COMMAND( ID_BUTTON_RESUME, &CReClass2016App::OnButtonResume )
-	ON_COMMAND( ID_BUTTON_KILL, &CReClass2016App::OnButtonKill )
-	ON_UPDATE_COMMAND_UI( ID_BUTTON_PAUSE, &CReClass2016App::OnUpdateButtonPause )
-	ON_UPDATE_COMMAND_UI( ID_BUTTON_RESUME, &CReClass2016App::OnUpdateButtonResume )
-	ON_UPDATE_COMMAND_UI( ID_BUTTON_KILL, &CReClass2016App::OnUpdateButtonKill )
-	ON_UPDATE_COMMAND_UI( ID_BUTTON_SEARCH, &CReClass2016App::OnUpdateButtonSearch )
-	ON_UPDATE_COMMAND_UI( ID_BUTTON_MODULES, &CReClass2016App::OnUpdateButtonModules )
-	ON_UPDATE_COMMAND_UI( ID_RECLASS_PLUGINS, &CReClass2016App::OnUpdateButtonPlugins )
-	ON_COMMAND( ID_BUTTON_GENERATE, &CReClass2016App::OnButtonGenerate )
-	ON_COMMAND( ID_BUTTON_CLEAN, &CReClass2016App::OnButtonClean )
-	ON_UPDATE_COMMAND_UI( ID_BUTTON_CLEAN, &CReClass2016App::OnUpdateButtonClean )
-	ON_UPDATE_COMMAND_UI( ID_FILE_OPEN_PDB, &CReClass2016App::OnUpdateOpenPDB )
+BEGIN_MESSAGE_MAP( CReClassExApp, CWinAppEx )
+	ON_COMMAND( ID_APP_ABOUT, &CReClassExApp::OnAppAbout )
+	ON_COMMAND( ID_FILE_NEW, &CReClassExApp::OnFileNew )
+	ON_COMMAND( ID_FILE_SAVE, &CReClassExApp::OnFileSave )
+	ON_COMMAND( ID_FILE_SAVE_AS, &CReClassExApp::OnFileSaveAs )
+	ON_COMMAND( ID_FILE_OPEN, &CReClassExApp::OnFileOpen )
+	ON_COMMAND( ID_FILE_OPEN_PDB, &CReClassExApp::OnOpenPDB )
+	ON_COMMAND( ID_RECLASS_PLUGINS, &CReClassExApp::OnButtonPlugins )
+	ON_COMMAND( ID_BUTTON_NEWCLASS, &CReClassExApp::OnButtonNewClass )
+	ON_COMMAND( ID_BUTTON_NOTES, &CReClassExApp::OnButtonNotes )
+	ON_COMMAND( ID_BUTTON_SEARCH, &CReClassExApp::OnButtonSearch )
+	ON_COMMAND( ID_BUTTON_CONSOLE, &CReClassExApp::OnButtonConsole )
+	ON_COMMAND( ID_BUTTON_MODULES, &CReClassExApp::OnButtonModules )
+	ON_COMMAND( ID_BUTTON_PARSER, &CReClassExApp::OnButtonParser )
+	ON_COMMAND( ID_BUTTON_HEADER, &CReClassExApp::OnButtonHeader )
+	ON_COMMAND( ID_BUTTON_FOOTER, &CReClassExApp::OnButtonFooter )
+	ON_COMMAND( ID_BUTTON_RESET, &CReClassExApp::OnButtonReset )
+	ON_COMMAND( ID_BUTTON_PAUSE, &CReClassExApp::OnButtonPause )
+	ON_COMMAND( ID_BUTTON_RESUME, &CReClassExApp::OnButtonResume )
+	ON_COMMAND( ID_BUTTON_KILL, &CReClassExApp::OnButtonKill )
+	ON_UPDATE_COMMAND_UI( ID_BUTTON_PAUSE, &CReClassExApp::OnUpdateButtonPause )
+	ON_UPDATE_COMMAND_UI( ID_BUTTON_RESUME, &CReClassExApp::OnUpdateButtonResume )
+	ON_UPDATE_COMMAND_UI( ID_BUTTON_KILL, &CReClassExApp::OnUpdateButtonKill )
+	ON_UPDATE_COMMAND_UI( ID_BUTTON_SEARCH, &CReClassExApp::OnUpdateButtonSearch )
+	ON_UPDATE_COMMAND_UI( ID_BUTTON_MODULES, &CReClassExApp::OnUpdateButtonModules )
+	ON_UPDATE_COMMAND_UI( ID_RECLASS_PLUGINS, &CReClassExApp::OnUpdateButtonPlugins )
+	ON_COMMAND( ID_BUTTON_GENERATE, &CReClassExApp::OnButtonGenerate )
+	ON_COMMAND( ID_BUTTON_CLEAN, &CReClassExApp::OnButtonClean )
+	ON_UPDATE_COMMAND_UI( ID_BUTTON_CLEAN, &CReClassExApp::OnUpdateButtonClean )
+	ON_UPDATE_COMMAND_UI( ID_FILE_OPEN_PDB, &CReClassExApp::OnUpdateOpenPDB )
 END_MESSAGE_MAP( )
 
-CReClass2016App::CReClass2016App( )
+CReClassExApp::CReClassExApp( )
 {
 	TCHAR AppId[256] = { 0 };
 
@@ -65,7 +65,7 @@ CReClass2016App::CReClass2016App( )
 	g_FontHeight = FONT_DEFAULT_HEIGHT;
 }
 
-void CReClass2016App::ResizeMemoryFont( int font_width, int font_height )
+void CReClassExApp::ResizeMemoryFont( int font_width, int font_height )
 {
 	g_ViewFont.DeleteObject( );
 
@@ -95,7 +95,7 @@ void CReClass2016App::ResizeMemoryFont( int font_width, int font_height )
 	g_ViewFont.CreateFont( g_FontHeight, g_FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, g_ViewFontName.GetBuffer( ) );
 }
 
-BOOL CReClass2016App::InitInstance( )
+BOOL CReClassExApp::InitInstance( )
 {
 	#ifdef _DEBUG
 	Utils::CreateDbgConsole( _T( "dbg" ) );
@@ -270,7 +270,7 @@ BOOL CReClass2016App::InitInstance( )
 	return TRUE;
 }
 
-int CReClass2016App::ExitInstance( )
+int CReClassExApp::ExitInstance( )
 {
 	//
 	// Free resources
@@ -359,7 +359,7 @@ int CReClass2016App::ExitInstance( )
 	return CWinAppEx::ExitInstance( );
 }
 
-void CReClass2016App::OnButtonReset( )
+void CReClassExApp::OnButtonReset( )
 {
 	CloseHandle( g_hProcess );
 
@@ -385,38 +385,38 @@ void CReClass2016App::OnButtonReset( )
 	m_strCurrentFilePath = "";
 }
 
-void CReClass2016App::OnButtonPause( )
+void CReClassExApp::OnButtonPause( )
 {
 	PauseResumeThreadList( FALSE );
 }
 
-void CReClass2016App::OnUpdateButtonPause( CCmdUI *pCmdUI )
+void CReClassExApp::OnUpdateButtonPause( CCmdUI *pCmdUI )
 {
 	pCmdUI->Enable( g_hProcess != NULL );
 }
 
-void CReClass2016App::OnButtonResume( )
+void CReClassExApp::OnButtonResume( )
 {
 	PauseResumeThreadList( TRUE );
 }
 
-void CReClass2016App::OnUpdateButtonResume( CCmdUI *pCmdUI )
+void CReClassExApp::OnUpdateButtonResume( CCmdUI *pCmdUI )
 {
 	pCmdUI->Enable( g_hProcess != NULL );
 }
 
-void CReClass2016App::OnButtonKill( )
+void CReClassExApp::OnButtonKill( )
 {
 	TerminateProcess( g_hProcess, 0 );
 	g_hProcess = NULL;
 }
 
-void CReClass2016App::OnUpdateButtonKill( CCmdUI* pCmdUI )
+void CReClassExApp::OnUpdateButtonKill( CCmdUI* pCmdUI )
 {
 	pCmdUI->Enable( g_hProcess != NULL );
 }
 
-void CReClass2016App::CalcOffsets( CNodeClass* pClass )
+void CReClassExApp::CalcOffsets( CNodeClass* pClass )
 {
 	size_t offset = 0;
 	for (UINT i = 0; i < pClass->NodeCount( ); i++)
@@ -426,13 +426,13 @@ void CReClass2016App::CalcOffsets( CNodeClass* pClass )
 	}
 }
 
-void CReClass2016App::CalcAllOffsets( )
+void CReClassExApp::CalcAllOffsets( )
 {
 	for (UINT i = 0; i < m_Classes.size( ); i++)
 		CalcOffsets( m_Classes[i] );
 }
 
-void CReClass2016App::OnFileNew( )
+void CReClassExApp::OnFileNew( )
 {
 	CMainFrame* pFrame = STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
 	CChildFrame* pChild = STATIC_DOWNCAST( CChildFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
@@ -458,34 +458,34 @@ void CReClass2016App::OnFileNew( )
 }
 
 // App command to run the dialog
-void CReClass2016App::OnAppAbout( )
+void CReClassExApp::OnAppAbout( )
 {
 	CDialogAbout aboutDlg;
 	aboutDlg.DoModal( );
 }
 
-void CReClass2016App::PreLoadState( )
+void CReClassExApp::PreLoadState( )
 {
 	CString strName;
 	ASSERT( strName.LoadString( IDS_EDIT_MENU ) );
 	GetContextMenuManager( )->AddMenu( strName, IDR_POPUP_EDIT );
 }
 
-void CReClass2016App::LoadCustomState( )
+void CReClassExApp::LoadCustomState( )
 {
 }
 
-void CReClass2016App::SaveCustomState( )
+void CReClassExApp::SaveCustomState( )
 {
 }
 
 // TODO: Actually finish this
-void CReClass2016App::OnFileImport( )
+void CReClassExApp::OnFileImport( )
 {
 	return;
 }
 
-void CReClass2016App::ClearSelection( )
+void CReClassExApp::ClearSelection( )
 {
 	for (UINT i = 0; i < m_Classes.size( ); i++)
 	{
@@ -518,7 +518,7 @@ void CReClass2016App::ClearSelection( )
 	}
 }
 
-void CReClass2016App::ClearHidden( )
+void CReClassExApp::ClearHidden( )
 {
 	for (UINT i = 0; i < m_Classes.size( ); i++)
 	{
@@ -549,7 +549,7 @@ void CReClass2016App::ClearHidden( )
 	}
 }
 
-bool CReClass2016App::IsNodeValid( CNodeBase* pCheckNode )
+bool CReClassExApp::IsNodeValid( CNodeBase* pCheckNode )
 {
 	for (UINT i = 0; i < m_Classes.size( ); i++)
 	{
@@ -588,7 +588,7 @@ bool CReClass2016App::IsNodeValid( CNodeBase* pCheckNode )
 
 
 //////////////// OnButtonNewClass /////////////////
-void CReClass2016App::OnButtonNewClass( )
+void CReClassExApp::OnButtonNewClass( )
 {
 	CMainFrame* pFrame = STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
 	CChildFrame* pChild = STATIC_DOWNCAST( CChildFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
@@ -610,34 +610,34 @@ void CReClass2016App::OnButtonNewClass( )
 	CalcOffsets( pClass );
 }
 
-void CReClass2016App::OnButtonSearch( )
+void CReClassExApp::OnButtonSearch( )
 {
 	GetMainWnd( )->MessageBox( _T( "Coming Soon!" ), _T( "WubbaLubbaDubDub" ) );
 }
 
-void CReClass2016App::OnUpdateButtonSearch( CCmdUI *pCmdUI )
+void CReClassExApp::OnUpdateButtonSearch( CCmdUI *pCmdUI )
 {
 	pCmdUI->Enable( g_hProcess != NULL );
 }
 
-void CReClass2016App::OnButtonConsole( )
+void CReClassExApp::OnButtonConsole( )
 {
 	m_pConsole->ShowWindow( SW_SHOW );
 	m_pConsole->SetForegroundWindow( );
 }
 
-void CReClass2016App::OnButtonModules( )
+void CReClassExApp::OnButtonModules( )
 {
 	CDialogModules dlg;
 	dlg.DoModal( );
 }
 
-void CReClass2016App::OnUpdateButtonModules( CCmdUI * pCmdU )
+void CReClassExApp::OnUpdateButtonModules( CCmdUI * pCmdU )
 {
 	pCmdU->Enable( g_hProcess != NULL );
 }
 
-void CReClass2016App::OnButtonNotes( )
+void CReClassExApp::OnButtonNotes( )
 {
 	CDialogEdit dlg;
 	dlg.Title = _T( "Notes" );
@@ -646,13 +646,13 @@ void CReClass2016App::OnButtonNotes( )
 	m_strNotes = dlg.Text;
 }
 
-void CReClass2016App::OnButtonParser( )
+void CReClassExApp::OnButtonParser( )
 {
 	CDialogClasses dlg;
 	dlg.DoModal( );
 }
 
-void CReClass2016App::OnButtonHeader( )
+void CReClassExApp::OnButtonHeader( )
 {
 	CDialogEdit dlg;
 	dlg.Title = _T( "Header" );
@@ -661,7 +661,7 @@ void CReClass2016App::OnButtonHeader( )
 	m_strHeader = dlg.Text;
 }
 
-void CReClass2016App::OnButtonFooter( )
+void CReClassExApp::OnButtonFooter( )
 {
 	CDialogEdit dlg;
 	dlg.Title = _T( "Footer" );
@@ -670,17 +670,17 @@ void CReClass2016App::OnButtonFooter( )
 	m_strFooter = dlg.Text;
 }
 
-CMainFrame* CReClass2016App::GetMainFrame( )
+CMainFrame* CReClassExApp::GetMainFrame( )
 {
 	return STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
 }
 
-CMFCRibbonBar* CReClass2016App::GetRibbonBar( )
+CMFCRibbonBar* CReClassExApp::GetRibbonBar( )
 {
 	return (CMFCRibbonBar*)&GetMainFrame( )->m_RibbonBar;
 }
 
-CNodeBase* CReClass2016App::CreateNewNode( NodeType Type )
+CNodeBase* CReClassExApp::CreateNewNode( NodeType Type )
 {
 	switch (Type)
 	{
@@ -727,7 +727,7 @@ CNodeBase* CReClass2016App::CreateNewNode( NodeType Type )
 	return NULL;
 }
 
-void CReClass2016App::SaveXML( TCHAR* FileName )
+void CReClassExApp::SaveXML( TCHAR* FileName )
 {
 	PrintOut( _T( "SaveXML(\"%s\") called" ), FileName );
 
@@ -949,7 +949,7 @@ void CReClass2016App::SaveXML( TCHAR* FileName )
 	PrintOut( _T( "Failed to save file to \"%s\". Error %d" ), FileName, err );
 }
 
-void CReClass2016App::OnFileSave( )
+void CReClassExApp::OnFileSave( )
 {
 	if (m_strCurrentFilePath.IsEmpty( ))
 	{
@@ -961,7 +961,7 @@ void CReClass2016App::OnFileSave( )
 	}
 }
 
-void CReClass2016App::OnFileSaveAs( )
+void CReClassExApp::OnFileSaveAs( )
 {
 	TCHAR Filters[] = _T( "ReClass (*.reclass)|*.reclass|All Files (*.*)|*.*||" );
 	CFileDialog fileDlg( FALSE, _T( "reclass" ), _T( "" ), OFN_HIDEREADONLY, Filters, NULL );
@@ -973,7 +973,7 @@ void CReClass2016App::OnFileSaveAs( )
 	SaveXML( pathName.GetBuffer( ) );
 }
 
-void CReClass2016App::OnFileOpen( )
+void CReClassExApp::OnFileOpen( )
 {
 	TCHAR Filters[] = _T( "ReClass (*.reclass)|*.reclass|All Files (*.*)|*.*||" );
 	CFileDialog fileDlg( TRUE, _T( "reclass" ), _T( "" ), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, Filters, NULL );
@@ -1177,7 +1177,7 @@ void CReClass2016App::OnFileOpen( )
 	CalcAllOffsets( );
 }
 
-void CReClass2016App::OnButtonGenerate( )
+void CReClassExApp::OnButtonGenerate( )
 {
 	PrintOut( _T( "OnButtonGenerate() called" ) );
 
@@ -1462,18 +1462,18 @@ void CReClass2016App::OnButtonGenerate( )
 	}
 }
 
-void CReClass2016App::OnButtonPlugins( )
+void CReClassExApp::OnButtonPlugins( )
 {
 	CDialogPlugins plugin_dlg;
 	plugin_dlg.DoModal( );
 }
 
-void CReClass2016App::OnUpdateButtonPlugins( CCmdUI * pCmdUI )
+void CReClassExApp::OnUpdateButtonPlugins( CCmdUI * pCmdUI )
 {
 	pCmdUI->Enable( !g_LoadedPlugins.empty( ) );
 }
 
-void CReClass2016App::OnOpenPDB( )
+void CReClassExApp::OnOpenPDB( )
 {
 	CString strConcatProcessName = g_ProcessName;
 	if (strConcatProcessName.ReverseFind( '.' ) != -1)
@@ -1486,12 +1486,12 @@ void CReClass2016App::OnOpenPDB( )
 	m_pSymbolLoader->LoadSymbolsForPdb( fileDlg.GetPathName( ) );
 }
 
-void CReClass2016App::OnUpdateOpenPDB( CCmdUI *pCmdUI )
+void CReClassExApp::OnUpdateOpenPDB( CCmdUI *pCmdUI )
 {
 	pCmdUI->Enable( (g_ProcessID != NULL) );
 }
 
-void CReClass2016App::DeleteClass( CNodeClass* pClass )
+void CReClassExApp::DeleteClass( CNodeClass* pClass )
 {
 	PrintOut( _T( "DeleteClass(\"%s\") called" ), pClass->GetName( ).GetString( ) );
 
@@ -1515,7 +1515,7 @@ void CReClass2016App::DeleteClass( CNodeClass* pClass )
 	}
 }
 
-CNodeBase* CReClass2016App::IsNodeRef( CNodeBase* pTestNode )
+CNodeBase* CReClassExApp::IsNodeRef( CNodeBase* pTestNode )
 {
 	for (UINT c = 0; c < m_Classes.size( ); c++)
 	{
@@ -1550,7 +1550,7 @@ CNodeBase* CReClass2016App::IsNodeRef( CNodeBase* pTestNode )
 	return NULL;
 }
 
-void CReClass2016App::OnButtonClean( )
+void CReClassExApp::OnButtonClean( )
 {
 	CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, m_pMainWnd );
 	CMDIChildWnd* wnd = pFrame->MDIGetActive( );
@@ -1598,7 +1598,7 @@ void CReClass2016App::OnButtonClean( )
 	MessageBox( GetMainWnd( )->GetSafeHwnd( ), msg.GetString( ), _T( "Cleaner" ), MB_OK );
 }
 
-void CReClass2016App::OnUpdateButtonClean( CCmdUI *pCmdUI )
+void CReClassExApp::OnUpdateButtonClean( CCmdUI *pCmdUI )
 {
 	pCmdUI->Enable( (g_ReClassApp.m_Classes.size( ) > 0) );
 }

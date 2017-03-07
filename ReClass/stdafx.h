@@ -271,8 +271,8 @@ struct AddressName
 //
 // Main Application
 //
-#include "ReClass2016.h"
-extern CReClass2016App g_ReClassApp;
+#include "ReClassEx.h"
+extern CReClassExApp g_ReClassApp;
 
 
 //
