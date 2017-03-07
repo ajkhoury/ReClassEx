@@ -1087,7 +1087,6 @@ void CReClass2016App::OnFileOpen( )
 					XMLElement* pXmlVTableFunctionPtrElement = pXmlClassElement->FirstChildElement( );
 					while (pXmlVTableFunctionPtrElement)
 					{
-						size_t functionPtrOffset = atoi( pXmlVTableFunctionPtrElement->Attribute( "Offset" ) );
 						CNodeFunctionPtr* pFunctionPtr = new CNodeFunctionPtr;
 						pFunctionPtr->SetName( _CA2W( pXmlVTableFunctionPtrElement->Attribute( "Name" ) ) );
 						pFunctionPtr->SetComment( _CA2W( pXmlVTableFunctionPtrElement->Attribute( "Comment" ) ) );

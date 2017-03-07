@@ -14,7 +14,8 @@ static ScintillaColors s_rgbSyntaxAsm[] =
 };
 
 CNodeFunctionPtr::CNodeFunctionPtr( )
-	: m_pEdit( NULL )
+	: m_pAssemblyWindow( NULL )
+	, m_pParentWindow( NULL )
 	, m_nLines( 0 )
 	, m_nLongestLine( 0 )
 	, m_iWidth( 0 )
@@ -25,21 +26,21 @@ CNodeFunctionPtr::CNodeFunctionPtr( )
 	m_strName = _T( "" );
 }
 
-CNodeFunctionPtr::CNodeFunctionPtr( CChildView* pChildView, ULONG_PTR Address )
+CNodeFunctionPtr::CNodeFunctionPtr( CWnd* pParentWindow, ULONG_PTR Address )
 	: CNodeFunctionPtr( )
 {
-	Initialize( pChildView, Address );
+	Initialize( pParentWindow, Address );
 }
 
 CNodeFunctionPtr::~CNodeFunctionPtr( )
 {
-	if (m_pEdit != NULL)
+	if (m_pAssemblyWindow != NULL)
 	{
-		m_pEdit->Clear( );
-		m_pEdit->ShowWindow( SW_HIDE );
+		m_pAssemblyWindow->Clear( );
+		m_pAssemblyWindow->ShowWindow( SW_HIDE );
 		
-		delete m_pEdit;
-		m_pEdit = NULL;
+		delete m_pAssemblyWindow;
+		m_pAssemblyWindow = NULL;
 	}
 }
 
@@ -113,18 +114,18 @@ NodeSize CNodeFunctionPtr::Draw( const ViewInfo& View, int x, int y )
 
 		y += g_FontHeight;
 
-		if (m_pEdit != NULL)
+		if (m_pAssemblyWindow != NULL)
 		{
 			if (m_bRedrawNeeded)
 			{
-				m_pEdit->MoveWindow( ax, y, m_iWidth, m_iHeight );
-				m_pEdit->ShowWindow( SW_SHOW );
+				m_pAssemblyWindow->MoveWindow( ax, y, m_iWidth, m_iHeight );
+				m_pAssemblyWindow->ShowWindow( SW_SHOW );
 
 				m_bRedrawNeeded = FALSE;
 			}
 			else
 			{
-				m_pEdit->MoveWindow( ax, y, m_iWidth, m_iHeight );
+				m_pAssemblyWindow->MoveWindow( ax, y, m_iWidth, m_iHeight );
 			}
 
 			y += m_iHeight;
@@ -132,9 +133,9 @@ NodeSize CNodeFunctionPtr::Draw( const ViewInfo& View, int x, int y )
 	}
 	else
 	{
-		if (m_pEdit != NULL)
+		if (m_pAssemblyWindow != NULL)
 		{
-			m_pEdit->ShowWindow( SW_HIDE );
+			m_pAssemblyWindow->ShowWindow( SW_HIDE );
 			m_bRedrawNeeded = TRUE;
 		}
 
@@ -146,43 +147,44 @@ NodeSize CNodeFunctionPtr::Draw( const ViewInfo& View, int x, int y )
 	return drawnSize;
 }
 
-void CNodeFunctionPtr::Initialize( CChildView* pChildView, ULONG_PTR Address )
+void CNodeFunctionPtr::Initialize( CWnd* pParentWindow, ULONG_PTR Address )
 {
-	if (m_pEdit != NULL)
+	if (m_pAssemblyWindow != NULL)
 	{
-		m_pEdit->Clear( );
-		m_pEdit->ShowWindow( SW_HIDE );
+		m_pAssemblyWindow->Clear( );
+		m_pAssemblyWindow->ShowWindow( SW_HIDE );
 
-		delete m_pEdit;
-		m_pEdit = NULL;
+		delete m_pAssemblyWindow;
+		m_pAssemblyWindow = NULL;
 	}
 
-	m_pEdit = new CScintillaEdit;
+	m_pAssemblyWindow = new CScintillaEdit;
 
-	m_pEdit->Create( WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, CRect( 0, 0, 0, 0 ), static_cast<CWnd*>(pChildView), 0 );
+	m_pParentWindow = static_cast<CWnd*>(pParentWindow);
 
-	m_pEdit->ShowWindow( SW_HIDE ); // Hide the window until we open the level
-	//m_pEdit->EnableWindow( FALSE ); // Disables the ability to scroll
-	m_pEdit->EnableScrollBarCtrl( SB_BOTH, FALSE );
+	m_pAssemblyWindow->Create( WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, CRect( 0, 0, 0, 0 ), m_pParentWindow, 0 );
+	m_pAssemblyWindow->ShowWindow( SW_HIDE ); // Hide the window until we open the level
+	//m_pAssemblyWindow->EnableWindow( FALSE ); // Disables the ability to scroll
+	m_pAssemblyWindow->EnableScrollBarCtrl( SB_BOTH, FALSE );
 
-	m_pEdit->SetLexer( SCLEX_ASM );
-	m_pEdit->SetStyleBits( 5 );
-	m_pEdit->SetTabWidth( 2 );
-	m_pEdit->SetForeground( STYLE_DEFAULT, black );
-	m_pEdit->SetBackground( STYLE_DEFAULT, g_crBackground );
-	m_pEdit->SetSize( STYLE_DEFAULT, FONT_DEFAULT_SIZE );
-	m_pEdit->SetHorizontalScrollVisible( FALSE );
-	m_pEdit->SetVerticalScrollVisible( FALSE );
-	m_pEdit->SetFont( STYLE_DEFAULT, g_ViewFontName );
+	m_pAssemblyWindow->SetLexer( SCLEX_ASM );
+	m_pAssemblyWindow->SetStyleBits( 5 );
+	m_pAssemblyWindow->SetTabWidth( 2 );
+	m_pAssemblyWindow->SetForeground( STYLE_DEFAULT, black );
+	m_pAssemblyWindow->SetBackground( STYLE_DEFAULT, g_crBackground );
+	m_pAssemblyWindow->SetSize( STYLE_DEFAULT, FONT_DEFAULT_SIZE );
+	m_pAssemblyWindow->SetHorizontalScrollVisible( FALSE );
+	m_pAssemblyWindow->SetVerticalScrollVisible( FALSE );
+	m_pAssemblyWindow->SetFont( STYLE_DEFAULT, g_ViewFontName );
 
-	m_pEdit->SetAllStylesDefault( );
+	m_pAssemblyWindow->SetAllStylesDefault( );
 
 	// Set syntax colors
 	for (int i = 0; s_rgbSyntaxAsm[i].iItem != -1; i++)
-		m_pEdit->SetForeground( s_rgbSyntaxAsm[i].iItem, s_rgbSyntaxAsm[i].rgb );
+		m_pAssemblyWindow->SetForeground( s_rgbSyntaxAsm[i].iItem, s_rgbSyntaxAsm[i].rgb );
 
-	m_pEdit->SetMarginWidth( 0, 0 );
-	m_pEdit->SetMarginWidth( 1, 0 );
+	m_pAssemblyWindow->SetMarginWidth( 0, 0 );
+	m_pAssemblyWindow->SetMarginWidth( 1, 0 );
 
 	// Finally, disassemble the bytes to get the memsize, height, and width
 	DisassembleBytes( Address );
@@ -194,12 +196,9 @@ void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
 	UIntPtr VirtualAddress = Address;
 
 	// Clear old disassembly info
-	if (m_pEdit != NULL)
-	{
-		m_pEdit->SetReadOnly( FALSE );
-		m_pEdit->Clear( );
-		m_pEdit->SetReadOnly( TRUE );
-	}
+	m_pAssemblyWindow->SetReadOnly( FALSE );
+	m_pAssemblyWindow->Clear( );
+	m_pAssemblyWindow->SetReadOnly( TRUE );
 
 	m_Assembly.clear( );
 	m_nLongestLine = 0;
@@ -238,7 +237,7 @@ void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
 			}
 			else
 			{
-				CHAR szInstruction[96] = { 0 };
+				CHAR szInstruction[256] = { 0 };
 				CHAR szBytes[128] = { 0 };
 
 				// INT3 instruction
@@ -248,12 +247,14 @@ void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
 				// Generate instruction bytes
 				for (int i = 0; i < disasmLen; i++)
 				{
-					sprintf_s( szBytes + (i * 3), 128, "%02X ", *(CHAR*)(MyDisasm.EIP + i) );
+					CHAR szByte[8];
+					sprintf_s( szByte, "%02X ", *(UCHAR*)(MyDisasm.EIP + i) );
+					strcat_s( szBytes, szByte );
 				}
 
 				// Create full instruction string
 				sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", (ULONG_PTR)MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
-				m_Assembly.emplace_back( szInstruction );
+				m_Assembly.push_back( szInstruction );
 
 				// Increment instruction length
 				MyDisasm.EIP = MyDisasm.EIP + disasmLen;
@@ -276,32 +277,33 @@ void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
 	m_nLines = (ULONG)m_Assembly.size( );
 
 	// Clear any left over text
-	m_pEdit->Clear( );
+	m_pAssemblyWindow->Clear( );
 
 	// Make the edit window temporarily editable
-	m_pEdit->SetReadOnly( FALSE );
+	m_pAssemblyWindow->SetReadOnly( FALSE );
 
 	for (ULONG i = 0; i < m_nLines; i++)
 	{
 		ULONG nCurrentLineLength = 0;
 
 		// Append text to window
-		m_pEdit->AppendText( m_Assembly[i].GetString( ) );
+		m_pAssemblyWindow->AppendText( m_Assembly[i].GetString( ) );
 
 		// Calculate width from longest assembly instruction		
-		nCurrentLineLength = m_pEdit->LineLength( i );
+		nCurrentLineLength = m_pAssemblyWindow->LineLength( i );
 		if (nCurrentLineLength > m_nLongestLine)
 			m_nLongestLine = nCurrentLineLength;
 	}
 
 	// Back to read only
-	m_pEdit->SetReadOnly( TRUE );
+	m_pAssemblyWindow->SetReadOnly( TRUE );
 
 	// Set caret at the beginning of documents
-	m_pEdit->SetSelection( 0, 0 );
+	m_pAssemblyWindow->SetSelection( 0, 0 );
 
 	// Set the editor width and height
-	m_iHeight = (m_pEdit->PointYFromPosition( m_pEdit->PositionFromLine( m_nLines ) ) - m_pEdit->PointYFromPosition( m_pEdit->PositionFromLine( 0 ) )) + g_FontHeight;
+	m_iHeight = (m_pAssemblyWindow->PointYFromPosition( m_pAssemblyWindow->PositionFromLine( m_nLines ) ) - 
+		m_pAssemblyWindow->PointYFromPosition( m_pAssemblyWindow->PositionFromLine( 0 ) )) + g_FontHeight;
 	m_iWidth = (m_nLongestLine * g_FontWidth) + g_FontWidth;
 
 	// Force a redraw

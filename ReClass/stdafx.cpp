@@ -129,7 +129,7 @@ CStringA ReadMemoryStringA( ULONG_PTR address, SIZE_T max )
 	{
 		for (int i = 0; i < bytesRead; i++)
 		{
-			if (!(isprint( buffer[i] )) && buffer[i] != '\0')
+			if (!(buffer[i] > 0x1F && buffer[i] < 0xFF && buffer[i] != 0x7F) && buffer[i] != '\0')
 				buffer[i] = '.';
 		}
 		buffer[bytesRead] = '\0';
@@ -140,7 +140,7 @@ CStringA ReadMemoryStringA( ULONG_PTR address, SIZE_T max )
 		#ifdef _DEBUG
 		PrintOut( _T( "[ReadMemoryString]: Failed to read memory, GetLastError() = %s" ), Utils::GetLastErrorString( ).GetString( ) );
 		#endif
-		return CStringA( ".." );
+		return CStringA( "...." );
 	}
 }
 
@@ -155,7 +155,7 @@ CStringW ReadMemoryStringW( ULONG_PTR address, SIZE_T max )
 
 		for (int i = 0; i < bytesRead; i++)
 		{
-			if (!(iswprint( buffer[i] )) && buffer[i] != '\0')
+			if (!(buffer[i] > 0x1F && buffer[i] < 0xFF && buffer[i] != 0x7F) && buffer[i] != '\0')
 				buffer[i] = '.';
 		}
 		buffer[bytesRead] = '\0';

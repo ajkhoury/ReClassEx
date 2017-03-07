@@ -18,12 +18,17 @@ END_MESSAGE_MAP( )
 // CChildFrame construction/destruction
 
 CChildFrame::CChildFrame( )
+	: m_pChildView( NULL )
 {
-	// TODO: add member initialization code here
 }
 
 CChildFrame::~CChildFrame( )
 {
+	if (m_pChildView != NULL)
+	{
+		delete m_pChildView;
+		m_pChildView = NULL;
+	}
 }
 
 BOOL CChildFrame::PreCreateWindow( CREATESTRUCT& cs )
@@ -69,25 +74,24 @@ int CChildFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 		return -1;
 
 	// Create a view to occupy the client area of the frame
-	if (!m_ChildView.Create( NULL, NULL, AFX_WS_DEFAULT_VIEW, CRect( 0, 0, 0, 0 ), this, AFX_IDW_PANE_FIRST, NULL ))
-	{
-		TRACE0( "Failed to create view window\n" );
-		return -1;
-	}
-
-	return 0;
+	m_pChildView = new CChildView;
+	if (m_pChildView && m_pChildView->Create( NULL, NULL, AFX_WS_DEFAULT_VIEW, CRect( 0, 0, 0, 0 ), this, AFX_IDW_PANE_FIRST, NULL ))
+		return 0;
+	
+	TRACE0( "Failed to create view window\n" );
+	return -1;
 }
 
 void CChildFrame::OnSetFocus( CWnd* pOldWnd )
 {
 	CMDIChildWndEx::OnSetFocus( pOldWnd );
-	m_ChildView.SetFocus( );
+	m_pChildView->SetFocus( );
 }
 
 BOOL CChildFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo )
 {
 	// Let the view have first crack at the command
-	if (m_ChildView.OnCmdMsg( nID, nCode, pExtra, pHandlerInfo ))
+	if (m_pChildView->OnCmdMsg( nID, nCode, pExtra, pHandlerInfo ))
 		return TRUE;
 	// Otherwise, do default handling
 	return CMDIChildWndEx::OnCmdMsg( nID, nCode, pExtra, pHandlerInfo );

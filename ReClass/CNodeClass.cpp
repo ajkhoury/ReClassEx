@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CNodeClass.h"
+#include "CChildFrame.h"
 
 CNodeClass::CNodeClass( )
 {
@@ -80,6 +81,15 @@ NodeSize CNodeClass::Draw( const ViewInfo& View, int x, int y )
 
 		for (UINT i = 0; i < m_ChildNodes.size( ); i++)
 		{
+			if (m_ChildNodes[i]->GetType( ) == nt_vtable)
+			{
+				CNodeVTable* pVTableNode = static_cast<CNodeVTable*>(m_ChildNodes[i]);
+				if (!pVTableNode->IsInitialized( ))
+				{
+					pVTableNode->Initialize( static_cast<CWnd*>(pChildWindow->GetChildView( )) );
+					//pVTableNode->Initialize(  );
+				}
+			}
 			childDrawnSize = m_ChildNodes[i]->Draw( nv, tx, y );
 			y = childDrawnSize.y;
 			if (childDrawnSize.x > drawnSize.x)

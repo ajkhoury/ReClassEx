@@ -6,7 +6,7 @@ class CChildFrame : public CMDIChildWndEx
 {
 	DECLARE_DYNCREATE(CChildFrame)
 public:
-	CChildFrame();
+	CChildFrame( );
 
 // Attributes
 public:
@@ -21,10 +21,11 @@ public:
 
 // Implementation
 public:
-	VOID SetClass( CNodeClass* pClass ) { m_ChildView.SetClass( pClass ); }
+	VOID SetClass( CNodeClass* pClass ) { m_pChildView->SetClass( pClass ); }
+	CChildView* GetChildView( ) { return m_pChildView; }
 
 	// View for the client area of the frame.
-	CChildView m_ChildView;
+	CChildView* m_pChildView;
 
 	virtual ~CChildFrame();
 

@@ -212,7 +212,7 @@ __forceinline CStringA GetStringFromMemoryA( char* pMemory, int Length )
 	CStringA ascii;
 	for (int i = 0; i < Length; i++)
 	{
-		ascii += (isprint( pMemory[i] & 0xFF )) ? (char)pMemory[i] : '.';
+		ascii += (pMemory[i] > 0x1F && pMemory[i] < 0xFF && pMemory[i] != 0x7F) ? (char)pMemory[i] : '.';
 	}
 	return ascii;
 }
@@ -222,7 +222,7 @@ __forceinline CStringW GetStringFromMemoryW( wchar_t* pMemory, int Length )
 	CStringW widechar;
 	for (int i = 0; i < Length; i++)
 	{
-		widechar += (iswprint( pMemory[i] ) > 0) ? (wchar_t)pMemory[i] : (wchar_t)(L'.');
+		widechar += (pMemory[i] > 0x1F && pMemory[i] < 0xFF && pMemory[i] != 0x7F) ? (wchar_t)pMemory[i] : (wchar_t)(L'.');
 	}
 	return widechar;
 }

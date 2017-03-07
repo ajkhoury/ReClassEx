@@ -2,8 +2,15 @@
 #include "CNodeVTable.h"
 
 CNodeVTable::CNodeVTable( )
+	: m_pParentWindow( nullptr )
 {
 	m_nodeType = nt_vtable;
+}
+
+CNodeVTable::CNodeVTable( CWnd* pParentWindow )
+	: CNodeVTable( )
+{
+	m_pParentWindow = pParentWindow;
 }
 
 void CNodeVTable::Update( const HotSpot& Spot )
@@ -57,8 +64,14 @@ NodeSize CNodeVTable::Draw( const ViewInfo& View, int x, int y )
 		for (UINT i = 0; i < m_ChildNodes.size( ); i++)
 		{
 			CNodeFunctionPtr* pFunctionPtr = static_cast<CNodeFunctionPtr*>(m_ChildNodes[i]);
-			pFunctionPtr->SetOffset( i * sizeof( size_t ) );
+			
+			if (!pFunctionPtr->IsInitialized( ))
+				pFunctionPtr->Initialize( m_pParentWindow, m_Offset + (i * sizeof( size_t )) );
+			
+			pFunctionPtr->SetOffset( m_Offset + (i * sizeof( size_t )) );
+			
 			childDrawnSize = pFunctionPtr->Draw( NewView, tx, y );
+			
 			drawnSize.y = childDrawnSize.y;
 			if (childDrawnSize.x > drawnSize.x) {
 				drawnSize.x = childDrawnSize.x;
@@ -74,4 +87,9 @@ NodeSize CNodeVTable::Draw( const ViewInfo& View, int x, int y )
 	}
 
 	return drawnSize;
+}
+
+void CNodeVTable::Initialize( CWnd* pParentWindow )
+{
+	m_pParentWindow = pParentWindow;
 }

@@ -759,7 +759,7 @@ void CChildView::OnPaint( )
 
 		CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, AfxGetApp( )->m_pMainWnd );
 		CChildFrame* pChild = STATIC_DOWNCAST( CChildFrame, pFrame->GetActiveFrame( ) );
-		if (pChild->m_ChildView.m_hWnd == m_hWnd)
+		if (pChild->GetChildView( )->m_hWnd == m_hWnd)
 		{
 			pChild->SetWindowText( m_pClass->GetName( ) );
 			pChild->SetTitle( m_pClass->GetName( ) );
@@ -1236,7 +1236,10 @@ void CChildView::AddBytes( CNodeClass* pClass, DWORD Length )
 		CNodeBase* pNode = 0;
 		if (pClass->GetType( ) == nt_vtable)
 		{
-			pNode = new CNodeFunctionPtr( this, pClass->GetOffset( ) + (pClass->NodeCount( ) * sizeof( size_t )) );
+			CNodeVTable* pVTable = (CNodeVTable*)pClass; // force this cast
+			if (!pVTable->IsInitialized( ))
+				pVTable->Initialize( static_cast<CWnd*>(this) );
+			pNode = new CNodeFunctionPtr( static_cast<CWnd*>(this), pClass->GetOffset( ) + (pClass->NodeCount( ) * sizeof( size_t )) );
 		}
 		else
 		{
@@ -1253,7 +1256,10 @@ void CChildView::AddBytes( CNodeClass* pClass, DWORD Length )
 		CNodeBase* pNode;
 		if (pClass->GetType( ) == nt_vtable)
 		{
-			pNode = new CNodeFunctionPtr( this, pClass->GetOffset( ) + ((pClass->NodeCount( ) + i) * sizeof( size_t )) );
+			CNodeVTable* pVTable = (CNodeVTable*)pClass;
+			if (!pVTable->IsInitialized( ))
+				pVTable->Initialize( static_cast<CWnd*>(this) );
+			pNode = new CNodeFunctionPtr( static_cast<CWnd*>(this), pClass->GetOffset( ) + ((pClass->NodeCount( ) + i) * sizeof( size_t )) );
 		}
 		else
 		{
@@ -1523,9 +1529,12 @@ void CChildView::ReplaceSelectedWithType( NodeType Type )
 			for (int i = 0; i < 10; i++)
 			{
 				CNodeVTable* pVTable = (CNodeVTable*)pNewNode;
-				CNodeFunctionPtr* pFunctionPtr = new CNodeFunctionPtr( this, pVTable->GetOffset( ) + (i * sizeof( size_t )) );
-				pFunctionPtr->SetOffset( i * sizeof( size_t ) );
+				pVTable->Initialize( static_cast<CWnd*>(this) );
+
+				CNodeFunctionPtr* pFunctionPtr = new CNodeFunctionPtr( static_cast<CWnd*>(this), pVTable->GetOffset( ) + (i * sizeof( size_t )) );
+				pFunctionPtr->SetOffset( pVTable->GetOffset( ) + (i * sizeof( size_t )) );
 				pFunctionPtr->SetParent( pVTable );
+
 				pVTable->AddNode( pFunctionPtr );
 			}
 		}

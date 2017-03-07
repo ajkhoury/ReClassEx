@@ -492,7 +492,7 @@ int CNodeBase::AddComment( const ViewInfo& View, int x, int y )
 
 				for (int i = 0; i < 8; i++)
 				{
-					if (!isprint( (unsigned char)txt[i] ))
+					if (!(txt[i] > 0x1F && txt[i] < 0xFF && txt[i] != 0x7F))
 						bAddStr = false;
 				}
 
@@ -583,18 +583,18 @@ int CNodeBase::AddComment( const ViewInfo& View, int x, int y )
 			if (g_bString)
 			{
 				bool bAddStr = true;
-				char txt[64];
-				ReClassReadMemory( (LPVOID)uintVal, txt, 64 ); // TODO: find out why it looks wrong
+				char txt[64] = { 0 };
+				ReClassReadMemory( (LPVOID)uintVal, txt, 64 );
 
 				for (int i = 0; i < 4; i++)
 				{
-					if (!isprint( (unsigned char)txt[i] ))
+					if (!(txt[i] > 0x1F && txt[i] < 0xFF && txt[i] != 0x7F))
 						bAddStr = false;
 				}
 
 				if (bAddStr)
 				{
-					txt[63] = '\0'; // null terminte (even though we prolly dont have to)
+					txt[64] = '\0'; // null terminte (even though we prolly dont have to)
 					x = AddText( View, x, y, g_crChar, HS_NONE, _T( "'%hs'" ), txt );
 				}
 			}
