@@ -7446,7 +7446,7 @@
         <Node Name="m_vDirectionalVelocity" Type="23" Size="12" bHidden="0" Comment=""/>
         <Node Name="N0000321D" Type="4" Size="4" bHidden="0" Comment=""/>
     </Class>
-    <Class Name="CBaseEntity" Type="28" Comment="" Offset="806028720" strOffset="0x300b05b0" Code="">
+    <Class Name="CBaseEntity" Type="28" Comment="" Offset="1049603184" strOffset="0x3e8fac70" Code="">
         <Node Name="N013CB086" Type="26" Size="4" bHidden="0" Comment="">
             <Function Name="" Comment="" bHidden="0">
                 <Code Assembly="ERROR: Could not read memory"/>
@@ -7610,6 +7610,7 @@
         <Node Name="m_iClassname" Type="10" Size="4" bHidden="0" Comment=""/>
         <Node Name="m_hScriptInstance" Type="10" Size="4" bHidden="0" Comment=""/>
         <Node Name="m_iszScriptId" Type="10" Size="4" bHidden="0" Comment=""/>
+        <Node Name="unknownFloatValue" Type="13" Size="4" bHidden="0" Comment=""/>
         <Node Name="m_varMap.m_Entries" Type="1" Size="20" bHidden="0" Comment="m_varMap.m_Entries" Instance="CUtlVector"/>
         <Node Name="m_varMap.m_nInterpolatedEntries" Type="10" Size="4" bHidden="0" Comment=""/>
         <Node Name="m_varMap.m_lastInterpolationTime" Type="13" Size="4" bHidden="0" Comment=""/>
@@ -7620,7 +7621,6 @@
         <Node Name="N18A62531" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N00000382" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N18A62530" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00000384" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N33DA0CBA" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N00000386" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="index" Type="10" Size="4" bHidden="0" Comment=""/>
@@ -13247,5 +13247,23 @@
         <Node Name="N0000326A" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N0000326B" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N0000326C" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N0000326D" Type="28" Comment="" Offset="0" strOffset="0" Code="">
+        <Node Name="N0000326E" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000326F" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003270" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003271" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003272" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003273" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003274" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003275" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003276" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003277" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003278" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003279" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000327A" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000327B" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000327C" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000327D" Type="4" Size="4" bHidden="0" Comment=""/>
     </Class>
 </ReClass>

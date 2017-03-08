@@ -600,6 +600,14 @@ int CNodeBase::AddComment( const ViewInfo& View, int x, int y )
 			}
 		}
 	}
+	else if (m_nodeType == nt_hex16)
+	{
+		if (g_bInt)
+		{
+			short intVal = *((short*)&View.pData[m_Offset]);
+			x = (intVal == 0) ? AddText( View, x, y, g_crValue, HS_NONE, _T( "(%i)" ), intVal ) : AddText( View, x, y, g_crValue, HS_NONE, _T( "(0x%X)" ), intVal );
+		}
+	}
 
 	return x;
 }

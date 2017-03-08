@@ -99,6 +99,8 @@ public:
 	afx_msg void OnUpdateCheckString( CCmdUI *pCmdUI );
 	afx_msg void OnCheckPointer( );
 	afx_msg void OnUpdateCheckPointer( CCmdUI *pCmdUI );
+	afx_msg void OnCheckUnsignedHex( );
+	afx_msg void OnUpdateCheckUnsignedHex( CCmdUI *pCmdUI );
 };
 
 

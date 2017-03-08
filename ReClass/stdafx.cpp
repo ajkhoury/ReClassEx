@@ -57,6 +57,7 @@ bool g_bFloat = true;
 bool g_bInt = true;
 bool g_bString = true;
 bool g_bPointers = true;
+bool g_bUnsignedHex = true;
 
 bool g_bTop = true;
 bool g_bClassBrowser = true;

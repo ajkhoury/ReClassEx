@@ -66,6 +66,8 @@ BEGIN_MESSAGE_MAP( CMainFrame, CMDIFrameWndEx )
 	ON_UPDATE_COMMAND_UI( ID_CHECK_STRING, &CMainFrame::OnUpdateCheckString )
 	ON_COMMAND( ID_CHECK_POINTER, &CMainFrame::OnCheckPointer )
 	ON_UPDATE_COMMAND_UI( ID_CHECK_POINTER, &CMainFrame::OnUpdateCheckPointer )
+	ON_COMMAND( ID_CHECK_UNSIGNEDHEX, &CMainFrame::OnCheckPointer )
+	ON_UPDATE_COMMAND_UI( ID_CHECK_UNSIGNEDHEX, &CMainFrame::OnUpdateCheckPointer )
 	ON_COMMAND( ID_CHECK_CLIP_COPY, &CMainFrame::OnCheckClipboardCopy )
 	ON_UPDATE_COMMAND_UI( ID_CHECK_CLIP_COPY, &CMainFrame::OnUpdateCheckClipboardCopy )
 	ON_COMMAND( ID_CHECK_PRIVATE_PADDING, &CMainFrame::OnCheckPrivatePadding )
@@ -692,5 +694,15 @@ void CMainFrame::OnCheckPointer( )
 void CMainFrame::OnUpdateCheckPointer( CCmdUI *pCmdUI )
 {
 	pCmdUI->SetCheck( g_bPointers );
+}
+
+void CMainFrame::OnCheckUnsignedHex( )
+{
+	g_bUnsignedHex = !g_bUnsignedHex;
+}
+
+void CMainFrame::OnUpdateCheckUnsignedHex( CCmdUI *pCmdUI )
+{
+	pCmdUI->SetCheck( g_bUnsignedHex );
 }
 

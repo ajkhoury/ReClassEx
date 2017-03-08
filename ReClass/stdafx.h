@@ -142,6 +142,7 @@ extern bool g_bFloat;
 extern bool g_bInt;
 extern bool g_bString;
 extern bool g_bPointers;
+extern bool g_bUnsignedHex;
 
 extern bool g_bTop;
 extern bool g_bClassBrowser;
