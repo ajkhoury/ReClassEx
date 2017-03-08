@@ -30,6 +30,7 @@ ReClass Extended
 - Added Ctrl+S hotkey for file saving, and others.
 - Added Plugin API for making plugins
 - Disassembly syntax highlighting (buggy)
+- View unsigned types in hexidecimal form via toggle
 
 ![Alt text](http://i.imgur.com/W6ytfG6.png "Automatic symbol resolving")
 ![Alt text](http://i.imgur.com/hBNyEFG.png "ReClass")
