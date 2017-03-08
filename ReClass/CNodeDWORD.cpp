@@ -9,7 +9,7 @@ CNodeDWORD::CNodeDWORD( )
 void CNodeDWORD::Update( const HotSpot& Spot )
 {
 	StandardUpdate( Spot );
-	DWORD v = _ttoi( Spot.Text.GetString( ) );
+	DWORD v = _tcstoul( Spot.Text.GetString( ), NULL, g_bUnsignedHex ? 16 : 10 );
 	if (Spot.ID == 0)
 		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( unsigned long ) );
 }
@@ -32,7 +32,7 @@ NodeSize CNodeDWORD::Draw( const ViewInfo& View, int x, int y )
 	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "DWORD " ) );
 	tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
 	tx = AddText( View, tx, y, g_crName, HS_NONE, _T( " = " ) );
-	tx = AddText( View, tx, y, g_crValue, HS_EDIT, _T( "%u" ), pMemory[0] ) + g_FontWidth;
+	tx = AddText( View, tx, y, g_crValue, HS_EDIT, g_bUnsignedHex ? _T( "0x%IX" ) : _T( "%u" ), pMemory[0] ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
 
 	drawnSize.x = tx;
