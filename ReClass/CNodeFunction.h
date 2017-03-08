@@ -2,7 +2,7 @@
 
 #include "CNodeBase.h"
 #include "CScintillaEdit.h"
-#include "CChildView.h"
+#include "CClassView.h"
 
 class CNodeFunction : public CNodeBase
 {
@@ -16,7 +16,7 @@ public:
 
 	virtual NodeSize Draw( const ViewInfo& View, int x, int y );
 
-	void Initialize( CChildView* pChild, ULONG_PTR Address );
+	void Initialize( CClassView* pChild, ULONG_PTR Address );
 
 private:
 	void DisassembleBytes( ULONG_PTR Address );

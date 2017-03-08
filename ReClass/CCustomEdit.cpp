@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "CCustomEdit.h"
-#include "CChildView.h"
+#include "CClassFrame.h"
 
 BEGIN_MESSAGE_MAP( CCustomEdit, CEdit )
 	ON_WM_CHAR( )
@@ -29,7 +29,7 @@ void CCustomEdit::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 		ShowWindow( SW_HIDE );
 		GetWindowText( spot.Text );
 
-		CChildView* pChild = (CChildView*)GetParent( );
+		CClassView* pChild = (CClassView*)GetParent( );
 		CNodeBase* c = (CNodeBase*)spot.object;
 
 		DWORD before = c->GetMemorySize( );

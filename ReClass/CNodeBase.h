@@ -18,7 +18,7 @@ struct ViewInfo
 {
 	// Temporarily added for testing
 	#ifdef _DEBUG
-	class CChildView* pChildView;
+	class CClassView* pChildView;
 	#endif
 
 	CDC* dc;

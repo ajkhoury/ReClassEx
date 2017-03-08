@@ -4,7 +4,7 @@
 #include "DialogProgress.h"
 
 #include "CMainFrame.h"
-#include "CChildFrame.h"
+#include "CClassFrame.h"
 
 #include "afxdialogex.h"
 
@@ -166,7 +166,7 @@ void CDialogModules::SetSelected( )
 		if (pNewClass != NULL)
 		{
 			CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, AfxGetApp( )->m_pMainWnd );
-			CChildFrame* pChild = pNewClass->pChildWindow;
+			CClassFrame* pChild = pNewClass->pChildWindow;
 
 			// Check if its a window first to dodge the assertion in IsWindowVisible
 			if (pChild && IsWindow( pChild->GetSafeHwnd( ) ) && pChild->IsWindowVisible( ))
@@ -175,7 +175,7 @@ void CDialogModules::SetSelected( )
 			}
 			else
 			{
-				CChildFrame* pNewChild = STATIC_DOWNCAST( CChildFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
+				CClassFrame* pNewChild = STATIC_DOWNCAST( CClassFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
 				pNewChild->SetClass( pNewClass );
 				pNewChild->SetTitle( pNewClass->GetName( ) );
 				pNewChild->SetWindowText( pNewClass->GetName( ) );
@@ -188,7 +188,7 @@ void CDialogModules::SetSelected( )
 		else
 		{
 			CMainFrame* pFrame = static_cast<CMainFrame*>(AfxGetApp( )->m_pMainWnd);
-			CChildFrame* pChild = static_cast<CChildFrame*>(pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ));
+			CClassFrame* pChild = STATIC_DOWNCAST( CClassFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ));
 
 			pNewClass = new CNodeClass;
 			pNewClass->SetName( ClassName );
@@ -198,7 +198,7 @@ void CDialogModules::SetSelected( )
 			pNewClass->SetOffsetString( strStart );
 			pNewClass->SetOffset( mod.Start );
 			pNewClass->pChildWindow = pChild;
-			pNewClass->idx = (int)g_ReClassApp.m_Classes.size( );
+			pNewClass->Idx = g_ReClassApp.m_Classes.size( );
 
 			g_ReClassApp.m_Classes.push_back( pNewClass );
 

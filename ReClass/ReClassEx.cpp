@@ -6,7 +6,7 @@
 #include "afxdialogex.h"
 
 #include "CMainFrame.h"
-#include "CChildFrame.h"
+#include "CClassFrame.h"
 
 #include "DialogEdit.h"
 #include "DialogClasses.h"
@@ -435,7 +435,7 @@ void CReClassExApp::CalcAllOffsets( )
 void CReClassExApp::OnFileNew( )
 {
 	CMainFrame* pFrame = STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
-	CChildFrame* pChild = STATIC_DOWNCAST( CChildFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
+	CClassFrame* pChild = STATIC_DOWNCAST( CClassFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
 	CNodeClass* pClass = new CNodeClass;
 
 	pClass->pChildWindow = pChild;
@@ -591,11 +591,11 @@ bool CReClassExApp::IsNodeValid( CNodeBase* pCheckNode )
 void CReClassExApp::OnButtonNewClass( )
 {
 	CMainFrame* pFrame = STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
-	CChildFrame* pChild = STATIC_DOWNCAST( CChildFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
+	CClassFrame* pChild = STATIC_DOWNCAST( CClassFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
 	CNodeClass* pClass = new CNodeClass;
 
 	pClass->SetChildFrame( pChild );
-	pClass->idx = (int)g_ReClassApp.m_Classes.size( );
+	pClass->Idx = g_ReClassApp.m_Classes.size( );
 	pChild->SetClass( pClass );
 
 	g_ReClassApp.m_Classes.push_back( pClass );

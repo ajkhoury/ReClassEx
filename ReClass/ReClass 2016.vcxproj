@@ -363,9 +363,9 @@
     <ClInclude Include="CScintillaEdit.h" />
     <ClInclude Include="DialogAbout.h" />
     <ClInclude Include="BitArray.h" />
-    <ClInclude Include="CChildFrame.h" />
-    <ClInclude Include="CChildView.h" />
-    <ClInclude Include="Classes.h" />
+    <ClInclude Include="CClassFrame.h" />
+    <ClInclude Include="CClassView.h" />
+    <ClInclude Include="Nodes.h" />
     <ClInclude Include="CMemory.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DialogClasses.h" />
@@ -404,8 +404,8 @@
   <ItemGroup>
     <ClCompile Include="CCustomEdit.cpp" />
     <ClCompile Include="CCustomToolTip.cpp" />
-    <ClCompile Include="CChildFrame.cpp" />
-    <ClCompile Include="CChildView.cpp" />
+    <ClCompile Include="CClassFrame.cpp" />
+    <ClCompile Include="CClassView.cpp" />
     <ClCompile Include="CNodeArray.cpp" />
     <ClCompile Include="CNodeBase.cpp" />
     <ClCompile Include="CNodeBits.cpp" />

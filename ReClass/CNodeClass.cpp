@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CNodeClass.h"
-#include "CChildFrame.h"
+#include "CClassFrame.h"
 
 CNodeClass::CNodeClass( )
 {
@@ -17,7 +17,7 @@ CNodeClass::CNodeClass( )
 	m_strOffset.SetString( szOffset );
 
 	RequestPosition = -1;
-	idx = 0;
+	Idx = 0;
 	pChildWindow = nullptr;
 }
 
@@ -62,14 +62,13 @@ NodeSize CNodeClass::Draw( const ViewInfo& View, int x, int y )
 	// printf( "Print %s at %d\n", m_strOffset, x );
 
 	x = AddText( View, x, y, g_crIndex, HS_NONE, _T( "(" ) );
-	x = AddText( View, x, y, g_crIndex, HS_OPENCLOSE, _T( "%i" ), idx );
+	x = AddText( View, x, y, g_crIndex, HS_OPENCLOSE, _T( "%i" ), Idx );
 	x = AddText( View, x, y, g_crIndex, HS_NONE, _T( ")" ) );
 
 	x = AddText( View, x, y, g_crType, HS_NONE, _T( "Class " ) );
 	x = AddText( View, x, y, g_crName, HS_NAME, m_strName ) + g_FontWidth;
 	x = AddText( View, x, y, g_crValue, HS_NONE, _T( "[%i]" ), GetMemorySize( ) ) + g_FontWidth;
 	x = AddComment( View, x, y );
-
 
 	drawnSize.x = x;
 	y += g_FontHeight;

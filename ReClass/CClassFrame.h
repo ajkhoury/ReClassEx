@@ -1,12 +1,12 @@
 #pragma once
 
-#include "CChildView.h"
+#include "CClassView.h"
 
-class CChildFrame : public CMDIChildWndEx
+class CClassFrame : public CMDIChildWndEx
 {
-	DECLARE_DYNCREATE(CChildFrame)
+	DECLARE_DYNCREATE(CClassFrame)
 public:
-	CChildFrame( );
+	CClassFrame( );
 
 // Attributes
 public:
@@ -21,13 +21,13 @@ public:
 
 // Implementation
 public:
-	VOID SetClass( CNodeClass* pClass ) { m_pChildView->SetClass( pClass ); }
-	CChildView* GetChildView( ) { return m_pChildView; }
+	inline VOID SetClass( CNodeClass* pClass ) { m_pClassView->SetClass( pClass ); }
+	inline CClassView* GetChildView( ) { return m_pClassView; }
 
 	// View for the client area of the frame.
-	CChildView* m_pChildView;
+	CClassView* m_pClassView;
 
-	virtual ~CChildFrame();
+	virtual ~CClassFrame();
 
 #ifdef _DEBUG
 	virtual void AssertValid() const;

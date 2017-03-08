@@ -113,7 +113,7 @@ NodeSize CNodeFunction::Draw( const ViewInfo& View, int x, int y )
 	return drawnSize;
 }
 
-void CNodeFunction::Initialize( CChildView* pChild, ULONG_PTR Address )
+void CNodeFunction::Initialize( CClassView* pChild, ULONG_PTR Address )
 {
 	if (m_pEdit != NULL)
 	{

@@ -166,9 +166,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Classes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -328,12 +325,6 @@
     <ClInclude Include="HotSpot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CChildView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CChildFrame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CMainFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -380,6 +371,15 @@
       <Filter>Header Files\Native</Filter>
     </ClInclude>
     <ClInclude Include="ReClassEx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Nodes.h">
+      <Filter>Header Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="CClassView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CClassFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -534,12 +534,6 @@
     <ClCompile Include="CCustomEdit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CChildView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CChildFrame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CMainFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -550,6 +544,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ReClassEx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CClassView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CClassFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

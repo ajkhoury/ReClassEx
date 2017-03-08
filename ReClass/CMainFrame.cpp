@@ -2,7 +2,7 @@
 
 #include <afxtabctrl.h>
 
-#include "CChildFrame.h"
+#include "CClassFrame.h"
 #include "CMainFrame.h"
 
 #include "DialogClasses.h"
@@ -396,7 +396,7 @@ BOOL CMainFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 		{
 			UINT idx = nID - WM_CLASSMENU;
 			
-			CChildFrame* pChild = STATIC_DOWNCAST( CChildFrame, CreateNewChild( RUNTIME_CLASS( CChildFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
+			CClassFrame* pChild = STATIC_DOWNCAST( CClassFrame, CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
 			CNodeClass* pClass = g_ReClassApp.m_Classes[idx];
 
 			pChild->SetTitle( pClass->GetName( ).GetString( ) );
@@ -525,7 +525,7 @@ void CMainFrame::OnButtonEditClass( )
 		CMenu menu;
 		menu.CreatePopupMenu( );
 
-		for (UINT i = 0; i < g_ReClassApp.m_Classes.size( ); i++)
+		for (size_t i = 0; i < g_ReClassApp.m_Classes.size( ); i++)
 		{
 			CString MenuItem;
 			MenuItem.Format( _T( "%i - %s" ), i, g_ReClassApp.m_Classes[i]->GetName( ).GetString( ) );
@@ -551,7 +551,7 @@ void CMainFrame::OnButtonDeleteClass( )
 
 	menu.CreatePopupMenu( );
 
-	for (UINT i = 0; i < g_ReClassApp.m_Classes.size( ); i++)
+	for (size_t i = 0; i < g_ReClassApp.m_Classes.size( ); i++)
 	{
 		menu.AppendMenu( MF_STRING | MF_ENABLED, WM_DELETECLASSMENU + i, g_ReClassApp.m_Classes[i]->GetName( ) );
 	}

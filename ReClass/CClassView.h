@@ -7,13 +7,13 @@
 #include "CCustomEdit.h"
 #include "CCustomToolTip.h"
 
-// CChildView window
-class CChildView : public CWnd
+// CClassView window
+class CClassView : public CWnd
 {
 	// Construction
 public:
-	CChildView( );
-	virtual ~CChildView( );
+	CClassView( );
+	virtual ~CClassView( );
 
 	// Overrides
 protected:
