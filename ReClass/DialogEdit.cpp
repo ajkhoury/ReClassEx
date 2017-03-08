@@ -1,7 +1,7 @@
 // DialogEdit.cpp : implementation file
 //
 #include "stdafx.h"
-#include "ReClass2016.h"
+#include "ReClassEx.h"
 #include "DialogEdit.h"
 #include "afxdialogex.h"
 

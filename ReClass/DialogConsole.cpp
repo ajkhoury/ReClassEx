@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "DialogConsole.h"
-#include "ReClass2016.h"
+#include "ReClassEx.h"
 #include "afxdialogex.h"
 
 // Console keywords

@@ -393,7 +393,7 @@
     <ClInclude Include="Native.h" />
     <ClInclude Include="PluginAPI.h" />
     <ClInclude Include="SymbolReader.h" />
-    <ClInclude Include="ReClass2016.h" />
+    <ClInclude Include="ReClassEx.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Symbols.h" />
@@ -453,7 +453,7 @@
     <ClCompile Include="NtDll.cpp" />
     <ClCompile Include="PluginAPI.cpp" />
     <ClCompile Include="SymbolReader.cpp" />
-    <ClCompile Include="ReClass2016.cpp" />
+    <ClCompile Include="ReClassEx.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

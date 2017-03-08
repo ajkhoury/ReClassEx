@@ -187,9 +187,6 @@
     <ClInclude Include="SymbolReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ReClass2016.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CNodeBase.h">
       <Filter>Header Files\Nodes</Filter>
     </ClInclude>
@@ -382,6 +379,9 @@
     <ClInclude Include="Native.h">
       <Filter>Header Files\Native</Filter>
     </ClInclude>
+    <ClInclude Include="ReClassEx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -397,9 +397,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SymbolReader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ReClass2016.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CNodeBase.cpp">
@@ -550,6 +547,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CScintillaEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ReClassEx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
