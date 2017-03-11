@@ -946,9 +946,9 @@ ULONG_PTR ConvertStrToAddress( CString str )
 			{
 				CString ModName = g_MemMapModules[i].Name;
 				ModName.MakeLower( );
-				if (StrStr( ModName, a ) != NULL)
+				if ( ModName.CompareNoCase( a ) == 0 )
 				{
-					curadd = g_MemMapModules[i].Start;
+					curadd = g_MemMapModules[ i ].Start;
 					bMod = true;
 					break;
 				}
