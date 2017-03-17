@@ -362,29 +362,29 @@ TCHAR GetBeginChar( CString name )
 	return '_';
 }
 
-bool SortBeginnings( std::pair<TCHAR, std::vector<std::pair<CString, UINT>>> i, std::pair<TCHAR, std::vector<std::pair<CString, UINT>>> j )
+bool SortBeginnings( std::pair<TCHAR, std::vector<std::pair<CString, size_t>>> i, std::pair<TCHAR, std::vector<std::pair<CString, size_t>>> j )
 {
 	return (i.first < j.first);
 }
 
-bool SortClassesByName( std::pair<CString, UINT> i, std::pair<CString, UINT> j )
+bool SortClassesByName( std::pair<CString, size_t> i, std::pair<CString, size_t> j )
 {
 	return (GetBeginChar( i.first ) < GetBeginChar( j.first ));
 }
 
-std::vector<std::pair<TCHAR, std::vector<std::pair<CString, UINT>>>> ExplodeByFirstChar( std::vector<std::pair<CString, UINT>> classRefs )
+std::vector<std::pair<TCHAR, std::vector<std::pair<CString, size_t>>>> ExplodeByFirstChar( std::vector<std::pair<CString, size_t>> classRefs )
 {
-	std::vector<std::pair<TCHAR, std::vector<std::pair<CString, UINT>>>> out;
+	std::vector<std::pair<TCHAR, std::vector<std::pair<CString, size_t>>>> out;
 
 	for (int i = 0; i < classRefs.size( ); i++)
 	{
-		std::pair<CString, UINT>* classRef = &classRefs[i];
+		std::pair<CString, size_t>* classRef = &classRefs[i];
 
 		// determine begin char
 		TCHAR begin = GetBeginChar( classRef->first );
 
 		// find if already in out
-		std::vector<std::pair<CString, UINT>>* outByBegin = NULL;
+		std::vector<std::pair<CString, size_t>>* outByBegin = NULL;
 		for (int j = 0; j < out.size( ); j++)
 		{
 			if (out[j].first == begin)
@@ -397,7 +397,7 @@ std::vector<std::pair<TCHAR, std::vector<std::pair<CString, UINT>>>> ExplodeByFi
 		// create if missing
 		if (outByBegin == NULL)
 		{
-			out.push_back( std::pair<TCHAR, std::vector<std::pair<CString, UINT>>>( begin, std::vector<std::pair<CString, UINT>>( ) ) );
+			out.push_back( std::pair<TCHAR, std::vector<std::pair<CString, size_t>>>( begin, std::vector<std::pair<CString, size_t>>( ) ) );
 			outByBegin = &out[out.size( ) - 1].second;
 		}
 
@@ -536,7 +536,7 @@ void CClassView::OnLButtonDown( UINT nFlags, CPoint point )
 				CImage img;
 				CBitmap bmp;
 
-				std::vector<std::pair<CString, UINT>> classRefs;
+				std::vector<std::pair<CString, size_t>> classRefs;
 
 				CRect pos = { 0 };
 				CNodeBase* pNode = NULL;
@@ -558,10 +558,10 @@ void CClassView::OnLButtonDown( UINT nFlags, CPoint point )
 				{
 					if ((HotSpots[i].Type == HS_CHANGE_X) && (pNode->GetParent( ) == g_ReClassApp.m_Classes[m]))
 						continue;
-					classRefs.push_back( std::pair<CString, UINT>( g_ReClassApp.m_Classes[m]->GetName( ), m ) );
+					classRefs.push_back( std::pair<CString, size_t>( g_ReClassApp.m_Classes[m]->GetName( ), m ) );
 				}
 
-				std::vector<std::pair<wchar_t, std::vector<std::pair<CString, UINT>>>> out = ExplodeByFirstChar( classRefs );
+				std::vector<std::pair<wchar_t, std::vector<std::pair<CString, size_t>>>> out = ExplodeByFirstChar( classRefs );
 
 				for (UINT i = 0; i < out.size( ); i++)
 				{
@@ -709,7 +709,7 @@ void CClassView::OnPaint( )
 		{
 			if ((m_pClass->RequestPosition >= 0) && (m_pClass->RequestPosition < g_ReClassApp.m_Classes.size( )))
 			{
-				int idx = -1;
+				size_t idx = -1;
 				for (size_t i = 0; i < g_ReClassApp.m_Classes.size( ); i++)
 				{
 					CNodeClass* pClass = View.Classes->at( i );
