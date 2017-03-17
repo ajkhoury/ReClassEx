@@ -378,12 +378,12 @@ void CReClassExApp::OnButtonReset( )
 	}
 
 	m_Classes.clear( );
+	g_NodeCreateIndex = 0;
 
 	m_strHeader = _T( "" );
 	m_strFooter = _T( "" );
 	m_strNotes = _T( "" );
-
-	m_strCurrentFilePath = "";
+	m_strCurrentFilePath = _T("");
 }
 
 void CReClassExApp::OnButtonPause( )
