@@ -31,6 +31,7 @@ ReClass Extended
 - Added Plugin API for making plugins
 - Disassembly syntax highlighting (buggy)
 - View unsigned types in hexidecimal form via toggle
+- Not really a feature but the "reclass files" folder contains a heap of reclass files with a ton already reversed for many different games
 
 ![Alt text](http://i.imgur.com/W6ytfG6.png "Automatic symbol resolving")
 ![Alt text](http://i.imgur.com/hBNyEFG.png "ReClass")
