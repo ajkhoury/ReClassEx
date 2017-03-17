@@ -45,7 +45,7 @@ void CDialogClasses::BuildList( )
 		CString name = g_ReClassApp.m_Classes[i]->GetName( );
 		if (m_Filter.GetLength( ) != 0 && name.MakeUpper( ).Find( m_Filter.MakeUpper( ) ) == -1)
 			continue;
-		AddData( i, 0, name );
+		AddData( (int)i, 0, name );
 	}
 }
 
@@ -76,7 +76,7 @@ inline int FindClassByName( const TCHAR* szName )
 		if (!pNodeClass)
 			continue;
 		if (_tcsicmp( pNodeClass->GetName( ), szName ) == 0)
-			return id;
+			return (int)id;
 	}
 	return -1;
 };

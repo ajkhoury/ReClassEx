@@ -80,20 +80,23 @@ NodeSize CNodeClass::Draw( const ViewInfo& View, int x, int y )
 
 		for (UINT i = 0; i < m_ChildNodes.size( ); i++)
 		{
-			if (m_ChildNodes[i]->GetType( ) == nt_vtable)
-			{
-				CNodeVTable* pVTableNode = static_cast<CNodeVTable*>(m_ChildNodes[i]);
-				if (!pVTableNode->IsInitialized( ))
+			CNodeBase* pNode = m_ChildNodes[i];
+			if (pNode != nullptr)
+			{			
+				if (pNode->GetType( ) == nt_vtable)
 				{
-					pVTableNode->Initialize( static_cast<CWnd*>(pChildWindow->GetChildView( )) );
-					//pVTableNode->Initialize(  );
+					CNodeVTable* pVTableNode = static_cast<CNodeVTable*>(pNode);
+					if (!pVTableNode->IsInitialized( ))
+						pVTableNode->Initialize( static_cast<CWnd*>(pChildWindow->GetChildView( )) );
 				}
-			}
-			childDrawnSize = m_ChildNodes[i]->Draw( nv, tx, y );
-			y = childDrawnSize.y;
-			if (childDrawnSize.x > drawnSize.x)
-			{
-				drawnSize.x = childDrawnSize.x;
+
+				childDrawnSize = pNode->Draw( nv, tx, y );
+
+				y = childDrawnSize.y;
+				if (childDrawnSize.x > drawnSize.x)
+				{
+					drawnSize.x = childDrawnSize.x;
+				}
 			}
 		}
 	}

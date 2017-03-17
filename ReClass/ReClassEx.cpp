@@ -63,6 +63,7 @@ CReClassExApp::CReClassExApp( )
 
 	g_FontWidth = FONT_DEFAULT_WIDTH;
 	g_FontHeight = FONT_DEFAULT_HEIGHT;
+
 }
 
 void CReClassExApp::ResizeMemoryFont( int font_width, int font_height )

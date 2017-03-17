@@ -875,92 +875,103 @@ void CClassView::OnMouseHover( UINT nFlags, CPoint point )
 					{
 						if (HotSpots[i].object->IsLevelOpen( HotSpots[i].Level ) == FALSE)
 						{
-
-							ULONG_PTR StartAddress = HotSpots[i].Address;
+							ULONG_PTR StartAddress = 0;
 							UCHAR Code[1024] = { 0xCC }; // set max function size to 1024] bytes
 							UIntPtr EndCode = (UIntPtr)(Code + 1024);
 							int textHeight = 0;
+							int longestLine = 0;
 							CStringA strDisassembly;
 
-							// Read in process bytes
-							if (ReClassReadMemory( (LPVOID)StartAddress, (LPVOID)Code, 1024 ) == TRUE)
+							if (ReClassReadMemory( (LPVOID)HotSpots[i].Address, &StartAddress, sizeof( ULONG_PTR ) ) == TRUE && StartAddress != 0)
 							{
-								DISASM MyDisasm;
-								BOOL Error = FALSE;
-
-								ZeroMemory( &MyDisasm, sizeof( DISASM ) );
-								MyDisasm.EIP = (UIntPtr)Code;
-								MyDisasm.VirtualAddr = (UInt64)StartAddress;
-								#ifdef _WIN64
-								MyDisasm.Archi = 64;
-								#else
-								MyDisasm.Archi = 0;
-								#endif
-								MyDisasm.Options = MasmSyntax | PrefixedNumeral | ShowSegmentRegs;
-
-								// Get assembly lines
-								while (Error == FALSE)
+								// Read in process bytes
+								if (ReClassReadMemory( (LPVOID)StartAddress, (LPVOID)Code, 1024 ) == TRUE)
 								{
-									int disasmLen = 0;
+									DISASM MyDisasm;
+									BOOL Error = FALSE;
 
-									MyDisasm.SecurityBlock = (UInt32)(EndCode - MyDisasm.EIP);
+									ZeroMemory( &MyDisasm, sizeof( DISASM ) );
+									MyDisasm.EIP = (UIntPtr)Code;
+									MyDisasm.VirtualAddr = (UInt64)StartAddress;
+									#ifdef _WIN64
+									MyDisasm.Archi = 64;
+									#else
+									MyDisasm.Archi = 0;
+									#endif
+									MyDisasm.Options = MasmSyntax | PrefixedNumeral | ShowSegmentRegs;
 
-									disasmLen = Disasm( &MyDisasm );
-									if (disasmLen == OUT_OF_BLOCK || disasmLen == UNKNOWN_OPCODE)
+									// Get assembly lines
+									while (Error == FALSE)
 									{
-										Error = TRUE;
-									}
-									else
-									{
-										CHAR szInstruction[256] = { 0 };
-										CHAR szBytes[128] = { 0 };
+										int disasmLen = 0;
 
-										// INT3 instruction usually indicates the end of a function (obviously this is temporary)
-										if (MyDisasm.Instruction.Opcode == 0xCC)
-											break;
+										MyDisasm.SecurityBlock = (UInt32)(EndCode - MyDisasm.EIP);
 
-										// Generate instruction bytes
-										for (int i = 0; i < disasmLen; i++)
+										disasmLen = Disasm( &MyDisasm );
+										if (disasmLen == OUT_OF_BLOCK || disasmLen == UNKNOWN_OPCODE)
 										{
-											sprintf_s( szBytes + (i * 3), 128, "%02X ", *(CHAR*)(MyDisasm.EIP + i) );
+											Error = TRUE;
 										}
+										else
+										{
+											CHAR szInstruction[256] = { 0 };
+											CHAR szBytes[128] = { 0 };
 
-										// Create full instruction string
-										sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", (ULONG_PTR)MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
-										strDisassembly += szInstruction;
+											// INT3 instruction usually indicates the end of a function
+											if (MyDisasm.Instruction.Opcode == 0xCC)
+												break;
 
-										// Increment the text height
-										textHeight += g_FontHeight;
+											// Generate instruction bytes
+											for (int i = 0; i < disasmLen; i++)
+											{
+												CHAR szByte[8];
+												sprintf_s( szByte, "%02X ", *(UCHAR*)(MyDisasm.EIP + i) );
+												strcat_s( szBytes, szByte );
+											}
 
-										// Increment by instruction length
-										MyDisasm.EIP += disasmLen;
-										MyDisasm.VirtualAddr += disasmLen;
+											// Create full instruction string
+											int len = sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", (ULONG_PTR)MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
 
-										if (MyDisasm.EIP >= EndCode)
-											break;
+											if (len > longestLine)
+												longestLine = len;
+
+											strDisassembly += szInstruction;
+
+											// Increment the text height
+											textHeight += g_FontHeight;
+
+											// Increment by instruction length
+											MyDisasm.EIP += disasmLen;
+											MyDisasm.VirtualAddr += disasmLen;
+
+											if (MyDisasm.EIP >= EndCode)
+												break;
+										}
 									}
+
 								}
+								else
+								{
+									strDisassembly = "ERROR: Could not read memory";
+									textHeight += g_FontHeight;
+								}
+
+								m_ToolTip.EnableWindow( FALSE );
+								#ifdef UNICODE
+								m_ToolTip.SetWindowText( CA2W( strDisassembly ).m_psz );
+								#else
+								m_ToolTip.SetWindowText( strDisassembly.GetString( ) );
+								#endif
+								
+								m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, (longestLine + 1) * g_FontWidth, textHeight + g_FontHeight, SWP_NOZORDER );
+
+								m_ToolTip.ShowWindow( SW_SHOW );
 							}
 							else
 							{
 								strDisassembly = "ERROR: Could not read memory";
 								textHeight += g_FontHeight;
 							}
-
-							m_ToolTip.EnableWindow( FALSE );
-							#ifdef UNICODE
-							m_ToolTip.SetWindowText( CA2W( strDisassembly ).m_psz );
-							#else
-							m_ToolTip.SetWindowText( strDisassembly.GetString( ) );
-							#endif
-
-							#ifdef _WIN64
-							m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 450, textHeight, SWP_NOZORDER );
-							#else
-							m_ToolTip.SetWindowPos( NULL, point.x + 16, point.y + 16, 450, textHeight, SWP_NOZORDER );
-							#endif
-
-							m_ToolTip.ShowWindow( SW_SHOW );
 						}
 					}
 					else if (nodeType == nt_hex64)

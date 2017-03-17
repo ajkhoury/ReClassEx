@@ -240,7 +240,7 @@ void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
 				CHAR szInstruction[256] = { 0 };
 				CHAR szBytes[128] = { 0 };
 
-				// INT3 instruction
+				// INT3 instruction usually indicates the end of a function
 				if (MyDisasm.Instruction.Opcode == 0xCC)
 					break;
 
