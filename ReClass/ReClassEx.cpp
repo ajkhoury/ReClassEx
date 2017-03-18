@@ -930,17 +930,17 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 				}
 			}
 		}
-	}
+	}	
 
-	char szFilename[MAX_PATH] = { 0 };
+	FILE* fp = NULL;
 	#ifdef UNICODE
-	size_t converted = 0;
-	wcstombs_s( &converted, szFilename, FileName, MAX_PATH );
+	_wfopen_s( &fp, FileName, L"w+" );
 	#else
-	strcpy_s( szFilename, FileName );
+	fopen_s( &fp, FileName, "w+" );
 	#endif
+	XMLError err = doc.SaveFile( fp );
+	fclose( fp );
 
-	XMLError err = doc.SaveFile( szFilename );
 	if (err == XML_NO_ERROR)
 	{
 		PrintOut( _T( "ReClass files saved successfully to \"%s\"" ), FileName );
