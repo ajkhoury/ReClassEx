@@ -930,7 +930,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 				}
 			}
 		}
-	}	
+	}
 
 	FILE* fp = NULL;
 	#ifdef UNICODE
