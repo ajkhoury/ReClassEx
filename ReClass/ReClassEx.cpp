@@ -934,9 +934,9 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 
 	FILE* fp = NULL;
 	#ifdef UNICODE
-	_wfopen_s( &fp, FileName, L"w+" );
+	_wfopen_s( &fp, FileName, L"wb" );
 	#else
-	fopen_s( &fp, FileName, "w+" );
+	fopen_s( &fp, FileName, "wb" );
 	#endif
 	XMLError err = doc.SaveFile( fp );
 	fclose( fp );
@@ -989,16 +989,19 @@ void CReClassExApp::OnFileOpen( )
 
 	#ifdef UNICODE
 	#define _CA2W(psz) CA2W(psz)
-	// Convert path to mbs in unicode mode
-	char szFilename[MAX_PATH] = { 0 };
-	size_t converted = 0;
-	wcstombs_s( &converted, szFilename, pathName, MAX_PATH );
 	#else
 	#define _CA2W(psz) (psz)
-	char* szFilename = pathName.GetBuffer( );
 	#endif
 
-	XMLError ret = doc.LoadFile( szFilename );
+	FILE* fp = NULL;
+	#ifdef UNICODE
+	_wfopen_s( &fp, pathName, L"rb" );
+	#else
+	fopen_s( &fp, pathName, "rb" );
+	#endif
+	XMLError ret = doc.LoadFile( fp );
+	fclose( fp );
+
 	if (ret != XML_NO_ERROR)
 		return;
 
