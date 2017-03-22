@@ -413,14 +413,7 @@ BOOL CMainFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 		if (nID >= WM_DELETECLASSMENU && nID < (WM_DELETECLASSMENU + WM_MAXITEMS))
 		{
 			UINT idx = nID - WM_DELETECLASSMENU;
-
-			if (g_ReClassApp.m_Classes[idx]->pChildWindow != NULL)
-			{
-				g_ReClassApp.m_Classes[idx]->pChildWindow->SendMessage( WM_CLOSE, 0, 0 );
-			}
-
 			g_ReClassApp.DeleteClass( g_ReClassApp.m_Classes[idx] );
-
 			return TRUE;
 		}
 	}

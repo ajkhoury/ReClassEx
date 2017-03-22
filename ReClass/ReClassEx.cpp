@@ -1499,7 +1499,14 @@ void CReClassExApp::DeleteClass( CNodeClass* pClass )
 {
 	PrintOut( _T( "DeleteClass(\"%s\") called" ), pClass->GetName( ).GetString( ) );
 
+	if (pClass->pChildWindow != NULL)
+	{
+		pClass->pChildWindow->SendMessage( WM_CLOSE, 0, 0 );
+		pClass->pChildWindow = NULL;
+	}
+
 	CNodeBase* pNode = IsNodeRef( pClass );
+	
 	if (pNode)
 	{
 		PrintOut( _T( "Class still has a reference in %s.%s" ), pNode->GetParent( )->GetName( ).GetString( ), pNode->GetName( ).GetString( ) );
