@@ -399,13 +399,13 @@ BOOL CMainFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 			CClassFrame* pChild = STATIC_DOWNCAST( CClassFrame, CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
 			CNodeClass* pClass = g_ReClassApp.m_Classes[idx];
 
-			pChild->SetTitle( pClass->GetName( ).GetString( ) );
-			pChild->SetWindowText( pClass->GetName( ).GetString( ) );
+			pChild->SetTitle( pClass->GetName( ) );
+			pChild->SetWindowText( pClass->GetName( ) );
 			pChild->SetClass( pClass );
 
 			pClass->SetChildFrame( pChild );
 
-			UpdateFrameTitleForDocument( pClass->GetName( ).GetString( ) );
+			UpdateFrameTitleForDocument( pClass->GetName( ) );
 
 			return TRUE;
 		}
@@ -425,6 +425,7 @@ void CMainFrame::OnCheckAddress( )
 {
 	g_bAddress = !g_bAddress;
 }
+
 void CMainFrame::OnUpdateCheckAddress( CCmdUI *pCmdUI )
 {
 	pCmdUI->SetCheck( g_bAddress );
@@ -434,6 +435,7 @@ void CMainFrame::OnCheckOffset( )
 {
 	g_bOffset = !g_bOffset;
 }
+
 void CMainFrame::OnUpdateCheckOffset( CCmdUI *pCmdUI )
 {
 	pCmdUI->SetCheck( g_bOffset );
@@ -443,6 +445,7 @@ void CMainFrame::OnCheckText( )
 {
 	g_bText = !g_bText;
 }
+
 void CMainFrame::OnUpdateCheckText( CCmdUI *pCmdUI )
 {
 	pCmdUI->SetCheck( g_bText );
@@ -455,12 +458,9 @@ void CMainFrame::OnCheckRtti( )
 
 void CMainFrame::OnUpdateCheckRtti( CCmdUI *pCmdUI )
 {
-	if (!g_bPointers)
-	{
+	if (!g_bPointers) {
 		pCmdUI->Enable( FALSE );
-	}
-	else
-	{
+	} else {
 		pCmdUI->Enable( TRUE );
 		pCmdUI->SetCheck( g_bRTTI );
 	}
@@ -470,14 +470,11 @@ void CMainFrame::OnCheckRandomWindowName( )
 {
 	g_bRandomName = !g_bRandomName;
 
-	if (g_bRandomName)
-	{
+	if (g_bRandomName) {
 		TCHAR tcsRandom[16] = { 0 };
 		Utils::GenerateRandomString( tcsRandom, 16 );
 		SetTitle( tcsRandom );
-	}
-	else
-	{
+	} else {
 		SetTitle( _T( "ReClass 2016" ) );
 	}
 

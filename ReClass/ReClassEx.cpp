@@ -683,7 +683,7 @@ CMFCRibbonBar* CReClassExApp::GetRibbonBar( )
 
 CNodeBase* CReClassExApp::CreateNewNode( NodeType Type )
 {
-	switch (Type)
+	switch ( Type )
 	{
 	case nt_class:			return new CNodeClass;
 
@@ -723,6 +723,8 @@ CNodeBase* CReClassExApp::CreateNewNode( NodeType Type )
 
 	case nt_pointer:		return new CNodePtr;
 	case nt_array:			return new CNodeArray;
+	case nt_ptrarray:		return new CNodePtrArray;
+
 	case nt_instance:		return new CNodeClassInstance;
 	}
 	return NULL;
@@ -875,8 +877,26 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 				item->SetAttribute( "Size", (UINT)pArray->GetClass( )->GetMemorySize( ) );
 				item->SetAttribute( "Comment", strArrayNodeComment );
 				pXmlNode->LinkEndChild( item );
-			}
-			else if (pNode->GetType( ) == nt_pointer)
+			}else if( pNode->GetType() == nt_ptrarray )
+			{ 
+				CNodePtrArray* pArray = (CNodePtrArray*)pNode;
+				pXmlNode->SetAttribute( "Count", (UINT)pArray->Count( ) );
+
+				#ifdef UNICODE
+				CStringA strArrayNodeName = CW2A( pArray->GetClass()->GetName() );
+				CStringA strArrayNodeComment = CW2A( pArray->GetClass()->GetComment() );
+				#else
+				CStringA strArrayNodeName = pArray->GetClass()->GetName();
+				CStringA strArrayNodeComment = pArray->GetClass()->GetComment();
+				#endif
+
+				XMLElement *item = doc.NewElement( "Array" );
+				item->SetAttribute( "Name", strArrayNodeName );
+				item->SetAttribute( "Type", pArray->GetClass( )->GetType( ) );
+				item->SetAttribute( "Size", (UINT)pArray->GetClass( )->GetMemorySize( ) );
+				item->SetAttribute( "Comment", strArrayNodeComment );
+				pXmlNode->LinkEndChild( item );
+			}else if (pNode->GetType( ) == nt_pointer)
 			{
 				CNodePtr* pPointer = (CNodePtr*)pNode;
 				#ifdef UNICODE
@@ -1133,8 +1153,27 @@ void CReClassExApp::OnFileOpen( )
 						}
 						// TODO: Handle other type of arrays....
 					}
-				}
-				else if (Type == nt_pointer)
+				} else if ( Type == nt_ptrarray )
+				{
+					CNodePtrArray* pArray = (CNodePtrArray*) pNode;
+					pArray->Count() = (DWORD) atoi( pXmlClassElement->Attribute( "Count" ) );
+
+					XMLElement* pXmlArrayElement = pXmlClassElement->FirstChildElement( );
+					if ( pXmlArrayElement )
+					{
+						CString Name = _CA2W( pXmlArrayElement->Attribute( "Name" ) );
+						CString Comment = _CA2W( pXmlArrayElement->Attribute( "Comment" ) );
+						int ArrayType = nt_none;
+						int ArraySize = 0;
+
+						pXmlArrayElement->QueryIntAttribute( "Type", &ArrayType );
+						pXmlClassElement->QueryIntAttribute( "Size", &ArraySize );
+
+						if ( ArrayType == nt_class ) {
+							links.push_back( Link( Name, pNode ) );
+						}
+					}
+				}else if (Type == nt_pointer)
 				{
 					CString PointerStr = _CA2W( pXmlClassElement->Attribute( "Pointer" ) );
 					links.push_back( Link( PointerStr, pNode ) );
@@ -1173,6 +1212,10 @@ void CReClassExApp::OnFileOpen( )
 				if (Type == nt_array)
 				{
 					static_cast<CNodeArray*>(it->second)->SetClass( m_Classes[i] );
+				}
+				if ( Type == nt_ptrarray )
+				{
+					static_cast<CNodePtrArray*>(it->second)->SetClass( m_Classes[i] );
 				}
 			}
 		}
@@ -1390,6 +1433,13 @@ void CReClassExApp::OnButtonGenerate( )
 			{
 				CNodeArray* pArray = (CNodeArray*)pNode;
 				t.Format( _T( "\t%s %s[%i]; //0x%0.4X %s\r\n" ), pArray->GetClass( )->GetName( ), pArray->GetName( ), pArray->GetTotal( ), pArray->GetOffset( ), pArray->GetComment( ) );
+				var.push_back( t );
+			}
+
+			if ( Type == nt_ptrarray )
+			{
+				CNodePtrArray* pArray = (CNodePtrArray*) pNode;
+				t.Format( _T( "\t%s** %s; //0x%0.4X %s\r\n" ), pArray->GetClass( )->GetName( ), pArray->GetName( ), pArray->GetOffset( ), pArray->GetComment( ) );
 				var.push_back( t );
 			}
 

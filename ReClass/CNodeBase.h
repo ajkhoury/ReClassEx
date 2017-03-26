@@ -42,6 +42,7 @@ typedef struct _TYPE_INFO
 	static int  GetName( ULONG_PTR typeInfo, __out LPSTR buffer, int bufferSize );
 	static void DoStruct( ULONG_PTR typeInfo );
 } TYPE_INFO, *PTYPE_INFO;
+
 typedef struct _TYPE_INFO TYPE_DESCRIPTOR;
 typedef TYPE_DESCRIPTOR* PTYPE_DESCRIPTOR;
 

@@ -184,6 +184,9 @@ public:
 	afx_msg void OnTypeArray( );
 	afx_msg void OnUpdateTypeArray( CCmdUI *pCmdUI );
 
+	afx_msg void OnTypePtrArray( );
+	afx_msg void OnUpdateTypePtrArray( CCmdUI *pCmdUI );
+
 	afx_msg void OnTypeClass( );
 	afx_msg void OnUpdateTypeClass( CCmdUI *pCmdUI );
 
