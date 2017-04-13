@@ -1111,12 +1111,14 @@ void CReClassExApp::OnFileOpen( )
 					XMLElement* pXmlVTableFunctionPtrElement = pXmlClassElement->FirstChildElement( );
 					while (pXmlVTableFunctionPtrElement)
 					{
+						CNodeVTable* pVMTNode = static_cast<CNodeVTable*>( pNode );
+						pVMTNode->Initialize( GetMainFrame( ) );
 						CNodeFunctionPtr* pFunctionPtr = new CNodeFunctionPtr;
 						pFunctionPtr->SetName( _CA2W( pXmlVTableFunctionPtrElement->Attribute( "Name" ) ) );
 						pFunctionPtr->SetComment( _CA2W( pXmlVTableFunctionPtrElement->Attribute( "Comment" ) ) );
 						pFunctionPtr->SetHidden( atoi( pXmlVTableFunctionPtrElement->Attribute( "bHidden" ) ) > 0 ? true : false );
-						pFunctionPtr->SetParent( pNode );
-						pNode->AddNode( pFunctionPtr );
+						pFunctionPtr->SetParent( pVMTNode );
+						pVMTNode->AddNode( pFunctionPtr );
 
 						XMLElement* pXmlCodeElement = pXmlVTableFunctionPtrElement->FirstChildElement( );
 						while (pXmlCodeElement)
@@ -1439,10 +1441,9 @@ void CReClassExApp::OnButtonGenerate( )
 			if ( Type == nt_ptrarray )
 			{
 				CNodePtrArray* pArray = (CNodePtrArray*) pNode;
-				t.Format( _T( "\t%s** %s; //0x%0.4X %s\r\n" ), pArray->GetClass( )->GetName( ), pArray->GetName( ), pArray->GetOffset( ), pArray->GetComment( ) );
+				t.Format( _T( "\t%s* %s[%i]; //0x%0.4X %s\r\n" ), pArray->GetClass( )->GetName( ), pArray->GetName( ), pArray->Count( ), pArray->GetOffset( ), pArray->GetComment( ) );
 				var.push_back( t );
 			}
-
 		}
 
 		if (fill > 0)

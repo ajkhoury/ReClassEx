@@ -36,20 +36,27 @@ NodeSize CNodePtrArray::Draw( const ViewInfo& View, int x, int y )
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( ")" ) );
 	tx = AddIcon( View, tx, y, ICON_RIGHT, HS_DROP, HS_CLICK );
 
-	tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( "<%s* Size=%i>" ), m_NodePtr->GetClass()->GetName( ), m_NodePtr->GetClass( )->GetMemorySize( ) );
+	tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( "<%s* Size=%i>" ), m_NodePtr->GetClass()->GetName( ), GetMemorySize( ) );
 	tx = AddIcon( View, tx, y, ICON_CHANGE, HS_CLICK, HS_CHANGE_X );
 
 	tx += g_FontWidth;
 	tx = AddComment( View, tx, y );
 	
 	y += g_FontHeight;
-	if ( m_LevelsOpen[ View.Level ] && IsMemory( (ULONG_PTR) View.pData + m_Offset + m_NodePtr->GetMemorySize( ) * m_CurrentIndex ) )
+	if ( m_LevelsOpen[ View.Level ] && IsMemory( View.Address + m_Offset + sizeof( ULONG_PTR ) * m_CurrentIndex ) )
 	{
+		ULONG class_size = m_NodePtr->GetClass( )->GetMemorySize( );
+		m_NodePtr->Memory( )->SetSize( class_size );
+
 		ViewInfo NewView;
 		NewView = View;
-		NewView.Address = View.Address + m_Offset + m_NodePtr->GetMemorySize( ) * m_CurrentIndex;
-		NewView.pData = *(UCHAR**) ( (ULONG_PTR) View.pData + m_Offset + m_NodePtr->GetMemorySize( ) * m_CurrentIndex );
+		NewView.pData = m_NodePtr->Memory( )->Data( );
+		NewView.Address = ( (ULONG_PTR*) &View.pData[ m_Offset + sizeof( ULONG_PTR ) * m_CurrentIndex ] )[ 0 ];
+
+		ReClassReadMemory( (LPVOID) NewView.Address, (LPVOID) NewView.pData, class_size );
+		
 		child_size = m_NodePtr->GetClass( )->Draw( NewView, x, y );
+		
 		y = child_size.y;
 		if ( child_size.x > draw_size.x )
 			draw_size.x = child_size.x;
@@ -61,7 +68,7 @@ NodeSize CNodePtrArray::Draw( const ViewInfo& View, int x, int y )
 
 ULONG CNodePtrArray::GetMemorySize( )
 {
-	return m_NodePtr->GetMemorySize( );
+	return m_NodePtr->GetMemorySize( ) * m_PtrCount;
 }
 
 void CNodePtrArray::Update( const HotSpot& Spot )
