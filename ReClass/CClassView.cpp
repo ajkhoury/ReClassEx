@@ -1567,10 +1567,11 @@ void CClassView::ReplaceSelectedWithType( NodeType Type )
 		}
 		if (Type == nt_ptrarray)
 		{
-			CNodePtrArray* pArray = (CNodePtrArray*) pNewNode;
+			/*CNodePtrArray* pArray = (CNodePtrArray*) pNewNode;
 			CNodeClass* pClass = (CNodeClass*) g_ReClassApp.CreateNewNode( nt_class );
 			MakeBasicClass( pClass );
-			pArray->SetClass( pClass );
+			pArray->SetClass( pClass );*/
+			MessageBox( TEXT( "Not yet implemented!" ), TEXT( "ReClassEx" ) );
 		}
 		if (Type == nt_instance)
 		{
