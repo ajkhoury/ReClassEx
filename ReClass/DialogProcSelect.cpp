@@ -70,8 +70,10 @@ void CDialogProcSelect::ListRunningProcs( )
 	PSYSTEM_PROCESS_INFORMATION ProcessInfo = NULL;
 	std::unique_ptr<uint8_t[]> BufferArray;
 	ULONG BufferSize = 0;
+	NTSTATUS status;
 
-	if (NT_SUCCESS( ntdll::NtQuerySystemInformation( SystemProcessInformation, NULL, NULL, &BufferSize ) ))
+	status = ntdll::NtQuerySystemInformation( SystemProcessInformation, NULL, NULL, &BufferSize );
+	if (status != STATUS_SUCCESS && status != STATUS_INFO_LENGTH_MISMATCH)
 	{
 		#ifdef _DEBUG
 		PrintOut( _T( "[CDialogProcSelect::RefreshRunningProcesses] Failed to get size for system process list from ProcessBasicInformation" ) );
@@ -88,15 +90,13 @@ void CDialogProcSelect::ListRunningProcs( )
 		m_bLoadingProcesses = TRUE;
 
 		ProcessInfo = (PSYSTEM_PROCESS_INFORMATION)BufferArray.get( );
-
-		while ((ProcessInfo != NULL) && (ProcessInfo->NextEntryOffset != 0))
+		while (ProcessInfo)
 		{
-			if (ProcessInfo->ImageName.Buffer && ProcessInfo->ImageName.Length)
+			if (ProcessInfo->ImageName.Buffer && ProcessInfo->ImageName.Length > 0)
 			{
-				if (
-					m_FilterCheck.GetCheck( ) != BST_CHECKED || 
+				if (m_FilterCheck.GetCheck( ) != BST_CHECKED || 
 					CommonProcesses.end( ) == std::find_if( CommonProcesses.begin( ), CommonProcesses.end( ), 
-															[ProcessInfo] ( const wchar_t* proc ) { return _wcsnicmp( proc, ProcessInfo->ImageName.Buffer, ProcessInfo->ImageName.Length ) == 0; } )
+															[ProcessInfo] ( const wchar_t* proc ) { return _wcsnicmp( proc, ProcessInfo->ImageName.Buffer, ProcessInfo->ImageName.MaximumLength / sizeof(wchar_t) ) == 0; } )
 					)
 				{
 					HANDLE hProcess = ReClassOpenProcess( PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, (DWORD)ProcessInfo->UniqueProcessId );
@@ -139,6 +139,11 @@ void CDialogProcSelect::ListRunningProcs( )
 					CloseHandle( hProcess );
 				}
 			}
+
+			// Make sure not to loop infinitely (Fix for issue where refresh wasnt updating closed applications)
+			if (ProcessInfo->NextEntryOffset == 0) 
+				break;
+
 			ProcessInfo = (PSYSTEM_PROCESS_INFORMATION)((uint8_t*)ProcessInfo + ProcessInfo->NextEntryOffset);
 		}
 	}
