@@ -1505,11 +1505,16 @@ void MakeBasicClass( CNodeClass* pClass )
 
 void CClassView::ReplaceSelectedWithType( NodeType Type )
 {
+	if (Type == nt_ptrarray) {
+		MessageBox( TEXT( "Not yet implemented!" ), TEXT( "ReClassEx" ), MB_ICONERROR );
+		return;
+	}
+
 	std::vector<CNodeBase*> newSelected;
 
 	PrintOut( _T( "Replace Node Type %s" ), NodeTypeToString( Type ) );
 
-	for (UINT i = 0; i < Selected.size( ); i++)
+	for (size_t i = 0; i < Selected.size( ); i++)
 	{
 		if (!g_ReClassApp.IsNodeValid( Selected[i].object ))
 			continue;
@@ -1565,14 +1570,13 @@ void CClassView::ReplaceSelectedWithType( NodeType Type )
 			MakeBasicClass( pClass );
 			pArray->SetClass( pClass );
 		}
-		if (Type == nt_ptrarray)
+		/*if (Type == nt_ptrarray)
 		{
-			/*CNodePtrArray* pArray = (CNodePtrArray*) pNewNode;
+			CNodePtrArray* pArray = (CNodePtrArray*) pNewNode;
 			CNodeClass* pClass = (CNodeClass*) g_ReClassApp.CreateNewNode( nt_class );
 			MakeBasicClass( pClass );
-			pArray->SetClass( pClass );*/
-			MessageBox( TEXT( "Not yet implemented!" ), TEXT( "ReClassEx" ) );
-		}
+			pArray->SetClass( pClass );
+		}*/
 		if (Type == nt_instance)
 		{
 			CNodeClassInstance* pInstance = (CNodeClassInstance*)pNewNode;
@@ -1592,6 +1596,7 @@ void CClassView::ReplaceSelectedWithType( NodeType Type )
 		}
 
 		ReplaceNode( (CNodeClass*)Selected[i].object->GetParent( ), FindNodeIndex( Selected[i].object ), pNewNode );
+
 		newSelected.push_back( pNewNode );
 	}
 
