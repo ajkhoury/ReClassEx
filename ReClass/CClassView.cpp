@@ -76,6 +76,7 @@ BEGIN_MESSAGE_MAP( CClassView, CWnd )
 	ON_COMMAND( ID_TYPE_FUNCTION_PTR, &CClassView::OnTypeFunctionPtr )
 	ON_COMMAND( ID_TYPE_POINTER, &CClassView::OnTypePointer )
 	ON_COMMAND( ID_TYPE_ARRAY, &CClassView::OnTypeArray )
+	ON_COMMAND( ID_TYPE_PTRARRAY, &CClassView::OnTypePtrArray )
 	ON_COMMAND( ID_TYPE_CLASS, &CClassView::OnTypeClass )
 	ON_COMMAND( ID_MODIFY_DELETE, &CClassView::OnModifyDelete )
 	ON_COMMAND( ID_MODIFY_SHOW, &CClassView::OnModifyShow )
@@ -119,6 +120,7 @@ BEGIN_MESSAGE_MAP( CClassView, CWnd )
 	ON_UPDATE_COMMAND_UI( ID_TYPE_QUAT, &CClassView::OnUpdateTypeQuat )
 	ON_UPDATE_COMMAND_UI( ID_TYPE_MATRIX, &CClassView::OnUpdateTypeMatrix )
 	ON_UPDATE_COMMAND_UI( ID_TYPE_ARRAY, &CClassView::OnUpdateTypeArray )
+	ON_UPDATE_COMMAND_UI( ID_TYPE_PTRARRAY, &CClassView::OnUpdateTypePtrArray )
 	ON_UPDATE_COMMAND_UI( ID_TYPE_CLASS, &CClassView::OnUpdateTypeClass )
 	ON_UPDATE_COMMAND_UI( ID_TYPE_VTABLE, &CClassView::OnUpdateTypeVtable )
 	ON_UPDATE_COMMAND_UI( ID_TYPE_FUNCTION, &CClassView::OnUpdateTypeFunction )
@@ -1507,7 +1509,7 @@ void CClassView::ReplaceSelectedWithType( NodeType Type )
 
 	PrintOut( _T( "Replace Node Type %s" ), NodeTypeToString( Type ) );
 
-	for (UINT i = 0; i < Selected.size( ); i++)
+	for (size_t i = 0; i < Selected.size( ); i++)
 	{
 		if (!g_ReClassApp.IsNodeValid( Selected[i].object ))
 			continue;
@@ -1563,6 +1565,13 @@ void CClassView::ReplaceSelectedWithType( NodeType Type )
 			MakeBasicClass( pClass );
 			pArray->SetClass( pClass );
 		}
+		if (Type == nt_ptrarray)
+		{
+			CNodePtrArray* pArray = (CNodePtrArray*) pNewNode;
+			CNodeClass* pClass = (CNodeClass*) g_ReClassApp.CreateNewNode( nt_class );
+			MakeBasicClass( pClass );
+			pArray->SetClass( pClass );
+		}
 		if (Type == nt_instance)
 		{
 			CNodeClassInstance* pInstance = (CNodeClassInstance*)pNewNode;
@@ -1582,6 +1591,7 @@ void CClassView::ReplaceSelectedWithType( NodeType Type )
 		}
 
 		ReplaceNode( (CNodeClass*)Selected[i].object->GetParent( ), FindNodeIndex( Selected[i].object ), pNewNode );
+
 		newSelected.push_back( pNewNode );
 	}
 
@@ -1897,6 +1907,17 @@ void CClassView::OnUpdateTypeArray( CCmdUI *pCmdUI )
 	StandardTypeUpdate( pCmdUI );
 }
 
+void CClassView::OnTypePtrArray( )
+{
+	//ReplaceSelectedWithType( nt_ptrarray );
+}
+
+void CClassView::OnUpdateTypePtrArray( CCmdUI * pCmdUI )
+{ 
+	pCmdUI->Enable( FALSE );
+	//StandardTypeUpdate( pCmdUI );
+}
+
 void CClassView::OnTypeClass( )
 {
 	ReplaceSelectedWithType( nt_instance );
@@ -1979,6 +2000,10 @@ BOOL CClassView::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
 			if (nodeType == nt_array)
 			{
 				((CNodeArray*)pNode)->SetClass( g_ReClassApp.m_Classes[idx] );
+			}
+			else if(nodeType == nt_ptrarray )
+			{
+				((CNodePtrArray*)pNode)->SetClass( g_ReClassApp.m_Classes[idx] );
 			}
 			else if (nodeType == nt_instance)
 			{

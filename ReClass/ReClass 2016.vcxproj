@@ -351,6 +351,7 @@
     <ClInclude Include="CNodeInt8.h" />
     <ClInclude Include="CNodeMatrix.h" />
     <ClInclude Include="CNodePtr.h" />
+    <ClInclude Include="CNodePtrArray.h" />
     <ClInclude Include="CNodeQuat.h" />
     <ClInclude Include="CNodeQWORD.h" />
     <ClInclude Include="CNodeText.h" />
@@ -430,6 +431,7 @@
     <ClCompile Include="CNodeInt8.cpp" />
     <ClCompile Include="CNodeMatrix.cpp" />
     <ClCompile Include="CNodePtr.cpp" />
+    <ClCompile Include="CNodePtrArray.cpp" />
     <ClCompile Include="CNodeQuat.cpp" />
     <ClCompile Include="CNodeQWORD.cpp" />
     <ClCompile Include="CNodeText.cpp" />

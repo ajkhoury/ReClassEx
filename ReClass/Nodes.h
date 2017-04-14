@@ -32,4 +32,5 @@
 #include "CNodeMatrix.h"
 #include "CNodeArray.h"
 #include "CNodeClassInstance.h"
+#include "CNodePtrArray.h"
 #include "CNodeCustom.h"

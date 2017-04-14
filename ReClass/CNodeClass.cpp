@@ -86,7 +86,7 @@ NodeSize CNodeClass::Draw( const ViewInfo& View, int x, int y )
 				if (pNode->GetType( ) == nt_vtable)
 				{
 					CNodeVTable* pVTableNode = static_cast<CNodeVTable*>(pNode);
-					if (!pVTableNode->IsInitialized( ))
+					if (!pVTableNode->IsInitialized( ) && pChildWindow != nullptr)
 						pVTableNode->Initialize( static_cast<CWnd*>(pChildWindow->GetChildView( )) );
 				}
 

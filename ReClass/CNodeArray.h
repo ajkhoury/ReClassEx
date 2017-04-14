@@ -17,7 +17,7 @@ public:
 	void SetClass( CNodeClass* pNode ) { m_pNode = pNode; }
 	CNodeClass* GetClass( void ) { return m_pNode; }
 
-private:
+protected:
 	CNodeClass* m_pNode;
 	DWORD m_dwTotal;
 	int m_iCurrent;

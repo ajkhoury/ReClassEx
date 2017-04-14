@@ -149,7 +149,7 @@ CStringW ReadMemoryStringW( ULONG_PTR address, SIZE_T max )
 {
 	SIZE_T bytesRead = 0;
 	auto buffer = std::make_unique<wchar_t[]>( max + 1 );
-	
+
 	if (ReClassReadMemory( (PVOID)address, (LPVOID)buffer.get( ), max * sizeof( wchar_t ), &bytesRead ) != 0)
 	{
 		bytesRead /= sizeof( wchar_t );

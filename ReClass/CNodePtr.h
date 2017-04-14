@@ -17,6 +17,8 @@ public:
 	void SetClass( CNodeClass* pNode ) { m_pNode = pNode; }
 	CNodeClass* GetClass( void ) { return m_pNode; }
 
+	CMemory* Memory( ) { return &m_Memory; }
+
 private:
 	CNodeClass* m_pNode;
 	CMemory m_Memory;
