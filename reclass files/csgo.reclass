@@ -7610,7 +7610,7 @@
         <Node Name="m_iClassname" Type="10" Size="4" bHidden="0" Comment=""/>
         <Node Name="m_hScriptInstance" Type="10" Size="4" bHidden="0" Comment=""/>
         <Node Name="m_iszScriptId" Type="10" Size="4" bHidden="0" Comment=""/>
-        <Node Name="unknownFloatValue" Type="13" Size="4" bHidden="0" Comment=""/>
+        <Node Name="m_flLastMadeNoiseTime" Type="13" Size="4" bHidden="0" Comment=""/>
         <Node Name="m_varMap.m_Entries" Type="1" Size="20" bHidden="0" Comment="m_varMap.m_Entries" Instance="CUtlVector"/>
         <Node Name="m_varMap.m_nInterpolatedEntries" Type="10" Size="4" bHidden="0" Comment=""/>
         <Node Name="m_varMap.m_lastInterpolationTime" Type="13" Size="4" bHidden="0" Comment=""/>
@@ -9976,11 +9976,11 @@
         <Node Name="N000025CC" Type="4" Size="4" bHidden="0" Comment=""/>
     </Class>
     <Class Name="CUtlVector" Type="28" Comment="" Offset="811287576" strOffset="305B4418" Code="">
-        <Node Name="m_pMemory" Type="29" Size="4" bHidden="0" Comment=""/>
+        <Node Name="m_pMemory" Type="15" Size="4" bHidden="0" Comment=""/>
         <Node Name="m_nAllocationCount" Type="10" Size="4" bHidden="0" Comment=""/>
         <Node Name="m_nGrowSize" Type="10" Size="4" bHidden="0" Comment=""/>
         <Node Name="m_Size" Type="10" Size="4" bHidden="0" Comment=""/>
-        <Node Name="m_pElements" Type="10" Size="4" bHidden="0" Comment=""/>
+        <Node Name="m_pElements" Type="29" Size="4" bHidden="0" Comment=""/>
     </Class>
     <Class Name="matrix3x4_t" Type="28" Comment="" Offset="811287772" strOffset="305B44DC" Code="">
         <Node Name="m0" Type="24" Size="16" bHidden="0" Comment=""/>
@@ -10140,10 +10140,6 @@
     </Class>
     <Class Name="FLOAT" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
         <Node Name="fl" Type="13" Size="4" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="CStudioHdr" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
-        <Node Name="m_pStudioHdr" Type="10" Size="4" bHidden="0" Comment=""/>
-        <Node Name="m_pVModel" Type="10" Size="4" bHidden="0" Comment=""/>
     </Class>
     <Class Name="CUtlReference" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
         <Node Name="m_pNext" Type="10" Size="4" bHidden="0" Comment=""/>
@@ -13206,57 +13202,16 @@
         <Node Name="N00003F6D" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N00003F6E" Type="4" Size="4" bHidden="0" Comment=""/>
     </Class>
-    <Class Name="N00003CD4" Type="28" Comment="" Offset="262144" strOffset="40000" Code="">
-        <Node Name="N00003CD5" Type="4" Size="4" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N00003CD7" Type="28" Comment="" Offset="262144" strOffset="40000" Code="">
-        <Node Name="N00003CD8" Type="4" Size="4" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N0000446B" Type="28" Comment="" Offset="262144" strOffset="40000" Code="">
-        <Node Name="N0000446C" Type="4" Size="4" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N000034A3" Type="28" Comment="" Offset="262144" strOffset="40000" Code="">
-        <Node Name="N000034A4" Type="4" Size="4" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N000034A6" Type="28" Comment="" Offset="262144" strOffset="40000" Code="">
-        <Node Name="N000034A7" Type="4" Size="4" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N000034A9" Type="28" Comment="" Offset="262144" strOffset="40000" Code="">
-        <Node Name="N000034AA" Type="4" Size="4" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N000034AC" Type="28" Comment="" Offset="262144" strOffset="40000" Code="">
-        <Node Name="N000034AD" Type="4" Size="4" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N000034C6" Type="28" Comment="" Offset="262144" strOffset="40000" Code="">
-        <Node Name="N000034C7" Type="4" Size="4" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N0000325C" Type="28" Comment="" Offset="4194304" strOffset="400000" Code="">
-        <Node Name="N0000325D" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N0000325E" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N0000325F" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003260" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003261" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003262" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003263" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003264" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003265" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003266" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003267" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003268" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003269" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N0000326A" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N0000326B" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N0000326C" Type="4" Size="4" bHidden="0" Comment=""/>
-    </Class>
-    <Class Name="N0000326D" Type="28" Comment="" Offset="0" strOffset="0" Code="">
-        <Node Name="N0000326E" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N0000326F" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003270" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003271" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003272" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003273" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003274" Type="4" Size="4" bHidden="0" Comment=""/>
-        <Node Name="N00003275" Type="4" Size="4" bHidden="0" Comment=""/>
+    <Class Name="CStudioHdr" Type="28" Comment="" Offset="122260432" strOffset="07498bd0" Code="">
+        <Node Name="m_pStudioHdr" Type="8" Size="4" bHidden="0" Comment="" Pointer="studiohdr_t"/>
+        <Node Name="m_pVModel" Type="8" Size="4" bHidden="0" Comment="" Pointer="virtualmodel_t"/>
+        <Node Name="N000032A7" Type="4" Size="4" bHidden="0" Comment="Reserved?"/>
+        <Node Name="m_pStudioHdrCache" Type="1" Size="20" bHidden="0" Comment="" Instance="CUtlVector"/>
+        <Node Name="m_nFrameUnlockCounter" Type="10" Size="4" bHidden="0" Comment=""/>
+        <Node Name="m_pFrameUnlockCounter" Type="8" Size="4" bHidden="0" Comment="" Pointer="INT"/>
+        <Node Name="m_FrameUnlockCounterMutex" Type="1" Size="8" bHidden="0" Comment="" Instance="CThreadFastMutex"/>
+        <Node Name="m_boneFlags" Type="1" Size="20" bHidden="0" Comment="" Instance="CUtlVector"/>
+        <Node Name="m_boneParent" Type="1" Size="20" bHidden="0" Comment="" Instance="CUtlVector"/>
         <Node Name="N00003276" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N00003277" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N00003278" Type="4" Size="4" bHidden="0" Comment=""/>
@@ -13265,5 +13220,78 @@
         <Node Name="N0000327B" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N0000327C" Type="4" Size="4" bHidden="0" Comment=""/>
         <Node Name="N0000327D" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="studiohdr_t" Type="28" Comment="" Offset="1900544" strOffset="1d0000" Code="">
+        <Node Name="N00003280" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003281" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003282" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003283" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003284" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003285" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003286" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003287" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003288" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003289" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000328A" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000328B" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000328C" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000328D" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000328E" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000328F" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003290" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="virtualmodel_t" Type="28" Comment="" Offset="1900544" strOffset="1d0000" Code="">
+        <Node Name="N00003293" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003294" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003295" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003296" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003297" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003298" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003299" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000329A" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000329B" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000329C" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000329D" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000329E" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000329F" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N000032A0" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N000032A1" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N000032A2" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N000032A3" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N000032A5" Type="28" Comment="" Offset="1900544" strOffset="1d0000" Code="">
+        <Node Name="N000032A6" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N000032AC" Type="28" Comment="" Offset="1900544" strOffset="1d0000" Code="">
+        <Node Name="N000032AD" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="CThreadFastMutex" Type="28" Comment="" Offset="1900544" strOffset="1d0000" Code="">
+        <Node Name="m_ownerID" Type="10" Size="4" bHidden="0" Comment=""/>
+        <Node Name="m_depth" Type="10" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N0000327B" Type="28" Comment="" Offset="1900544" strOffset="1d0000" Code="">
+        <Node Name="N0000327C" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N0000327F" Type="28" Comment="" Offset="1900544" strOffset="1d0000" Code="">
+        <Node Name="N00003280" Type="4" Size="4" bHidden="0" Comment=""/>
+    </Class>
+    <Class Name="N00003282" Type="28" Comment="" Offset="1900544" strOffset="1d0000" Code="">
+        <Node Name="N00003283" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003284" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003285" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003286" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003287" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003288" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003289" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000328A" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000328B" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000328C" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000328D" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000328E" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N0000328F" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003290" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003291" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003292" Type="4" Size="4" bHidden="0" Comment=""/>
+        <Node Name="N00003293" Type="4" Size="4" bHidden="0" Comment=""/>
     </Class>
 </ReClass>
