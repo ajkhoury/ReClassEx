@@ -1003,7 +1003,21 @@ void CReClassExApp::OnFileOpen( )
 
 	CString pathName = fileDlg.GetPathName( );
 
-	OnButtonReset( );
+	CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, m_pMainWnd );
+	CMDIChildWnd* pChildWnd = pFrame->MDIGetActive( );
+
+	while ( pChildWnd )
+	{
+		pChildWnd->SendMessage( WM_CLOSE, 0, 0 );
+		pChildWnd = pFrame->MDIGetActive( );
+	}
+
+	m_Classes.clear( );
+
+	m_strHeader = _T( "" );
+	m_strFooter = _T( "" );
+	m_strNotes = _T( "" );
+	m_strCurrentFilePath = _T( "" );
 
 	TiXMLDocument doc;
 
