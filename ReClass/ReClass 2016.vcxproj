@@ -22,7 +22,7 @@
     <ProjectGuid>{FA80DCEB-16C4-43D1-8451-6EE506D5FF82}</ProjectGuid>
     <RootNamespace>ReClass2015</RootNamespace>
     <Keyword>MFCProj</Keyword>
-    <ProjectName>ReClass</ProjectName>
+    <ProjectName>ReClassEx</ProjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

@@ -215,6 +215,7 @@ BOOLEAN UpdateMemoryMap( );
 BOOLEAN UpdateExports( );
 
 ULONG_PTR GetBaseAddress( );
+
 BOOLEAN IsCode( ULONG_PTR Address );
 BOOLEAN IsData( ULONG_PTR Address );
 BOOLEAN IsMemory( ULONG_PTR Address );

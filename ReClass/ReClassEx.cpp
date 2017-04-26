@@ -997,7 +997,8 @@ void CReClassExApp::OnFileSaveAs( )
 void CReClassExApp::OnFileOpen( )
 {
 	TCHAR Filters[] = _T( "ReClass (*.reclass)|*.reclass|All Files (*.*)|*.*||" );
-	CFileDialog fileDlg( TRUE, _T( "reclass" ), _T( "" ), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, Filters, NULL );
+	
+	CFileDialog fileDlg( TRUE, _T( "reclass" ), _T( "" ), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, Filters );
 	if (fileDlg.DoModal( ) != IDOK)
 		return;
 
@@ -1053,6 +1054,7 @@ void CReClassExApp::OnFileOpen( )
 		return;
 
 	const char* v = pXmlCurrentElement->Value( );
+
 	if (_stricmp( v, "ReClass" ) != 0) // The root element value is 'ReClass'
 		return; // Not a Reclass file
 
