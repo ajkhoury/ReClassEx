@@ -160,12 +160,15 @@ BOOL CClassView::PreCreateWindow( CREATESTRUCT& cs )
 int CClassView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
 	lpCreateStruct->cy += g_FontHeight;
+	
 	if (CWnd::OnCreate( lpCreateStruct ) == -1)
 		return -1;
 
 	CRect rect( 0, 0, 100, 100 );
 	CRect hrect( 5, 5, 100, 30 );
+	
 	//m_Edit.CreateEx(WS_EX_WINDOWEDGE, _T("EDIT"),  _T(" "), WS_CHILD | WS_TABSTOP, rect, this, 1);
+	
 	m_Edit.Create( WS_CHILD | WS_TABSTOP, rect, this, 1 );
 	m_Edit.ShowWindow( SW_HIDE );
 	m_Edit.SetFont( &g_ViewFont );
@@ -190,7 +193,7 @@ int CClassView::OnCreate( LPCREATESTRUCT lpCreateStruct )
 void CClassView::OnTimer( UINT_PTR nIDEvent )
 {
 	if (nIDEvent == 1)
-		Invalidate( FALSE );
+		CWnd::Invalidate( FALSE );
 	CWnd::OnTimer( nIDEvent );
 }
 
