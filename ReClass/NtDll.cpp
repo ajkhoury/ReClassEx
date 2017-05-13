@@ -6,13 +6,24 @@ namespace ntdll
 {
 
 PVOID Base = nullptr;
+
 tNtQuerySystemInformation NtQuerySystemInformation = nullptr;
 tNtQueryInformationProcess NtQueryInformationProcess = nullptr;
-tRtlGetVersion RtlGetVersion = nullptr;
-tRtlGetNativeSystemInformation RtlGetNativeSystemInformation = nullptr;
+
+tNtCreateThreadEx NtCreateThreadEx = nullptr;
+
 tNtOpenProcessToken NtOpenProcessToken = nullptr;
 tNtAdjustPrivilegesToken NtAdjustPrivilegesToken = nullptr;
-tNtCreateThreadEx NtCreateThreadEx = nullptr;
+
+tRtlInitializeCriticalSection RtlInitializeCriticalSection = nullptr;
+tRtlDeleteCriticalSection RtlDeleteCriticalSection = nullptr;
+tRtlEnterCriticalSection RtlEnterCriticalSection = nullptr;
+tRtlLeaveCriticalSection RtlLeaveCriticalSection = nullptr;
+
+tRtlGetVersion RtlGetVersion = nullptr;
+tRtlGetNativeSystemInformation RtlGetNativeSystemInformation = nullptr;
+
+
 
 
 bool Init( )
@@ -24,25 +35,38 @@ bool Init( )
 	Base = Utils::GetLocalModuleBase( _T( "ntdll.dll" ) );
 	if (Base)
 	{
-		NtQuerySystemInformation = reinterpret_cast<tNtQuerySystemInformation>(Utils::GetLocalProcAddress( Base, _T( "NtQuerySystemInformation" ) ));
-		NtQueryInformationProcess = reinterpret_cast<tNtQueryInformationProcess>(Utils::GetLocalProcAddress( Base, _T( "NtQueryInformationProcess" ) ));
-		RtlGetVersion = reinterpret_cast<tRtlGetVersion>(Utils::GetLocalProcAddress( Base, _T( "RtlGetVersion" ) ));
-		RtlGetNativeSystemInformation = reinterpret_cast<tRtlGetNativeSystemInformation>(Utils::GetLocalProcAddress( Base, _T( "RtlGetNativeSystemInformation" ) ));
-		NtOpenProcessToken = reinterpret_cast<tNtOpenProcessToken>(Utils::GetLocalProcAddress( Base, _T( "NtOpenProcessToken" ) ));
-		NtAdjustPrivilegesToken = reinterpret_cast<tNtAdjustPrivilegesToken>(Utils::GetLocalProcAddress( Base, _T( "NtAdjustPrivilegesToken" ) ));
-		NtCreateThreadEx = reinterpret_cast<tNtCreateThreadEx>(Utils::GetLocalProcAddress( Base, _T( "NtCreateThreadEx" ) ));
+		NtQuerySystemInformation = (tNtQuerySystemInformation)Utils::GetLocalProcAddress( Base, _T( "NtQuerySystemInformation" ) );
+		NtQueryInformationProcess = (tNtQueryInformationProcess)Utils::GetLocalProcAddress( Base, _T( "NtQueryInformationProcess" ) );
+		
+		NtCreateThreadEx = (tNtCreateThreadEx)Utils::GetLocalProcAddress( Base, _T( "NtCreateThreadEx" ) );
 
+		NtOpenProcessToken = (tNtOpenProcessToken)Utils::GetLocalProcAddress( Base, _T( "NtOpenProcessToken" ) );
+		NtAdjustPrivilegesToken = (tNtAdjustPrivilegesToken)Utils::GetLocalProcAddress( Base, _T( "NtAdjustPrivilegesToken" ) );
+
+		RtlInitializeCriticalSection = (tRtlInitializeCriticalSection)Utils::GetLocalProcAddress( Base, _T( "RtlInitializeCriticalSection" ) );
+		RtlDeleteCriticalSection = (tRtlDeleteCriticalSection)Utils::GetLocalProcAddress( Base, _T( "RtlDeleteCriticalSection" ) );
+		RtlEnterCriticalSection = (tRtlEnterCriticalSection)Utils::GetLocalProcAddress( Base, _T( "RtlEnterCriticalSection" ) );
+		RtlLeaveCriticalSection = (tRtlLeaveCriticalSection)Utils::GetLocalProcAddress( Base, _T( "RtlLeaveCriticalSection" ) );
+
+		RtlGetVersion = (tRtlGetVersion)Utils::GetLocalProcAddress( Base, _T( "RtlGetVersion" ) );
+		RtlGetNativeSystemInformation = (tRtlGetNativeSystemInformation)Utils::GetLocalProcAddress( Base, _T( "RtlGetNativeSystemInformation" ) );
 
 		return !(
 			!NtQueryInformationProcess ||
 			!NtQueryInformationProcess ||
-			!RtlGetVersion ||
-			!RtlGetNativeSystemInformation ||
+
+			!NtCreateThreadEx ||	
+
 			!NtOpenProcessToken ||
 			!NtAdjustPrivilegesToken ||
-			!NtCreateThreadEx
 
+			!RtlInitializeCriticalSection ||
+			!RtlDeleteCriticalSection ||
+			!RtlEnterCriticalSection ||
+			!RtlLeaveCriticalSection ||
 
+			!RtlGetVersion ||
+			!RtlGetNativeSystemInformation
 
 			);
 	}

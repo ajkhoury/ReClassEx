@@ -3,7 +3,8 @@
 
 #include "stdafx.h"
 #include "DialogProgress.h"
-#include "afxdialogex.h"
+
+#include <afxdialogex.h>
 
 
 // CDialogProgress dialog

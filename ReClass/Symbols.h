@@ -7,11 +7,10 @@ class Symbols
 {
 public:
 	Symbols( );
+	~Symbols( );
 
 	void ResolveSearchPath( );
 	BOOLEAN WriteSymSrvDll( );
-
-	~Symbols( );
 
 	void Cleanup( );
 	BOOLEAN Init( );
@@ -24,6 +23,7 @@ public:
 	SymbolReader* GetSymbolsForModuleName( CString ModuleName );
 
 private:
+	RTL_CRITICAL_SECTION m_CriticalSection;
 
 	std::map<CString, SymbolReader*> m_SymbolNames;
 	std::map<ULONG_PTR, SymbolReader*> m_SymbolAddresses;

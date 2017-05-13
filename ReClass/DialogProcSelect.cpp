@@ -2,11 +2,15 @@
 //
 
 #include "stdafx.h"
-#include "afxdialogex.h"
+
+#include <afxdialogex.h>
+
+#include "ReClassEx.h"
 
 #include "DialogProcSelect.h"
 #include "DialogProgress.h"
-#include "ReClassEx.h"
+
+#include "CMainFrame.h"
 
 #include <memory>
 #include <algorithm>
@@ -274,35 +278,9 @@ void CDialogProcSelect::OnAttachButton( )
 
 				if (g_bSymbolResolution && m_LoadAllSymbols.GetCheck( ) == BST_CHECKED)
 				{
-					CDialogProgress* ProgressDialog = new CDialogProgress( this );
-					ULONG nModules = (ULONG)g_MemMapModules.size( );
-
-					ProgressDialog->Create( CDialogProgress::IDD, this );
-					ProgressDialog->ShowWindow( SW_SHOW );
-
-					ProgressDialog->Bar( ).SetRange32( 0, nModules );
-					ProgressDialog->Bar( ).SetStep( 1 );
-
-					for (ULONG i = 0; i < nModules; i++)
-					{
-						TCHAR tcsProgressText[64] = { 0 };
-						MemMapInfo CurrentModule = g_MemMapModules[i];
-
-						_stprintf_s( tcsProgressText, 64, _T( "[%d/%d] %s" ), i + 1, nModules, CurrentModule.Name.GetString( ) );
-						ProgressDialog->SetProgressText( tcsProgressText );
-
-						if (g_ReClassApp.m_pSymbolLoader->LoadSymbolsForModule( CurrentModule.Path, CurrentModule.Start, CurrentModule.Size ) == FALSE)
-						{
-							PrintOut( _T( "Failed to load symbols for %s (%s)" ), 
-									  CurrentModule.Name.GetString( ), FoundProcessInfo->strProcessName.GetString( ) );
-						}
-
-						ProgressDialog->Bar( ).StepIt( );
-					}
-
-					ProgressDialog->EndDialog( 0 );
-
-					delete ProgressDialog;
+					OnClose( );
+					g_ReClassApp.GetMainFrame( )->OnLoadSymbols( );
+					return;
 				}
 
 				OnClose( );

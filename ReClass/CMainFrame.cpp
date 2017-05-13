@@ -2,12 +2,18 @@
 
 #include <afxtabctrl.h>
 
-#include "CClassFrame.h"
 #include "CMainFrame.h"
+#include "CClassFrame.h"
+
 
 #include "DialogClasses.h"
 #include "DialogProcSelect.h"
 #include "DialogTypes.h"
+
+UINT BASED_CODE CMainFrame::s_StatusBarPanes[2] = { 
+	ID_STATUSBAR_PANE1,
+	ID_STATUSBAR_PANE2
+};
 
 // CMainFrame
 IMPLEMENT_DYNAMIC( CMainFrame, CMDIFrameWndEx )
@@ -15,6 +21,7 @@ IMPLEMENT_DYNAMIC( CMainFrame, CMDIFrameWndEx )
 BEGIN_MESSAGE_MAP( CMainFrame, CMDIFrameWndEx )
 	ON_WM_TIMER( )
 	ON_WM_CREATE( )
+	ON_WM_SIZE( )
 	ON_WM_SETTINGCHANGE( )
 	ON_COMMAND( ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager )
 	ON_COMMAND_RANGE( ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook )
@@ -85,10 +92,62 @@ CMainFrame::~CMainFrame( )
 {
 }
 
+//DWORD WINAPI LoadModuleSymbolsThread( LPVOID lpThreadParameter )
+//{ 
+//	DWORD retval = TRUE;
+//	MemMapInfo* pInfo = (MemMapInfo*)lpThreadParameter;
+//	if (pInfo)
+//	{
+//		if (!g_ReClassApp.m_pSymbolLoader->LoadSymbolsForModule( pInfo->Path, pInfo->Start, pInfo->Size ))
+//		{
+//			PrintOut( _T( "Failed to load symbols for %s" ), pInfo->Name.GetString( ) );
+//			retval = FALSE;
+//		}
+//		delete pInfo;
+//	}
+//	return retval;
+//}
+
+void CMainFrame::OnLoadSymbols( )
+{
+	CProgressBar progressBar( _T( "Progress" ), 100, 100, TRUE, 0, &m_StatusBar );
+	progressBar.SetStep( 1 );
+	progressBar.SetText( _T( "Symbols loading: " ) );
+
+	for (ULONG i = 0; i < g_MemMapModules.size( ); i++)
+	{
+		TCHAR tcsProgressText[256] = { 0 };
+		MemMapInfo CurrentModule = g_MemMapModules[i];
+
+		progressBar.SetRange32( 0, g_MemMapModules.size( ) );
+
+		_stprintf_s( tcsProgressText, _T( "[%d/%d] %s" ), i + 1, g_MemMapModules.size( ), CurrentModule.Name.GetString( ) );
+		m_StatusBar.SetPaneText( 1, tcsProgressText );
+
+		//MemMapInfo* pCurrentModule = new MemMapInfo( CurrentModule );
+		//Utils::NtCreateThread( LoadModuleSymbolsThread, pCurrentModule, 0 );
+
+		if (!g_ReClassApp.m_pSymbolLoader->LoadSymbolsForModule( CurrentModule.Path, CurrentModule.Start, CurrentModule.Size ))
+		{
+			PrintOut( _T( "Failed to load symbols for %s" ), CurrentModule.Name.GetString( ) );
+		}
+
+		progressBar.StepIt( );
+		
+		// Peek and pump through messages to stop reclass from hanging
+		MSG msg;
+		while (::PeekMessage( &msg, NULL, 0, 0, PM_NOREMOVE ))
+		{
+			if (!AfxGetApp( )->PumpMessage( ))
+				::PostQuitMessage( 0 );
+		}
+	}
+
+	m_StatusBar.SetPaneText( 1, _T( "" ) );
+}
+
 int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
-	//lpCreateStruct->cy += g_FontHeight * 40;
-
 	if (CMDIFrameWndEx::OnCreate( lpCreateStruct ) == -1)
 		return -1;
 
@@ -108,8 +167,15 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	mdiTabParams.m_bFlatFrame = TRUE;
 	EnableMDITabbedGroups( TRUE, mdiTabParams );
 
+	// Create ribbon bar
 	m_RibbonBar.Create( this );
 	m_RibbonBar.LoadFromResource( IDR_RIBBON );
+
+	// Create status bar
+	m_StatusBar.Create( this );
+	m_StatusBar.SetIndicators( s_StatusBarPanes, 2 );
+	m_StatusBar.SetPaneInfo( 0, ID_STATUSBAR_PANE1, SBPS_NORMAL, 0 );
+	m_StatusBar.SetPaneInfo( 1, ID_STATUSBAR_PANE2, SBPS_STRETCH, 0 );
 
 	// enable Visual Studio 2005 style docking window behavior
 	CDockingManager::SetDockingMode( DT_SMART );
@@ -143,86 +209,97 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 
 	// Update Colors
 	CMFCRibbonColorButton* pColor = NULL;
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_BACKGROUND );	pColor->SetColor( g_crBackground );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_SELECT );		pColor->SetColor( g_crSelect );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_HIDDEN );		pColor->SetColor( g_crHidden );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_OFFSET );		pColor->SetColor( g_crOffset );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_ADDRESS );		pColor->SetColor( g_crAddress );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_TYPE );		pColor->SetColor( g_crType );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_NAME );		pColor->SetColor( g_crName );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_INDEX );		pColor->SetColor( g_crIndex );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_VALUE );		pColor->SetColor( g_crValue );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_COMMENT );		pColor->SetColor( g_crComment );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_VTABLE );		pColor->SetColor( g_crVTable );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_FUNCTION );	pColor->SetColor( g_crFunction );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_TEXT );		pColor->SetColor( g_crChar );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_CUSTOM );		pColor->SetColor( g_crCustom );
-	pColor = (CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_HEX );			pColor->SetColor( g_crHex );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_BACKGROUND ));	pColor->SetColor( g_crBackground );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_SELECT ));		pColor->SetColor( g_crSelect );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HIDDEN ));		pColor->SetColor( g_crHidden );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_OFFSET ));		pColor->SetColor( g_crOffset );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_ADDRESS ));	pColor->SetColor( g_crAddress );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_TYPE ));		pColor->SetColor( g_crType );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_NAME ));		pColor->SetColor( g_crName );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_INDEX ));		pColor->SetColor( g_crIndex );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_VALUE ));		pColor->SetColor( g_crValue );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_COMMENT ));	pColor->SetColor( g_crComment );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_VTABLE ));		pColor->SetColor( g_crVTable );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_FUNCTION ));	pColor->SetColor( g_crFunction );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_TEXT ));		pColor->SetColor( g_crChar );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_CUSTOM ));		pColor->SetColor( g_crCustom );
+	pColor = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HEX ));		pColor->SetColor( g_crHex );
 
 	// update after 5 seconds
 	SetTimer( TIMER_MEMORYMAP_UPDATE, 5000, NULL );
 
 	return 0;
 }
+
+void CMainFrame::OnSize( UINT nType, int cx, int cy )
+{
+	CMDIFrameWndEx::OnSize( nType, cx, cy );
+
+	RepositionBars( AFX_IDW_CONTROLBAR_FIRST, AFX_IDW_CONTROLBAR_LAST, ID_STATUSBAR_PANE2 );
+
+	if (m_StatusBar.GetSafeHwnd( ) && cx > 250)
+		m_StatusBar.SetPaneInfo( 0, ID_STATUSBAR_PANE1, SBPS_NORMAL, cx - 250 );
+}
+
 void CMainFrame::OnButtonClrBackground( )
 {
-	g_crBackground = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_BACKGROUND ))->GetColor( );
+	g_crBackground = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_BACKGROUND ))->GetColor( );
 }
 void CMainFrame::OnButtonClrSelect( )
 {
-	g_crSelect = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_SELECT ))->GetColor( );
+	g_crSelect = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_SELECT ))->GetColor( );
 }
 void CMainFrame::OnButtonClrHidden( )
 {
-	g_crHidden = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_HIDDEN ))->GetColor( );
+	g_crHidden = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HIDDEN ))->GetColor( );
 }
 void CMainFrame::OnButtonClrOffset( )
 {
-	g_crOffset = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_OFFSET ))->GetColor( );
+	g_crOffset = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_OFFSET ))->GetColor( );
 }
 void CMainFrame::OnButtonClrAddress( )
 {
-	g_crAddress = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_ADDRESS ))->GetColor( );
+	g_crAddress = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_ADDRESS ))->GetColor( );
 }
 void CMainFrame::OnButtonClrHex( )
 {
-	g_crHex = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_HEX ))->GetColor( );
+	g_crHex = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HEX ))->GetColor( );
 }
 void CMainFrame::OnButtonClrType( )
 {
-	g_crType = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_TYPE ))->GetColor( );
+	g_crType = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_TYPE ))->GetColor( );
 }
 void CMainFrame::OnButtonClrName( )
 {
-	g_crName = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_NAME ))->GetColor( );
+	g_crName = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_NAME ))->GetColor( );
 }
 void CMainFrame::OnButtonClrValue( )
 {
-	g_crValue = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_VALUE ))->GetColor( );
+	g_crValue = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_VALUE ))->GetColor( );
 }
 void CMainFrame::OnButtonClrIndex( )
 {
-	g_crIndex = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_INDEX ))->GetColor( );
+	g_crIndex = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_INDEX ))->GetColor( );
 }
 void CMainFrame::OnButtonClrComment( )
 {
-	g_crComment = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_COMMENT ))->GetColor( );
+	g_crComment = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_COMMENT ))->GetColor( );
 }
 void CMainFrame::OnButtonClrText( )
 {
-	g_crChar = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_TEXT ))->GetColor( );
+	g_crChar = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_TEXT ))->GetColor( );
 }
 void CMainFrame::OnButtonClrVtable( )
 {
-	g_crVTable = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_VTABLE ))->GetColor( );
+	g_crVTable = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_VTABLE ))->GetColor( );
 }
 void CMainFrame::OnButtonClrFunction( )
 {
-	g_crFunction = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_FUNCTION ))->GetColor( );
+	g_crFunction = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_FUNCTION ))->GetColor( );
 }
 void CMainFrame::OnButtonClrCustom( )
 {
-	g_crCustom = ((CMFCRibbonColorButton*)m_RibbonBar.FindByID( ID_BUTTON_CLR_CUSTOM ))->GetColor( );
+	g_crCustom = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_CUSTOM ))->GetColor( );
 }
 
 BOOL CMainFrame::PreCreateWindow( CREATESTRUCT& cs )

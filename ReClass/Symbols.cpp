@@ -12,6 +12,16 @@ Symbols::Symbols( ) :
 
 	if (!Init( ))
 		throw std::exception( "init_failed" );
+
+	ntdll::RtlInitializeCriticalSection( &m_CriticalSection );
+}
+
+Symbols::~Symbols( )
+{
+	ntdll::RtlDeleteCriticalSection( &m_CriticalSection );
+
+	Cleanup( );
+	DeleteFile( _T( "symsrv.dll" ) );
 }
 
 void Symbols::ResolveSearchPath( )
@@ -107,12 +117,6 @@ BOOLEAN Symbols::WriteSymSrvDll( )
 	return FALSE;
 }
 
-Symbols::~Symbols( )
-{
-	Cleanup( );
-	DeleteFile( _T( "symsrv.dll" ) );
-}
-
 void Symbols::Cleanup( )
 {
 	if (m_bInitialized == TRUE)
@@ -153,6 +157,7 @@ BOOLEAN Symbols::LoadSymbolsForModule( CString ModulePath, ULONG_PTR ModuleBaseA
 	CString ModuleName;
 	const TCHAR* szSearchPath = NULL;
 	SymbolReader* reader = NULL;
+	BOOLEAN bSucc = FALSE;
 
 	idx = ModulePath.ReverseFind( '/' );
 	if (idx == -1)
@@ -163,7 +168,14 @@ BOOLEAN Symbols::LoadSymbolsForModule( CString ModulePath, ULONG_PTR ModuleBaseA
 		szSearchPath = m_strSearchPath.GetString( );
 
 	reader = new SymbolReader( );
-	if (reader->LoadFile( ModuleName, ModulePath, ModuleBaseAddress, SizeOfModule, szSearchPath ))
+
+	//ntdll::RtlEnterCriticalSection( &m_CriticalSection );
+
+	bSucc = reader->LoadFile( ModuleName, ModulePath, ModuleBaseAddress, SizeOfModule, szSearchPath );
+
+	//ntdll::RtlLeaveCriticalSection( &m_CriticalSection );
+
+	if (bSucc)
 	{
 		PrintOut( _T( "[Symbols::LoadSymbolsForModule] Symbols for module %s loaded" ), ModuleName.GetString( ) );
 		m_SymbolAddresses.insert( std::make_pair( ModuleBaseAddress, reader ) );
@@ -181,6 +193,7 @@ BOOLEAN Symbols::LoadSymbolsForPdb( CString PdbPath )
 	CString PdbFileName;
 	const TCHAR* szSearchPath = NULL;
 	SymbolReader* reader = NULL;
+	BOOLEAN bSucc = FALSE;
 
 	idx = PdbPath.ReverseFind( '/' );
 	if (idx == -1)
@@ -191,7 +204,14 @@ BOOLEAN Symbols::LoadSymbolsForPdb( CString PdbPath )
 		szSearchPath = m_strSearchPath.GetString( );
 
 	reader = new SymbolReader( );
-	if (reader->LoadFile( PdbFileName, PdbPath, 0, 0, szSearchPath ))
+
+	ntdll::RtlEnterCriticalSection( &m_CriticalSection );
+
+	bSucc = reader->LoadFile( PdbFileName, PdbPath, 0, 0, szSearchPath );
+
+	ntdll::RtlLeaveCriticalSection( &m_CriticalSection );
+
+	if (bSucc)
 	{
 		PrintOut( _T( "[Symbols::LoadSymbolsForPdb] Symbols for module %s loaded" ), PdbFileName.GetString( ) );
 		m_SymbolNames.insert( std::make_pair( PdbFileName, reader ) );

@@ -37,7 +37,8 @@ public:
 
 // Implementation
 	class CMainFrame* GetMainFrame( );
-	CMFCRibbonBar* GetRibbonBar( );
+	class CMFCRibbonBar* GetRibbonBar( );
+	class CStatusBar* GetStatusBar( );
 
 	CNodeBase* CreateNewNode( NodeType Type );
 	bool IsNodeValid( CNodeBase* pCheckNode );

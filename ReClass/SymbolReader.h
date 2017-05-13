@@ -201,13 +201,8 @@ private:
 private:
 	BOOLEAN			m_bInitialized;
 
-	// Source
 	IDiaDataSource* m_pSource;
-
 	IDiaSession*	m_pSession;
-	IDiaSymbol*		m_pGlobal;
-
-	DWORD			m_dwMachineType;
 
 	CString			m_strFileName;
 	CString			m_strFilePath;

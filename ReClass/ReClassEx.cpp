@@ -681,6 +681,11 @@ CMFCRibbonBar* CReClassExApp::GetRibbonBar( )
 	return (CMFCRibbonBar*)&GetMainFrame( )->m_RibbonBar;
 }
 
+CStatusBar* CReClassExApp::GetStatusBar( )
+{
+	return (CStatusBar*)&GetMainFrame( )->m_StatusBar;
+}
+
 CNodeBase* CReClassExApp::CreateNewNode( NodeType Type )
 {
 	switch ( Type )

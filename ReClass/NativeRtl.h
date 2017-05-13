@@ -1111,6 +1111,36 @@ typedef LONG( NTAPI *tRtlCompareAltitudes )(
 #endif
 
 //
+// Critical Section Routines
+//
+
+typedef NTSTATUS( NTAPI *tRtlInitializeCriticalSection) (
+	OUT PRTL_CRITICAL_SECTION CriticalSection
+);
+
+typedef NTSTATUS( NTAPI *tRtlInitializeCriticalSectionAndSpinCount )(
+	IN OUT PRTL_CRITICAL_SECTION CriticalSection,
+	IN ULONG SpinCount
+);
+
+typedef NTSTATUS( NTAPI *tRtlDeleteCriticalSection )(
+	IN OUT PRTL_CRITICAL_SECTION CriticalSection
+);
+
+typedef NTSTATUS( NTAPI *tRtlEnterCriticalSection)(
+	IN OUT PRTL_CRITICAL_SECTION CriticalSection
+);
+
+typedef NTSTATUS( NTAPI *tRtlLeaveCriticalSection )(
+	IN OUT PRTL_CRITICAL_SECTION CriticalSection
+);
+
+typedef NTSTATUS( NTAPI *tRtlTryEnterCriticalSection )(
+	IN OUT PRTL_CRITICAL_SECTION CriticalSection
+);
+
+
+//
 // Compression Routines
 //
 typedef NTSTATUS( NTAPI *tRtlGetCompressionWorkSpaceSize )(

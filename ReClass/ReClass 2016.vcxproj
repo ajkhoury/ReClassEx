@@ -362,6 +362,7 @@
     <ClInclude Include="CNodeWCharPtr.h" />
     <ClInclude Include="CNodeWORD.h" />
     <ClInclude Include="CScintillaEdit.h" />
+    <ClInclude Include="CProgressBar.h" />
     <ClInclude Include="DialogAbout.h" />
     <ClInclude Include="BitArray.h" />
     <ClInclude Include="CClassFrame.h" />
@@ -442,6 +443,7 @@
     <ClCompile Include="CNodeWCharPtr.cpp" />
     <ClCompile Include="CNodeWORD.cpp" />
     <ClCompile Include="CScintillaEdit.cpp" />
+    <ClCompile Include="CProgressBar.cpp" />
     <ClCompile Include="DialogAbout.cpp" />
     <ClCompile Include="DialogClasses.cpp" />
     <ClCompile Include="DialogConsole.cpp" />

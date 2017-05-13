@@ -194,5 +194,6 @@ LONG GetProcessorArchitecture( );
 OSType GetOperatingSystemType( );
 int GetProcessPlatform( HANDLE hProcess );
 HANDLE NtCreateThreadEx( HANDLE hProcess, LPVOID lpRemoteThreadStart, LPVOID lpParam, DWORD createFlags, DWORD* threadId );
+HANDLE NtCreateThread( LPVOID lpRemoteThreadStart, LPVOID lpParam, DWORD createFlags, DWORD* threadId = NULL );
 
 };

@@ -364,9 +364,9 @@ HANDLE NtCreateThreadEx( HANDLE hProcess, LPVOID lpRemoteThreadStart, LPVOID lpP
 	return hRemoteThread;
 }
 
-HANDLE NtCreateThread( LPVOID lpRemoteThreadStart, LPVOID lpParam, DWORD createFlags, DWORD* threadId = NULL )
+HANDLE NtCreateThread( LPVOID lpRemoteThreadStart, LPVOID lpParam, DWORD createFlags, DWORD* threadId )
 {
-	return NtCreateThreadEx( GetCurrentProcess( ), lpRemoteThreadStart, lpParam, createFlags, threadId );
+	return NtCreateThreadEx( NtCurrentProcess( ), lpRemoteThreadStart, lpParam, createFlags, threadId );
 }
 
 }

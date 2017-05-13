@@ -29,7 +29,8 @@ CScintillaEdit::~CScintillaEdit( )
 
 sptr_t CScintillaEdit::SendEditor( UINT Msg, WPARAM wParam, LPARAM lParam )
 {
-	return m_pSciMsg( m_pSciWndData, Msg, wParam, lParam );
+	return ::SendMessage( m_hWnd, Msg, wParam, lParam );
+	//return m_pSciMsg( m_pSciWndData, Msg, wParam, lParam );
 }
 
 //

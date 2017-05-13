@@ -2,17 +2,15 @@
 #include "SymbolReader.h"
 
 
-SymbolReader::SymbolReader( ) :
-	m_bInitialized( FALSE ),
-	m_pSource( NULL ),
-	m_pSession( NULL ),
-	m_pGlobal( NULL )
+SymbolReader::SymbolReader( ) 
+	: m_bInitialized( FALSE )
+	, m_pSource( NULL )
+	, m_pSession( NULL )
 {
 }
 
 SymbolReader::~SymbolReader( )
 {
-	SAFE_RELEASE( m_pGlobal );
 	SAFE_RELEASE( m_pSession );
 	SAFE_RELEASE( m_pSource );
 }
@@ -85,25 +83,6 @@ BOOLEAN SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
 	{
 		PrintOut( _T( "[LoadDataFromPdb] openSession failed - HRESULT = %08X" ), hr );
 		return FALSE;
-	}
-
-	// Retrieve a reference to the global scope
-	hr = m_pSession->get_globalScope( &m_pGlobal );
-	if (FAILED( hr ))
-	{
-		PrintOut( _T( "[LoadDataFromPdb] get_globalScope failed - HRESULT = %08X" ), hr );
-		return FALSE;
-	}
-
-	// Set Machine type for getting correct register names
-	if (m_pGlobal->get_machineType( &dwMachType ) == S_OK)
-	{
-		switch (dwMachType)
-		{
-		case IMAGE_FILE_MACHINE_I386: m_dwMachineType = CV_CFL_80386; break;
-		case IMAGE_FILE_MACHINE_IA64: m_dwMachineType = CV_CFL_IA64; break;
-		case IMAGE_FILE_MACHINE_AMD64: m_dwMachineType = CV_CFL_AMD64; break;
-		}
 	}
 
 	return TRUE;

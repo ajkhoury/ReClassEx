@@ -2,6 +2,8 @@
 
 #include <afxwin.h>
 
+#include "CProgressBar.h"
+
 #define TIMER_MEMORYMAP_UPDATE 0xDEADF00D
 
 class CMainFrame : public CMDIFrameWndEx
@@ -34,9 +36,16 @@ public:  // control bar embedded members
 	CMFCRibbonApplicationButton m_MainButton;
 	CMFCToolBarImages m_PanelImages;
 
+	static UINT BASED_CODE s_StatusBarPanes[2];
+	CStatusBar m_StatusBar;
+
+	void OnLoadSymbols( );
+
+
 // Generated message map functions
 protected:
 	afx_msg int OnCreate( LPCREATESTRUCT lpCreateStruct );
+	afx_msg void OnSize( UINT nType, int cx, int cy );
 	afx_msg void OnWindowManager( );
 	afx_msg void OnApplicationLook( UINT id );
 	afx_msg void OnUpdateApplicationLook( CCmdUI* pCmdUI );

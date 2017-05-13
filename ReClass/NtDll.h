@@ -9,13 +9,23 @@ namespace ntdll
 {
 
 extern PVOID Base;
+
 extern tNtQuerySystemInformation NtQuerySystemInformation;
 extern tNtQueryInformationProcess NtQueryInformationProcess;
-extern tRtlGetVersion RtlGetVersion;
-extern tRtlGetNativeSystemInformation RtlGetNativeSystemInformation;
+
+extern tNtCreateThreadEx NtCreateThreadEx;
+
 extern tNtOpenProcessToken NtOpenProcessToken;
 extern tNtAdjustPrivilegesToken NtAdjustPrivilegesToken;
-extern tNtCreateThreadEx NtCreateThreadEx;
+
+extern tRtlInitializeCriticalSection RtlInitializeCriticalSection;
+extern tRtlDeleteCriticalSection RtlDeleteCriticalSection;
+extern tRtlEnterCriticalSection RtlEnterCriticalSection;
+extern tRtlLeaveCriticalSection RtlLeaveCriticalSection;
+
+extern tRtlGetVersion RtlGetVersion;
+extern tRtlGetNativeSystemInformation RtlGetNativeSystemInformation;
+
 
 bool Init( );
 
