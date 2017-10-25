@@ -98,7 +98,7 @@ static const int TIXML2_PATCH_VERSION = 0;
 
 namespace tinyxml2
 {
-class TiXMLDocument; // changed to TiXMLDocument cause XMLDocument in the win api
+class XMLDocument; // changed to XMLDocument cause XMLDocument in the win api
 class XMLElement;
 class XMLAttribute;
 class XMLComment;
@@ -435,7 +435,7 @@ private:
 	All flavors of Visit methods have a default implementation that returns 'true' (continue
 	visiting). You need to only override methods that are interesting to you.
 
-	Generally Accept() is called on the TiXMLDocument, although all nodes support visiting.
+	Generally Accept() is called on the XMLDocument, although all nodes support visiting.
 
 	You should never change the document from a callback.
 
@@ -447,11 +447,11 @@ public:
     virtual ~XMLVisitor() {}
 
     /// Visit a document.
-    virtual bool VisitEnter( const TiXMLDocument& /*doc*/ )			{
+    virtual bool VisitEnter( const XMLDocument& /*doc*/ )			{
         return true;
     }
     /// Visit a document.
-    virtual bool VisitExit( const TiXMLDocument& /*doc*/ )			{
+    virtual bool VisitExit( const XMLDocument& /*doc*/ )			{
         return true;
     }
 
@@ -482,7 +482,7 @@ public:
     }
 };
 
-// WARNING: must match TiXMLDocument::_errorNames[]
+// WARNING: must match XMLDocument::_errorNames[]
 enum XMLError {
     XML_SUCCESS = 0,
     XML_NO_ERROR = 0,
@@ -588,12 +588,12 @@ public:
 /** XMLNode is a base class for every object that is in the
 	XML Document Object Model (DOM), except XMLAttributes.
 	Nodes have siblings, a parent, and children which can
-	be navigated. A node is always in a TiXMLDocument.
+	be navigated. A node is always in a XMLDocument.
 	The type of a XMLNode can be queried, and it can
 	be cast to its more defined type.
 
-	A TiXMLDocument allocates memory for all its Nodes.
-	When the TiXMLDocument gets deleted, all its Nodes
+	A XMLDocument allocates memory for all its Nodes.
+	When the XMLDocument gets deleted, all its Nodes
 	will also be deleted.
 
 	@verbatim
@@ -612,17 +612,17 @@ public:
 */
 class TINYXML2_LIB XMLNode
 {
-    friend class TiXMLDocument;
+    friend class XMLDocument;
     friend class XMLElement;
 public:
 
-    /// Get the TiXMLDocument that owns this XMLNode.
-    const TiXMLDocument* GetDocument() const	{
+    /// Get the XMLDocument that owns this XMLNode.
+    const XMLDocument* GetDocument() const	{
         TIXMLASSERT( _document );
         return _document;
     }
-    /// Get the TiXMLDocument that owns this XMLNode.
-	TiXMLDocument* GetDocument()				{
+    /// Get the XMLDocument that owns this XMLNode.
+	XMLDocument* GetDocument()				{
         TIXMLASSERT( _document );
         return _document;
     }
@@ -640,7 +640,7 @@ public:
         return 0;
     }
     /// Safely cast to a Document, or null.
-    virtual TiXMLDocument*	ToDocument()	{
+    virtual XMLDocument*	ToDocument()	{
         return 0;
     }
     /// Safely cast to a Declaration, or null.
@@ -661,7 +661,7 @@ public:
     virtual const XMLComment*		ToComment() const		{
         return 0;
     }
-    virtual const TiXMLDocument*		ToDocument() const		{
+    virtual const XMLDocument*		ToDocument() const		{
         return 0;
     }
     virtual const XMLDeclaration*	ToDeclaration() const	{
@@ -816,15 +816,15 @@ public:
     	null, then the node returned will be allocated
     	from the current Document. (this->GetDocument())
 
-    	Note: if called on a TiXMLDocument, this will return null.
+    	Note: if called on a XMLDocument, this will return null.
     */
-    virtual XMLNode* ShallowClone(TiXMLDocument* document ) const = 0;
+    virtual XMLNode* ShallowClone(XMLDocument* document ) const = 0;
 
     /**
     	Test if 2 nodes are the same, but don't test children.
     	The 2 nodes do not need to be in the same Document.
 
-    	Note: if called on a TiXMLDocument, this will return false.
+    	Note: if called on a XMLDocument, this will return false.
     */
     virtual bool ShallowEqual( const XMLNode* compare ) const = 0;
 
@@ -853,12 +853,12 @@ public:
     virtual bool Accept( XMLVisitor* visitor ) const = 0;
 
 protected:
-    XMLNode(TiXMLDocument* );
+    XMLNode(XMLDocument* );
     virtual ~XMLNode();
 
     virtual char* ParseDeep( char*, StrPair* );
 
-	TiXMLDocument*	_document;
+	XMLDocument*	_document;
     XMLNode*		_parent;
     mutable StrPair	_value;
 
@@ -894,7 +894,7 @@ private:
 class TINYXML2_LIB XMLText : public XMLNode
 {
     friend class XMLBase;
-    friend class TiXMLDocument;
+    friend class XMLDocument;
 public:
     virtual bool Accept( XMLVisitor* visitor ) const;
 
@@ -914,11 +914,11 @@ public:
         return _isCData;
     }
 
-    virtual XMLNode* ShallowClone(TiXMLDocument* document ) const;
+    virtual XMLNode* ShallowClone(XMLDocument* document ) const;
     virtual bool ShallowEqual( const XMLNode* compare ) const;
 
 protected:
-    XMLText(TiXMLDocument* doc )	: XMLNode( doc ), _isCData( false )	{}
+    XMLText(XMLDocument* doc )	: XMLNode( doc ), _isCData( false )	{}
     virtual ~XMLText()												{}
 
     char* ParseDeep( char*, StrPair* endTag );
@@ -934,7 +934,7 @@ private:
 /** An XML Comment. */
 class TINYXML2_LIB XMLComment : public XMLNode
 {
-    friend class TiXMLDocument;
+    friend class XMLDocument;
 public:
     virtual XMLComment*	ToComment()					{
         return this;
@@ -945,11 +945,11 @@ public:
 
     virtual bool Accept( XMLVisitor* visitor ) const;
 
-    virtual XMLNode* ShallowClone(TiXMLDocument* document ) const;
+    virtual XMLNode* ShallowClone(XMLDocument* document ) const;
     virtual bool ShallowEqual( const XMLNode* compare ) const;
 
 protected:
-    XMLComment(TiXMLDocument* doc );
+    XMLComment(XMLDocument* doc );
     virtual ~XMLComment();
 
     char* ParseDeep( char*, StrPair* endTag );
@@ -973,7 +973,7 @@ private:
 */
 class TINYXML2_LIB XMLDeclaration : public XMLNode
 {
-    friend class TiXMLDocument;
+    friend class XMLDocument;
 public:
     virtual XMLDeclaration*	ToDeclaration()					{
         return this;
@@ -984,11 +984,11 @@ public:
 
     virtual bool Accept( XMLVisitor* visitor ) const;
 
-    virtual XMLNode* ShallowClone(TiXMLDocument* document ) const;
+    virtual XMLNode* ShallowClone(XMLDocument* document ) const;
     virtual bool ShallowEqual( const XMLNode* compare ) const;
 
 protected:
-    XMLDeclaration(TiXMLDocument* doc );
+    XMLDeclaration(XMLDocument* doc );
     virtual ~XMLDeclaration();
 
     char* ParseDeep( char*, StrPair* endTag );
@@ -1008,7 +1008,7 @@ private:
 */
 class TINYXML2_LIB XMLUnknown : public XMLNode
 {
-    friend class TiXMLDocument;
+    friend class XMLDocument;
 public:
     virtual XMLUnknown*	ToUnknown()					{
         return this;
@@ -1019,11 +1019,11 @@ public:
 
     virtual bool Accept( XMLVisitor* visitor ) const;
 
-    virtual XMLNode* ShallowClone(TiXMLDocument* document ) const;
+    virtual XMLNode* ShallowClone(XMLDocument* document ) const;
     virtual bool ShallowEqual( const XMLNode* compare ) const;
 
 protected:
-    XMLUnknown(TiXMLDocument* doc );
+    XMLUnknown(XMLDocument* doc );
     virtual ~XMLUnknown();
 
     char* ParseDeep( char*, StrPair* endTag );
@@ -1143,7 +1143,7 @@ private:
 class TINYXML2_LIB XMLElement : public XMLNode
 {
     friend class XMLBase;
-    friend class TiXMLDocument;
+    friend class XMLDocument;
 public:
     /// Get the name of an element (which is the Value() of the node.)
     const char* Name() const		{
@@ -1477,14 +1477,14 @@ public:
     int ClosingType() const {
         return _closingType;
     }
-    virtual XMLNode* ShallowClone(TiXMLDocument* document ) const;
+    virtual XMLNode* ShallowClone(XMLDocument* document ) const;
     virtual bool ShallowEqual( const XMLNode* compare ) const;
 
 protected:
     char* ParseDeep( char* p, StrPair* endTag );
 
 private:
-    XMLElement(TiXMLDocument* doc );
+    XMLElement(XMLDocument* doc );
     virtual ~XMLElement();
     XMLElement( const XMLElement& );	// not supported
     void operator=( const XMLElement& );	// not supported
@@ -1517,19 +1517,19 @@ enum Whitespace {
 	All Nodes are connected and allocated to a Document.
 	If the Document is deleted, all its Nodes are also deleted.
 */
-class TINYXML2_LIB TiXMLDocument : public XMLNode
+class TINYXML2_LIB XMLDocument : public XMLNode
 {
     friend class XMLElement;
 public:
     /// constructor
-	TiXMLDocument( bool processEntities = true, Whitespace = PRESERVE_WHITESPACE );
-    ~TiXMLDocument();
+	XMLDocument( bool processEntities = true, Whitespace = PRESERVE_WHITESPACE );
+    ~XMLDocument();
 
-    virtual TiXMLDocument* ToDocument()				{
+    virtual XMLDocument* ToDocument()				{
         TIXMLASSERT( this == _document );
         return this;
     }
-    virtual const TiXMLDocument* ToDocument() const	{
+    virtual const XMLDocument* ToDocument() const	{
         TIXMLASSERT( this == _document );
         return this;
     }
@@ -1700,7 +1700,7 @@ public:
     // internal
     char* Identify( char* p, XMLNode** node );
 
-    virtual XMLNode* ShallowClone( TiXMLDocument* /*document*/ ) const	{
+    virtual XMLNode* ShallowClone( XMLDocument* /*document*/ ) const	{
         return 0;
     }
     virtual bool ShallowEqual( const XMLNode* /*compare*/ ) const	{
@@ -1708,8 +1708,8 @@ public:
     }
 
 private:
-	TiXMLDocument( const TiXMLDocument& );	// not supported
-    void operator=( const TiXMLDocument& );	// not supported
+	XMLDocument( const XMLDocument& );	// not supported
+    void operator=( const XMLDocument& );	// not supported
 
     bool        _writeBOM;
     bool        _processEntities;
@@ -1936,12 +1936,12 @@ private:
 
 /**
 	Printing functionality. The XMLPrinter gives you more
-	options than the TiXMLDocument::Print() method.
+	options than the XMLDocument::Print() method.
 
 	It can:
 	-# Print to memory.
 	-# Print to a file you provide.
-	-# Print XML without a TiXMLDocument.
+	-# Print XML without a XMLDocument.
 
 	Print to Memory
 
@@ -1959,7 +1959,7 @@ private:
 	doc.Print( &printer );
 	@endverbatim
 
-	Print without a TiXMLDocument
+	Print without a XMLDocument
 
 	When loading, an XML parser is very useful. However, sometimes
 	when saving, it just gets in the way. The code is often set up
@@ -2022,8 +2022,8 @@ public:
     void PushDeclaration( const char* value );
     void PushUnknown( const char* value );
 
-    virtual bool VisitEnter( const TiXMLDocument& /*doc*/ );
-    virtual bool VisitExit( const TiXMLDocument& /*doc*/ )			{
+    virtual bool VisitEnter( const XMLDocument& /*doc*/ );
+    virtual bool VisitExit( const XMLDocument& /*doc*/ )			{
         return true;
     }
 

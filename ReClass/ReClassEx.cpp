@@ -739,7 +739,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 {
 	PrintOut( _T( "SaveXML(\"%s\") called" ), FileName );
 
-	TiXMLDocument doc;
+	XMLDocument doc;
 
 	XMLDeclaration* decl = doc.NewDeclaration(/*"xml version = \"1.0\" encoding=\"UTF-8\""*/ );
 	doc.LinkEndChild( decl );
@@ -1025,7 +1025,7 @@ void CReClassExApp::OnFileOpen( )
 	m_strNotes = _T( "" );
 	m_strCurrentFilePath = _T( "" );
 
-	TiXMLDocument doc;
+	XMLDocument doc;
 
 	#ifdef UNICODE
 	#define _CA2W(psz) CA2W(psz)

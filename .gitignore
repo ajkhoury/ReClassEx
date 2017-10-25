@@ -49,3 +49,4 @@ DriverPlugin_dbg.rc-plugin64d
 *.sys
 /ReClass/plugins/TestPlugin.lib
 /ReClass/plugins/TestPlugin.rc-plugin64
+.vs

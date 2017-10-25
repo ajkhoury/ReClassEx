@@ -21,7 +21,7 @@ must not be misrepresented as being the original software.
 distribution.
 */
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "tinyxml2.h"
 
 #include <new>		// yes, this one new style header, is in the Android SDK.
@@ -609,7 +609,7 @@ bool XMLUtil::ToDouble( const char* str, double* value )
 }
 
 
-char* TiXMLDocument::Identify( char* p, XMLNode** node )
+char* XMLDocument::Identify( char* p, XMLNode** node )
 {
     TIXMLASSERT( node );
     TIXMLASSERT( p );
@@ -683,7 +683,7 @@ char* TiXMLDocument::Identify( char* p, XMLNode** node )
 }
 
 
-bool TiXMLDocument::Accept( XMLVisitor* visitor ) const
+bool XMLDocument::Accept( XMLVisitor* visitor ) const
 {
     TIXMLASSERT( visitor );
     if ( visitor->VisitEnter( *this ) ) {
@@ -699,7 +699,7 @@ bool TiXMLDocument::Accept( XMLVisitor* visitor ) const
 
 // --------- XMLNode ----------- //
 
-XMLNode::XMLNode(TiXMLDocument* doc ) :
+XMLNode::XMLNode(XMLDocument* doc ) :
     _document( doc ),
     _parent( 0 ),
     _firstChild( 0 ), _lastChild( 0 ),
@@ -1065,7 +1065,7 @@ char* XMLText::ParseDeep( char* p, StrPair* )
 }
 
 
-XMLNode* XMLText::ShallowClone(TiXMLDocument* doc ) const
+XMLNode* XMLText::ShallowClone(XMLDocument* doc ) const
 {
     if ( !doc ) {
         doc = _document;
@@ -1092,7 +1092,7 @@ bool XMLText::Accept( XMLVisitor* visitor ) const
 
 // --------- XMLComment ---------- //
 
-XMLComment::XMLComment(TiXMLDocument* doc ) : XMLNode( doc )
+XMLComment::XMLComment(XMLDocument* doc ) : XMLNode( doc )
 {
 }
 
@@ -1114,7 +1114,7 @@ char* XMLComment::ParseDeep( char* p, StrPair* )
 }
 
 
-XMLNode* XMLComment::ShallowClone(TiXMLDocument* doc ) const
+XMLNode* XMLComment::ShallowClone(XMLDocument* doc ) const
 {
     if ( !doc ) {
         doc = _document;
@@ -1141,7 +1141,7 @@ bool XMLComment::Accept( XMLVisitor* visitor ) const
 
 // --------- XMLDeclaration ---------- //
 
-XMLDeclaration::XMLDeclaration(TiXMLDocument* doc ) : XMLNode( doc )
+XMLDeclaration::XMLDeclaration(XMLDocument* doc ) : XMLNode( doc )
 {
 }
 
@@ -1164,7 +1164,7 @@ char* XMLDeclaration::ParseDeep( char* p, StrPair* )
 }
 
 
-XMLNode* XMLDeclaration::ShallowClone(TiXMLDocument* doc ) const
+XMLNode* XMLDeclaration::ShallowClone(XMLDocument* doc ) const
 {
     if ( !doc ) {
         doc = _document;
@@ -1191,7 +1191,7 @@ bool XMLDeclaration::Accept( XMLVisitor* visitor ) const
 
 // --------- XMLUnknown ---------- //
 
-XMLUnknown::XMLUnknown(TiXMLDocument* doc ) : XMLNode( doc )
+XMLUnknown::XMLUnknown(XMLDocument* doc ) : XMLNode( doc )
 {
 }
 
@@ -1214,7 +1214,7 @@ char* XMLUnknown::ParseDeep( char* p, StrPair* )
 }
 
 
-XMLNode* XMLUnknown::ShallowClone(TiXMLDocument* doc ) const
+XMLNode* XMLUnknown::ShallowClone(XMLDocument* doc ) const
 {
     if ( !doc ) {
         doc = _document;
@@ -1374,7 +1374,7 @@ void XMLAttribute::SetAttribute( float v )
 
 
 // --------- XMLElement ---------- //
-XMLElement::XMLElement(TiXMLDocument* doc ) : XMLNode( doc ),
+XMLElement::XMLElement(XMLDocument* doc ) : XMLNode( doc ),
     _closingType( 0 ),
     _rootAttribute( 0 )
 {
@@ -1688,7 +1688,7 @@ char* XMLElement::ParseDeep( char* p, StrPair* strPair )
 
 
 
-XMLNode* XMLElement::ShallowClone(TiXMLDocument* doc ) const
+XMLNode* XMLElement::ShallowClone(XMLDocument* doc ) const
 {
     if ( !doc ) {
         doc = _document;
@@ -1741,10 +1741,10 @@ bool XMLElement::Accept( XMLVisitor* visitor ) const
 }
 
 
-// --------- TiXMLDocument ----------- //
+// --------- XMLDocument ----------- //
 
 // Warning: List must match 'enum XMLError'
-const char* TiXMLDocument::_errorNames[XML_ERROR_COUNT] = {
+const char* XMLDocument::_errorNames[XML_ERROR_COUNT] = {
     "XML_SUCCESS",
     "XML_NO_ATTRIBUTE",
     "XML_WRONG_ATTRIBUTE_TYPE",
@@ -1768,7 +1768,7 @@ const char* TiXMLDocument::_errorNames[XML_ERROR_COUNT] = {
 };
 
 
-TiXMLDocument::TiXMLDocument( bool processEntities, Whitespace whitespace ) :
+XMLDocument::XMLDocument( bool processEntities, Whitespace whitespace ) :
     XMLNode( 0 ),
     _writeBOM( false ),
     _processEntities( processEntities ),
@@ -1783,13 +1783,13 @@ TiXMLDocument::TiXMLDocument( bool processEntities, Whitespace whitespace ) :
 }
 
 
-TiXMLDocument::~TiXMLDocument()
+XMLDocument::~XMLDocument()
 {
     Clear();
 }
 
 
-void TiXMLDocument::Clear()
+void XMLDocument::Clear()
 {
     DeleteChildren();
 
@@ -1821,7 +1821,7 @@ void TiXMLDocument::Clear()
 }
 
 
-XMLElement* TiXMLDocument::NewElement( const char* name )
+XMLElement* XMLDocument::NewElement( const char* name )
 {
     TIXMLASSERT( sizeof( XMLElement ) == _elementPool.ItemSize() );
     XMLElement* ele = new (_elementPool.Alloc()) XMLElement( this );
@@ -1831,7 +1831,7 @@ XMLElement* TiXMLDocument::NewElement( const char* name )
 }
 
 
-XMLComment* TiXMLDocument::NewComment( const char* str )
+XMLComment* XMLDocument::NewComment( const char* str )
 {
     TIXMLASSERT( sizeof( XMLComment ) == _commentPool.ItemSize() );
     XMLComment* comment = new (_commentPool.Alloc()) XMLComment( this );
@@ -1841,7 +1841,7 @@ XMLComment* TiXMLDocument::NewComment( const char* str )
 }
 
 
-XMLText* TiXMLDocument::NewText( const char* str )
+XMLText* XMLDocument::NewText( const char* str )
 {
     TIXMLASSERT( sizeof( XMLText ) == _textPool.ItemSize() );
     XMLText* text = new (_textPool.Alloc()) XMLText( this );
@@ -1851,7 +1851,7 @@ XMLText* TiXMLDocument::NewText( const char* str )
 }
 
 
-XMLDeclaration* TiXMLDocument::NewDeclaration( const char* str )
+XMLDeclaration* XMLDocument::NewDeclaration( const char* str )
 {
     TIXMLASSERT( sizeof( XMLDeclaration ) == _commentPool.ItemSize() );
     XMLDeclaration* dec = new (_commentPool.Alloc()) XMLDeclaration( this );
@@ -1861,7 +1861,7 @@ XMLDeclaration* TiXMLDocument::NewDeclaration( const char* str )
 }
 
 
-XMLUnknown* TiXMLDocument::NewUnknown( const char* str )
+XMLUnknown* XMLDocument::NewUnknown( const char* str )
 {
     TIXMLASSERT( sizeof( XMLUnknown ) == _commentPool.ItemSize() );
     XMLUnknown* unk = new (_commentPool.Alloc()) XMLUnknown( this );
@@ -1886,7 +1886,7 @@ static FILE* callfopen( const char* filepath, const char* mode )
     return fp;
 }
     
-void TiXMLDocument::DeleteNode( XMLNode* node )	{
+void XMLDocument::DeleteNode( XMLNode* node )	{
     TIXMLASSERT( node );
     TIXMLASSERT(node->_document == this );
     if (node->_parent) {
@@ -1904,7 +1904,7 @@ void TiXMLDocument::DeleteNode( XMLNode* node )	{
 }
 
 
-XMLError TiXMLDocument::LoadFile( const char* filename )
+XMLError XMLDocument::LoadFile( const char* filename )
 {
     Clear();
     FILE* fp = callfopen( filename, "rb" );
@@ -1938,7 +1938,7 @@ bool LongFitsIntoSizeTMinusOne<false>::Fits( unsigned long /*value*/ )
     return true;
 }
 
-XMLError TiXMLDocument::LoadFile( FILE* fp )
+XMLError XMLDocument::LoadFile( FILE* fp )
 {
     Clear();
 
@@ -1984,7 +1984,7 @@ XMLError TiXMLDocument::LoadFile( FILE* fp )
 }
 
 
-XMLError TiXMLDocument::SaveFile( const char* filename, bool compact )
+XMLError XMLDocument::SaveFile( const char* filename, bool compact )
 {
     FILE* fp = callfopen( filename, "w" );
     if ( !fp ) {
@@ -1997,7 +1997,7 @@ XMLError TiXMLDocument::SaveFile( const char* filename, bool compact )
 }
 
 
-XMLError TiXMLDocument::SaveFile( FILE* fp, bool compact )
+XMLError XMLDocument::SaveFile( FILE* fp, bool compact )
 {
     // Clear any error from the last save, otherwise it will get reported
     // for *this* call.
@@ -2008,7 +2008,7 @@ XMLError TiXMLDocument::SaveFile( FILE* fp, bool compact )
 }
 
 
-XMLError TiXMLDocument::Parse( const char* p, size_t len )
+XMLError XMLDocument::Parse( const char* p, size_t len )
 {
     Clear();
 
@@ -2039,7 +2039,7 @@ XMLError TiXMLDocument::Parse( const char* p, size_t len )
 }
 
 
-void TiXMLDocument::Print( XMLPrinter* streamer ) const
+void XMLDocument::Print( XMLPrinter* streamer ) const
 {
     if ( streamer ) {
         Accept( streamer );
@@ -2051,7 +2051,7 @@ void TiXMLDocument::Print( XMLPrinter* streamer ) const
 }
 
 
-void TiXMLDocument::SetError( XMLError error, const char* str1, const char* str2 )
+void XMLDocument::SetError( XMLError error, const char* str1, const char* str2 )
 {
     TIXMLASSERT( error >= 0 && error < XML_ERROR_COUNT );
     _errorID = error;
@@ -2059,7 +2059,7 @@ void TiXMLDocument::SetError( XMLError error, const char* str1, const char* str2
     _errorStr2 = str2;
 }
 
-const char* TiXMLDocument::ErrorName() const
+const char* XMLDocument::ErrorName() const
 {
 	TIXMLASSERT( _errorID >= 0 && _errorID < XML_ERROR_COUNT );
     const char* errorName = _errorNames[_errorID];
@@ -2067,7 +2067,7 @@ const char* TiXMLDocument::ErrorName() const
     return errorName;
 }
 
-void TiXMLDocument::PrintError() const
+void XMLDocument::PrintError() const
 {
     if ( Error() ) {
         static const int LEN = 20;
@@ -2084,12 +2084,12 @@ void TiXMLDocument::PrintError() const
         // Should check INT_MIN <= _errorID && _errorId <= INT_MAX, but that
         // causes a clang "always true" -Wtautological-constant-out-of-range-compare warning
         TIXMLASSERT( 0 <= _errorID && XML_ERROR_COUNT - 1 <= INT_MAX );
-        printf( "TiXMLDocument error id=%d '%s' str1=%s str2=%s\n",
+        printf( "XMLDocument error id=%d '%s' str1=%s str2=%s\n",
                 static_cast<int>( _errorID ), ErrorName(), buf1, buf2 );
     }
 }
 
-void TiXMLDocument::Parse()
+void XMLDocument::Parse()
 {
     TIXMLASSERT( NoChildren() ); // Clear() must have been called previously
     TIXMLASSERT( _charBuffer );
@@ -2405,7 +2405,7 @@ void XMLPrinter::PushUnknown( const char* value )
 }
 
 
-bool XMLPrinter::VisitEnter( const TiXMLDocument& doc )
+bool XMLPrinter::VisitEnter( const XMLDocument& doc )
 {
     _processEntities = doc.ProcessEntities();
     if ( doc.HasBOM() ) {
