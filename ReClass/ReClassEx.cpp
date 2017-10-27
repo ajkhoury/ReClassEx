@@ -966,7 +966,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 	XMLError err = doc.SaveFile( fp );
 	fclose( fp );
 
-	if (err == XML_NO_ERROR)
+	if (err == XML_SUCCESS)
 	{
 		PrintOut( _T( "ReClass files saved successfully to \"%s\"" ), FileName );
 		return;
@@ -1042,7 +1042,7 @@ void CReClassExApp::OnFileOpen( )
 	XMLError ret = doc.LoadFile( fp );
 	fclose( fp );
 
-	if (ret != XML_NO_ERROR)
+	if (ret != XML_SUCCESS)
 		return;
 
 	m_strCurrentFilePath = pathName;
