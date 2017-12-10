@@ -249,28 +249,31 @@ void CDialogProcSelect::OnAttachButton( )
 	int SelectedIndex = m_ProcessList.GetSelectionMark( );
 	if (SelectedIndex != -1)
 	{
-		TCHAR tcsdSelectedProcessId[64] = { 0 };
-		m_ProcessList.GetItemText( SelectedIndex, COLUMN_PROCESSID, tcsdSelectedProcessId, 64 );
-		DWORD dwSelectedProcessId = _tcstoul( tcsdSelectedProcessId, NULL, 10 );
+        HANDLE ProcessHandle;
+        DWORD SelectedProcessId;
+		TCHAR SelectedProcessIdText[64];
+
+		m_ProcessList.GetItemText( SelectedIndex, COLUMN_PROCESSID, SelectedProcessIdText, sizeof( SelectedProcessIdText ) );
+		SelectedProcessId = _tcstoul( SelectedProcessIdText, NULL, 10 );
 
 		auto FoundProcessInfo = std::find_if( m_ProcessInfos.begin( ), m_ProcessInfos.end( ),
-											 [dwSelectedProcessId] ( const ProcessInfoStack& proc ) -> bool { return proc.dwProcessId == dwSelectedProcessId; } );
+											 [SelectedProcessId] ( const ProcessInfoStack& proc ) -> bool { return proc.dwProcessId == SelectedProcessId; } );
 
 		if (FoundProcessInfo != m_ProcessInfos.end( ))
 		{
-			HANDLE hProcess = ReClassOpenProcess( PROCESS_ALL_ACCESS, FALSE, FoundProcessInfo->dwProcessId );
-			if (hProcess == NULL || GetLastError( ) != ERROR_SUCCESS)
+            ProcessHandle = ReClassOpenProcess( PROCESS_ALL_ACCESS, FALSE, FoundProcessInfo->dwProcessId );
+			if (ProcessHandle == NULL || GetLastError( ) != ERROR_SUCCESS)
 			{
-				CString message;
-				message.Format( _T( "Failed to attach to process \"%s\"!" ), FoundProcessInfo->strProcessName.GetString( ) );
-				MessageBox( message, _T( "ReClass 2016" ), MB_OK | MB_ICONERROR );
+				CString MessageText;
+                MessageText.Format( _T( "Failed to attach to process \"%s\"!" ), FoundProcessInfo->strProcessName.GetString( ) );
+				MessageBox( MessageText, g_ReClassApp.m_pszAppName, MB_OK | MB_ICONERROR );
 			}
 			else
 			{
 				if (g_hProcess != NULL) // Stop leaking handles!
 					CloseHandle( g_hProcess ); 
 
-				g_hProcess = hProcess;
+				g_hProcess = ProcessHandle;
 				g_ProcessID = FoundProcessInfo->dwProcessId;
 				g_ProcessName = FoundProcessInfo->strProcessName;
 
@@ -280,42 +283,42 @@ void CDialogProcSelect::OnAttachButton( )
 				{
 					OnClose( );
 				
-					CStatusBar* pStatusBar = g_ReClassApp.GetStatusBar( );
+                    MSG Msg;
+					CStatusBar* StatusBar = g_ReClassApp.GetStatusBar( );
 
-					CProgressBar progressBar( _T( "Progress" ), 100, 100, TRUE, 0, pStatusBar );
-					progressBar.SetStep( 1 );
-					progressBar.SetText( _T( "Symbols loading: " ) );
+					CProgressBar ProgressBar( _T( "Progress" ), 100, 100, TRUE, 0, StatusBar );
+                    ProgressBar.SetStep( 1 );
+                    ProgressBar.SetText( _T( "Symbols loading: " ) );
 
 					for (ULONG i = 0; i < g_MemMapModules.size( ); i++)
 					{
-						TCHAR tcsProgressText[256] = { 0 };
-						MemMapInfo CurrentModule = g_MemMapModules[i];
+						TCHAR ProgressText[256];
+						MemMapInfo *CurrentModule = &g_MemMapModules[i];
 
-						progressBar.SetRange32( 0, g_MemMapModules.size( ) );
+                        ProgressBar.SetRange32( 0, (int)g_MemMapModules.size( ) );
 
-						_stprintf_s( tcsProgressText, _T( "[%d/%d] %s" ), i + 1, g_MemMapModules.size( ), CurrentModule.Name.GetString( ) );
-						pStatusBar->SetPaneText( 1, tcsProgressText );
+						_stprintf_s( ProgressText, _T( "[%d/%d] %s" ), i + 1, g_MemMapModules.size( ), CurrentModule->Name.GetString( ) );
+                        StatusBar->SetPaneText( 1, ProgressText );
 
 						//MemMapInfo* pCurrentModule = new MemMapInfo( CurrentModule );
 						//Utils::NtCreateThread( LoadModuleSymbolsThread, pCurrentModule, 0 );
 
-						if (!g_ReClassApp.m_pSymbolLoader->LoadSymbolsForModule( CurrentModule.Path, CurrentModule.Start, CurrentModule.Size ))
+						if (!g_ReClassApp.m_pSymbolLoader->LoadSymbolsForModule( CurrentModule->Path, CurrentModule->Start, CurrentModule->Size ))
 						{
-							PrintOut( _T( "Failed to load symbols for %s" ), CurrentModule.Name.GetString( ) );
+							PrintOut( _T( "Failed to load symbols for %s" ), CurrentModule->Name.GetString( ) );
 						}
 
-						progressBar.StepIt( );
+                        ProgressBar.StepIt( );
 
 						// Peek and pump through messages to stop reclass from hanging
-						MSG msg;
-						while (::PeekMessage( &msg, NULL, 0, 0, PM_NOREMOVE ))
+						while (::PeekMessage( &Msg, NULL, 0, 0, PM_NOREMOVE ))
 						{
 							if (!AfxGetApp( )->PumpMessage( ))
 								::PostQuitMessage( 0 );
 						}
 					}
 
-					pStatusBar->SetPaneText( 1, _T( "" ) );
+                    StatusBar->SetPaneText( 1, _T( "" ) );
 
 					return;
 				}
@@ -335,6 +338,8 @@ void CDialogProcSelect::OnClose( )
 {
 	g_bFilterProcesses = (m_FilterCheck.GetCheck( ) == BST_CHECKED);
 	g_bLoadModuleSymbol = (m_LoadAllSymbols.GetCheck( ) == BST_CHECKED);
+
 	EndDialog( 0 );
-	CDialogEx::OnClose( );
+	
+    CDialogEx::OnClose( );
 }

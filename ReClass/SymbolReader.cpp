@@ -88,7 +88,7 @@ BOOLEAN SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
 	return TRUE;
 }
 
-////////////////////////////////////////////////////////////
+//
 // Print the string coresponding to the symbol's tag property
 //
 void SymbolReader::ReadSymTag( DWORD dwSymTag, CString& outString )
@@ -99,7 +99,7 @@ void SymbolReader::ReadSymTag( DWORD dwSymTag, CString& outString )
 	//wprintf(L"%-15s: ", SafeDRef(rgTags, dwSymTag));
 }
 
-////////////////////////////////////////////////////////////
+//
 // Print the name of the symbol
 //
 void SymbolReader::ReadName( IDiaSymbol *pSymbol, CString& outString )
@@ -140,7 +140,7 @@ void SymbolReader::ReadName( IDiaSymbol *pSymbol, CString& outString )
 	SysFreeString( strName );
 }
 
-////////////////////////////////////////////////////////////
+//
 // Print a VARIANT
 //
 void SymbolReader::ReadVariant( VARIANT var, CString& outString )
@@ -249,7 +249,7 @@ void SymbolReader::ReadBound( IDiaSymbol *pSymbol, CString& outString )
 	}
 }
 
-////////////////////////////////////////////////////////////
+//
 // Print a string corespondig to a location type
 //
 void SymbolReader::ReadLocation( IDiaSymbol *pSymbol, CString& outString )
@@ -377,7 +377,7 @@ void SymbolReader::ReadLocation( IDiaSymbol *pSymbol, CString& outString )
 	}
 }
 
-////////////////////////////////////////////////////////////
+//
 // Print a string corresponding to a UDT kind
 //
 void SymbolReader::ReadUdtKind( IDiaSymbol *pSymbol, CString& outString )
@@ -391,7 +391,7 @@ void SymbolReader::ReadUdtKind( IDiaSymbol *pSymbol, CString& outString )
 	}
 }
 
-////////////////////////////////////////////////////////////
+//
 // Print the information details for a type symbol
 //
 void SymbolReader::ReadType( IDiaSymbol *pSymbol, CString& outString )
@@ -742,7 +742,7 @@ void SymbolReader::ReadType( IDiaSymbol *pSymbol, CString& outString )
 		SysFreeString( strName );
 }
 
-////////////////////////////////////////////////////////////
+//
 // Print a string representing the type of a symbol
 //
 void SymbolReader::ReadSymbolType( IDiaSymbol *pSymbol, CString& outString )
@@ -756,8 +756,9 @@ void SymbolReader::ReadSymbolType( IDiaSymbol *pSymbol, CString& outString )
 	}
 }
 
-////////////////////////////////////////////////////////////
 //
+// Read symbol data
+// 
 void SymbolReader::ReadData( IDiaSymbol *pSymbol, CString& outString )
 {
 	HRESULT hr = S_OK;
@@ -783,7 +784,7 @@ void SymbolReader::ReadData( IDiaSymbol *pSymbol, CString& outString )
 	//ReadName(pSymbol, outString);
 }
 
-////////////////////////////////////////////////////////////
+//
 // Print the undecorated name of the symbol
 //  - only SymTagFunction, SymTagData and SymTagPublicSymbol
 //    can have this property set
@@ -817,7 +818,7 @@ void SymbolReader::ReadUndName( IDiaSymbol *pSymbol, CString& outString )
 	SysFreeString( strName );
 }
 
-////////////////////////////////////////////////////////////
+//
 // Print the name and the type of an user defined type
 //
 void SymbolReader::ReadUDT( IDiaSymbol *pSymbol, CString& outString )
@@ -826,7 +827,7 @@ void SymbolReader::ReadUDT( IDiaSymbol *pSymbol, CString& outString )
 	ReadName( pSymbol, outString );
 }
 
-////////////////////////////////////////////////////////////
+//
 // Print a symbol info: name, type etc.
 //
 void SymbolReader::ReadSymbol( IDiaSymbol *pSymbol, CString& outString )

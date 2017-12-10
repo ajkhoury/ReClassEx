@@ -263,7 +263,7 @@ struct AddressName
 // Nodes 
 //
 #include "Nodes.h"
-#ifdef _WIN64
+#if defined(_M_AMD64)
 #define CNodeHex CNodeHex64
 #else
 #define CNodeHex CNodeHex32
@@ -292,8 +292,10 @@ do { \
 
 //
 // Plugins
-// NOTE: Plugins disabled and enabled state are dependent on the implementation inside the plugin
-// All we do is send a state change to plugins for them to disable or enable their functionality
-// Also decided to change folder creation so that its up to the user to create the folder if they want/have plugins
+//
+// NOTE: Plugins disabled and enabled states are dependent on the implementation inside the plugin.
+// All we do is send a state change to plugins for them to disable or enable their functionality.
+// Also decided to change folder creation so that its up to the user to create the folder if they 
+// want/have plugins.
 //
 #include "PluginAPI.h"

@@ -149,7 +149,7 @@ COLORREF CProgressBar::SetBarColour( COLORREF clrBar )
 	if (!IsWindow( GetSafeHwnd( ) ))
 		return CLR_DEFAULT;
 
-	return SendMessage( PBM_SETBARCOLOR, 0, (LPARAM)clrBar );
+	return (COLORREF)SendMessage( PBM_SETBARCOLOR, 0, (LPARAM)clrBar );
 	#else
 	UNUSED( clrBar );
 	return CLR_DEFAULT;
@@ -162,7 +162,7 @@ COLORREF CProgressBar::SetBkColour( COLORREF clrBk )
 	if (!IsWindow( GetSafeHwnd( ) ))
 		return CLR_DEFAULT;
 
-	return SendMessage( PBM_SETBKCOLOR, 0, (LPARAM)clrBk );
+	return (COLORREF)SendMessage( PBM_SETBKCOLOR, 0, (LPARAM)clrBk );
 	#else
 	UNUSED( clrBk );
 	return CLR_DEFAULT;

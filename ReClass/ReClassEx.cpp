@@ -1045,71 +1045,70 @@ void CReClassExApp::OnFileOpen( )
 
 	XMLHandle hDoc( &XmlDoc );
 	XMLHandle hRoot( 0 );
-	XMLElement* pXmlCurrentElement = NULL;
+	XMLElement* XmlCurrentElement;
 	typedef std::pair<CString, CNodeBase*> Link;
-	typedef std::vector<Link> Links;
-	Links links;
+    std::vector<Link> links;
 
-	pXmlCurrentElement = hDoc.FirstChildElement( ).ToElement( );
-	if (!pXmlCurrentElement)
+    XmlCurrentElement = hDoc.FirstChildElement( ).ToElement( );
+	if (!XmlCurrentElement)
 		return;
 
-	const char* v = pXmlCurrentElement->Value( );
+	const char* v = XmlCurrentElement->Value( );
 
 	if (_stricmp( v, "ReClass" ) != 0) // The root element value is 'ReClass'
 		return; // Not a Reclass file
 
-	hRoot = XMLHandle( pXmlCurrentElement );
+	hRoot = XMLHandle( XmlCurrentElement );
 
-	pXmlCurrentElement = hRoot.FirstChildElement( "Header" ).ToElement( );
-	if (pXmlCurrentElement)
+    XmlCurrentElement = hRoot.FirstChildElement( "Header" ).ToElement( );
+	if (XmlCurrentElement)
 	{
-		m_strHeader.SetString( _CA2W( pXmlCurrentElement->Attribute( "Text" ) ) );
+		m_strHeader.SetString( _CA2W( XmlCurrentElement->Attribute( "Text" ) ) );
 	}
 
-	pXmlCurrentElement = hRoot.FirstChildElement( "Footer" ).ToElement( );
-	if (pXmlCurrentElement)
+    XmlCurrentElement = hRoot.FirstChildElement( "Footer" ).ToElement( );
+	if (XmlCurrentElement)
 	{
-		m_strFooter.SetString( _CA2W( pXmlCurrentElement->Attribute( "Text" ) ) );
+		m_strFooter.SetString( _CA2W( XmlCurrentElement->Attribute( "Text" ) ) );
 	}
 
-	pXmlCurrentElement = hRoot.FirstChildElement( "Notes" ).ToElement( );
-	if (pXmlCurrentElement)
+    XmlCurrentElement = hRoot.FirstChildElement( "Notes" ).ToElement( );
+	if (XmlCurrentElement)
 	{
-		m_strNotes.SetString( _CA2W( pXmlCurrentElement->Attribute( "Text" ) ) );
+		m_strNotes.SetString( _CA2W( XmlCurrentElement->Attribute( "Text" ) ) );
 	}
 
-	pXmlCurrentElement = hRoot.FirstChildElement( "Class" ).ToElement( );
-	while (pXmlCurrentElement)
+    XmlCurrentElement = hRoot.FirstChildElement( "Class" ).ToElement( );
+	while (XmlCurrentElement)
 	{
 		CNodeClass* pClass = new CNodeClass;
-		pClass->SetName( _CA2W( pXmlCurrentElement->Attribute( "Name" ) ) );
-		pClass->SetComment( _CA2W( pXmlCurrentElement->Attribute( "Comment" ) ) );
-		pClass->SetOffset( atoi( pXmlCurrentElement->Attribute( "Offset" ) ) );
-		pClass->SetOffsetString( _CA2W( pXmlCurrentElement->Attribute( "strOffset" ) ) );
-		pClass->m_Code.SetString( _CA2W( pXmlCurrentElement->Attribute( "Code" ) ) );
+		pClass->SetName( _CA2W( XmlCurrentElement->Attribute( "Name" ) ) );
+		pClass->SetComment( _CA2W( XmlCurrentElement->Attribute( "Comment" ) ) );
+		pClass->SetOffset( atoi( XmlCurrentElement->Attribute( "Offset" ) ) );
+		pClass->SetOffsetString( _CA2W( XmlCurrentElement->Attribute( "strOffset" ) ) );
+		pClass->m_Code.SetString( _CA2W( XmlCurrentElement->Attribute( "Code" ) ) );
 
 		if (pClass->GetOffsetString( ) == "")
-			pClass->SetOffsetString( _CA2W( pXmlCurrentElement->Attribute( "Offset" ) ) );
+			pClass->SetOffsetString( _CA2W( XmlCurrentElement->Attribute( "Offset" ) ) );
 
-		XMLElement* pXmlClassElement = pXmlCurrentElement->FirstChildElement( );
-		while (pXmlClassElement)
+		XMLElement* XmlClassElement = XmlCurrentElement->FirstChildElement( );
+		while (XmlClassElement)
 		{
 			int Type = nt_none;
-			pXmlClassElement->QueryIntAttribute( "Type", &Type );
+            XmlClassElement->QueryIntAttribute( "Type", &Type );
 
 			if (Type != nt_none)
 			{
 				CNodeBase* pNode = CreateNewNode( (NodeType)Type );
 				int Size = -1;
 				
-				pNode->SetName( _CA2W( pXmlClassElement->Attribute( "Name" ) ) );
-				pNode->SetComment( _CA2W( pXmlClassElement->Attribute( "Comment" ) ) );
-				pNode->SetHidden( atoi( pXmlClassElement->Attribute( "bHidden" ) ) > 0 ? true : false );
+				pNode->SetName( _CA2W( XmlClassElement->Attribute( "Name" ) ) );
+				pNode->SetComment( _CA2W( XmlClassElement->Attribute( "Comment" ) ) );
+				pNode->SetHidden( atoi( XmlClassElement->Attribute( "bHidden" ) ) > 0 ? true : false );
 				pNode->SetParent( pClass );
 				pClass->AddNode( pNode );
 
-				pXmlClassElement->QueryIntAttribute( "Size", &Size );
+                XmlClassElement->QueryIntAttribute( "Size", &Size );
 
 				if (Type == nt_custom)
 				{
@@ -1125,27 +1124,31 @@ void CReClassExApp::OnFileOpen( )
 				}
 				else if (Type == nt_vtable)
 				{
-					XMLElement* pXmlVTableFunctionPtrElement = pXmlClassElement->FirstChildElement( );
-					while (pXmlVTableFunctionPtrElement)
+					XMLElement* XmlVTableFunctionPtrElement = XmlClassElement->FirstChildElement( );
+					while (XmlVTableFunctionPtrElement)
 					{
-						CNodeVTable* pVMTNode = static_cast<CNodeVTable*>( pNode );
-						pVMTNode->Initialize( GetMainFrame( ) );
-						CNodeFunctionPtr* pFunctionPtr = new CNodeFunctionPtr;
-						pFunctionPtr->SetName( _CA2W( pXmlVTableFunctionPtrElement->Attribute( "Name" ) ) );
-						pFunctionPtr->SetComment( _CA2W( pXmlVTableFunctionPtrElement->Attribute( "Comment" ) ) );
-						pFunctionPtr->SetHidden( atoi( pXmlVTableFunctionPtrElement->Attribute( "bHidden" ) ) > 0 ? true : false );
-						pFunctionPtr->SetParent( pVMTNode );
-						pVMTNode->AddNode( pFunctionPtr );
+						CNodeVTable* VMTNode = static_cast<CNodeVTable*>( pNode );
+                        CNodeFunctionPtr* FunctionPtrNode;
 
-						XMLElement* pXmlCodeElement = pXmlVTableFunctionPtrElement->FirstChildElement( );
-						while (pXmlCodeElement)
+                        VMTNode->Initialize( GetMainFrame( ) );
+
+						FunctionPtrNode = new CNodeFunctionPtr;
+						FunctionPtrNode->SetName( _CA2W( XmlVTableFunctionPtrElement->Attribute( "Name" ) ) );
+						FunctionPtrNode->SetComment( _CA2W( XmlVTableFunctionPtrElement->Attribute( "Comment" ) ) );
+						FunctionPtrNode->SetHidden( atoi( XmlVTableFunctionPtrElement->Attribute( "bHidden" ) ) > 0 ? true : false );
+						FunctionPtrNode->SetParent( VMTNode );
+
+                        VMTNode->AddNode( FunctionPtrNode );
+
+						XMLElement* XmlCodeElement = XmlVTableFunctionPtrElement->FirstChildElement( );
+						while (XmlCodeElement)
 						{
-							CStringA strAssembly = pXmlCodeElement->Attribute( "Assembly" );
-							pFunctionPtr->m_Assembly.push_back( strAssembly );
-							pXmlCodeElement = pXmlCodeElement->NextSiblingElement( );
+							CStringA AssemblyString = XmlCodeElement->Attribute( "Assembly" );
+                            FunctionPtrNode->m_Assembly.push_back( AssemblyString );
+                            XmlCodeElement = XmlCodeElement->NextSiblingElement( );
 						}
 
-						pXmlVTableFunctionPtrElement = pXmlVTableFunctionPtrElement->NextSiblingElement( );
+                        XmlVTableFunctionPtrElement = XmlVTableFunctionPtrElement->NextSiblingElement( );
 					}
 				}
 				else if (Type == nt_array)
@@ -1153,18 +1156,18 @@ void CReClassExApp::OnFileOpen( )
 					//<Node Name="N4823" Type="23" Size="64" bHidden="0" Comment="" Total="1">
 					//<Array Name="N12DB" Type="24" Size="64" Comment="" />
 					CNodeArray* pArray = (CNodeArray*)pNode;
-					pArray->SetTotal( (DWORD)atoi( pXmlClassElement->Attribute( "Total" ) ) );
+					pArray->SetTotal( (DWORD)atoi( XmlClassElement->Attribute( "Total" ) ) );
 
-					XMLElement* pXmlArrayElement = pXmlClassElement->FirstChildElement( );
-					if (pXmlArrayElement)
+					XMLElement* XmlArrayElement = XmlClassElement->FirstChildElement( );
+					if (XmlArrayElement)
 					{
-						CString Name = _CA2W( pXmlArrayElement->Attribute( "Name" ) );
-						CString Comment = _CA2W( pXmlArrayElement->Attribute( "Comment" ) );
+						CString Name = _CA2W( XmlArrayElement->Attribute( "Name" ) );
+						CString Comment = _CA2W( XmlArrayElement->Attribute( "Comment" ) );
 						int ArrayType = nt_none;
 						int ArraySize = 0;
 
-						pXmlArrayElement->QueryIntAttribute( "Type", &ArrayType );
-						pXmlClassElement->QueryIntAttribute( "Size", &ArraySize );
+                        XmlArrayElement->QueryIntAttribute( "Type", &ArrayType );
+                        XmlClassElement->QueryIntAttribute( "Size", &ArraySize );
 
 						if (ArrayType == nt_class)
 						{
@@ -1175,18 +1178,18 @@ void CReClassExApp::OnFileOpen( )
 				} else if ( Type == nt_ptrarray )
 				{
 					CNodePtrArray* pArray = (CNodePtrArray*) pNode;
-					pArray->Count() = (DWORD) atoi( pXmlClassElement->Attribute( "Count" ) );
+					pArray->Count() = (DWORD) atoi( XmlClassElement->Attribute( "Count" ) );
 
-					XMLElement* pXmlArrayElement = pXmlClassElement->FirstChildElement( );
-					if ( pXmlArrayElement )
+					XMLElement* XmlArrayElement = XmlClassElement->FirstChildElement( );
+					if (XmlArrayElement)
 					{
-						CString Name = _CA2W( pXmlArrayElement->Attribute( "Name" ) );
-						CString Comment = _CA2W( pXmlArrayElement->Attribute( "Comment" ) );
+						CString Name = _CA2W( XmlArrayElement->Attribute( "Name" ) );
+						CString Comment = _CA2W( XmlArrayElement->Attribute( "Comment" ) );
 						int ArrayType = nt_none;
 						int ArraySize = 0;
 
-						pXmlArrayElement->QueryIntAttribute( "Type", &ArrayType );
-						pXmlClassElement->QueryIntAttribute( "Size", &ArraySize );
+                        XmlArrayElement->QueryIntAttribute( "Type", &ArrayType );
+                        XmlClassElement->QueryIntAttribute( "Size", &ArraySize );
 
 						if ( ArrayType == nt_class ) {
 							links.push_back( Link( Name, pNode ) );
@@ -1194,28 +1197,28 @@ void CReClassExApp::OnFileOpen( )
 					}
 				}else if (Type == nt_pointer)
 				{
-					CString PointerStr = _CA2W( pXmlClassElement->Attribute( "Pointer" ) );
-					links.push_back( Link( PointerStr, pNode ) );
+					CString PointerString = _CA2W( XmlClassElement->Attribute( "Pointer" ) );
+					links.push_back( Link( PointerString, pNode ) );
 				}
 				else if (Type == nt_instance)
 				{
-					CString strInstance = _CA2W( pXmlClassElement->Attribute( "Instance" ) );
+					CString strInstance = _CA2W( XmlClassElement->Attribute( "Instance" ) );
 					links.push_back( Link( strInstance, pNode ) );
 				}
 			}
 
-			pXmlClassElement = pXmlClassElement->NextSiblingElement( );
+            XmlClassElement = XmlClassElement->NextSiblingElement( );
 		}
 
 		m_Classes.push_back( pClass );
 
-		pXmlCurrentElement = pXmlCurrentElement->NextSiblingElement( "Class" );
+		XmlCurrentElement = XmlCurrentElement->NextSiblingElement( "Class" );
 	}
 
 	//Fix Links... very ghetto this whole thing is just fucked
 	for (auto it = links.begin( ); it != links.end( ); it++)
 	{
-		for (UINT i = 0; i < m_Classes.size( ); i++)
+		for (size_t i = 0; i < m_Classes.size( ); i++)
 		{
 			if (it->first == m_Classes[i]->GetName( ))
 			{
@@ -1224,15 +1227,15 @@ void CReClassExApp::OnFileOpen( )
 				{
 					static_cast<CNodePtr*>(it->second)->SetClass( m_Classes[i] );
 				}
-				if (Type == nt_instance)
+                else if (Type == nt_instance)
 				{
 					static_cast<CNodeClassInstance*>(it->second)->SetClass( m_Classes[i] );
 				}
-				if (Type == nt_array)
+                else if (Type == nt_array)
 				{
 					static_cast<CNodeArray*>(it->second)->SetClass( m_Classes[i] );
 				}
-				if ( Type == nt_ptrarray )
+                else if ( Type == nt_ptrarray )
 				{
 					static_cast<CNodePtrArray*>(it->second)->SetClass( m_Classes[i] );
 				}
@@ -1254,7 +1257,7 @@ void CReClassExApp::OnButtonGenerate( )
 	if (!m_strHeader.IsEmpty( ))
 		strGeneratedText += m_strHeader + _T( "\r\n\r\n" );
 
-	for (UINT i = 0; i < m_Classes.size( ); i++)
+	for (size_t i = 0; i < m_Classes.size( ); i++)
 	{
 		t.Format( _T( "class %s;\r\n" ), m_Classes[i]->GetName( ) );
 		strGeneratedText += t;

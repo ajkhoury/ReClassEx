@@ -2,8 +2,7 @@
 
 #include "NtDll.h"
 
-namespace ntdll
-{
+namespace ntdll {
 
 PVOID Base = nullptr;
 
@@ -23,10 +22,7 @@ tRtlLeaveCriticalSection RtlLeaveCriticalSection = nullptr;
 tRtlGetVersion RtlGetVersion = nullptr;
 tRtlGetNativeSystemInformation RtlGetNativeSystemInformation = nullptr;
 
-
-
-
-bool Init( )
+BOOL Init( VOID )
 {
 	// Already initialized
 	if (Base)

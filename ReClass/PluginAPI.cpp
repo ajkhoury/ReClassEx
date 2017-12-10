@@ -12,44 +12,57 @@ std::vector<PRECLASS_PLUGIN> g_LoadedPlugins;
 
 VOID LoadPlugins( )
 {
-	WIN32_FIND_DATA FileData = { 0 };
-	#ifdef _WIN64
-	#ifndef _DEBUG
-	HANDLE hFileTree = FindFirstFile( _T( "plugins\\*.rc-plugin64" ), &FileData );
-	#else
-	HANDLE hFileTree = FindFirstFile( _T( "plugins\\*.rc-plugin64d" ), &FileData );
-	#endif
-	#else
-	HANDLE hFileTree = FindFirstFile( _T( "plugins\\*.rc-plugin" ), &FileData );
-	#endif
+    PRECLASS_PLUGIN Plugin;
+    HMODULE PluginBase;
+    tPluginInit pfnPluginInit;
+    tPluginStateChange pfnPluginStateChange;
+    DLGPROC pfnPluginSettingDlgProc;
+
+    HANDLE hFileTree;
+    WIN32_FIND_DATA FileData;
+
+#if defined(_M_AMD64)
+#ifndef _DEBUG
+	hFileTree = FindFirstFile( _T( "plugins\\*.rc-plugin64" ), &FileData );
+#else
+	hFileTree = FindFirstFile( _T( "plugins\\*.rc-plugin64d" ), &FileData );
+#endif
+#else
+#ifndef _DEBUG
+	hFileTree = FindFirstFile( _T( "plugins\\*.rc-plugin" ), &FileData );
+#else
+    hFileTree = FindFirstFile( _T( "plugins\\*.rc-plugind" ), &FileData );
+#endif
+#endif
 	if (hFileTree != INVALID_HANDLE_VALUE)
 	{
 		do
 		{
-			HMODULE PluginBase = LoadLibrary( CString( _T( "plugins\\" ) ) + FileData.cFileName );
+			PluginBase = LoadLibrary( CString( _T( "plugins\\" ) ) + FileData.cFileName );
 			if (PluginBase == NULL)
 			{
 				PrintOut( _T( "plugin %s was not able to be loaded!" ), FileData.cFileName );
 				continue;
 			}
 
-			auto pfnPluginInit = reinterpret_cast<tPluginInit>(GetProcAddress( PluginBase, "PluginInit" ));
-			if (pfnPluginInit == nullptr)
+            pfnPluginInit = (tPluginInit)GetProcAddress( PluginBase, "PluginInit" );
+			if (!pfnPluginInit)
 			{
 				PrintOut( _T( "%s is not a reclass plugin!" ), FileData.cFileName );
 				FreeLibrary( PluginBase );
 				continue;
 			}
 
-			auto pfnPluginStateChange = reinterpret_cast<tPluginStateChange>(GetProcAddress( PluginBase, "PluginStateChange" ));
-			if (pfnPluginStateChange == nullptr)
+			pfnPluginStateChange = (tPluginStateChange)GetProcAddress( PluginBase, "PluginStateChange" );
+			if (!pfnPluginStateChange)
 			{
-				PrintOut( _T( "%s doesnt have exported state change function! Unable to disable plugin on request, stop reclass and delete the plugin to disable it" ), FileData .cFileName );
+				PrintOut( _T( "%s doesnt have exported state change function! "
+                    "Unable to disable plugin on request, stop reclass and delete the plugin to disable it" ), FileData .cFileName );
 			}
 
-			auto pfnPluginSettingDlgProc = reinterpret_cast<DLGPROC>(GetProcAddress( PluginBase, "PluginSettingsDlg" ));
+			pfnPluginSettingDlgProc = (DLGPROC)GetProcAddress( PluginBase, "PluginSettingsDlg" );
 
-			PRECLASS_PLUGIN Plugin = new RECLASS_PLUGIN();
+			Plugin = new RECLASS_PLUGIN;
 			wcscpy_s( Plugin->FileName, FileData.cFileName );
 			Plugin->LoadedBase = PluginBase;
 			Plugin->InitFnc = pfnPluginInit;
@@ -63,11 +76,14 @@ VOID LoadPlugins( )
 				#else
 				Plugin->State = g_ReClassApp.GetProfileInt( "PluginState", CW2A( Plugin->Info.Name ), 1 ) == 1;
 				#endif
+
 				if (Plugin->Info.DialogID == -1)
 					Plugin->SettingDlgFnc = nullptr;
+
 				PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), FileData.cFileName, Plugin->Info.Name, Plugin->Info.Version, Plugin->Info.About );
 				if (Plugin->StateChangeFnc != nullptr)
 					Plugin->StateChangeFnc( Plugin->State );
+
 				g_LoadedPlugins.push_back( Plugin );
 			}
 			else

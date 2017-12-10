@@ -5,8 +5,7 @@
 //
 // NTDLL
 //
-namespace ntdll
-{
+namespace ntdll {
 
 extern PVOID Base;
 
@@ -26,7 +25,6 @@ extern tRtlLeaveCriticalSection RtlLeaveCriticalSection;
 extern tRtlGetVersion RtlGetVersion;
 extern tRtlGetNativeSystemInformation RtlGetNativeSystemInformation;
 
-
-bool Init( );
+BOOL Init( VOID );
 
 }
