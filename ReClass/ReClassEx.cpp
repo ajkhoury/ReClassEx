@@ -15,10 +15,10 @@
 #include "DialogAbout.h"
 
 
-// The one and only CReClass2016App object
+// The one and only CReClassExApp object
 CReClassExApp g_ReClassApp;
 
-// CReClass2016App
+// CReClassExApp
 BEGIN_MESSAGE_MAP( CReClassExApp, CWinAppEx )
 	ON_COMMAND( ID_APP_ABOUT, &CReClassExApp::OnAppAbout )
 	ON_COMMAND( ID_FILE_NEW, &CReClassExApp::OnFileNew )
@@ -739,19 +739,19 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 {
 	PrintOut( _T( "SaveXML(\"%s\") called" ), FileName );
 
-	XMLDocument doc;
+	tinyxml2::XMLDocument XmlDoc;
 
-	XMLDeclaration* decl = doc.NewDeclaration(/*"xml version = \"1.0\" encoding=\"UTF-8\""*/ );
-	doc.LinkEndChild( decl );
+	XMLDeclaration* decl = XmlDoc.NewDeclaration(/*"xml version = \"1.0\" encoding=\"UTF-8\""*/ );
+    XmlDoc.LinkEndChild( decl );
 
-	XMLElement* root = doc.NewElement( "ReClass" );
-	doc.LinkEndChild( root );
+	XMLElement* root = XmlDoc.NewElement( "ReClass" );
+    XmlDoc.LinkEndChild( root );
 
-	XMLComment* comment = doc.NewComment( "Reclass 2016" );
+	XMLComment* comment = XmlDoc.NewComment( "Reclass 2016" );
 	root->LinkEndChild( comment );
 	//---------------------------------------------
-	XMLElement* settings = doc.NewElement( "TypeDef" );
-	#ifdef UNICODE
+	XMLElement* settings = XmlDoc.NewElement( "TypeDef" );
+#ifdef UNICODE
 	settings->SetAttribute( "tdHex",	CW2A( g_tdHex ) );
 	settings->SetAttribute( "tdInt64",	CW2A( g_tdInt64 ) );
 	settings->SetAttribute( "tdInt32",	CW2A( g_tdInt32 ) );
@@ -769,7 +769,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 	settings->SetAttribute( "tdMatrix", CW2A( g_tdMatrix ) );
 	settings->SetAttribute( "tdPChar",	CW2A( g_tdPChar ) );
 	settings->SetAttribute( "tdPWChar", CW2A( g_tdPWChar ) );
-	#else
+#else
 	settings->SetAttribute( "tdHex",	g_tdHex );
 	settings->SetAttribute( "tdInt64",	g_tdInt64 );
 	settings->SetAttribute( "tdInt32",	g_tdInt32 );
@@ -787,33 +787,33 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 	settings->SetAttribute( "tdMatrix", g_tdMatrix );
 	settings->SetAttribute( "tdPChar",	g_tdPChar );
 	settings->SetAttribute( "tdPWChar", g_tdPWChar );
-	#endif
+#endif
 	root->LinkEndChild( settings );
 
-	settings = doc.NewElement( "Header" );
-	#ifdef UNICODE
+	settings = XmlDoc.NewElement( "Header" );
+#ifdef UNICODE
 	settings->SetAttribute( "Text", CW2A( m_strHeader ) );
 	root->LinkEndChild( settings );
 
-	settings = doc.NewElement( "Footer" );
+	settings = XmlDoc.NewElement( "Footer" );
 	settings->SetAttribute( "Text", CW2A( m_strFooter ) );
 	root->LinkEndChild( settings );
 
-	settings = doc.NewElement( "Notes" );
+	settings = XmlDoc.NewElement( "Notes" );
 	settings->SetAttribute( "Text", CW2A( m_strNotes ) );
 	root->LinkEndChild( settings );
-	#else
+#else
 	settings->SetAttribute( "Text", Header );
 	root->LinkEndChild( settings );
 
-	settings = doc.NewElement( "Footer" );
+	settings = XmlDoc.NewElement( "Footer" );
 	settings->SetAttribute( "Text", Footer );
 	root->LinkEndChild( settings );
 
-	settings = doc.NewElement( "Notes" );
+	settings = XmlDoc.NewElement( "Notes" );
 	settings->SetAttribute( "Text", Notes );
 	root->LinkEndChild( settings );
-	#endif
+#endif
 
 	for (UINT i = 0; i < m_Classes.size( ); i++)
 	{
@@ -831,7 +831,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 		CStringA strClassCode = pClass->Code;
 		#endif
 
-		XMLElement* classNode = doc.NewElement( "Class" );
+		XMLElement* classNode = XmlDoc.NewElement( "Class" );
 		classNode->SetAttribute( "Name", strClassName );
 		classNode->SetAttribute( "Type", pClass->GetType( ) );
 		classNode->SetAttribute( "Comment", strClassComment );
@@ -854,7 +854,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 			CStringA strNodeComment = pNode->GetComment( );
 			#endif
 
-			XMLElement* pXmlNode = doc.NewElement( "Node" );
+			XMLElement* pXmlNode = XmlDoc.NewElement( "Node" );
 			pXmlNode->SetAttribute( "Name", strNodeName );
 			pXmlNode->SetAttribute( "Type", pNode->GetType( ) );
 			pXmlNode->SetAttribute( "Size", (UINT)pNode->GetMemorySize( ) );
@@ -876,7 +876,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 				CStringA strArrayNodeComment = pArray->pGetClass( )Node->GetComment( );
 				#endif
 
-				XMLElement *item = doc.NewElement( "Array" );
+				XMLElement *item = XmlDoc.NewElement( "Array" );
 				item->SetAttribute( "Name", strArrayNodeName );
 				item->SetAttribute( "Type", pArray->GetClass( )->GetType( ) );
 				item->SetAttribute( "Size", (UINT)pArray->GetClass( )->GetMemorySize( ) );
@@ -895,7 +895,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 				CStringA strArrayNodeComment = pArray->GetClass()->GetComment();
 				#endif
 
-				XMLElement *item = doc.NewElement( "Array" );
+				XMLElement *item = XmlDoc.NewElement( "Array" );
 				item->SetAttribute( "Name", strArrayNodeName );
 				item->SetAttribute( "Type", pArray->GetClass( )->GetType( ) );
 				item->SetAttribute( "Size", (UINT)pArray->GetClass( )->GetMemorySize( ) );
@@ -936,7 +936,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 					CStringA strFunctionNodeComment = pNodefun->GetComment( );
 					#endif
 
-					XMLElement *pXmlFunctionElement = doc.NewElement( "Function" );
+					XMLElement *pXmlFunctionElement = XmlDoc.NewElement( "Function" );
 					pXmlFunctionElement->SetAttribute( "Name", strFunctionNodeName );
 					pXmlFunctionElement->SetAttribute( "Comment", strFunctionNodeComment );
 					pXmlFunctionElement->SetAttribute( "bHidden", pFunctionPtr->IsHidden( ) );
@@ -949,7 +949,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 						strFunctionAssembly += pFunctionPtr->m_Assembly[as];
 					}
 
-					XMLElement* pXmlCodeElement = doc.NewElement( "Code" );
+					XMLElement* pXmlCodeElement = XmlDoc.NewElement( "Code" );
 					pXmlCodeElement->SetAttribute( "Assembly", strFunctionAssembly );
 					pXmlFunctionElement->LinkEndChild( pXmlCodeElement );
 				}
@@ -957,13 +957,9 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 		}
 	}
 
-	FILE* fp = NULL;
-	#ifdef UNICODE
-	_wfopen_s( &fp, FileName, L"wb" );
-	#else
-	fopen_s( &fp, FileName, "wb" );
-	#endif
-	XMLError err = doc.SaveFile( fp );
+	FILE* fp;
+    _tfopen_s( &fp, FileName, _T( "wb" ) );
+	XMLError err = XmlDoc.SaveFile( fp );
 	fclose( fp );
 
 	if (err == XML_SUCCESS)
@@ -1025,7 +1021,7 @@ void CReClassExApp::OnFileOpen( )
 	m_strNotes = _T( "" );
 	m_strCurrentFilePath = _T( "" );
 
-	XMLDocument doc;
+    tinyxml2::XMLDocument XmlDoc;
 
 	#ifdef UNICODE
 	#define _CA2W(psz) CA2W(psz)
@@ -1039,7 +1035,7 @@ void CReClassExApp::OnFileOpen( )
 	#else
 	fopen_s( &fp, pathName, "rb" );
 	#endif
-	XMLError ret = doc.LoadFile( fp );
+	XMLError ret = XmlDoc.LoadFile( fp );
 	fclose( fp );
 
 	if (ret != XML_SUCCESS)
@@ -1047,7 +1043,7 @@ void CReClassExApp::OnFileOpen( )
 
 	m_strCurrentFilePath = pathName;
 
-	XMLHandle hDoc( &doc );
+	XMLHandle hDoc( &XmlDoc );
 	XMLHandle hRoot( 0 );
 	XMLElement* pXmlCurrentElement = NULL;
 	typedef std::pair<CString, CNodeBase*> Link;

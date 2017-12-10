@@ -21,15 +21,17 @@ must not be misrepresented as being the original software.
 distribution.
 */
 
+#include "stdafx.h"
+
 #include "tinyxml2.h"
 
 #include <new>		// yes, this one new style header, is in the Android SDK.
 #if defined(ANDROID_NDK) || defined(__BORLANDC__) || defined(__QNXNTO__)
-#   include <stddef.h>
-#   include <stdarg.h>
+#include <stddef.h>
+#include <stdarg.h>
 #else
-#   include <cstddef>
-#   include <cstdarg>
+#include <cstddef>
+#include <cstdarg>
 #endif
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400 ) && (!defined WINCE)
@@ -58,7 +60,7 @@ distribution.
 
 	#define TIXML_VSCPRINTF	_vscprintf
 	#define TIXML_SSCANF	sscanf_s
-#elif defined _MSC_VER
+#elif defined(_MSC_VER)
 	// Microsoft Visual Studio 2003 and earlier or WinCE
 	#define TIXML_SNPRINTF	_snprintf
 	#define TIXML_VSNPRINTF _vsnprintf

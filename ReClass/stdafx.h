@@ -70,7 +70,6 @@ const COLORREF purple = RGB( 128, 0, 255 );
 //#include "tinyxml2_unicode.h"
 #include "tinyxml2.h"
 using namespace tinyxml2;
-#define XMLDocument tinyxml2::XMLDocument
 
 //
 // Utilities
