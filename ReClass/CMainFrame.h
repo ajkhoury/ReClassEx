@@ -39,8 +39,6 @@ public:  // control bar embedded members
 	static UINT BASED_CODE s_StatusBarPanes[2];
 	CStatusBar m_StatusBar;
 
-	void OnLoadSymbols( );
-
 
 // Generated message map functions
 protected:

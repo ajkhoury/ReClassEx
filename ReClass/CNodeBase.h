@@ -14,25 +14,22 @@
 // Global node index
 extern DWORD g_NodeCreateIndex;
 
-struct ViewInfo
-{
+typedef struct tagVIEWINFO {
 	// Temporarily added for testing
 	#ifdef _DEBUG
 	class CClassView* pChildView;
 	#endif
-
-	CDC* dc;
-	CRect* client;
-	std::vector<HotSpot>* HotSpots;
+	CDC* Dc;
+	CRect* ClientRect;
+	std::vector<HOTSPOT>* Hotspots;
 	std::vector<CNodeClass*>* Classes;
 	ULONG_PTR Address;
-	UCHAR* pData;
+	UCHAR* Data;
 	UINT Level;
-	bool bMultiSelected;
-};
+	BOOL MultiSelected;
+} VIEWINFO, *PVIEWINFO;
 
-typedef struct _TYPE_INFO
-{
+typedef struct _TYPE_INFO {
 	ULONG_PTR VirtualTable; // type_info class vftable
 	ULONG_PTR Data;			// NULL until loaded at runtime
 	CHAR Name[1];			// Mangled name (prefix: .?AV=classes, .?AU=structs)
@@ -46,15 +43,13 @@ typedef struct _TYPE_INFO
 typedef struct _TYPE_INFO TYPE_DESCRIPTOR;
 typedef TYPE_DESCRIPTOR* PTYPE_DESCRIPTOR;
 
-typedef struct _TYPE_INFO_DISP_INFO
-{
+typedef struct _TYPE_INFO_DISP_INFO {
 	LONG MemberDisp;				// 0x00 Member displacement
 	LONG VirtualTableDisp;			// 0x04 Vftable displacement
 	LONG InternalVirtualTableDisp;	// 0x08 Displacement inside vftable
 } TYPE_INFO_DISP_INFO, *PTYPE_INFO_DISP_INFO;
 
-typedef struct _RTTI_BASE_CLASS_DESCRIPTOR
-{
+typedef struct _RTTI_BASE_CLASS_DESCRIPTOR {
 	#if defined(_M_AMD64)
 	ULONG TypeDescriptor;				// 0x00 Offset to TYPE_DESCRIPTOR of the class
 	#else
@@ -65,15 +60,20 @@ typedef struct _RTTI_BASE_CLASS_DESCRIPTOR
 	ULONG Attributes;					// 0x14 Flags
 } RTTI_BASE_CLASS_DESCRIPTOR, *PRTTI_BASE_CLASS_DESCRIPTOR;
 
-#pragma warning (disable : 4200)
-typedef struct _RTTI_BASE_CLASS_ARRAY
-{
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4200)
+#endif
+
+typedef struct _RTTI_BASE_CLASS_ARRAY {
 	PRTTI_BASE_CLASS_DESCRIPTOR* BaseClassDescriptors;
 } RTTI_BASE_CLASS_ARRAY, *PRTTI_BASE_CLASS_ARRAY;
-#pragma warning (default : 4200)
 
-typedef struct _RTTI_CLASS_HIERARCHY_DESCRIPTOR
-{
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+
+typedef struct _RTTI_CLASS_HIERARCHY_DESCRIPTOR {
 	ULONG Signature;			// 0x00 Zero until loaded
 	ULONG Attributes;			// 0x04 Flags
 	ULONG BaseClassesCount;		// 0x08 Number of classes in RTTI_BASE_CLASS_ARRAY
@@ -84,8 +84,7 @@ typedef struct _RTTI_CLASS_HIERARCHY_DESCRIPTOR
 	#endif
 } RTTI_CLASS_HIERARCHY_DESCRIPTOR, *PRTTI_CLASS_HIERARCHY_DESCRIPTOR;
 
-typedef struct _RTTI_COMPLETE_OBJECT_LOCATOR
-{
+typedef struct _RTTI_COMPLETE_OBJECT_LOCATOR {
 	ULONG Signature;				// 0x00 '0' in x86, '1' in x86_64
 	ULONG Offset;					// 0x04 Offset of this vftable in the complete class
 	ULONG ConstructorDispOffset;	// 0x08 Constructor displacement offset
@@ -99,25 +98,24 @@ typedef struct _RTTI_COMPLETE_OBJECT_LOCATOR
 	#endif
 } RTTI_COMPLETE_OBJECT_LOCATOR, *PRTTI_COMPLETE_OBJECT_LOCATOR;
 
-struct NodeSize {
-	int x;
-	int y;
-};
+typedef struct _NODESIZE {
+	INT x;
+	INT y;
+} NODESIZE, *PNODESIZE;
 
-class CNodeBase
-{
+class CNodeBase {
 public:
 	CNodeBase( );
 	~CNodeBase( ) { }
 
-	virtual NodeSize Draw( const ViewInfo& View, int x, int y ) = 0;
+	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y ) = 0;
 	virtual ULONG GetMemorySize( ) = 0;
-	virtual void Update( const HotSpot& Spot ) = 0;
+	virtual void Update( const PHOTSPOT Spot ) = 0;
 
 	inline NodeType GetType( ) const { return m_nodeType; }
 
 	inline size_t GetOffset( ) const { return m_Offset; }
-	inline void SetOffset( const size_t& offset ) { m_Offset = offset; }
+	inline void SetOffset( const size_t offset ) { m_Offset = offset; }
 
 	inline const CString& GetOffsetString( ) const { return m_strOffset; }
 	inline void SetOffsetString( const CString& offsetStr ) { m_strOffset = offsetStr; }
@@ -162,33 +160,33 @@ public:
 	inline void ToggleLevelOpen( int idx ) { m_LevelsOpen[idx] = !m_LevelsOpen[idx]; }
 
 	// Incorrect view.address
-	void AddHotSpot( const ViewInfo& View, const CRect& Spot, CString Text, int ID, int Type );
+	void AddHotSpot( const PVIEWINFO View, const CRect& Spot, CString Text, int ID, int Type );
 
-	int AddText( const ViewInfo& View, int x, int y, DWORD color, int HitID, const wchar_t* fmt, ... );
+	int AddText( const PVIEWINFO View, int x, int y, DWORD color, int HitID, const wchar_t* fmt, ... );
 
-	int AddText( const ViewInfo& View, int x, int y, DWORD color, int HitID, const char* fmt, ... );
+	int AddText( const PVIEWINFO View, int x, int y, DWORD color, int HitID, const char* fmt, ... );
 
-	int AddAddressOffset( const ViewInfo& View, int x, int y );
+	int AddAddressOffset( const PVIEWINFO View, int x, int y );
 
-	void AddSelection( const ViewInfo& View, int x, int y, int Height );
+	void AddSelection( const PVIEWINFO View, int x, int y, int Height );
 
-	int AddIcon( const ViewInfo& View, int x, int y, int idx, int ID, int Type );
+	int AddIcon( const PVIEWINFO View, int x, int y, int idx, int ID, int Type );
 
-	int AddOpenClose( const ViewInfo& View, int x, int y );
+	int AddOpenClose( const PVIEWINFO View, int x, int y );
 
-	void AddDelete( const ViewInfo& View, int x, int y );
+	void AddDelete( const PVIEWINFO View, int x, int y );
 
-	//void AddAdd(ViewInfo& View,int x,int y);
+	//void AddAdd(VIEWINFO& View,int x,int y);
 
-	void AddTypeDrop( const ViewInfo& View, int x, int y );
+	void AddTypeDrop( const PVIEWINFO View, int x, int y );
 
-	int ResolveRTTI( ULONG_PTR Address, int &x, const ViewInfo& View, int y );
+	int ResolveRTTI( ULONG_PTR Address, int x, const PVIEWINFO View, int y );
 
-	int AddComment( const ViewInfo& View, int x, int y );
+	int AddComment( const PVIEWINFO View, int x, int y );
 
-	void StandardUpdate( const HotSpot &Spot );
+	void StandardUpdate( const PHOTSPOT Spot );
 
-	NodeSize DrawHidden( const ViewInfo& View, int x, int y );
+	NODESIZE DrawHidden( const PVIEWINFO View, int x, int y );
 
 protected:
 	NodeType m_nodeType;
@@ -208,22 +206,22 @@ protected:
 	std::vector<bool> m_LevelsOpen;
 };
 
-__forceinline CStringA GetStringFromMemoryA( char* pMemory, int Length )
+__forceinline CStringA GetStringFromMemoryA( const char* pMemory, int Length )
 {
-	CStringA ascii;
+	CStringA AsciiString;
 	for (int i = 0; i < Length; i++)
 	{
-		ascii += (pMemory[i] > 0x1F && pMemory[i] < 0xFF && pMemory[i] != 0x7F) ? (char)pMemory[i] : '.';
+        AsciiString += (pMemory[i] > 0x1F && pMemory[i] < 0xFF && pMemory[i] != 0x7F) ? (char)pMemory[i] : '.';
 	}
-	return ascii;
+	return AsciiString;
 }
 
-__forceinline CStringW GetStringFromMemoryW( wchar_t* pMemory, int Length )
+__forceinline CStringW GetStringFromMemoryW( const wchar_t* pMemory, int Length )
 {
-	CStringW widechar;
+	CStringW WideCharString;
 	for (int i = 0; i < Length; i++)
 	{
-		widechar += (pMemory[i] > 0x1F && pMemory[i] < 0xFF && pMemory[i] != 0x7F) ? (wchar_t)pMemory[i] : (wchar_t)(L'.');
+        WideCharString += (pMemory[i] > 0x1F && pMemory[i] < 0xFF && pMemory[i] != 0x7F) ? (wchar_t)pMemory[i] : (wchar_t)(L'.');
 	}
-	return widechar;
+	return WideCharString;
 }

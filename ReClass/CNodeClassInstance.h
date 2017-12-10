@@ -2,19 +2,18 @@
 
 #include "CNodeBase.h"
 
-class CNodeClassInstance : public CNodeBase
-{
+class CNodeClassInstance : public CNodeBase {
 public:
 	CNodeClassInstance( );
 
-	virtual void Update( const HotSpot& Spot );
+	virtual void Update( const PHOTSPOT Spot );
 
 	virtual ULONG GetMemorySize( );
 
-	virtual NodeSize Draw( const ViewInfo& View, int x, int y );
+	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
-	void SetClass( CNodeClass* pNode ) { m_pNode = pNode; }
-	CNodeClass* GetClass( void ) { return m_pNode; }
+	inline void SetClass( CNodeClass* pNode ) { m_pNode = pNode; }
+	inline CNodeClass* GetClass( void ) { return m_pNode; }
 
 private:
 	CNodeClass* m_pNode;

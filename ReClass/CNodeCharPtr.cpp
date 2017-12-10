@@ -7,28 +7,31 @@ CNodeCharPtr::CNodeCharPtr( )
 	m_strName = "PChar";
 }
 
-void CNodeCharPtr::Update( const HotSpot& Spot )
+void CNodeCharPtr::Update( const PHOTSPOT Spot )
 {
+    uintptr_t PointerValue;
+
 	StandardUpdate( Spot );
-	#ifdef _WIN64
-	size_t ptr = _ttoi64( Spot.Text.GetString( ) );
+
+	#if defined(_M_AMD64)
+    PointerValue = (uintptr_t)_ttoi64( Spot->Text.GetString( ) );
 	#else
-	size_t ptr = _ttoi( Spot.Text.GetString( ) );
+	PointerValue = (uintptr_t)_ttoi( Spot->Text.GetString( ) );
 	#endif
-	if (Spot.ID == 0)
-		ReClassWriteMemory( (LPVOID)Spot.Address, &ptr, sizeof( size_t ) );
+	if (Spot->Id == 0)
+		ReClassWriteMemory( (LPVOID)Spot->Address, &PointerValue, sizeof( uintptr_t ) );
 }
 
-NodeSize CNodeCharPtr::Draw( const ViewInfo& View, int x, int y )
+NODESIZE CNodeCharPtr::Draw( const PVIEWINFO View, int x, int y )
 {
-	int tx = 0;
-	ULONG_PTR* pMemory = NULL;
-	NodeSize drawnSize;
+	int tx;
+    NODESIZE DrawSize;
+	uintptr_t* Data;
 
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	pMemory = (ULONG_PTR*)&View.pData[m_Offset];
+    Data = (uintptr_t*)(View->Data + m_Offset);
 
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
@@ -57,16 +60,16 @@ NodeSize CNodeCharPtr::Draw( const ViewInfo& View, int x, int y )
 	*/
 
 	tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( " = '" ) );
-	if (VALID( pMemory ))
+	if (VALID( Data ))
 	{
-		CStringA str( ReadMemoryStringA( (ULONG_PTR)pMemory[0], 128 ) );
-		tx = AddText( View, tx, y, g_crChar, 1, "%s", str.GetBuffer( ) );
+		CStringA MemoryString( ReadMemoryStringA( *Data, 128 ) );
+		tx = AddText( View, tx, y, g_crChar, 1, "%s", MemoryString.GetBuffer( ) );
 	}
 
 	tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( "' " ) ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
 
-	drawnSize.x = tx;
-	drawnSize.y = y + g_FontHeight;
-	return drawnSize;
+    DrawSize.x = tx;
+    DrawSize.y = y + g_FontHeight;
+	return DrawSize;
 }

@@ -19,23 +19,23 @@ CNodeBase::CNodeBase( ) :
 }
 
 // Incorrect view.address
-void CNodeBase::AddHotSpot( const ViewInfo& View, const CRect& Spot, CString Text, int ID, int Type )
+void CNodeBase::AddHotSpot( const PVIEWINFO View, const CRect& Spot, CString Text, int ID, int Type )
 {
-	if (Spot.top > View.client->bottom || Spot.bottom < 0)
+	if (Spot.top > View->ClientRect->bottom || Spot.bottom < 0)
 		return;
 
-	HotSpot spot;
-	spot.Rect = Spot;
-	spot.Text = Text.GetString( );
-	spot.Address = View.Address + m_Offset;
-	spot.ID = ID;
-	spot.Type = Type;
-	spot.object = this;
-	spot.Level = View.Level;
-	View.HotSpots->push_back( spot );
+	HOTSPOT Hotspot;
+	Hotspot.Rect = Spot;
+	Hotspot.Text = Text.GetString( );
+	Hotspot.Address = View->Address + m_Offset;
+	Hotspot.Id = ID;
+	Hotspot.Type = Type;
+	Hotspot.Object = this;
+	Hotspot.Level = View->Level;
+	View->Hotspots->push_back( Hotspot );
 }
 
-int CNodeBase::AddText( const ViewInfo& View, int x, int y, DWORD color, int HitID, const wchar_t* fmt, ... )
+int CNodeBase::AddText( const PVIEWINFO View, int x, int y, DWORD color, int HitID, const wchar_t* fmt, ... )
 {
 	if (fmt == NULL)
 		return x;
@@ -49,7 +49,7 @@ int CNodeBase::AddText( const ViewInfo& View, int x, int y, DWORD color, int Hit
 
 	int width = (int)(wcslen( wcsbuf )) * g_FontWidth;
 
-	if ((y >= -(g_FontHeight)) && (y + g_FontHeight <= View.client->bottom + g_FontHeight))
+	if ((y >= -(g_FontHeight)) && (y + g_FontHeight <= View->ClientRect->bottom + g_FontHeight))
 	{
 		CRect pos;
 		if (HitID != HS_NONE)
@@ -64,15 +64,15 @@ int CNodeBase::AddText( const ViewInfo& View, int x, int y, DWORD color, int Hit
 
 		pos.SetRect( x, y, 0, 0 );
 
-		View.dc->SetTextColor( color );
-		View.dc->SetBkMode( TRANSPARENT );
-		View.dc->DrawText( wcsbuf, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX );
+		View->Dc->SetTextColor( color );
+		View->Dc->SetBkMode( TRANSPARENT );
+		View->Dc->DrawText( wcsbuf, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX );
 	}
 	
 	return x + width;
 }
 
-int CNodeBase::AddText( const ViewInfo& View, int x, int y, DWORD color, int HitID, const char* fmt, ... )
+int CNodeBase::AddText( const PVIEWINFO View, int x, int y, DWORD color, int HitID, const char* fmt, ... )
 {
 	char buffer[1024] = { 0 };
 	TCHAR finalBuffer[1024] = { 0 };
@@ -94,7 +94,7 @@ int CNodeBase::AddText( const ViewInfo& View, int x, int y, DWORD color, int Hit
 
 	int width = static_cast<int>(strlen( buffer )) * g_FontWidth;
 
-	if ((y >= -g_FontHeight) && (y + g_FontHeight <= View.client->bottom + g_FontHeight))
+	if ((y >= -g_FontHeight) && (y + g_FontHeight <= View->ClientRect->bottom + g_FontHeight))
 	{
 		CRect pos;
 		if (HitID != HS_NONE)
@@ -109,15 +109,15 @@ int CNodeBase::AddText( const ViewInfo& View, int x, int y, DWORD color, int Hit
 
 		pos.SetRect( x, y, 0, 0 );
 
-		View.dc->SetTextColor( color );
-		View.dc->SetBkMode( TRANSPARENT );
-		View.dc->DrawText( finalBuffer, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX );
+		View->Dc->SetTextColor( color );
+		View->Dc->SetBkMode( TRANSPARENT );
+		View->Dc->DrawText( finalBuffer, pos, DT_LEFT | DT_NOCLIP | DT_NOPREFIX );
 	}
 
 	return x + width;
 }
 
-int CNodeBase::AddAddressOffset( const ViewInfo& View, int x, int y )
+int CNodeBase::AddAddressOffset( const PVIEWINFO View, int x, int y )
 {
 	if (g_bOffset)
 	{
@@ -127,7 +127,7 @@ int CNodeBase::AddAddressOffset( const ViewInfo& View, int x, int y )
 		// TODO: fix the ghetto rig FontWidth * x
 		// where x = characters over 8
 		//x += FontWidth; // we need this either way
-		//int numdigits = Utils::NumDigits(View.Address);
+		//int numdigits = Utils::NumDigits(View->Address);
 		//if (numdigits < 8 && numdigits > 4)
 		//	x -= ((8 - numdigits) * FontWidth);
 		//if (numdigits > 8)
@@ -142,33 +142,33 @@ int CNodeBase::AddAddressOffset( const ViewInfo& View, int x, int y )
 	if (g_bAddress)
 	{
 		#ifdef _WIN64
-		x = AddText( View, x, y, g_crAddress, HS_ADDRESS, _T( "%0.9I64X" ), View.Address + m_Offset ) + g_FontWidth;
+		x = AddText( View, x, y, g_crAddress, HS_ADDRESS, _T( "%0.9I64X" ), View->Address + m_Offset ) + g_FontWidth;
 		#else
-		x = AddText( View, x, y, g_crAddress, HS_ADDRESS, _T( "%0.8X" ), View.Address + m_Offset ) + g_FontWidth;
+		x = AddText( View, x, y, g_crAddress, HS_ADDRESS, _T( "%0.8X" ), View->Address + m_Offset ) + g_FontWidth;
 		#endif
 	}
 
 	return x;
 }
 
-void CNodeBase::AddSelection( const ViewInfo& View, int x, int y, int Height )
+void CNodeBase::AddSelection( const PVIEWINFO View, int x, int y, int Height )
 {
-	if ((y > View.client->bottom) || (y + Height < 0))
+	if ((y > View->ClientRect->bottom) || (y + Height < 0))
 		return;
 
 	if (m_bSelected)
-		View.dc->FillSolidRect( 0, y, View.client->right, Height, g_crSelect );
+		View->Dc->FillSolidRect( 0, y, View->ClientRect->right, Height, g_crSelect );
 
 	CRect pos( 0, y, INT_MAX, y + Height );
 	AddHotSpot( View, pos, CString( ), 0, HS_SELECT );
 }
 
-int CNodeBase::AddIcon( const ViewInfo& View, int x, int y, int idx, int ID, int Type )
+int CNodeBase::AddIcon( const PVIEWINFO View, int x, int y, int idx, int ID, int Type )
 {
-	if ((y > View.client->bottom) || (y + 16 < 0))
+	if ((y > View->ClientRect->bottom) || (y + 16 < 0))
 		return x + 16;
 
-	DrawIconEx( View.dc->m_hDC, x, y, g_Icons[idx], 16, 16, 0, NULL, DI_NORMAL );
+	DrawIconEx( View->Dc->m_hDC, x, y, g_Icons[idx], 16, 16, 0, NULL, DI_NORMAL );
 
 	if (ID != -1)
 	{
@@ -179,40 +179,40 @@ int CNodeBase::AddIcon( const ViewInfo& View, int x, int y, int idx, int ID, int
 	return x + 16;
 }
 
-int CNodeBase::AddOpenClose( const ViewInfo& View, int x, int y )
+int CNodeBase::AddOpenClose( const PVIEWINFO View, int x, int y )
 {
-	if ((y > View.client->bottom) || (y + 16 < 0))
+	if ((y > View->ClientRect->bottom) || (y + 16 < 0))
 		return x + 16;
-	return m_LevelsOpen[View.Level] ? AddIcon( View, x, y, ICON_OPEN, 0, HS_OPENCLOSE ) : AddIcon( View, x, y, ICON_CLOSED, 0, HS_OPENCLOSE );
+	return m_LevelsOpen[View->Level] ? AddIcon( View, x, y, ICON_OPEN, 0, HS_OPENCLOSE ) : AddIcon( View, x, y, ICON_CLOSED, 0, HS_OPENCLOSE );
 }
 
-void CNodeBase::AddDelete( const ViewInfo& View, int x, int y )
+void CNodeBase::AddDelete( const PVIEWINFO View, int x, int y )
 {
-	if ((y > View.client->bottom) || (y + 16 < 0))
+	if ((y > View->ClientRect->bottom) || (y + 16 < 0))
 		return;
 
 	if (m_bSelected)
-		AddIcon( View, View.client->right - 16, y, ICON_DELETE, 0, HS_DELETE );
+		AddIcon( View, View->ClientRect->right - 16, y, ICON_DELETE, 0, HS_DELETE );
 }
 
-//void CNodeBase::AddAdd(ViewInfo& View,int x,int y)
+//void CNodeBase::AddAdd(const PVIEWINFO View, int x, int y)
 //{
-//	if ( (y > View.client->bottom) || (y+16 < 0) ) return;
+//	if ( (y > View->ClientRect->bottom) || (y+16 < 0) ) return;
 //	if (m_bSelected)AddIcon(View,16,y,ICON_ADD,HS_NONE,HS_NONE);
 //}
 
-void CNodeBase::AddTypeDrop( const ViewInfo& View, int x, int y )
+void CNodeBase::AddTypeDrop( const PVIEWINFO View, int x, int y )
 {
-	if (View.bMultiSelected || ((y > View.client->bottom) || (y + 16 < 0)))
+	if (View->MultiSelected || ((y > View->ClientRect->bottom) || (y + 16 < 0)))
 		return;
 
 	if (m_bSelected)
 		AddIcon( View, 0, y, ICON_DROPARROW, 0, HS_DROP );
 }
 
-int CNodeBase::ResolveRTTI( ULONG_PTR Address, int &x, const ViewInfo& View, int y )
+int CNodeBase::ResolveRTTI( ULONG_PTR Address, int x, const PVIEWINFO View, int y )
 {
-	#ifdef _WIN64
+#if defined(_M_AMD64)
 	ULONG_PTR ModuleBase = 0;
 
 	ULONG_PTR RTTIObjectLocatorPtr = 0;
@@ -226,7 +226,7 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Address, int &x, const ViewInfo& View, int
 	DWORD BaseClassArrayOffset = 0;
 	ULONG_PTR BaseClassArray = 0;
 
-	CString RTTIString;
+	CString RttiString;
 
 	// Get module base that this address falls in
 	ModuleBase = GetModuleBaseFromAddress( Address );
@@ -265,7 +265,7 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Address, int &x, const ViewInfo& View, int
 
 		if (i != 0 && i != NumBaseClasses)
 		{
-			RTTIString += TEXT( " : " ); // Base class
+			RttiString += TEXT( " : " ); // Base class
 		}
 
 		ReClassReadMemory( (LPVOID)(BaseClassArray + (sizeof( ULONG ) * i)), &BaseClassDescriptorOffset, sizeof( ULONG ) );
@@ -303,15 +303,15 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Address, int &x, const ViewInfo& View, int
 			TCHAR Demangled[MAX_PATH] = { 0 };
 			if (_UnDecorateSymbolName( RTTIName, Demangled, MAX_PATH, UNDNAME_NAME_ONLY ) == 0)
 			{
-				RTTIString += RTTIName;
+				RttiString += RTTIName;
 			}
 			else
 			{
-				RTTIString += Demangled;
+				RttiString += Demangled;
 			}
 		}
 	}
-	#else	
+#else	
 	ULONG_PTR RTTIObjectLocatorPtr = 0;
 	ULONG_PTR RTTIObjectLocator = 0;
 
@@ -323,7 +323,7 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Address, int &x, const ViewInfo& View, int
 	ULONG_PTR BaseClassArrayPtr = 0;
 	ULONG_PTR BaseClassArray = 0;
 
-	CString RTTIString;
+	CString RttiString;
 
 	RTTIObjectLocatorPtr = Address - sizeof( ULONG );
 	if (!IsValidPtr( RTTIObjectLocatorPtr ))
@@ -356,7 +356,7 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Address, int &x, const ViewInfo& View, int
 
 		if (i != 0 && i != NumBaseClasses)
 		{
-			RTTIString += " : "; // Base class
+			RttiString += " : "; // Base class
 		}
 
 		BaseClassDescriptorPtr = BaseClassArray + (4 * i);
@@ -395,22 +395,22 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Address, int &x, const ViewInfo& View, int
 
 			if (_UnDecorateSymbolName( RTTIName.GetString( ), Demangled, 256, UNDNAME_NAME_ONLY ) == 0)
 			{
-				RTTIString += RTTIName.GetString( );
+				RttiString += RTTIName.GetString( );
 			}
 			else
 			{
-				RTTIString += Demangled;
+				RttiString += Demangled;
 			}
 		}
 	}
-	#endif
+#endif
 
-	x = AddText( View, x, y, g_crOffset, HS_RTTI, _T( "%s" ), RTTIString.GetString( ) );
+	x = AddText( View, x, y, g_crOffset, HS_RTTI, _T( "%s" ), RttiString.GetString( ) );
 
 	return x;
 }
 
-int CNodeBase::AddComment( const ViewInfo& View, int x, int y )
+int CNodeBase::AddComment( const PVIEWINFO View, int x, int y )
 {
 	x = AddText( View, x, y, g_crComment, HS_NONE, _T( "//" ) );
 	// Need the extra whitespace in "%s " after the %s to edit.
@@ -418,8 +418,8 @@ int CNodeBase::AddComment( const ViewInfo& View, int x, int y )
 
 	if (m_nodeType == nt_hex64)
 	{
-		float flVal = *(float*)&View.pData[m_Offset];
-		LONG_PTR intVal = *(LONG_PTR*)&View.pData[m_Offset];
+		float flVal = *(float*)&View->Data[m_Offset];
+		LONG_PTR intVal = *(LONG_PTR*)&View->Data[m_Offset];
 
 		if (g_bFloat)
 		{
@@ -506,8 +506,8 @@ int CNodeBase::AddComment( const ViewInfo& View, int x, int y )
 	}
 	else if (m_nodeType == nt_hex32)
 	{
-		float flVal = *((float*)&View.pData[m_Offset]);
-		int intVal = *((int*)&View.pData[m_Offset]);
+		float flVal = *((float*)&View->Data[m_Offset]);
+		int intVal = *((int*)&View->Data[m_Offset]);
 
 		if (g_bFloat)
 		{
@@ -519,7 +519,7 @@ int CNodeBase::AddComment( const ViewInfo& View, int x, int y )
 
 		if (g_bInt)
 		{
-			#ifdef _WIN64
+			#if defined(_M_AMD64)
 			if (intVal > 0x140000000 && intVal < 0x7FFFFFFFFFFF) // in 64 bit address range
 				x = AddText( View, x, y, g_crValue, HS_NONE, _T( "(%i|0x%IX)" ), intVal, intVal );
 			else if (intVal > 0x400000 && intVal < 0x140000000)
@@ -604,7 +604,7 @@ int CNodeBase::AddComment( const ViewInfo& View, int x, int y )
 	{
 		if (g_bInt)
 		{
-			short intVal = *((short*)&View.pData[m_Offset]);
+			short intVal = *((short*)&View->Data[m_Offset]);
 			x = (intVal == 0) ? AddText( View, x, y, g_crValue, HS_NONE, _T( "(%i)" ), intVal ) : AddText( View, x, y, g_crValue, HS_NONE, _T( "(0x%X)" ), intVal );
 		}
 	}
@@ -612,18 +612,26 @@ int CNodeBase::AddComment( const ViewInfo& View, int x, int y )
 	return x;
 }
 
-void CNodeBase::StandardUpdate( const HotSpot &Spot )
+void CNodeBase::StandardUpdate( const PHOTSPOT Spot )
 {
-	if (Spot.ID == HS_NAME)
-		m_strName = Spot.Text;
-	else if (Spot.ID == HS_COMMENT)
-		m_strComment = Spot.Text;
+    if (Spot->Id == HS_NAME)
+    {
+        m_strName = Spot->Text;
+    }	
+    else if (Spot->Id == HS_COMMENT)
+    {
+        m_strComment = Spot->Text;
+    }	
 }
 
-NodeSize CNodeBase::DrawHidden( const ViewInfo& View, int x, int y )
+NODESIZE CNodeBase::DrawHidden( const PVIEWINFO View, int x, int y )
 {
-	NodeSize drawnSize = { 0 };
-	View.dc->FillSolidRect( 0, y, View.client->right, 1, (m_bSelected) ? g_crSelect : g_crHidden );
-	drawnSize.y = y;
-	return drawnSize;
+    NODESIZE DrawSize;
+
+	View->Dc->FillSolidRect( 0, y, View->ClientRect->right, 1, m_bSelected ? g_crSelect : g_crHidden );
+
+    DrawSize.x = 0;
+    DrawSize.y = y;
+
+	return DrawSize;
 }

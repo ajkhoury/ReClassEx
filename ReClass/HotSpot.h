@@ -21,13 +21,12 @@
 #define HS_NAME 69
 #define HS_COMMENT 70
 
-struct HotSpot
-{
+typedef struct tagHOTSPOT {
 	CRect Rect;
 	CString Text;
 	ULONG_PTR Address;
-	INT ID;
+	INT Id;
 	INT Type;
 	UINT Level;
-	class CNodeBase* object;
-};
+	class CNodeBase* Object;
+} HOTSPOT, *PHOTSPOT;

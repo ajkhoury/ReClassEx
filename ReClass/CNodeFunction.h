@@ -10,11 +10,11 @@ public:
 	CNodeFunction( );
 	~CNodeFunction( );
 
-	virtual void Update( const HotSpot& Spot );
+	virtual void Update( const PHOTSPOT Spot );
 
 	virtual ULONG GetMemorySize( ) { return m_dwMemorySize; }
 
-	virtual NodeSize Draw( const ViewInfo& View, int x, int y );
+	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
 	void Initialize( CClassView* pChild, ULONG_PTR Address );
 

@@ -97,24 +97,28 @@ void CDialogClasses::OnOK( )
 		nItem = FindClassByName( szBuffer.GetBuffer( ) );
 
 		// Thanks timboy67678
-		CMainFrame*  pFrame = STATIC_DOWNCAST( CMainFrame, AfxGetApp( )->m_pMainWnd );
-		CClassFrame* pChild = g_ReClassApp.m_Classes[nItem]->pChildWindow;
+		CMainFrame* pMainFrame = STATIC_DOWNCAST( CMainFrame, AfxGetApp( )->m_pMainWnd );
+		CClassFrame* pChildClassFrame = g_ReClassApp.m_Classes[nItem]->m_pChildClassFrame;
 
 		// Check if its a window first to dodge the assertion in IsWindowVisible
-		if (pChild && IsWindow( pChild->GetSafeHwnd( ) ) && pChild->IsWindowVisible( ))
+		if (pChildClassFrame != nullptr && 
+            IsWindow( pChildClassFrame->GetSafeHwnd( ) ) && 
+            pChildClassFrame->IsWindowVisible( ))
 		{
-			static_cast<CMDIChildWnd*>(pChild)->MDIActivate( );
+			static_cast<CMDIChildWnd*>(pChildClassFrame)->MDIActivate( );
 		}
 		else
 		{
-			CClassFrame* pNewChild = STATIC_DOWNCAST( CClassFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
-			pNewChild->SetClass( g_ReClassApp.m_Classes[nItem] );
-			pNewChild->SetTitle( g_ReClassApp.m_Classes[nItem]->GetName( ) );
-			pNewChild->SetWindowText( g_ReClassApp.m_Classes[nItem]->GetName( ) );
+			CClassFrame* pNewChildClassFrame = STATIC_DOWNCAST( CClassFrame, 
+                pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), 
+                    IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
+            pNewChildClassFrame->SetClass( g_ReClassApp.m_Classes[nItem] );
+            pNewChildClassFrame->SetTitle( g_ReClassApp.m_Classes[nItem]->GetName( ) );
+            pNewChildClassFrame->SetWindowText( g_ReClassApp.m_Classes[nItem]->GetName( ) );
 
-			g_ReClassApp.m_Classes[nItem]->SetChildFrame( pNewChild );
+            g_ReClassApp.m_Classes[nItem]->SetChildClassFrame( pNewChildClassFrame );
 
-			pFrame->UpdateFrameTitleForDocument( g_ReClassApp.m_Classes[nItem]->GetName( ) );
+            pMainFrame->UpdateFrameTitleForDocument( g_ReClassApp.m_Classes[nItem]->GetName( ) );
 		}
 	}
 

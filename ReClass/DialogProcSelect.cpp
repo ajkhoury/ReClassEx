@@ -279,7 +279,44 @@ void CDialogProcSelect::OnAttachButton( )
 				if (g_bSymbolResolution && m_LoadAllSymbols.GetCheck( ) == BST_CHECKED)
 				{
 					OnClose( );
-					g_ReClassApp.GetMainFrame( )->OnLoadSymbols( );
+				
+					CStatusBar* pStatusBar = g_ReClassApp.GetStatusBar( );
+
+					CProgressBar progressBar( _T( "Progress" ), 100, 100, TRUE, 0, pStatusBar );
+					progressBar.SetStep( 1 );
+					progressBar.SetText( _T( "Symbols loading: " ) );
+
+					for (ULONG i = 0; i < g_MemMapModules.size( ); i++)
+					{
+						TCHAR tcsProgressText[256] = { 0 };
+						MemMapInfo CurrentModule = g_MemMapModules[i];
+
+						progressBar.SetRange32( 0, g_MemMapModules.size( ) );
+
+						_stprintf_s( tcsProgressText, _T( "[%d/%d] %s" ), i + 1, g_MemMapModules.size( ), CurrentModule.Name.GetString( ) );
+						pStatusBar->SetPaneText( 1, tcsProgressText );
+
+						//MemMapInfo* pCurrentModule = new MemMapInfo( CurrentModule );
+						//Utils::NtCreateThread( LoadModuleSymbolsThread, pCurrentModule, 0 );
+
+						if (!g_ReClassApp.m_pSymbolLoader->LoadSymbolsForModule( CurrentModule.Path, CurrentModule.Start, CurrentModule.Size ))
+						{
+							PrintOut( _T( "Failed to load symbols for %s" ), CurrentModule.Name.GetString( ) );
+						}
+
+						progressBar.StepIt( );
+
+						// Peek and pump through messages to stop reclass from hanging
+						MSG msg;
+						while (::PeekMessage( &msg, NULL, 0, 0, PM_NOREMOVE ))
+						{
+							if (!AfxGetApp( )->PumpMessage( ))
+								::PostQuitMessage( 0 );
+						}
+					}
+
+					pStatusBar->SetPaneText( 1, _T( "" ) );
+
 					return;
 				}
 

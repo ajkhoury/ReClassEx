@@ -9,11 +9,11 @@ public:
 	CNodeVTable( );
 	CNodeVTable( CWnd* pParentWindow );
 
-	virtual void Update( const HotSpot& Spot );
+	virtual void Update( const PHOTSPOT Spot );
 
 	virtual ULONG GetMemorySize( ) { return sizeof( void* ); }
 
-	virtual NodeSize Draw( const ViewInfo& View, int x, int y );
+	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
 	inline bool IsInitialized( ) { return (m_pParentWindow != NULL); }
 

@@ -6,24 +6,28 @@ CNodeByte::CNodeByte( )
 	m_nodeType = nt_uint8;
 }
 
-void CNodeByte::Update( const HotSpot& Spot )
+void CNodeByte::Update( const PHOTSPOT Spot )
 {
+    unsigned __int8 ByteValue;
+
 	StandardUpdate( Spot );
-	UCHAR v = (UCHAR)_tcstoul( Spot.Text.GetString( ), NULL, g_bUnsignedHex ? 16 : 10 );
-	if (Spot.ID == 0)
-		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( unsigned char ) );
+
+    ByteValue = (unsigned __int8)_tcstoul( Spot->Text.GetString( ), NULL, g_bUnsignedHex ? 16 : 10 );
+	if (Spot->Id == 0)
+		ReClassWriteMemory( (LPVOID)Spot->Address, &ByteValue, sizeof( unsigned __int8 ) );
 }
 
-NodeSize CNodeByte::Draw( const ViewInfo& View, int x, int y )
+NODESIZE CNodeByte::Draw( const PVIEWINFO View, int x, int y )
 {
-	int tx = 0;
-	UCHAR* pMemory = NULL;
-	NodeSize drawnSize;
-
+	int tx;
+    NODESIZE DrawSize;
+	unsigned __int8* Data;
+    
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	pMemory = (UCHAR*)&View.pData[m_Offset];
+    Data = (unsigned __int8*)(View->Data + m_Offset);
+
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
@@ -35,10 +39,10 @@ NodeSize CNodeByte::Draw( const ViewInfo& View, int x, int y )
 	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "BYTE  " ) );
 	tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
 	tx = AddText( View, tx, y, g_crName, HS_NONE, _T( " = " ) );
-	tx = AddText( View, tx, y, g_crValue, HS_EDIT, g_bUnsignedHex ? _T( "0x%02X" ) : _T( "%u" ), pMemory[0] ) + g_FontWidth;
+	tx = AddText( View, tx, y, g_crValue, HS_EDIT, g_bUnsignedHex ? _T( "0x%02X" ) : _T( "%u" ), Data[0] ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
 
-	drawnSize.x = tx;
-	drawnSize.y = y + g_FontHeight;
-	return drawnSize;
+    DrawSize.x = tx;
+    DrawSize.y = y + g_FontHeight;
+	return DrawSize;
 }

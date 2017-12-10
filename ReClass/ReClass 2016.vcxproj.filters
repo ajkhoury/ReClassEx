@@ -232,15 +232,6 @@
     <ClInclude Include="CNodeInt8.h">
       <Filter>Header Files\Nodes</Filter>
     </ClInclude>
-    <ClInclude Include="CNodeQWORD.h">
-      <Filter>Header Files\Nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="CNodeDWORD.h">
-      <Filter>Header Files\Nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="CNodeWORD.h">
-      <Filter>Header Files\Nodes</Filter>
-    </ClInclude>
     <ClInclude Include="CNodeByte.h">
       <Filter>Header Files\Nodes</Filter>
     </ClInclude>
@@ -388,6 +379,15 @@
     <ClInclude Include="CProgressBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CNodeDword.h">
+      <Filter>Header Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="CNodeWord.h">
+      <Filter>Header Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="CNodeQword.h">
+      <Filter>Header Files\Nodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -447,9 +447,6 @@
     <ClCompile Include="CNodePtr.cpp">
       <Filter>Source Files\Nodes</Filter>
     </ClCompile>
-    <ClCompile Include="CNodeQWORD.cpp">
-      <Filter>Source Files\Nodes</Filter>
-    </ClCompile>
     <ClCompile Include="CNodeVTable.cpp">
       <Filter>Source Files\Nodes</Filter>
     </ClCompile>
@@ -469,9 +466,6 @@
       <Filter>Source Files\Nodes</Filter>
     </ClCompile>
     <ClCompile Include="CNodeDouble.cpp">
-      <Filter>Source Files\Nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="CNodeDWORD.cpp">
       <Filter>Source Files\Nodes</Filter>
     </ClCompile>
     <ClCompile Include="CNodeFloat.cpp">
@@ -496,9 +490,6 @@
       <Filter>Source Files\Nodes</Filter>
     </ClCompile>
     <ClCompile Include="CNodeWCharPtr.cpp">
-      <Filter>Source Files\Nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="CNodeWORD.cpp">
       <Filter>Source Files\Nodes</Filter>
     </ClCompile>
     <ClCompile Include="NtDll.cpp">
@@ -563,6 +554,15 @@
     </ClCompile>
     <ClCompile Include="CProgressBar.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CNodeDword.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="CNodeWord.cpp">
+      <Filter>Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="CNodeQword.cpp">
+      <Filter>Source Files\Nodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

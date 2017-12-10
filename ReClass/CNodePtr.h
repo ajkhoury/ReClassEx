@@ -8,16 +8,16 @@ class CNodePtr : public CNodeBase
 public:
 	CNodePtr( );
 
-	virtual void Update( const HotSpot& Spot );
+	virtual void Update( const PHOTSPOT Spot );
 
 	virtual ULONG GetMemorySize( ) { return sizeof( void* ); }
 
-	virtual NodeSize Draw( const ViewInfo& View, int x, int y );
+	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
-	void SetClass( CNodeClass* pNode ) { m_pNode = pNode; }
-	CNodeClass* GetClass( void ) { return m_pNode; }
+	inline void SetClass( CNodeClass* pNode ) { m_pNode = pNode; }
+	inline CNodeClass* GetClass( void ) { return m_pNode; }
 
-	CMemory* Memory( ) { return &m_Memory; }
+	inline CMemory* Memory( ) { return &m_Memory; }
 
 private:
 	CNodeClass* m_pNode;

@@ -1,41 +1,49 @@
 #include "stdafx.h"
-#include "CNodeWORD.h"
 
-CNodeWORD::CNodeWORD( )
+#include "CNodeWord.h"
+
+CNodeWord::CNodeWord( )
 {
 	m_nodeType = nt_uint16;
 }
 
-void CNodeWORD::Update( const HotSpot& Spot )
+void CNodeWord::Update( const PHOTSPOT Spot )
 {
+    unsigned __int16 UInt16Value;
+
 	StandardUpdate( Spot );
-	WORD v = (WORD)_tcstoul( Spot.Text.GetString( ), NULL, g_bUnsignedHex ? 16 : 10 );
-	if (Spot.ID == 0)
-		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( unsigned short ) );
+
+    UInt16Value = (unsigned __int16)_tcstoul( Spot->Text.GetString( ), NULL, g_bUnsignedHex ? 16 : 10 );
+	if (Spot->Id == 0)
+		ReClassWriteMemory( (LPVOID)Spot->Address, &UInt16Value, sizeof( unsigned __int16 ) );
 }
 
-NodeSize CNodeWORD::Draw( const ViewInfo& View, int x, int y )
+NODESIZE CNodeWord::Draw( const PVIEWINFO View, int x, int y )
 {
+    int tx;
+    NODESIZE DrawSize;
+    unsigned __int16 *Data;
+
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	NodeSize drawnSize = { 0 };
-	WORD* pMemory = (WORD*)&View.pData[m_Offset];
+    Data = (unsigned __int16*)(View->Data + m_Offset);
+
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
 	//AddAdd(View,x,y);
 
-	int tx = x + TXOFFSET;
+	tx = x + TXOFFSET;
 	tx = AddIcon( View, tx, y, ICON_UNSIGNED, HS_NONE, HS_NONE );
 	tx = AddAddressOffset( View, tx, y );
 	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "WORD  " ) );
 	tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
 	tx = AddText( View, tx, y, g_crName, HS_NONE, _T( " = " ) );
-	tx = AddText( View, tx, y, g_crValue, HS_EDIT, g_bUnsignedHex ? _T( "0x%X" ) : _T( "%u" ), pMemory[0] ) + g_FontWidth;
+	tx = AddText( View, tx, y, g_crValue, HS_EDIT, g_bUnsignedHex ? _T( "0x%X" ) : _T( "%u" ), *Data ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
 
-	drawnSize.x = tx;
-	drawnSize.y = y + g_FontHeight;
-	return drawnSize;
+    DrawSize.x = tx;
+    DrawSize.y = y + g_FontHeight;
+	return DrawSize;
 }

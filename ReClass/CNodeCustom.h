@@ -7,15 +7,15 @@ class CNodeCustom : public CNodeBase
 public:
 	CNodeCustom( );
 
-	virtual void Update( const HotSpot& Spot );
+	virtual void Update( const PHOTSPOT Spot );
 
 	virtual ULONG GetMemorySize( );
 
-	virtual NodeSize Draw( const ViewInfo& View, int x, int y );
+	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
-	void SetSize( DWORD size ) { m_dwMemorySize = size; }
-	DWORD GetSize( void ) { return m_dwMemorySize; }
+	inline void SetSize( ULONG size ) { m_ulMemorySize = size; }
+	inline ULONG GetSize( void ) { return m_ulMemorySize; }
 
 private:
-	DWORD m_dwMemorySize;
+    ULONG m_ulMemorySize;
 };

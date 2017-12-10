@@ -1,24 +1,23 @@
 #pragma once
 
-class CNodeArray : public CNodeBase
-{
+class CNodeArray : public CNodeBase {
 public:
 	CNodeArray( );
 
-	virtual void Update( const HotSpot& Spot );
+	virtual void Update( const PHOTSPOT Spot );
 
 	virtual ULONG GetMemorySize( );
 
-	virtual NodeSize Draw( const ViewInfo& View, int x, int y );
+	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
-	void SetTotal( DWORD total ) { m_dwTotal = total; }
-	DWORD GetTotal( void ) { return m_dwTotal; }
+	inline void SetTotal( ULONG total ) { m_ulTotal = total; }
+	inline ULONG GetTotal( void ) { return m_ulTotal; }
 
-	void SetClass( CNodeClass* pNode ) { m_pNode = pNode; }
-	CNodeClass* GetClass( void ) { return m_pNode; }
+	inline void SetClass( CNodeClass* pNode ) { m_pNode = pNode; }
+	inline CNodeClass* GetClass( void ) { return m_pNode; }
 
 protected:
 	CNodeClass* m_pNode;
-	DWORD m_dwTotal;
+	ULONG m_ulTotal;
 	int m_iCurrent;
 };

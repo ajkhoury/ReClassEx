@@ -25,7 +25,7 @@ BEGIN_MESSAGE_MAP( CReClassExApp, CWinAppEx )
 	ON_COMMAND( ID_FILE_SAVE, &CReClassExApp::OnFileSave )
 	ON_COMMAND( ID_FILE_SAVE_AS, &CReClassExApp::OnFileSaveAs )
 	ON_COMMAND( ID_FILE_OPEN, &CReClassExApp::OnFileOpen )
-	ON_COMMAND( ID_FILE_OPEN_PDB, &CReClassExApp::OnOpenPDB )
+	ON_COMMAND( ID_FILE_OPEN_PDB, &CReClassExApp::OnOpenPdb )
 	ON_COMMAND( ID_RECLASS_PLUGINS, &CReClassExApp::OnButtonPlugins )
 	ON_COMMAND( ID_BUTTON_NEWCLASS, &CReClassExApp::OnButtonNewClass )
 	ON_COMMAND( ID_BUTTON_NOTES, &CReClassExApp::OnButtonNotes )
@@ -48,7 +48,7 @@ BEGIN_MESSAGE_MAP( CReClassExApp, CWinAppEx )
 	ON_COMMAND( ID_BUTTON_GENERATE, &CReClassExApp::OnButtonGenerate )
 	ON_COMMAND( ID_BUTTON_CLEAN, &CReClassExApp::OnButtonClean )
 	ON_UPDATE_COMMAND_UI( ID_BUTTON_CLEAN, &CReClassExApp::OnUpdateButtonClean )
-	ON_UPDATE_COMMAND_UI( ID_FILE_OPEN_PDB, &CReClassExApp::OnUpdateOpenPDB )
+	ON_UPDATE_COMMAND_UI( ID_FILE_OPEN_PDB, &CReClassExApp::OnUpdateOpenPdb )
 END_MESSAGE_MAP( )
 
 CReClassExApp::CReClassExApp( )
@@ -435,12 +435,12 @@ void CReClassExApp::CalcAllOffsets( )
 
 void CReClassExApp::OnFileNew( )
 {
-	CMainFrame* pFrame = STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
-	CClassFrame* pChild = STATIC_DOWNCAST( CClassFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
+	CMainFrame* pMainFrame = STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
+	CClassFrame* pChildClassFrame = STATIC_DOWNCAST( CClassFrame, pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
 	CNodeClass* pClass = new CNodeClass;
 
-	pClass->pChildWindow = pChild;
-	pChild->SetClass( pClass );
+	pClass->m_pChildClassFrame = pChildClassFrame;
+    pChildClassFrame->SetClass( pClass );
 	g_ReClassApp.m_Classes.push_back( pClass );
 	
 	//CNodeCustom* pCust = new CNodeCustom;
@@ -591,24 +591,24 @@ bool CReClassExApp::IsNodeValid( CNodeBase* pCheckNode )
 //////////////// OnButtonNewClass /////////////////
 void CReClassExApp::OnButtonNewClass( )
 {
-	CMainFrame* pFrame = STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
-	CClassFrame* pChild = STATIC_DOWNCAST( CClassFrame, pFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
-	CNodeClass* pClass = new CNodeClass;
+	CMainFrame* pMainFrame = STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
+	CClassFrame* pChildClassFrame = STATIC_DOWNCAST( CClassFrame, pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
+	CNodeClass* pNewClass = new CNodeClass;
 
-	pClass->SetChildFrame( pChild );
-	pClass->Idx = g_ReClassApp.m_Classes.size( );
-	pChild->SetClass( pClass );
+    pNewClass->SetChildClassFrame( pChildClassFrame );
+    pNewClass->m_Idx = g_ReClassApp.m_Classes.size( );
+    pChildClassFrame->SetClass( pNewClass );
 
-	g_ReClassApp.m_Classes.push_back( pClass );
+	g_ReClassApp.m_Classes.push_back( pNewClass );
 
 	for (int i = 0; i < 64 / sizeof( size_t ); i++)
 	{
 		CNodeHex* pNode = new CNodeHex;
-		pNode->SetParent( pClass );
-		pClass->AddNode( pNode );
+		pNode->SetParent( pNewClass );
+        pNewClass->AddNode( pNode );
 	}
 
-	CalcOffsets( pClass );
+	CalcOffsets( pNewClass );
 }
 
 void CReClassExApp::OnButtonSearch( )
@@ -703,9 +703,9 @@ CNodeBase* CReClassExApp::CreateNewNode( NodeType Type )
 	case nt_int16:			return new CNodeInt16;
 	case nt_int8:			return new CNodeInt8;
 
-	case nt_uint64:			return new CNodeQWORD;
-	case nt_uint32:			return new CNodeDWORD;
-	case nt_uint16:			return new CNodeWORD;
+	case nt_uint64:			return new CNodeQword;
+	case nt_uint32:			return new CNodeDword;
+	case nt_uint16:			return new CNodeWord;
 	case nt_uint8:			return new CNodeByte;
 
 	case nt_vec2:			return new CNodeVec2;
@@ -823,7 +823,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 		CStringA strClassName = CW2A( pClass->GetName( ) );
 		CStringA strClassComment = CW2A( pClass->GetComment( ) );
 		CStringA strClassOffset = CW2A( pClass->GetOffsetString( ) );
-		CStringA strClassCode = CW2A( pClass->Code );
+		CStringA strClassCode = CW2A( pClass->m_Code );
 		#else
 		CStringA strClassName = pClass->Name;
 		CStringA strClassComment = pClass->Comment;
@@ -1091,7 +1091,7 @@ void CReClassExApp::OnFileOpen( )
 		pClass->SetComment( _CA2W( pXmlCurrentElement->Attribute( "Comment" ) ) );
 		pClass->SetOffset( atoi( pXmlCurrentElement->Attribute( "Offset" ) ) );
 		pClass->SetOffsetString( _CA2W( pXmlCurrentElement->Attribute( "strOffset" ) ) );
-		pClass->Code.SetString( _CA2W( pXmlCurrentElement->Attribute( "Code" ) ) );
+		pClass->m_Code.SetString( _CA2W( pXmlCurrentElement->Attribute( "Code" ) ) );
 
 		if (pClass->GetOffsetString( ) == "")
 			pClass->SetOffsetString( _CA2W( pXmlCurrentElement->Attribute( "Offset" ) ) );
@@ -1492,9 +1492,9 @@ void CReClassExApp::OnButtonGenerate( )
 		if (var.size( ) > 0)
 			strGeneratedText += _T( "\r\n" );
 
-		if (pClass->Code.GetLength( ) > 0)
+		if (pClass->m_Code.GetLength( ) > 0)
 		{
-			strGeneratedText += pClass->Code;
+			strGeneratedText += pClass->m_Code;
 			strGeneratedText += _T( "\r\n" );
 		}
 
@@ -1549,7 +1549,7 @@ void CReClassExApp::OnUpdateButtonPlugins( CCmdUI * pCmdUI )
 	pCmdUI->Enable( !g_LoadedPlugins.empty( ) );
 }
 
-void CReClassExApp::OnOpenPDB( )
+void CReClassExApp::OnOpenPdb( )
 {
 	CString strConcatProcessName = g_ProcessName;
 	if (strConcatProcessName.ReverseFind( '.' ) != -1)
@@ -1562,7 +1562,7 @@ void CReClassExApp::OnOpenPDB( )
 	m_pSymbolLoader->LoadSymbolsForPdb( fileDlg.GetPathName( ) );
 }
 
-void CReClassExApp::OnUpdateOpenPDB( CCmdUI *pCmdUI )
+void CReClassExApp::OnUpdateOpenPdb( CCmdUI *pCmdUI )
 {
 	pCmdUI->Enable( (g_ProcessID != NULL) );
 }
@@ -1571,10 +1571,10 @@ void CReClassExApp::DeleteClass( CNodeClass* pClass )
 {
 	PrintOut( _T( "DeleteClass(\"%s\") called" ), pClass->GetName( ).GetString( ) );
 
-	if (pClass->pChildWindow != NULL)
+	if (pClass->m_pChildClassFrame != NULL)
 	{
-		pClass->pChildWindow->SendMessage( WM_CLOSE, 0, 0 );
-		pClass->pChildWindow = NULL;
+		pClass->m_pChildClassFrame->SendMessage( WM_CLOSE, 0, 0 );
+		pClass->m_pChildClassFrame = NULL;
 	}
 
 	CNodeBase* pNode = IsNodeRef( pClass );

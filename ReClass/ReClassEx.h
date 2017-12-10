@@ -95,6 +95,6 @@ public:
 	afx_msg void OnUpdateButtonModules( CCmdUI *pCmdUI );
 	afx_msg void OnButtonPlugins( );
 	afx_msg void OnUpdateButtonPlugins( CCmdUI *pCmdUI );
-	afx_msg void OnOpenPDB( );
-	afx_msg void OnUpdateOpenPDB( CCmdUI *pCmdUI );
+	afx_msg void OnOpenPdb( );
+	afx_msg void OnUpdateOpenPdb( CCmdUI *pCmdUI );
 };

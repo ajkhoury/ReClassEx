@@ -24,29 +24,40 @@ HBRUSH CCustomEdit::CtlColor( CDC* pDC, UINT nCtlColor )
 
 void CCustomEdit::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
+    CClassView* ClassView;
+    CNodeBase* HotspotNode;
+    UINT HotspotNodeIndex;
+    DWORD Before, After;
+
 	if (nChar == VK_RETURN)
 	{
 		ShowWindow( SW_HIDE );
-		GetWindowText( spot.Text );
+		GetWindowText( m_Hotspot.Text );
 
-		CClassView* pChild = (CClassView*)GetParent( );
-		CNodeBase* c = (CNodeBase*)spot.object;
+		ClassView = static_cast<CClassView*>(GetParent( ));
+		HotspotNode = m_Hotspot.Object;
 
-		DWORD before = c->GetMemorySize( );
-		c->Update( spot );
-		DWORD after = c->GetMemorySize( );
+		Before = HotspotNode->GetMemorySize( );
+        HotspotNode->Update( &m_Hotspot );
+		After = HotspotNode->GetMemorySize( );
 
-		pChild->ResizeNode( (CNodeClass*)c->GetParent( ), pChild->FindNodeIndex( c ), before, after );
-		pChild->Invalidate( );
+        HotspotNodeIndex = ClassView->FindNodeIndex( HotspotNode );
+
+        ClassView->ResizeNode( static_cast<CNodeClass*>(HotspotNode->GetParent( )), HotspotNodeIndex, Before, After );
+        ClassView->Invalidate( );
 	}
+
 	CEdit::OnChar( nChar, nRepCnt, nFlags );
 }
 
 void CCustomEdit::OnEnChange( )
 {
-	CString text;
-	GetWindowText( text );
-	int  w = (text.GetLength( ) + 1) * g_FontWidth; // + 6;
-	if (w > MinWidth)
-		SetWindowPos( NULL, 0, 0, w, g_FontHeight, SWP_NOMOVE );
+	CString TextString;
+    int StringWidth;
+
+	GetWindowText( TextString );
+
+	StringWidth = (TextString.GetLength( ) + 1) * g_FontWidth; // + 6;
+	if (StringWidth > m_MinWidth)
+		SetWindowPos( NULL, 0, 0, StringWidth, g_FontHeight, SWP_NOMOVE );
 }

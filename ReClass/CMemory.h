@@ -3,9 +3,9 @@
 class CMemory
 {
 public:
-	CMemory( ) :
-		m_ulSize( 0 ),
-		m_pMemory( NULL )
+	CMemory( ) 
+        : m_ulSize( 0 )
+        , m_pMemory( NULL )
 	{
 	}
 
@@ -14,7 +14,6 @@ public:
 		if (m_pMemory)
 		{
 			delete[] m_pMemory;
-			m_pMemory = NULL;
 		}
 	}
 
@@ -23,7 +22,10 @@ public:
 		if (m_pMemory == NULL || (Size != m_ulSize))
 		{
 			if (m_pMemory)
-				delete[] m_pMemory;
+            {
+                delete[] m_pMemory;
+            }
+				
 			m_pMemory = new unsigned char[Size];
 			m_ulSize = Size;
 		}
@@ -41,5 +43,5 @@ public:
 
 private:
 	unsigned char* m_pMemory;
-	unsigned long  m_ulSize;
+	unsigned long m_ulSize;
 };

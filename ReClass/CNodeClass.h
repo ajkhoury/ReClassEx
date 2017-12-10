@@ -2,23 +2,22 @@
 
 #include "CNodeBase.h"
 
-class CNodeClass : public CNodeBase
-{
+class CNodeClass : public CNodeBase {
 public:
 	CNodeClass( );
 
-	virtual void Update( const HotSpot& Spot );
+	virtual void Update( const PHOTSPOT Spot );
 
 	virtual ULONG GetMemorySize( );
 
-	virtual NodeSize Draw( const ViewInfo& View, int x, int y );
+	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
-	VOID SetChildFrame( class CClassFrame* pChild ) { pChildWindow = pChild; }
-	class CClassFrame* GetChildFrame( ) { return pChildWindow; }
+	inline void SetChildClassFrame( class CClassFrame* pChild ) { m_pChildClassFrame = pChild; }
+	inline class CClassFrame* GetChildClassFrame( ) { return m_pChildClassFrame; }
 
 public:
-	size_t Idx;
-	size_t RequestPosition;
-	CString Code;
-	class CClassFrame* pChildWindow;
+	size_t m_Idx;
+	size_t m_RequestPosition;
+	CString m_Code;
+	class CClassFrame* m_pChildClassFrame;
 };

@@ -6,21 +6,23 @@ CNodePtr::CNodePtr( ) : m_pNode( NULL )
 	m_nodeType = nt_pointer;
 }
 
-void CNodePtr::Update( const HotSpot& Spot )
+void CNodePtr::Update( const PHOTSPOT Spot )
 {
 	StandardUpdate( Spot );
 }
 
-NodeSize CNodePtr::Draw( const ViewInfo& View, int x, int y )
+NODESIZE CNodePtr::Draw( const PVIEWINFO View, int x, int y )
 {
+    NODESIZE DrawSize;
+    NODESIZE ChildDrawSize;
+    uintptr_t* Data;
+
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
+	
+    Data = (uintptr_t*)(View->Data + m_Offset);
 
-	NodeSize drawnSize = { 0 };
-	NodeSize childDrawnSize;
-	ULONG_PTR* pMemory = (ULONG_PTR*)&View.pData[m_Offset];
-
-	//printf( "read ptr: %p\n", View.pData );
+	//printf( "read ptr: %p\n", View->Data );
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
@@ -39,27 +41,27 @@ NodeSize CNodePtr::Draw( const ViewInfo& View, int x, int y )
 	tx = AddComment( View, tx, y );
 
 	y += g_FontHeight;
-	drawnSize.x = tx;
-	if (m_LevelsOpen[View.Level])
+    DrawSize.x = tx;
+	if (m_LevelsOpen[View->Level])
 	{
 		DWORD NeededSize = m_pNode->GetMemorySize( );
 		m_Memory.SetSize( NeededSize );
 
-		ViewInfo newView;
-		newView = View;
-		newView.pData = m_Memory.Data( );
-		newView.Address = pMemory[0];
+		VIEWINFO NewView;
+        memcpy( &NewView, View, sizeof( NewView ) );
+		NewView.Data = m_Memory.Data( );
+		NewView.Address = *Data;
 
-		ReClassReadMemory( (LPVOID)newView.Address, (LPVOID)newView.pData, NeededSize );
+		ReClassReadMemory( (LPVOID)NewView.Address, (LPVOID)NewView.Data, NeededSize );
 
-		childDrawnSize = m_pNode->Draw( newView, x, y );
-		y = childDrawnSize.y;
-		if (childDrawnSize.x > drawnSize.x) {
-			drawnSize.x = childDrawnSize.x;
+        ChildDrawSize = m_pNode->Draw( &NewView, x, y );
+		y = ChildDrawSize.y;
+		if (ChildDrawSize.x > DrawSize.x) 
+        {
+            DrawSize.x = ChildDrawSize.x;
 		}
-
 	}
 
-	drawnSize.y = y;
-	return drawnSize;
+    DrawSize.y = y;
+	return DrawSize;
 }

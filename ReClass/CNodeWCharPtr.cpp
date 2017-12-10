@@ -7,24 +7,27 @@ CNodeWCharPtr::CNodeWCharPtr( )
 	m_strName = "PWChar";
 }
 
-void CNodeWCharPtr::Update( const HotSpot& Spot )
+void CNodeWCharPtr::Update( const PHOTSPOT Spot )
 {
+    uintptr_t PointerValue;
+
 	StandardUpdate( Spot );
-	__int64 v = _ttoi64( Spot.Text.GetString( ) );
-	if (Spot.ID == 0)
-		ReClassWriteMemory( (LPVOID)Spot.Address, &v, sizeof( size_t ) );
+
+    PointerValue = (uintptr_t)_ttoi64( Spot->Text.GetString( ) );
+	if (Spot->Id == 0)
+		ReClassWriteMemory( (LPVOID)Spot->Address, &PointerValue, sizeof( uintptr_t ) );
 }
 
-NodeSize CNodeWCharPtr::Draw( const ViewInfo& View, int x, int y )
+NODESIZE CNodeWCharPtr::Draw( const PVIEWINFO View, int x, int y )
 {
-	int tx = 0;
-	ULONG_PTR* pMemory = NULL;
-	NodeSize drawnSize = { 0 };
+	int tx;
+    NODESIZE DrawSize;
+    uintptr_t* Data;
 
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	pMemory = (ULONG_PTR*)&View.pData[m_Offset];
+    Data = (uintptr_t*)(View->Data + m_Offset);
 
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
@@ -42,7 +45,7 @@ NodeSize CNodeWCharPtr::Draw( const ViewInfo& View, int x, int y )
 	//tx = AddComment(View,tx,y);
 
 	/*
-	int tx = x + 16;
+	tx = x + 16;
 	tx = AddIcon(View,tx,y,ICON_TEXT,HS_NONE,HS_NONE);
 	tx = AddAddressOffset(View,tx,y);
 	tx = AddText(View,tx,y,g_crType,HS_NONE,"Text ");
@@ -53,18 +56,16 @@ NodeSize CNodeWCharPtr::Draw( const ViewInfo& View, int x, int y )
 	*/
 
 	tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( " = '" ) );
-	if (VALID( pMemory ))
+	if (VALID( Data ))
 	{
-		CStringW sc = ReadMemoryStringW( (ULONG_PTR)pMemory[0], 128 );
-		tx = AddText( View, tx, y, g_crChar, 1, "%ls", sc.GetBuffer( ) );
+		CStringW MemoryString = ReadMemoryStringW( *Data, 128 );
+		tx = AddText( View, tx, y, g_crChar, 1, "%ls", MemoryString.GetBuffer( ) );
 	}
 
 	tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( "' " ) ) + g_FontWidth;
 	tx = AddComment( View, tx, y );
-
 	
-	drawnSize.x = tx;
-	drawnSize.y = y + g_FontHeight;
-
-	return drawnSize;
+	DrawSize.x = tx;
+	DrawSize.y = y + g_FontHeight;
+	return DrawSize;
 }

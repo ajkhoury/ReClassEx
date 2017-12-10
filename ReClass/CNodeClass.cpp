@@ -4,103 +4,104 @@
 
 CNodeClass::CNodeClass( )
 {
-	TCHAR szOffset[128] = { 0 };
+    TCHAR szOffset[128] = { 0 };
 
-	m_nodeType = nt_class;
-	m_Offset = GetBaseAddress( );
+    m_nodeType = nt_class;
+    m_Offset = GetBaseAddress( );
 
-	#ifdef _WIN64
-	_ui64tot_s( m_Offset, szOffset, 128, 16 );
-	#else
-	_ultot_s( m_Offset, szOffset, 128, 16 );
-	#endif
-	m_strOffset.SetString( szOffset );
+    #if defined(_M_AMD64)
+    _ui64tot_s( m_Offset, szOffset, 128, 16 );
+    #else
+    _ultot_s( m_Offset, szOffset, 128, 16 );
+    #endif
+    m_strOffset.SetString( szOffset );
 
-	RequestPosition = -1;
-	Idx = 0;
-	pChildWindow = nullptr;
+    m_RequestPosition = -1;
+    m_Idx = 0;
+    m_pChildClassFrame = nullptr;
 }
 
-void CNodeClass::Update( const HotSpot& Spot )
+void CNodeClass::Update( const PHOTSPOT Spot )
 {
-	StandardUpdate( Spot );
-	if (Spot.ID == 0)
-	{
-		m_strOffset.SetString( Spot.Text.GetString( ) );
-		m_Offset = ConvertStrToAddress( m_strOffset );
-	}
-	else if (Spot.ID == 1)
-	{
-		RequestPosition = _tcstol( Spot.Text.GetString( ), NULL, 10 ); // RequestPosition = ConvertStrToAddress( Spot.Text );
-	}
+    StandardUpdate( Spot );
+    if (Spot->Id == 0)
+    {
+        m_strOffset.SetString( Spot->Text.GetString( ) );
+        m_Offset = ConvertStrToAddress( m_strOffset );
+    }
+    else if (Spot->Id == 1)
+    {
+        m_RequestPosition = _tcstol( Spot->Text.GetString( ), NULL, 10 ); // m_RequestPosition = ConvertStrToAddress( Spot->Text );
+    }
 }
 
 ULONG CNodeClass::GetMemorySize( )
 {
-	int size = 0;
-	for (UINT i = 0; i < m_ChildNodes.size( ); i++)
-		size += m_ChildNodes[i]->GetMemorySize( );
-	return size;
+    int size = 0;
+    for (UINT i = 0; i < m_ChildNodes.size( ); i++)
+        size += m_ChildNodes[i]->GetMemorySize( );
+    return size;
 }
 
-NodeSize CNodeClass::Draw( const ViewInfo& View, int x, int y )
+NODESIZE CNodeClass::Draw( const PVIEWINFO View, int x, int y )
 {
-	NodeSize drawnSize = { 0 };
-	NodeSize childDrawnSize;
-	AddSelection( View, x, y, g_FontHeight );
-	x = AddOpenClose( View, x, y );
+    NODESIZE DrawSize;
+    NODESIZE ChildDrawSize;
 
-	// Save tx here
-	int tx = x;
+    AddSelection( View, x, y, g_FontHeight );
+    x = AddOpenClose( View, x, y );
 
-	x = AddIcon( View, x, y, ICON_CLASS, -1, -1 );
-	x = AddText( View, x, y, g_crOffset, 0, _T( "%s" ), m_strOffset ) + g_FontWidth;
+    // Save tx here
+    int tx = x;
 
-	// x += ( NumDigits( m_Offset ) ) * FontWidth;
-	// TODO, figure this out better
-	// x += ( ( NumDigits( m_Offset ) - 7 ) * FontWidth ) / 2;
-	// printf( "Print %s at %d\n", m_strOffset, x );
+    x = AddIcon( View, x, y, ICON_CLASS, -1, -1 );
+    x = AddText( View, x, y, g_crOffset, 0, _T( "%s" ), m_strOffset ) + g_FontWidth;
 
-	x = AddText( View, x, y, g_crIndex, HS_NONE, _T( "(" ) );
-	x = AddText( View, x, y, g_crIndex, HS_OPENCLOSE, _T( "%i" ), Idx );
-	x = AddText( View, x, y, g_crIndex, HS_NONE, _T( ")" ) );
+    // x += ( NumDigits( m_Offset ) ) * FontWidth;
+    // TODO, figure this out better
+    // x += ( ( NumDigits( m_Offset ) - 7 ) * FontWidth ) / 2;
+    // printf( "Print %s at %d\n", m_strOffset, x );
 
-	x = AddText( View, x, y, g_crType, HS_NONE, _T( "Class " ) );
-	x = AddText( View, x, y, g_crName, HS_NAME, m_strName ) + g_FontWidth;
-	x = AddText( View, x, y, g_crValue, HS_NONE, _T( "[%i]" ), GetMemorySize( ) ) + g_FontWidth;
-	x = AddComment( View, x, y );
+    x = AddText( View, x, y, g_crIndex, HS_NONE, _T( "(" ) );
+    x = AddText( View, x, y, g_crIndex, HS_OPENCLOSE, _T( "%i" ), m_Idx );
+    x = AddText( View, x, y, g_crIndex, HS_NONE, _T( ")" ) );
 
-	drawnSize.x = x;
-	y += g_FontHeight;
-	if (m_LevelsOpen[View.Level])
-	{
-		ViewInfo nv;
-		nv = View;
-		nv.Level++;
+    x = AddText( View, x, y, g_crType, HS_NONE, _T( "Class " ) );
+    x = AddText( View, x, y, g_crName, HS_NAME, m_strName ) + g_FontWidth;
+    x = AddText( View, x, y, g_crValue, HS_NONE, _T( "[%i]" ), GetMemorySize( ) ) + g_FontWidth;
+    x = AddComment( View, x, y );
 
-		for (UINT i = 0; i < m_ChildNodes.size( ); i++)
-		{
-			CNodeBase* pNode = m_ChildNodes[i];
-			if (pNode != nullptr)
-			{			
-				if (pNode->GetType( ) == nt_vtable)
-				{
-					CNodeVTable* pVTableNode = static_cast<CNodeVTable*>(pNode);
-					if (!pVTableNode->IsInitialized( ) && pChildWindow != nullptr)
-						pVTableNode->Initialize( static_cast<CWnd*>(pChildWindow->GetChildView( )) );
-				}
+    DrawSize.x = x;
+    y += g_FontHeight;
+    if (m_LevelsOpen[View->Level])
+    {
+        VIEWINFO ViewInfo;
+        memcpy( &ViewInfo, View, sizeof( ViewInfo ) );
+        ViewInfo.Level++;
 
-				childDrawnSize = pNode->Draw( nv, tx, y );
+        for (UINT i = 0; i < m_ChildNodes.size( ); i++)
+        {
+            CNodeBase* pNode = m_ChildNodes[i];
+            if (pNode != nullptr)
+            {           
+                if (pNode->GetType( ) == nt_vtable)
+                {
+                    CNodeVTable* VTableNode = static_cast<CNodeVTable*>(pNode);
+                    if (!VTableNode->IsInitialized( ) && m_pChildClassFrame != nullptr)
+                        VTableNode->Initialize( static_cast<CWnd*>(m_pChildClassFrame->GetChildView( )) );
+                }
 
-				y = childDrawnSize.y;
-				if (childDrawnSize.x > drawnSize.x)
-				{
-					drawnSize.x = childDrawnSize.x;
-				}
-			}
-		}
-	}
+                ChildDrawSize = pNode->Draw( &ViewInfo, tx, y );
 
-	drawnSize.y = y;
-	return drawnSize;
+                y = ChildDrawSize.y;
+                if (ChildDrawSize.x > DrawSize.x)
+                {
+                    DrawSize.x = ChildDrawSize.x;
+                }
+            }
+        }
+    }
+
+    DrawSize.y = y;
+    return DrawSize;
 }

@@ -44,22 +44,21 @@ CNodeFunctionPtr::~CNodeFunctionPtr( )
 	}
 }
 
-void CNodeFunctionPtr::Update( const HotSpot& Spot )
+void CNodeFunctionPtr::Update( const PHOTSPOT Spot )
 {
 	StandardUpdate( Spot );
 
-	if (Spot.ID == 0)
+	if (Spot->Id == 0)
 	{
 		// Re-read bytes at specified address
-		DisassembleBytes( Spot.Address );
+		DisassembleBytes( Spot->Address );
 	}
 }
 
-NodeSize CNodeFunctionPtr::Draw( const ViewInfo& View, int x, int y )
+NODESIZE CNodeFunctionPtr::Draw( const PVIEWINFO View, int x, int y )
 {
-	NodeSize drawnSize;
-	int tx = 0;
-	int ax = 0;
+	NODESIZE DrawSize;
+	int tx, ax;
 
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
@@ -104,7 +103,7 @@ NodeSize CNodeFunctionPtr::Draw( const ViewInfo& View, int x, int y )
 
 	tx = AddComment( View, tx, y );
 
-	if (m_LevelsOpen[View.Level])
+	if (m_LevelsOpen[View->Level])
 	{
 		//for (size_t i = 0; i < m_Assembly.size( ); i++)
 		//{
@@ -142,9 +141,9 @@ NodeSize CNodeFunctionPtr::Draw( const ViewInfo& View, int x, int y )
 		y += g_FontHeight;
 	}
 
-	drawnSize.x = tx;
-	drawnSize.y = y;
-	return drawnSize;
+    DrawSize.x = tx;
+    DrawSize.y = y;
+	return DrawSize;
 }
 
 void CNodeFunctionPtr::Initialize( CWnd* pParentWindow, ULONG_PTR Address )
@@ -204,10 +203,8 @@ void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
 	m_nLongestLine = 0;
 
 	// Read in process bytes
-	if (
-		ReClassReadMemory( (LPVOID)VirtualAddress, (LPVOID)&VirtualAddress, sizeof( UIntPtr ) ) == TRUE &&
-		ReClassReadMemory( (LPVOID)VirtualAddress, (LPVOID)Code, 2048 ) == TRUE
-		)
+	if (ReClassReadMemory( (LPVOID)VirtualAddress, (LPVOID)&VirtualAddress, sizeof( UIntPtr ) ) && 
+        ReClassReadMemory( (LPVOID)VirtualAddress, (LPVOID)Code, 2048 ))
 	{
 		DISASM MyDisasm;
 		BOOL Error = FALSE;

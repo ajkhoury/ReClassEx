@@ -7,15 +7,15 @@ class CNodeUnicode : public CNodeBase
 public:
 	CNodeUnicode( );
 
-	virtual void Update( const HotSpot& Spot );
+	virtual void Update( const PHOTSPOT Spot );
 
 	virtual ULONG GetMemorySize( void ) { return m_dwMemorySize; }
 
-	virtual NodeSize Draw( const ViewInfo& View, int x, int y );
+	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
-	void SetSize( DWORD size ) { m_dwMemorySize = size; }
-	DWORD GetSize( void ) { return m_dwMemorySize; }
+	inline void SetSize( ULONG size ) { m_dwMemorySize = size; }
+	inline ULONG GetSize( void ) { return m_dwMemorySize; }
 
 private:
-	DWORD m_dwMemorySize;
+    ULONG m_dwMemorySize;
 };

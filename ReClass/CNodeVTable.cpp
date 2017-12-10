@@ -13,19 +13,22 @@ CNodeVTable::CNodeVTable( CWnd* pParentWindow )
 	m_pParentWindow = pParentWindow;
 }
 
-void CNodeVTable::Update( const HotSpot& Spot )
+void CNodeVTable::Update( const PHOTSPOT Spot )
 {
 	StandardUpdate( Spot );
 }
 
-NodeSize CNodeVTable::Draw( const ViewInfo& View, int x, int y )
+NODESIZE CNodeVTable::Draw( const PVIEWINFO View, int x, int y )
 {
+    NODESIZE DrawSize;
+    NODESIZE ChildDrawSize;
+    ULONG_PTR* Data;
+
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	ULONG_PTR* pMemory = (ULONG_PTR*)&View.pData[m_Offset];
-	NodeSize drawnSize = { 0 };
-	NodeSize childDrawnSize = { 0 };
+    Data = (ULONG_PTR*)(View->Data + m_Offset);
+	
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
@@ -45,39 +48,40 @@ NodeSize CNodeVTable::Draw( const ViewInfo& View, int x, int y )
 	x = AddComment( View, x, y );
 
 	y += g_FontHeight;
-	drawnSize.x = x;
-	drawnSize.y = y;
+    DrawSize.x = x;
+    DrawSize.y = y;
 
-	if (m_LevelsOpen[View.Level])
+	if (m_LevelsOpen[View->Level])
 	{
-		ViewInfo NewView;
-		DWORD NeededSize = (DWORD)m_ChildNodes.size( ) * sizeof( ULONG_PTR );
+		VIEWINFO NewView;
 
+		DWORD NeededSize = (DWORD)m_ChildNodes.size( ) * sizeof( ULONG_PTR );
 		m_Memory.SetSize( NeededSize );
 		
-		NewView = View;
-		NewView.pData = m_Memory.Data( );
-		NewView.Address = pMemory[0];
+		memcpy( &NewView, View, sizeof( NewView ) );
+		NewView.Data = m_Memory.Data( );
+		NewView.Address = *Data;
 
-		ReClassReadMemory( (LPVOID)NewView.Address, NewView.pData, NeededSize );
+		ReClassReadMemory( (LPVOID)NewView.Address, NewView.Data, NeededSize );
 
 		for (UINT i = 0; i < m_ChildNodes.size( ); i++)
 		{
-			CNodeFunctionPtr* pFunctionPtr = static_cast<CNodeFunctionPtr*>(m_ChildNodes[i]);
+			CNodeFunctionPtr* FunctionPtrNode = static_cast<CNodeFunctionPtr*>(m_ChildNodes[i]);
 			
-			if (!pFunctionPtr->IsInitialized( ))
-				pFunctionPtr->Initialize( m_pParentWindow, i * sizeof( ULONG_PTR ) );
+			if (!FunctionPtrNode->IsInitialized( ))
+                FunctionPtrNode->Initialize( m_pParentWindow, i * sizeof( ULONG_PTR ) );
 			
-			pFunctionPtr->SetOffset( i * sizeof( ULONG_PTR ) );
+            FunctionPtrNode->SetOffset( i * sizeof( ULONG_PTR ) );
 			
-			childDrawnSize = pFunctionPtr->Draw( NewView, tx, y );
+            ChildDrawSize = FunctionPtrNode->Draw( &NewView, tx, y );
 			
-			drawnSize.y = childDrawnSize.y;
-			if (childDrawnSize.x > drawnSize.x) {
-				drawnSize.x = childDrawnSize.x;
+            DrawSize.y = ChildDrawSize.y;
+			if (ChildDrawSize.x > DrawSize.x)
+            {
+                DrawSize.x = ChildDrawSize.x;
 			}
 
-			y = drawnSize.y;
+			y = DrawSize.y;
 		}
 	}
 	else
@@ -86,7 +90,7 @@ NodeSize CNodeVTable::Draw( const ViewInfo& View, int x, int y )
 			static_cast<CNodeFunctionPtr*>(m_ChildNodes[i])->HideAssemblyWindow( );
 	}
 
-	return drawnSize;
+	return DrawSize;
 }
 
 void CNodeVTable::Initialize( CWnd* pParentWindow )

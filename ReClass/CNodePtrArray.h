@@ -5,9 +5,11 @@ class CNodePtrArray : public CNodeBase
 public:
 	CNodePtrArray( );
 
-	virtual NodeSize Draw( const ViewInfo & View, int x, int y );
+	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
+
 	virtual ULONG GetMemorySize( );
-	virtual void Update( const HotSpot & Spot );
+
+	virtual void Update( const PHOTSPOT Spot );
 
 	size_t& Count( ) { return m_PtrCount; }
 

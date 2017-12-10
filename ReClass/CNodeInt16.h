@@ -7,9 +7,9 @@ class CNodeInt16 : public CNodeBase
 public:
 	CNodeInt16( );
 
-	virtual void Update( const HotSpot& Spot );
+	virtual void Update( const PHOTSPOT Spot );
 
-	virtual ULONG GetMemorySize( ) { return sizeof( short ); }
+	virtual ULONG GetMemorySize( ) { return sizeof( __int16 ); }
 
-	virtual NodeSize Draw( const ViewInfo& View, int x, int y );
+	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 };

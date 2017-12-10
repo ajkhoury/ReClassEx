@@ -3,8 +3,7 @@
 #include <afxwin.h>
 #include "HotSpot.h"
 
-class CCustomEdit : public CEdit
-{
+class CCustomEdit : public CEdit {
 public:
 	virtual BOOL Create( DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID );
 
@@ -15,7 +14,7 @@ public:
 	afx_msg HBRUSH CtlColor( CDC* /*pDC*/, UINT /*nCtlColor*/ );
 
 public:
-	HotSpot spot;
-	int MinWidth;
+	HOTSPOT m_Hotspot;
+	LONG m_MinWidth;
 	HBRUSH m_brBackGnd;
 };

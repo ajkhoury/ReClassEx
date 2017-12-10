@@ -22,14 +22,14 @@ protected:
 	// Implementation
 public:
 	UINT		FindNodeIndex( CNodeBase* pNode );
-	CNodeBase*	FindNodeFromIndex( CNodeBase* currentlySelectedNode, UINT index );
+	CNodeBase*	FindNodeFromIndex( CNodeBase* pSelectedNode, UINT Index );
 
-	void		ReplaceNode( CNodeClass* pClass, UINT idx, CNodeBase* pNewNode );
-	void		RemoveNodes( CNodeClass* pClass, UINT idx, DWORD Length );
-	void		FillNodes( CNodeClass* pClass, UINT idx, DWORD Length );
-	void		ResizeNode( CNodeClass* pClass, UINT idx, DWORD before, DWORD after );
+	void		ReplaceNode( CNodeClass* pClass, UINT Index, CNodeBase* pNewNode );
+	void		RemoveNodes( CNodeClass* pClass, UINT Index, DWORD Length );
+	void		FillNodes( CNodeClass* pClass, UINT Index, DWORD Length );
+	void		ResizeNode( CNodeClass* pClass, UINT Index, DWORD Before, DWORD After );
 	void		AddBytes( CNodeClass* pClass, DWORD Length );
-	void		InsertBytes( CNodeClass* pClass, UINT idx, DWORD Length );
+	void		InsertBytes( CNodeClass* pClass, UINT Index, DWORD Length );
 
 	void		ReplaceSelectedWithType( NodeType Type );
 	void		ClearSelection( );
@@ -190,7 +190,7 @@ public:
 	afx_msg void OnTypeClass( );
 	afx_msg void OnUpdateTypeClass( CCmdUI *pCmdUI );
 
-	afx_msg void OnButtonEditcode( );
+	afx_msg void OnButtonEditCode( );
 	afx_msg void OnEditCopy( );
 	afx_msg void OnEditPaste( );
 	afx_msg void OnMouseLeave( );
@@ -219,9 +219,9 @@ private:
 public:
 	CMemory m_Memory;
 
-	std::vector<HotSpot> HotSpots;
-	std::vector<HotSpot> Selected;
-	HotSpot ExchangeTarget;
+	std::vector<HOTSPOT> m_Hotspots;
+	std::vector<HOTSPOT> m_Selected;
+    HOTSPOT ExchangeTarget;
 
 	// Controls
 	CCustomEdit m_Edit;

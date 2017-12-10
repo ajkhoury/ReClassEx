@@ -38,23 +38,24 @@ CNodeFunction::~CNodeFunction( )
 	}
 }
 
-void CNodeFunction::Update( const HotSpot& Spot )
+void CNodeFunction::Update( const PHOTSPOT Spot )
 {
 	StandardUpdate( Spot );
 
-	if (Spot.ID == 0)
+	if (Spot->Id == 0)
 	{
 		// Re-read bytes at specified address
-		DisassembleBytes( Spot.Address );
+		DisassembleBytes( Spot->Address );
 	}
 }
 
-NodeSize CNodeFunction::Draw( const ViewInfo& View, int x, int y )
+NODESIZE CNodeFunction::Draw( const PVIEWINFO View, int x, int y )
 {
+    NODESIZE DrawSize;
+
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-	NodeSize drawnSize;
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
@@ -82,7 +83,7 @@ NodeSize CNodeFunction::Draw( const ViewInfo& View, int x, int y )
 
 	tx = AddComment( View, tx, y );
 
-	if (m_LevelsOpen[View.Level])
+	if (m_LevelsOpen[View->Level])
 	{
 		y += g_FontHeight;
 
@@ -108,9 +109,9 @@ NodeSize CNodeFunction::Draw( const ViewInfo& View, int x, int y )
 		y += g_FontHeight;
 	}
 
-	drawnSize.x = tx;
-	drawnSize.y = y;
-	return drawnSize;
+    DrawSize.x = tx;
+    DrawSize.y = y;
+	return DrawSize;
 }
 
 void CNodeFunction::Initialize( CClassView* pChild, ULONG_PTR Address )
