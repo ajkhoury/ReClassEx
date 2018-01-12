@@ -1,74 +1,304 @@
-#pragma once
+#ifndef _RECLASS_PLUGIN_API_H_
+#define _RECLASS_PLUGIN_API_H_
 
 #include <afxwin.h>
 #include <afxribbonbar.h>
 #include <vector>
 
-VOID LoadPlugins( );
-VOID UnloadPlugins( );
+//
+// ReClass Plugin Loading and Unloading - Not part of the plugin API.
+//
+VOID 
+LoadPlugins( 
+    VOID 
+    );
 
-#define RECLASS_EXPORT __declspec(dllexport) 
+VOID 
+UnloadPlugins( 
+    VOID 
+    );
+
+//
+// ReClass Plugin Calling Convention
+//
 #define PLUGIN_CC __stdcall
 
-typedef BOOL( PLUGIN_CC *tReadMemoryOperation )(IN LPVOID Address, IN LPVOID Buffer, IN SIZE_T Size, OUT PSIZE_T BytesRead);
-typedef BOOL( PLUGIN_CC *tWriteMemoryOperation )(IN LPVOID Address, IN LPVOID Buffer, IN SIZE_T Size, OUT PSIZE_T BytesWritten);
-typedef HANDLE( PLUGIN_CC *tOpenProcessOperation )(IN DWORD dwDesiredAccess, IN BOOL bInheritHandle, IN DWORD dwProcessID);
-typedef HANDLE( PLUGIN_CC *tOpenThreadOperation )(IN DWORD dwDesiredAccess, IN BOOL bInheritHandle, IN DWORD dwThreadID);
+//
+// Plugin Operation API Prototypes
+//
+typedef BOOL( PLUGIN_CC *PPLUGIN_READ_MEMORY_OPERATION )(
+    IN LPVOID Address,
+    IN LPVOID Buffer,
+    IN SIZE_T Size,
+    OUT PSIZE_T BytesRead
+    );
+typedef BOOL( PLUGIN_CC *PPLUGIN_WRITE_MEMORY_OPERATION )(
+    IN LPVOID Address,
+    IN LPVOID Buffer,
+    IN SIZE_T Size,
+    OUT PSIZE_T BytesWritten
+    );
+typedef HANDLE( PLUGIN_CC *PPLUGIN_OPEN_PROCESS_OPERATION )(
+    IN DWORD dwDesiredAccess,
+    IN BOOL bInheritHandle,
+    IN DWORD dwProcessId
+    );
+typedef HANDLE( PLUGIN_CC *PPLUGIN_OPEN_THREAD_OPERATION )(
+    IN DWORD dwDesiredAccess,
+    IN BOOL bInheritHandle,
+    IN DWORD dwThreadId
+    );
 
-typedef DECLSPEC_ALIGN( 16 ) struct _RECLASS_PLUGIN_INFO {
+//
+// Basic ReClass Pugin Information Struct.
+//
+typedef DECLSPEC_ALIGN(16) struct _RECLASS_PLUGIN_INFO {
 	wchar_t Name[256];
 	wchar_t Version[256];
 	wchar_t About[2048];
-	int DialogID;
+	int DialogId;
 } RECLASS_PLUGIN_INFO, *PRECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
-BOOL PLUGIN_CC PluginInit( PRECLASS_PLUGIN_INFO lpRCInfo );
-VOID PLUGIN_CC PluginStateChange( BOOL state );
-typedef BOOL( PLUGIN_CC *tPluginInit )(PRECLASS_PLUGIN_INFO lpRCInfo);
-typedef VOID( PLUGIN_CC *tPluginStateChange )(BOOL state);
+//
+// Mandatory Plugin Exports Prototypes
+//
+// These must be exported by the plugin module!
+// 
+// Example:
+// 
+//      BOOL
+//      PLUGIN_CC
+//      PluginInit(
+//          OUT LPRECLASS_PLUGIN_INFO lpRCInfo
+//          );
+//      
+//      VOID
+//      PLUGIN_CC
+//      PluginStateChange(
+//          IN BOOL State
+//          );
+//
+typedef BOOL( PLUGIN_CC *PPLUGIN_INIT )(
+    OUT LPRECLASS_PLUGIN_INFO lpRCInfo
+    );
+typedef VOID( PLUGIN_CC *PPLUGIN_STATE_CHANGE )(
+    IN BOOL State
+    );
 
-typedef DECLSPEC_ALIGN( 16 ) struct _RECLASS_PLUGIN {
+//
+// Defines a ReClass Plugin.
+//
+typedef DECLSPEC_ALIGN(16) struct _RECLASS_PLUGIN {
 	RECLASS_PLUGIN_INFO Info;
 	wchar_t FileName[MAX_PATH];
 	BOOL State;
 	HMODULE LoadedBase;
-	tPluginInit InitFnc;
-	tPluginStateChange StateChangeFnc;
-	DLGPROC SettingDlgFnc;
+	PPLUGIN_INIT InitFunction;
+	PPLUGIN_STATE_CHANGE StateChangeFunction;
+	DLGPROC SettingDlgFunction;
 } RECLASS_PLUGIN, *PRECLASS_PLUGIN, *LPRECLASS_PLUGIN;
 
-// Exported Functions Below
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideReadMemoryOperation( tReadMemoryOperation MemRead );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideWriteMemoryOperation( tWriteMemoryOperation MemWrite );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideMemoryOperations( tReadMemoryOperation MemRead, tWriteMemoryOperation MemWrite );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveReadMemoryOverride( );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveWriteMemoryOverride( );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsReadMemoryOverriden( );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsWriteMemoryOverriden( );
-RECLASS_EXPORT tReadMemoryOperation PLUGIN_CC ReClassGetCurrentReadMemory( );
-RECLASS_EXPORT tWriteMemoryOperation PLUGIN_CC ReClassGetCurrentWriteMemory( );
 
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideOpenProcessOperation( tOpenProcessOperation ProcessOpen );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideOpenThreadOperation( tOpenThreadOperation ThreadOpen );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassOverrideHandleOperations( tOpenProcessOperation ProcessOpen, tOpenThreadOperation ThreadOpen );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveOpenProcessOverride( );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassRemoveOpenThreadOverride( );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsOpenProcessOverriden( );
-RECLASS_EXPORT BOOL PLUGIN_CC ReClassIsOpenThreadOverriden( );
-RECLASS_EXPORT tOpenProcessOperation PLUGIN_CC ReClassGetCurrentOpenProcess( );
-RECLASS_EXPORT tOpenThreadOperation PLUGIN_CC ReClassGetCurrentOpenThread( );
+//
+// Exported Plugin API Below
+//
+#define RECLASS_EXPORT __declspec(dllexport) 
 
-RECLASS_EXPORT VOID PLUGIN_CC ReClassPrintConsole( const WCHAR* format, ... );
-RECLASS_EXPORT HANDLE PLUGIN_CC ReClassGetProcessHandle( );
-RECLASS_EXPORT DWORD PLUGIN_CC ReClassGetProcessId( );
-RECLASS_EXPORT HWND PLUGIN_CC ReClassMainWindow( );
-RECLASS_EXPORT CMFCRibbonBar* PLUGIN_CC ReClassRibbonInterface( );
+//
+// Plugin Memory Operation API
+//
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassOverrideReadMemoryOperation( 
+    IN PPLUGIN_READ_MEMORY_OPERATION ReadMemoryOperation 
+    );
 
-extern tReadMemoryOperation g_PluginOverrideReadMemory;
-extern tWriteMemoryOperation g_PluginOverrideWriteMemory;
-extern tOpenProcessOperation g_PluginOverrideOpenProcess;
-extern tOpenThreadOperation g_PluginOverrideOpenThread;
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassOverrideWriteMemoryOperation( 
+    IN PPLUGIN_WRITE_MEMORY_OPERATION WriteMemoryOperation 
+    );
+
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassOverrideMemoryOperations( 
+    IN PPLUGIN_READ_MEMORY_OPERATION ReadMemoryOperation, 
+    IN PPLUGIN_WRITE_MEMORY_OPERATION WriteMemoryOperation 
+    );
+
+
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassRemoveReadMemoryOverride( 
+    VOID 
+    );
+
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassRemoveWriteMemoryOverride( 
+    VOID 
+    );
+
+
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassIsReadMemoryOverriden( 
+    VOID 
+    );
+
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassIsWriteMemoryOverriden( 
+    VOID 
+    );
+
+
+RECLASS_EXPORT
+PPLUGIN_READ_MEMORY_OPERATION 
+PLUGIN_CC 
+ReClassGetCurrentReadMemory( 
+    VOID 
+    );
+
+RECLASS_EXPORT
+PPLUGIN_WRITE_MEMORY_OPERATION 
+PLUGIN_CC 
+ReClassGetCurrentWriteMemory( 
+    VOID 
+    );
+
+
+//
+// Plugin Handle Operation API
+//
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassOverrideOpenProcessOperation( 
+    IN PPLUGIN_OPEN_PROCESS_OPERATION OpenProcessOperation 
+    );
+
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassOverrideOpenThreadOperation( 
+    IN PPLUGIN_OPEN_THREAD_OPERATION OpenThreadOperation 
+    );
+
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassOverrideHandleOperations( 
+    IN PPLUGIN_OPEN_PROCESS_OPERATION OpenProcessOperation, 
+    IN PPLUGIN_OPEN_THREAD_OPERATION OpenThreadOperation 
+    );
+
+
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassRemoveOpenProcessOverride( 
+    VOID 
+    );
+
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassRemoveOpenThreadOverride( 
+    VOID 
+    );
+
+
+RECLASS_EXPORT
+BOOL 
+PLUGIN_CC 
+ReClassIsOpenProcessOverriden( 
+    VOID 
+    );
+
+RECLASS_EXPORT 
+BOOL 
+PLUGIN_CC 
+ReClassIsOpenThreadOverriden( 
+    VOID 
+    );
+
+
+RECLASS_EXPORT 
+PPLUGIN_OPEN_PROCESS_OPERATION 
+PLUGIN_CC 
+ReClassGetCurrentOpenProcess( 
+    VOID 
+    );
+
+RECLASS_EXPORT 
+PPLUGIN_OPEN_THREAD_OPERATION 
+PLUGIN_CC 
+ReClassGetCurrentOpenThread( 
+    VOID 
+    );
+
+
+//
+// Plugin Logging API
+//
+RECLASS_EXPORT 
+VOID 
+CDECL // __stdcall can't handle variadic functions 
+ReClassPrintConsole( 
+    IN const wchar_t* Format,
+    ...
+    );
+
+
+//
+// Plugin Process Info API
+//
+RECLASS_EXPORT 
+HANDLE 
+PLUGIN_CC 
+ReClassGetProcessHandle( 
+    VOID 
+    );
+
+RECLASS_EXPORT 
+DWORD 
+PLUGIN_CC 
+ReClassGetProcessId( 
+    VOID 
+    );
+
+
+//
+// Plugin UI API
+//
+RECLASS_EXPORT 
+HWND 
+PLUGIN_CC 
+ReClassMainWindow( 
+    VOID 
+    );
+
+RECLASS_EXPORT 
+CMFCRibbonBar* 
+PLUGIN_CC 
+ReClassRibbonInterface( 
+    VOID 
+    );
+
+extern PPLUGIN_READ_MEMORY_OPERATION g_PluginOverrideReadMemoryOperation;
+extern PPLUGIN_WRITE_MEMORY_OPERATION g_PluginOverrideWriteMemoryOperation;
+extern PPLUGIN_OPEN_PROCESS_OPERATION g_PluginOverrideOpenProcessOperation;
+extern PPLUGIN_OPEN_THREAD_OPERATION g_PluginOverrideOpenThreadOperation;
 
 extern std::vector<PRECLASS_PLUGIN> g_LoadedPlugins;
 
-#pragma endregion
+
+#endif // _RECLASS_PLUGIN_API_H_

@@ -1,12 +1,16 @@
 #include "Plugin.h"
 #include "resource.h"
 
-BOOL PLUGIN_CC PluginInit( PRECLASS_PLUGIN_INFO lpRCInfo )
+BOOL 
+PLUGIN_CC 
+PluginInit( 
+    OUT LPRECLASS_PLUGIN_INFO lpRCInfo 
+)
 {
 	wcscpy_s( lpRCInfo->Name, L"Test Plugin Name" );
 	wcscpy_s( lpRCInfo->Version, L"1.0.0.2" );
 	wcscpy_s( lpRCInfo->About, L"This plugin is a test plugin" );
-	lpRCInfo->DialogID = IDD_SETTINGS_DLG;
+	lpRCInfo->DialogId = IDD_SETTINGS_DLG;
 
 	if (!ReClassIsReadMemoryOverriden( ) && !ReClassIsWriteMemoryOverriden( ))
 	{
@@ -20,12 +24,23 @@ BOOL PLUGIN_CC PluginInit( PRECLASS_PLUGIN_INFO lpRCInfo )
 	return TRUE;
 }
 
-VOID PLUGIN_CC PluginStateChange( BOOL state )
+VOID 
+PLUGIN_CC 
+PluginStateChange( 
+    IN BOOL State 
+)
 {
-	ReClassPrintConsole( (state == FALSE) ? L"[TestPlugin] Disabled!" : L"[TestPlugin] Enabled!" );
+	ReClassPrintConsole( L"[TestPlugin] %s!", (State == FALSE) ? L"Disabled" : L"Enabled" );
 }
 
-INT_PTR CALLBACK PluginSettingsDlg( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam )
+INT_PTR 
+PLUGIN_CC 
+PluginSettingsDlg( 
+    IN HWND hWnd, 
+    IN UINT Msg, 
+    IN WPARAM wParam, 
+    IN LPARAM lParam 
+)
 {
 	switch (Msg)
 	{
@@ -85,21 +100,35 @@ INT_PTR CALLBACK PluginSettingsDlg( HWND hWnd, UINT Msg, WPARAM wParam, LPARAM l
 	return FALSE;
 }
 
-BOOL WINAPI WriteCallback( LPVOID write_address, LPVOID buffer_ptr, SIZE_T write_size, PSIZE_T num_write )
+BOOL 
+PLUGIN_CC 
+WriteCallback( 
+    IN LPVOID Address, 
+    IN LPVOID Buffer, 
+    IN SIZE_T Size, 
+    OUT PSIZE_T BytesWritten 
+)
 {
 	DWORD OldProtect;
-	HANDLE hProcess = ReClassGetProcessHandle( );
-	VirtualProtectEx( hProcess, (PVOID)write_address, write_size, PAGE_EXECUTE_READWRITE, &OldProtect );
-	BOOL ret = WriteProcessMemory( hProcess, (PVOID)write_address, buffer_ptr, write_size, num_write );
-	VirtualProtectEx( hProcess, (PVOID)write_address, write_size, OldProtect, NULL );
-	return ret;
+	HANDLE ProcessHandle = ReClassGetProcessHandle( );
+	VirtualProtectEx( ProcessHandle, (PVOID)Address, Size, PAGE_EXECUTE_READWRITE, &OldProtect );
+	BOOL Retval = WriteProcessMemory( ProcessHandle, (PVOID)Address, Buffer, Size, BytesWritten );
+	VirtualProtectEx( ProcessHandle, (PVOID)Address, Size, OldProtect, NULL );
+	return Retval;
 }
 
-BOOL WINAPI ReadCallback( LPVOID read_address, LPVOID buffer_ptr, SIZE_T read_size, PSIZE_T num_read )
+BOOL 
+PLUGIN_CC 
+ReadCallback( 
+    IN LPVOID Address,
+    IN LPVOID Buffer,
+    IN SIZE_T Size,
+    OUT PSIZE_T BytesRead 
+)
 {
-	HANDLE hProcess = ReClassGetProcessHandle( );
-	BOOL return_val = ReadProcessMemory( hProcess, (LPVOID)read_address, buffer_ptr, read_size, num_read );
-	if (!return_val)
-		ZeroMemory( buffer_ptr, read_size );
-	return return_val;
+	HANDLE ProcessHandle = ReClassGetProcessHandle( );
+	BOOL Retval = ReadProcessMemory( ProcessHandle, (LPVOID)Address, Buffer, Size, BytesRead );
+	if (!Retval)
+		ZeroMemory( Buffer, Size );
+	return Retval;
 }

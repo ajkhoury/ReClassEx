@@ -51,3 +51,5 @@ DriverPlugin_dbg.rc-plugin64d
 /ReClass/plugins/TestPlugin.rc-plugin64
 *.db-wal
 *.db-shm
+*.rc-plugin64d
+/ReClass/plugins/TestPlugin_dbg.lib

@@ -44,50 +44,58 @@ void CDialogPlugins::OnContextMenu( CWnd *pWnd, CPoint pos )
 
 	if (*pWnd == m_PluginsList)
 	{
-		//FUTURE: Use items rect to check if mouse pos is inside of rect when right clicked, not needed but maybe if it becomes a problem down the road...
-		POSITION selected_pos = m_PluginsList.GetFirstSelectedItemPosition( );
-		if (selected_pos != nullptr && m_PluginsList.GetNextSelectedItem( selected_pos ) != -1)
+        POSITION SelectedPos;
+
+        //
+		// FUTURE: Use items rect to check if mouse pos is inside of rect when right clicked, not needed but maybe 
+        //         if it becomes a problem down the road...
+		SelectedPos = m_PluginsList.GetFirstSelectedItemPosition( );
+		if (SelectedPos != nullptr && m_PluginsList.GetNextSelectedItem( SelectedPos ) != -1)
 		{
-			PRECLASS_PLUGIN plugin = GetSelectedPlugin( );
+            CString About;
+            CMenu ContextMenu;
+            PRECLASS_PLUGIN Plugin;
 
-			CString About;
-			About.Format( _T( "About \"%ls\"" ), plugin->Info.Name );
-
-			CMenu context_menu;
-			context_menu.CreatePopupMenu( );
-			if (plugin->SettingDlgFnc != nullptr)
-				context_menu.AppendMenu( MF_STRING, MENU_SETTINGS, _T( "Settings" ) );
-			if (plugin->StateChangeFnc != nullptr)
-				context_menu.AppendMenu( MF_STRING, MENU_STATECHANGE, plugin->State ? _T( "Disable" ) : _T( "Enable" ) );
-			context_menu.AppendMenu( MF_STRING, MENU_ABOUT, About );
-			context_menu.TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, pos.x, pos.y, this );
+			Plugin = GetSelectedPlugin( );
+	
+			About.Format( _T( "About \"%ls\"" ), Plugin->Info.Name );
+			
+            ContextMenu.CreatePopupMenu( );
+			if (Plugin->SettingDlgFunction != NULL)
+                ContextMenu.AppendMenu( MF_STRING, MENU_SETTINGS, _T( "Settings" ) );
+			if (Plugin->StateChangeFunction != NULL)
+                ContextMenu.AppendMenu( MF_STRING, MENU_STATECHANGE, Plugin->State ? _T( "Disable" ) : _T( "Enable" ) );
+            ContextMenu.AppendMenu( MF_STRING, MENU_ABOUT, About );
+            ContextMenu.TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, pos.x, pos.y, this );
 		}
 	}
 }
 
 void CDialogPlugins::OnPopupMenuSettings( )
 {
-	PRECLASS_PLUGIN plugin = GetSelectedPlugin( );
-	DialogBox( plugin->LoadedBase, MAKEINTRESOURCE( plugin->Info.DialogID ), GetSafeHwnd( ), plugin->SettingDlgFnc );
+	PRECLASS_PLUGIN Plugin = GetSelectedPlugin( );
+	DialogBox( Plugin->LoadedBase, MAKEINTRESOURCE( Plugin->Info.DialogId ), GetSafeHwnd( ), Plugin->SettingDlgFunction );
 }
 
 void CDialogPlugins::OnPopupMenuAbout( )
 {
-	PRECLASS_PLUGIN plugin = GetSelectedPlugin( );
+    CStringW Title;
+	PRECLASS_PLUGIN Plugin = GetSelectedPlugin( );
+
 	//TODO: make cool about dialog maybe??
-	CStringW title;
-	title.Format( L"%s - About", plugin->Info.Name );
-	MessageBoxW( plugin->Info.About, title, MB_OK | MB_ICONINFORMATION );
+
+    Title.Format( L"%s - About", Plugin->Info.Name );
+	MessageBoxW( Plugin->Info.About, Title, MB_OK | MB_ICONINFORMATION );
 }
 
 void CDialogPlugins::OnPopupMenuChangeState( )
 {
-	PRECLASS_PLUGIN plugin = GetSelectedPlugin( );
-	plugin->StateChangeFnc( plugin->State = !plugin->State );
+	PRECLASS_PLUGIN Plugin = GetSelectedPlugin( );
+    Plugin->StateChangeFunction( Plugin->State = !Plugin->State );
 	#ifdef UNICODE
-	g_ReClassApp.WriteProfileInt( L"PluginState", plugin->Info.Name, plugin->State ? 1 : 0 );
+	g_ReClassApp.WriteProfileInt( L"PluginState", Plugin->Info.Name, Plugin->State ? 1 : 0 );
 	#else
-	g_ReClassApp.WriteProfileInt( "PluginState", CW2A( plugin.Info.Name ), plugin.State ? 1 : 0 );
+	g_ReClassApp.WriteProfileInt( "PluginState", CW2A( Plugin.Info.Name ), Plugin.State ? 1 : 0 );
 	#endif
 	RefreshPlugins( );
 }
@@ -96,20 +104,18 @@ VOID CDialogPlugins::RefreshPlugins( )
 {
 	m_PluginsList.DeleteAllItems( );
 
-	LVITEM item;
+	for (PRECLASS_PLUGIN Plugin : g_LoadedPlugins)
+	{   
+        LVITEM Item;
+		ZeroMemory( &Item, sizeof( LVITEM ) );
 
-	for (PRECLASS_PLUGIN plugin : g_LoadedPlugins)
-	{
-		ZeroMemory( &item, sizeof( LVITEM ) );
+		Item.mask = LVIF_TEXT;
+		Item.pszText = Plugin->Info.Name;
+		Item.cchTextMax = (int)wcslen( Plugin->Info.Name ) + 1;
+		Item.iItem = m_PluginsList.GetItemCount( );
 
-		item.mask = LVIF_TEXT;
-		item.pszText = plugin->Info.Name;
-		item.cchTextMax = (int)wcslen( plugin->Info.Name ) + 1;
-		item.iItem = m_PluginsList.GetItemCount( );
-
-		int pos = m_PluginsList.InsertItem( &item );
-
-		m_PluginsList.SetItemText( pos, 1, plugin->Info.Version );
-		m_PluginsList.SetItemText( pos, 2, plugin->State ? _T( "Enabled" ) : _T( "Disabled" ) );
+		int PosIdx = m_PluginsList.InsertItem( &Item );
+		m_PluginsList.SetItemText( PosIdx, 1, Plugin->Info.Version );
+		m_PluginsList.SetItemText( PosIdx, 2, Plugin->State ? _T( "Enabled" ) : _T( "Disabled" ) );
 	}
 }

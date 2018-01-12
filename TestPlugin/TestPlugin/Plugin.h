@@ -9,5 +9,20 @@
 
 #include "ReClassAPI.h"
 
-BOOL WINAPI WriteCallback( LPVOID write_address, LPVOID buffer_ptr, SIZE_T write_size, PSIZE_T num_write );
-BOOL WINAPI ReadCallback( LPVOID read_address, LPVOID buffer_ptr, SIZE_T read_size, PSIZE_T num_read );
+BOOL 
+PLUGIN_CC 
+WriteCallback( 
+    IN LPVOID Address, 
+    IN LPVOID Buffer, 
+    IN SIZE_T Size, 
+    OUT PSIZE_T BytesWritten 
+    );
+
+BOOL 
+PLUGIN_CC
+ReadCallback( 
+    IN LPVOID Address, 
+    IN LPVOID Buffer, 
+    IN SIZE_T Size, 
+    OUT PSIZE_T BytesRead 
+    );

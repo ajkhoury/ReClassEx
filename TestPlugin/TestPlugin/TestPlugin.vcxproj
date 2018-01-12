@@ -76,8 +76,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)_dbg</TargetName>
-    <TargetExt>.rc-plugin64</TargetExt>
-    <OutDir>..\..\ReClass\plugins\</OutDir>
+    <TargetExt>.rc-plugin64d</TargetExt>
+    <OutDir>$(SolutionDir)ReClass\plugins\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

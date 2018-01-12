@@ -87,8 +87,8 @@ DWORD g_NodeCreateIndex = 0;
 
 BOOL ReClassReadMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T BytesRead )
 {
-	if (g_PluginOverrideReadMemory != NULL)
-		return g_PluginOverrideReadMemory( Address, Buffer, Size, BytesRead );
+	if (g_PluginOverrideReadMemoryOperation != NULL)
+		return g_PluginOverrideReadMemoryOperation( Address, Buffer, Size, BytesRead );
 
 	BOOL return_val = ReadProcessMemory( g_hProcess, (LPVOID)Address, Buffer, Size, BytesRead );
 	if (!return_val) SecureZeroMemory( Buffer, Size );
@@ -97,8 +97,8 @@ BOOL ReClassReadMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T Byte
 
 BOOL ReClassWriteMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T BytesWritten )
 {
-	if (g_PluginOverrideWriteMemory != NULL)
-		return g_PluginOverrideWriteMemory( Address, Buffer, Size, BytesWritten );
+	if (g_PluginOverrideWriteMemoryOperation != NULL)
+		return g_PluginOverrideWriteMemoryOperation( Address, Buffer, Size, BytesWritten );
 
 	DWORD OldProtect;
 	VirtualProtectEx( g_hProcess, (void*)Address, Size, PAGE_EXECUTE_READWRITE, &OldProtect );
@@ -109,15 +109,15 @@ BOOL ReClassWriteMemory( LPVOID Address, LPVOID Buffer, SIZE_T Size, PSIZE_T Byt
 
 HANDLE ReClassOpenProcess( DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessID )
 {
-	if (g_PluginOverrideOpenProcess != NULL)
-		return g_PluginOverrideOpenProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
+	if (g_PluginOverrideOpenProcessOperation != NULL)
+		return g_PluginOverrideOpenProcessOperation( dwDesiredAccess, bInheritHandle, dwProcessID );
 	return OpenProcess( dwDesiredAccess, bInheritHandle, dwProcessID );
 }
 
 HANDLE ReClassOpenThread( DWORD dwDesiredAccessFlags, BOOL bInheritHandle, DWORD dwThreadID )
 {
-	if (g_PluginOverrideOpenThread != NULL)
-		return g_PluginOverrideOpenThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
+	if (g_PluginOverrideOpenProcessOperation != NULL)
+		return g_PluginOverrideOpenProcessOperation( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
 	return OpenThread( dwDesiredAccessFlags, bInheritHandle, dwThreadID );
 }
 
