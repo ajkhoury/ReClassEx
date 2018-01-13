@@ -44,7 +44,7 @@ ReClass Extended
 
 See wiki for instructions on how to compile:
 
-[Compilation Instructions](https://github.com/dude719/Reclass-2016/wiki/Compiling-ReClass-2016)
+[Compilation Instructions](https://github.com/dude719/Reclass-2016/wiki/Compiling-ReClassEx)
 
 ## Plugins
 
