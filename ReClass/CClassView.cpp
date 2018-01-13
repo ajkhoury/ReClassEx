@@ -715,25 +715,24 @@ void CClassView::OnRButtonDown( UINT nFlags, CPoint point )
 
 void CClassView::OnPaint( )
 {
-    VIEWINFO ViewInfo;
-    ULONG ClassSize;
-    CRect ClientRect;
-    NODESIZE DrawMax;
-    int XPos, YPos;
-
     CPaintDC PaintDC( this ); // draw context for painting
     CMemDC MemDC( PaintDC, this );
-    CDC &Dc = MemDC.GetDC( );
-    
-
+    CDC *Dc = &MemDC.GetDC( );
+       
+    VIEWINFO ViewInfo;
+    ULONG ClassSize;
+    int XPos, YPos;
+    NODESIZE DrawMax;
+    CRect ClientRect;
 
     GetClientRect( &ClientRect );
     //ClientRect.bottom += g_FontHeight;
-    Dc.FillSolidRect( &ClientRect, g_crBackground );
+
+    Dc->FillSolidRect( &ClientRect, g_crBackground );
 
     if (m_pClass != NULL)
     {
-        Dc.SelectObject( &g_ViewFont );
+        Dc->SelectObject( &g_ViewFont );
 
         m_Hotspots.clear( );
 
@@ -748,7 +747,7 @@ void CClassView::OnPaint( )
         ViewInfo.Data = m_Memory.Data( );
         ViewInfo.Classes = &g_ReClassApp.m_Classes;
         ViewInfo.ClientRect = &ClientRect;
-        ViewInfo.Dc = &Dc;
+        ViewInfo.Dc = Dc;
         ViewInfo.Level = 0;
         ViewInfo.Hotspots = &m_Hotspots;
         ViewInfo.MultiSelected = (BOOL)(m_Selected.size( ) > 1);
@@ -768,8 +767,8 @@ void CClassView::OnPaint( )
         DrawMax = m_pClass->Draw( &ViewInfo, 0 - XPos, -YPos );
 
         // Dirty hack, fix Draw methods
-        DrawMax.y += YPos + g_FontHeight;   
-        DrawMax.x += XPos; 
+        DrawMax.x += XPos;
+        DrawMax.y += YPos; //+ g_FontHeight;
 
         if (m_pClass->m_RequestPosition != -1)
         {

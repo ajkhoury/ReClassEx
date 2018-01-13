@@ -4,7 +4,7 @@
 
 CNodeClass::CNodeClass( )
 {
-    TCHAR szOffset[128] = { 0 };
+    TCHAR szOffset[128];
 
     m_nodeType = nt_class;
     m_Offset = GetBaseAddress( );
@@ -48,6 +48,9 @@ NODESIZE CNodeClass::Draw( const PVIEWINFO View, int x, int y )
     NODESIZE DrawSize;
     NODESIZE ChildDrawSize;
 
+    DrawSize.x = 0;
+    DrawSize.y = 0;
+
     AddSelection( View, x, y, g_FontHeight );
     x = AddOpenClose( View, x, y );
 
@@ -83,7 +86,10 @@ NODESIZE CNodeClass::Draw( const PVIEWINFO View, int x, int y )
         {
             CNodeBase* pNode = m_ChildNodes[i];
             if (!pNode)
+            {
+                PrintOut( _T( "Node %d is NULL in class %s!" ), i, m_strName.GetString( ) );
                 continue;
+            }          
                       
             if (pNode->GetType( ) == nt_vtable)
             {
