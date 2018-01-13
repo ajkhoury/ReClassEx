@@ -592,16 +592,16 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="ReClass2016.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <MASM Include="Intrinsics32.asm">
       <Filter>Source Files</Filter>
     </MASM>
     <MASM Include="Intrinsics64.asm">
       <Filter>Source Files</Filter>
     </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ReClassEx.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

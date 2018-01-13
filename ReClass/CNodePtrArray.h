@@ -11,7 +11,8 @@ public:
 
 	virtual void Update( const PHOTSPOT Spot );
 
-	size_t& Count( ) { return m_PtrCount; }
+	inline size_t Count( void ) { return m_PtrCount; }
+    inline void SetCount( size_t Count ) { m_PtrCount = Count; }
 
 	void SetClass( CNodeClass* pNode ) { m_NodePtr->SetClass( pNode ); }
 	CNodeClass* GetClass( void ) { return m_NodePtr->GetClass( ); }

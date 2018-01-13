@@ -747,7 +747,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 	XMLElement* root = XmlDoc.NewElement( "ReClass" );
     XmlDoc.LinkEndChild( root );
 
-	XMLComment* comment = XmlDoc.NewComment( "Reclass 2016" );
+	XMLComment* comment = XmlDoc.NewComment( "ReClassEx" );
 	root->LinkEndChild( comment );
 	//---------------------------------------------
 	XMLElement* settings = XmlDoc.NewElement( "TypeDef" );
@@ -882,7 +882,8 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 				item->SetAttribute( "Size", (UINT)pArray->GetClass( )->GetMemorySize( ) );
 				item->SetAttribute( "Comment", strArrayNodeComment );
 				pXmlNode->LinkEndChild( item );
-			}else if( pNode->GetType() == nt_ptrarray )
+			}
+            else if (pNode->GetType() == nt_ptrarray)
 			{ 
 				CNodePtrArray* pArray = (CNodePtrArray*)pNode;
 				pXmlNode->SetAttribute( "Count", (UINT)pArray->Count( ) );
@@ -901,7 +902,8 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
 				item->SetAttribute( "Size", (UINT)pArray->GetClass( )->GetMemorySize( ) );
 				item->SetAttribute( "Comment", strArrayNodeComment );
 				pXmlNode->LinkEndChild( item );
-			}else if (pNode->GetType( ) == nt_pointer)
+			}
+            else if (pNode->GetType( ) == nt_pointer)
 			{
 				CNodePtr* pPointer = (CNodePtr*)pNode;
 				#ifdef UNICODE
@@ -1086,7 +1088,7 @@ void CReClassExApp::OnFileOpen( )
 		pClass->SetComment( _CA2W( XmlCurrentElement->Attribute( "Comment" ) ) );
 		pClass->SetOffset( atoi( XmlCurrentElement->Attribute( "Offset" ) ) );
 		pClass->SetOffsetString( _CA2W( XmlCurrentElement->Attribute( "strOffset" ) ) );
-		pClass->m_Code.SetString( _CA2W( XmlCurrentElement->Attribute( "Code" ) ) );
+		pClass->SetCodeString( _CA2W( XmlCurrentElement->Attribute( "Code" ) ) );
 
 		if (pClass->GetOffsetString( ) == "")
 			pClass->SetOffsetString( _CA2W( XmlCurrentElement->Attribute( "Offset" ) ) );
@@ -1120,14 +1122,18 @@ void CReClassExApp::OnFileOpen( )
 				}
 				else if (Type == nt_unicode)
 				{
-					static_cast<CNodeText*>(pNode)->SetSize( Size );
+					static_cast<CNodeUnicode*>(pNode)->SetSize( Size );
 				}
+                else if (Type == nt_function)
+                {
+                    static_cast<CNodeFunction*>(pNode)->SetSize( Size );
+                }
 				else if (Type == nt_vtable)
 				{
 					XMLElement* XmlVTableFunctionPtrElement = XmlClassElement->FirstChildElement( );
 					while (XmlVTableFunctionPtrElement)
 					{
-						CNodeVTable* VMTNode = static_cast<CNodeVTable*>( pNode );
+						CNodeVTable* VMTNode = static_cast<CNodeVTable*>(pNode);
                         CNodeFunctionPtr* FunctionPtrNode;
 
                         VMTNode->Initialize( GetMainFrame( ) );
@@ -1175,10 +1181,11 @@ void CReClassExApp::OnFileOpen( )
 						}
 						// TODO: Handle other type of arrays....
 					}
-				} else if ( Type == nt_ptrarray )
+				}
+                else if ( Type == nt_ptrarray )
 				{
 					CNodePtrArray* pArray = (CNodePtrArray*) pNode;
-					pArray->Count() = (DWORD) atoi( XmlClassElement->Attribute( "Count" ) );
+					pArray->SetCount( (size_t)atoi( XmlClassElement->Attribute( "Count" ) ) );
 
 					XMLElement* XmlArrayElement = XmlClassElement->FirstChildElement( );
 					if (XmlArrayElement)
@@ -1191,11 +1198,13 @@ void CReClassExApp::OnFileOpen( )
                         XmlArrayElement->QueryIntAttribute( "Type", &ArrayType );
                         XmlClassElement->QueryIntAttribute( "Size", &ArraySize );
 
-						if ( ArrayType == nt_class ) {
+						if (ArrayType == nt_class) 
+                        {
 							links.push_back( Link( Name, pNode ) );
 						}
 					}
-				}else if (Type == nt_pointer)
+				}
+                else if (Type == nt_pointer)
 				{
 					CString PointerString = _CA2W( XmlClassElement->Attribute( "Pointer" ) );
 					links.push_back( Link( PointerString, pNode ) );

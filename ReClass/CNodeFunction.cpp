@@ -103,7 +103,7 @@ NODESIZE CNodeFunction::Draw( const PVIEWINFO View, int x, int y )
 	}
 	else
 	{
-		m_pEdit->ShowWindow( SW_HIDE );
+        m_pEdit->ShowWindow( SW_HIDE );
 		m_bRedrawNeeded = TRUE;
 
 		y += g_FontHeight;
@@ -114,7 +114,7 @@ NODESIZE CNodeFunction::Draw( const PVIEWINFO View, int x, int y )
 	return DrawSize;
 }
 
-void CNodeFunction::Initialize( CClassView* pChild, ULONG_PTR Address )
+void CNodeFunction::Initialize( CClassView* pParentWindow, ULONG_PTR Address )
 {
 	if (m_pEdit != NULL)
 	{
@@ -122,12 +122,11 @@ void CNodeFunction::Initialize( CClassView* pChild, ULONG_PTR Address )
 		m_pEdit->ShowWindow( SW_HIDE );
 
 		delete m_pEdit;
-		m_pEdit = NULL;
 	}
 
 	m_pEdit = new CScintillaEdit;
 
-	m_pEdit->Create( WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, CRect( 0, 0, 0, 0 ), (CWnd*)pChild, 0 );
+	m_pEdit->Create( WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, CRect( 0, 0, 0, 0 ), (CWnd*)pParentWindow, 0 );
 
 	m_pEdit->ShowWindow( SW_HIDE ); // Hide the window until we open the level
 	//m_pEdit->EnableWindow( FALSE ); // Disables the ability to scroll
@@ -174,7 +173,7 @@ void CNodeFunction::DisassembleBytes( ULONG_PTR Address )
 	m_nLongestLine = 0;
 
 	// Read in process bytes
-	if (ReClassReadMemory( (LPVOID)StartAddress, (LPVOID)Code, 2048 ) == TRUE)
+	if (ReClassReadMemory( (LPVOID)StartAddress, (LPVOID)Code, 2048, NULL ) == TRUE)
 	{
 		DISASM MyDisasm;
 		BOOLEAN Error = FALSE;
@@ -187,7 +186,7 @@ void CNodeFunction::DisassembleBytes( ULONG_PTR Address )
 		#else
 		MyDisasm.Archi = 0;
 		#endif
-		MyDisasm.Options = MasmSyntax | PrefixedNumeral | ShowSegmentRegs;
+		MyDisasm.Options = NasmSyntax | PrefixedNumeral | ShowSegmentRegs;
 
 		// Get assembly lines
 		while (Error == FALSE)

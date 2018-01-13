@@ -22,7 +22,7 @@ public:
 // Implementation
 public:
 	inline VOID SetClass( CNodeClass* pClass ) { m_pClassView->SetClass( pClass ); }
-	inline CClassView* GetChildView( ) { return m_pClassView; }
+	inline CClassView* GetChildView( void ) { return m_pClassView; }
 
 	// View for the client area of the frame.
 	CClassView* m_pClassView;

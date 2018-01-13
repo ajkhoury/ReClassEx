@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FA80DCEB-16C4-43D1-8451-6EE506D5FF82}</ProjectGuid>
-    <RootNamespace>ReClass2015</RootNamespace>
+    <RootNamespace>ReClassEx</RootNamespace>
     <Keyword>MFCProj</Keyword>
     <ProjectName>ReClassEx</ProjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
@@ -472,7 +472,7 @@
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="ReClass2016.rc" />
+    <ResourceCompile Include="ReClassEx.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\file_large.bmp" />

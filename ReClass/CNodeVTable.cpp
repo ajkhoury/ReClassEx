@@ -68,10 +68,10 @@ NODESIZE CNodeVTable::Draw( const PVIEWINFO View, int x, int y )
 		{
 			CNodeFunctionPtr* FunctionPtrNode = static_cast<CNodeFunctionPtr*>(m_ChildNodes[i]);
 			
-			if (!FunctionPtrNode->IsInitialized( ))
-                FunctionPtrNode->Initialize( m_pParentWindow, i * sizeof( ULONG_PTR ) );
-			
             FunctionPtrNode->SetOffset( i * sizeof( ULONG_PTR ) );
+
+			if (!FunctionPtrNode->IsInitialized( ))
+                FunctionPtrNode->Initialize( m_pParentWindow, NewView.Address + i * sizeof( ULONG_PTR ) );
 			
             ChildDrawSize = FunctionPtrNode->Draw( &NewView, tx, y );
 			

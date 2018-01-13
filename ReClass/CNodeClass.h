@@ -15,6 +15,8 @@ public:
 	inline void SetChildClassFrame( class CClassFrame* pChild ) { m_pChildClassFrame = pChild; }
 	inline class CClassFrame* GetChildClassFrame( ) { return m_pChildClassFrame; }
 
+    inline void SetCodeString( LPCTSTR CodeStr ) { m_Code.SetString( CodeStr ); }
+
 public:
 	size_t m_Idx;
 	size_t m_RequestPosition;

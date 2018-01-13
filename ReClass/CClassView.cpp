@@ -850,7 +850,7 @@ void CClassView::OnSize( UINT nType, int cx, int cy )
     CRect client;
     GetClientRect( &client );
     m_Scroll.SetWindowPos( NULL, client.right - SB_WIDTH, 0, SB_WIDTH, client.Height( ) - SB_WIDTH, SWP_NOZORDER );
-    m_HScroll.SetWindowPos( NULL, client.left, client.bottom - SB_WIDTH, client.Width( ) - SB_WIDTH, SB_WIDTH, SWP_NOZORDER );
+    m_HScroll.SetWindowPos( NULL, client.left, client.bottom - SB_WIDTH * 2, client.Width( ) - SB_WIDTH, SB_WIDTH, SWP_NOZORDER );
     m_Edit.ShowWindow( SW_HIDE );
 
     CWnd::OnSize( nType, cx, cy );

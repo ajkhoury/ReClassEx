@@ -82,22 +82,29 @@ NODESIZE CNodeClass::Draw( const PVIEWINFO View, int x, int y )
         for (UINT i = 0; i < m_ChildNodes.size( ); i++)
         {
             CNodeBase* pNode = m_ChildNodes[i];
-            if (pNode != nullptr)
-            {           
-                if (pNode->GetType( ) == nt_vtable)
-                {
-                    CNodeVTable* VTableNode = static_cast<CNodeVTable*>(pNode);
-                    if (!VTableNode->IsInitialized( ) && m_pChildClassFrame != nullptr)
-                        VTableNode->Initialize( static_cast<CWnd*>(m_pChildClassFrame->GetChildView( )) );
-                }
-
-                ChildDrawSize = pNode->Draw( &ViewInfo, tx, y );
-
-                y = ChildDrawSize.y;
-                if (ChildDrawSize.x > DrawSize.x)
-                {
-                    DrawSize.x = ChildDrawSize.x;
-                }
+            if (!pNode)
+                continue;
+                      
+            if (pNode->GetType( ) == nt_vtable)
+            {
+                CNodeVTable* VTableNode = static_cast<CNodeVTable*>(pNode);
+                if (!VTableNode->IsInitialized( ) && m_pChildClassFrame != nullptr)
+                    VTableNode->Initialize( static_cast<CWnd*>(m_pChildClassFrame->GetChildView( )) );
+            }
+            
+            if (pNode->GetType( ) == nt_function)
+            {
+                CNodeFunction* FunctionNode = static_cast<CNodeFunction*>(pNode);
+                if (!FunctionNode->IsInitialized( ) && m_pChildClassFrame != nullptr)
+                    FunctionNode->Initialize( m_pChildClassFrame->GetChildView( ), m_Offset + FunctionNode->GetOffset( ) );
+            }
+            
+            ChildDrawSize = pNode->Draw( &ViewInfo, tx, y );
+            
+            y = ChildDrawSize.y;
+            if (ChildDrawSize.x > DrawSize.x)
+            {
+                DrawSize.x = ChildDrawSize.x;
             }
         }
     }
