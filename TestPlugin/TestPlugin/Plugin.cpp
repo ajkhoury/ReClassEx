@@ -1,6 +1,9 @@
 #include "Plugin.h"
 #include "resource.h"
 
+BOOL gTestPluginState = FALSE;
+
+
 BOOL 
 PLUGIN_CC 
 PluginInit( 
@@ -21,6 +24,8 @@ PluginInit(
 		}
 	}
 
+    gTestPluginState = TRUE;
+
 	return TRUE;
 }
 
@@ -30,7 +35,33 @@ PluginStateChange(
     IN BOOL State 
 )
 {
-	ReClassPrintConsole( L"[TestPlugin] %s!", (State == FALSE) ? L"Disabled" : L"Enabled" );
+    //
+    // Update global state variable
+    //
+    gTestPluginState = State;
+
+
+    if (State)
+    {
+        ReClassPrintConsole( L"[TestPlugin] Enabled!" );
+
+        //
+        // Nothing for now.
+        //
+    }
+    else
+    {
+        ReClassPrintConsole( L"[TestPlugin] Disabled!" );
+
+        //
+        // Remove our overrides if we're disabling/disabled.
+        //
+        if (ReClassGetCurrentReadMemory( ) == &ReadCallback)
+            ReClassRemoveReadMemoryOverride( );
+
+        if (ReClassGetCurrentWriteMemory( ) == &WriteCallback)
+            ReClassRemoveWriteMemoryOverride( );
+    }
 }
 
 INT_PTR 
@@ -47,18 +78,31 @@ PluginSettingsDlg(
 
 	case WM_INITDIALOG:
 	{
-		SendMessage( 
-			GetDlgItem( hWnd, IDC_CHECK_READ_MEMORY_OVERRIDE ), 
-			BM_SETCHECK, 
-			MAKEWPARAM( ReClassIsReadMemoryOverriden( ) ? BST_CHECKED : BST_UNCHECKED, 0 ), 
-			0 
-		);
-		SendMessage( 
-			GetDlgItem( hWnd, IDC_CHECK_WRITE_MEMORY_OVERRIDE ), 
-			BM_SETCHECK, 
-			MAKEWPARAM( ReClassIsWriteMemoryOverriden( ) ? BST_CHECKED : BST_UNCHECKED, 0 ), 
-			0 
-		);
+        if (gTestPluginState)
+        {
+            //
+            // Apply checkboxes appropriately if we're in anm enabled state.
+            //
+            BOOL ReadChecked = (ReClassGetCurrentReadMemory( ) == &ReadCallback) ? BST_CHECKED : BST_UNCHECKED;
+            BOOL WriteChecked = (ReClassGetCurrentWriteMemory( ) == &WriteCallback) ? BST_CHECKED : BST_UNCHECKED;
+
+            SendMessage( GetDlgItem( hWnd, IDC_CHECK_READ_MEMORY_OVERRIDE ), BM_SETCHECK, MAKEWPARAM( ReadChecked, 0 ), 0 );
+            EnableWindow( GetDlgItem( hWnd, IDC_CHECK_READ_MEMORY_OVERRIDE ), TRUE );
+
+            SendMessage( GetDlgItem( hWnd, IDC_CHECK_WRITE_MEMORY_OVERRIDE ), BM_SETCHECK, MAKEWPARAM( WriteChecked, 0 ), 0 );
+            EnableWindow( GetDlgItem( hWnd, IDC_CHECK_WRITE_MEMORY_OVERRIDE ), TRUE );
+        }
+        else
+        {
+            //
+            // Make sure we can't touch the settings if we're in a disabled state.
+            //
+            SendMessage( GetDlgItem( hWnd, IDC_CHECK_READ_MEMORY_OVERRIDE ), BM_SETCHECK, MAKEWPARAM( BST_UNCHECKED, 0 ), 0 );
+            EnableWindow( GetDlgItem( hWnd, IDC_CHECK_READ_MEMORY_OVERRIDE ), FALSE );
+
+            SendMessage( GetDlgItem( hWnd, IDC_CHECK_WRITE_MEMORY_OVERRIDE ), BM_SETCHECK, MAKEWPARAM( BST_UNCHECKED, 0 ), 0 );
+            EnableWindow( GetDlgItem( hWnd, IDC_CHECK_WRITE_MEMORY_OVERRIDE ), FALSE );
+        }
 	}
 	return TRUE;
 
@@ -66,7 +110,7 @@ PluginSettingsDlg(
 	{
 		WORD NotificationCode = HIWORD( wParam );
 		WORD ControlId = LOWORD( wParam );
-		HWND hControlWnd = reinterpret_cast<HWND>(lParam);
+		HWND hControlWnd = (HWND)lParam;
 		
 		if (NotificationCode == BN_CLICKED)
 		{
@@ -74,17 +118,124 @@ PluginSettingsDlg(
 
 			if (ControlId == IDC_CHECK_READ_MEMORY_OVERRIDE)
 			{
-				if (bChecked)
-					ReClassOverrideReadMemoryOperation( ReadCallback );
-				else
-					ReClassRemoveReadMemoryOverride( );
+                if (bChecked)
+                {
+                    //
+                    // Make sure the read memory operation is not already overriden.
+                    //
+                    if (!ReClassIsReadMemoryOverriden( ))
+                    {
+                        ReClassOverrideReadMemoryOperation( &ReadCallback );
+                    }
+                    else
+                    {
+                        //
+                        // Make sure it's not us!
+                        //
+                        if (ReClassGetCurrentReadMemory( ) != &ReadCallback)
+                        {
+                            //
+                            // Ask the user whether or not they want to overwrite the other operation.
+                            //
+                            if (MessageBoxW( ReClassMainWindow( ),
+                                L"Another plugin has already overriden the read operation.\n"
+                                L"Would you like to overwrite their read override?",
+                                L"Test Plugin", MB_YESNO ) == IDYES)
+                            {
+                                ReClassOverrideReadMemoryOperation( &ReadCallback );
+                            }
+                            else
+                            {
+                                //
+                                // If the user chose no, then make sure our checkbox is unchecked.
+                                //
+                                SendMessage( GetDlgItem( hWnd, IDC_CHECK_READ_MEMORY_OVERRIDE ), 
+                                    BM_SETCHECK, MAKEWPARAM( BST_UNCHECKED, 0 ), 0 );
+                            }
+                        }
+                        else
+                        {
+                            //
+                            // This shouldn't happen!
+                            //
+                            MessageBoxW( ReClassMainWindow( ), 
+                                L"WTF! Plugin memory read operation is already set as the active override!", 
+                                L"Test Plugin", MB_ICONERROR );
+                        }
+                    }
+                }
+                else
+                {
+                    //
+                    // Only remove the read memory operation if it's ours!
+                    //
+                    if (ReClassGetCurrentReadMemory( ) == &ReadCallback)
+                    {
+                        ReClassRemoveReadMemoryOverride( );
+                    }
+                }			
 			}
 			else if (ControlId == IDC_CHECK_WRITE_MEMORY_OVERRIDE)
 			{
-				if (bChecked)
-					ReClassOverrideWriteMemoryOperation( WriteCallback );
-				else
-					ReClassRemoveWriteMemoryOverride( );
+                if (bChecked)
+                {
+                    //
+                    // Make sure the write memory operation is not already overriden.
+                    //
+                    if (!ReClassIsWriteMemoryOverriden( ))
+                    {
+                        //
+                        // We're all good to set our write memory operation!
+                        //
+                        ReClassOverrideWriteMemoryOperation( &WriteCallback );
+                    }
+                    else
+                    {
+                        //
+                        // Make sure it's not us!
+                        //
+                        if (ReClassGetCurrentWriteMemory( ) != &WriteCallback)
+                        {
+                            //
+                            // Ask the user whether or not they want to overwrite the other operation.
+                            //
+                            if (MessageBoxW( ReClassMainWindow( ),
+                                L"Another plugin has already overriden the write operation.\n"
+                                L"Would you like to overwrite their write override?",
+                                L"Test Plugin", MB_YESNO ) == IDYES)
+                            {
+                                ReClassOverrideWriteMemoryOperation( &WriteCallback );
+                            }
+                            else
+                            {
+                                //
+                                // If the user chose no, then make sure our checkbox is unchecked.
+                                //
+                                SendMessage( GetDlgItem( hWnd, IDC_CHECK_WRITE_MEMORY_OVERRIDE ),
+                                    BM_SETCHECK, MAKEWPARAM( BST_UNCHECKED, 0 ), 0 );
+                            }
+                        }
+                        else
+                        {
+                            //
+                            // This shouldn't happen!
+                            //
+                            MessageBoxW( ReClassMainWindow( ),
+                                L"WTF! Plugin memory write operation is already set as the active override!",
+                                L"Test Plugin", MB_ICONERROR );
+                        }
+                    }
+                }
+                else
+                {
+                    //
+                    // Only remove the read memory operation if it's ours!
+                    //
+                    if (ReClassGetCurrentWriteMemory( ) == &WriteCallback)
+                    {
+                        ReClassRemoveWriteMemoryOverride( );
+                    }
+                }
 			}
 		}	
 	}

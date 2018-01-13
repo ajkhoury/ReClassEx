@@ -44,12 +44,10 @@ void CDialogPlugins::OnContextMenu( CWnd *pWnd, CPoint pos )
 
 	if (*pWnd == m_PluginsList)
 	{
-        POSITION SelectedPos;
-
         //
 		// FUTURE: Use items rect to check if mouse pos is inside of rect when right clicked, not needed but maybe 
         //         if it becomes a problem down the road...
-		SelectedPos = m_PluginsList.GetFirstSelectedItemPosition( );
+        POSITION SelectedPos = m_PluginsList.GetFirstSelectedItemPosition( );
 		if (SelectedPos != nullptr && m_PluginsList.GetNextSelectedItem( SelectedPos ) != -1)
 		{
             CString About;
@@ -74,6 +72,7 @@ void CDialogPlugins::OnContextMenu( CWnd *pWnd, CPoint pos )
 void CDialogPlugins::OnPopupMenuSettings( )
 {
 	PRECLASS_PLUGIN Plugin = GetSelectedPlugin( );
+
 	DialogBox( Plugin->LoadedBase, MAKEINTRESOURCE( Plugin->Info.DialogId ), GetSafeHwnd( ), Plugin->SettingDlgFunction );
 }
 
@@ -91,7 +90,9 @@ void CDialogPlugins::OnPopupMenuAbout( )
 void CDialogPlugins::OnPopupMenuChangeState( )
 {
 	PRECLASS_PLUGIN Plugin = GetSelectedPlugin( );
+
     Plugin->StateChangeFunction( Plugin->State = !Plugin->State );
+
 	#ifdef UNICODE
 	g_ReClassApp.WriteProfileInt( L"PluginState", Plugin->Info.Name, Plugin->State ? 1 : 0 );
 	#else
@@ -102,12 +103,13 @@ void CDialogPlugins::OnPopupMenuChangeState( )
 
 VOID CDialogPlugins::RefreshPlugins( )
 {
+    LVITEM Item;
+
 	m_PluginsList.DeleteAllItems( );
 
 	for (PRECLASS_PLUGIN Plugin : g_LoadedPlugins)
-	{   
-        LVITEM Item;
-		ZeroMemory( &Item, sizeof( LVITEM ) );
+    {
+        ZeroMemory( &Item, sizeof( LVITEM ) );
 
 		Item.mask = LVIF_TEXT;
 		Item.pszText = Plugin->Info.Name;

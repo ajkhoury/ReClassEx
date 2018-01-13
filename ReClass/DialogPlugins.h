@@ -32,8 +32,13 @@ protected:
 
 private:
 
-	PRECLASS_PLUGIN GetSelectedPlugin( ) { return g_LoadedPlugins.at(m_PluginsList.GetSelectionMark( )); }
-	VOID RefreshPlugins( );
+	PRECLASS_PLUGIN GetSelectedPlugin( void ) 
+    { 
+        int SelectedIdx = m_PluginsList.GetSelectionMark( );
+        return g_LoadedPlugins.at( SelectedIdx );
+    }
+	
+    VOID RefreshPlugins( );
 
 	CListCtrl m_PluginsList;
 };

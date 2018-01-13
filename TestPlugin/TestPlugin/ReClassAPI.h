@@ -50,10 +50,10 @@ typedef HANDLE( PLUGIN_CC *PPLUGIN_OPEN_THREAD_OPERATION )(
 // which is passed back to ReClass to display in the plugins dialog
 //
 typedef DECLSPEC_ALIGN(16) struct _RECLASS_PLUGIN_INFO {
-    wchar_t Name[256];		//< Name of the plugin
-    wchar_t Version[256];	//< Plugin version
-    wchar_t About[2048];	//< Small snippet about the plugin 
-    int DialogId;			//< Identifier for the settings dialog
+    wchar_t Name[256];      //< Name of the plugin
+    wchar_t Version[256];   //< Plugin version
+    wchar_t About[2048];    //< Small snippet about the plugin 
+    int DialogId;           //< Identifier for the settings dialog
 } RECLASS_PLUGIN_INFO, *PRECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
 //
