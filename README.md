@@ -2,7 +2,7 @@
 
 ReClass Extended
 
-![Alt text](https://i.gyazo.com/485c87c45a4eae9af08d5412c5844be3.png "ReClass")
+![ReClassEx](https://raw.githubusercontent.com/dude719/ReClassEx/master/Images/reclass.png "ReClassEx")
 
 ## New Features
 - Up and down arrow hotkeys to switch nodes
