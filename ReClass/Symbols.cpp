@@ -412,7 +412,7 @@ UndecorateSymbolNameUnicode(
         return 0;
     }
 
-    ZeroMemory( AnsiName, 0, AnsiNameLength );
+    ZeroMemory( AnsiName, AnsiNameLength );
     if (!WideCharToMultiByte( CP_ACP, WC_COMPOSITECHECK | WC_SEPCHARS, name, -1, AnsiName, AnsiNameLength, NULL, NULL ))
     {
         FreeIt( AnsiName );
