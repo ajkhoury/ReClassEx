@@ -172,196 +172,207 @@ PVOID GetLocalProcAddressW( PVOID ModuleBase, LPCWSTR ProcName )
 }
 
 
-BOOLEAN SetPrivilege( HANDLE hToken, LPCTSTR lpPrivilege, BOOLEAN bEnablePrivilege )
+bool SetPrivilege( HANDLE hToken, LPCTSTR lpPrivilege, bool bEnablePrivilege )
 {
-	TOKEN_PRIVILEGES    tkp = { 0 };
-	LUID                luid = { 0 };
-	TOKEN_PRIVILEGES    tkpPrevious = { 0 };
-	DWORD				cbPrevious = 0;
-	NTSTATUS			status = STATUS_SUCCESS;
-	//
-	if (!LookupPrivilegeValue( NULL, lpPrivilege, &luid ))
-		return FALSE;
-	tkp.PrivilegeCount = 1;
-	tkp.Privileges[0].Luid = luid;
-	tkp.Privileges[0].Attributes = 0;
+    NTSTATUS Status;
+    LUID privLuid;
+	TOKEN_PRIVILEGES tokenPriv;
+    TOKEN_PRIVILEGES tokenPrivPrevious;
+	DWORD cbPrevious;
+	
+	if (!LookupPrivilegeValue( NULL, lpPrivilege, &privLuid ))
+		return false;
+
+    ZeroMemory( &tokenPriv, sizeof( tokenPriv ) );
+    tokenPriv.PrivilegeCount = 1;
+    tokenPriv.Privileges[0].Luid = privLuid;
+    tokenPriv.Privileges[0].Attributes = 0;
+
 	cbPrevious = sizeof( TOKEN_PRIVILEGES );
+    Status = ntdll::NtAdjustPrivilegesToken( hToken, FALSE, &tokenPriv, sizeof( TOKEN_PRIVILEGES ), &tokenPrivPrevious, &cbPrevious );
+	if (!NT_SUCCESS( Status ))
+		return false;
 
-	status = ntdll::NtAdjustPrivilegesToken( hToken, FALSE, &tkp, sizeof( TOKEN_PRIVILEGES ), &tkpPrevious, &cbPrevious );
-
-	if (!NT_SUCCESS( status ))
-		return FALSE;
-
-	tkpPrevious.PrivilegeCount = 1;
-	tkpPrevious.Privileges[0].Luid = luid;
+    tokenPrivPrevious.PrivilegeCount = 1;
+    tokenPrivPrevious.Privileges[0].Luid = privLuid;
 	if (bEnablePrivilege)
-		tkpPrevious.Privileges[0].Attributes |= (SE_PRIVILEGE_ENABLED);
+        tokenPrivPrevious.Privileges[0].Attributes |= (SE_PRIVILEGE_ENABLED);
 	else
-		tkpPrevious.Privileges[0].Attributes ^= (SE_PRIVILEGE_ENABLED & tkpPrevious.Privileges[0].Attributes);
+        tokenPrivPrevious.Privileges[0].Attributes ^= (SE_PRIVILEGE_ENABLED & tokenPrivPrevious.Privileges[0].Attributes);
 
-	status = ntdll::NtAdjustPrivilegesToken( hToken, FALSE, &tkpPrevious, cbPrevious, NULL, NULL );
+    Status = ntdll::NtAdjustPrivilegesToken( hToken, FALSE, &tokenPrivPrevious, cbPrevious, NULL, NULL );
+	if (!NT_SUCCESS( Status ))
+		return false;
 
-	if (!NT_SUCCESS( status ))
-		return FALSE;
-
-	return TRUE;
+	return true;
 }
 
-BOOLEAN SetDebugPrivilege( BOOLEAN bEnable )
+bool SetDebugPrivilege( bool bEnable )
 {
-	HANDLE hToken = NULL;
-	NTSTATUS status = ntdll::NtOpenProcessToken( GetCurrentProcess( ), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken );
-	if (!NT_SUCCESS( status ))
+    NTSTATUS Status;
+	HANDLE hToken;
+    
+    Status = ntdll::NtOpenProcessToken( GetCurrentProcess( ), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken );
+	if (!NT_SUCCESS( Status ))
 		return FALSE;
+
 	// Enable/Disable Debug Privilege
 	if (!SetPrivilege( hToken, SE_DEBUG_NAME, bEnable ))
 	{
 		CloseHandle( hToken );
-		return FALSE;
+		return false;
 	}
+
 	CloseHandle( hToken );
-	return TRUE;
+	return true;
 }
 
 
-BOOLEAN IsWindowsVersionOrLater( OSType target )
+bool IsWindowsVersionOrLater( OSType target )
 {
+    DWORDLONG Mask = 0;
+    RTL_OSVERSIONINFOEXW versionInfo;
+
+    ZeroMemory( &versionInfo, sizeof( versionInfo ) );
+    versionInfo.dwOSVersionInfoSize = sizeof( RTL_OSVERSIONINFOEXW );
+
 	if (target == Windows10)
 	{
-		RTL_OSVERSIONINFOEXW verInfo = { 0 };
-		verInfo.dwOSVersionInfoSize = sizeof( verInfo );
+		if (ntdll::RtlGetVersion && ntdll::RtlGetVersion( (PRTL_OSVERSIONINFOW)&versionInfo ) == 0)
+			return (versionInfo.dwMajorVersion == 10);
 
-		if (ntdll::RtlGetVersion != nullptr && ntdll::RtlGetVersion( (PRTL_OSVERSIONINFOW)&verInfo ) == 0)
-		{
-			return (verInfo.dwMajorVersion == 10);
-		}
-		return FALSE;
+		return false;
 	}
-
-	OSVERSIONINFOEX info;
-	memset( &info, 0, sizeof( OSVERSIONINFOEX ) );
-	info.dwOSVersionInfoSize = sizeof( OSVERSIONINFOEX );
 
 	if (target >= WinVista)
 	{
-		info.dwMajorVersion = 6;
+        versionInfo.dwMajorVersion = 6;
 
 		switch (target)
 		{
-		case WinVista:   info.dwMinorVersion = 0; break;
-		case Windows7:   info.dwMinorVersion = 1; break;
-		case Windows8:	  info.dwMinorVersion = 2; break;
-		default: break;
+		case WinVista:  versionInfo.dwMinorVersion = 0; break;
+		case Windows7:  versionInfo.dwMinorVersion = 1; break;
+		case Windows8:  versionInfo.dwMinorVersion = 2; break;
+		default: 
+            break;
 		}
 	}
 	else
 	{
-		info.dwMajorVersion = 5;
-		info.dwMinorVersion = target >= WinXP ? 1 : 0;
+        versionInfo.dwMajorVersion = 5;
+        versionInfo.dwMinorVersion = (target >= WinXP) ? 1 : 0;
 	}
 
-	DWORDLONG mask = 0;
-
-	VER_SET_CONDITION( mask, VER_MAJORVERSION, VER_GREATER_EQUAL );
-	VER_SET_CONDITION( mask, VER_MINORVERSION, VER_GREATER_EQUAL );
-	VER_SET_CONDITION( mask, VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL );
-	VER_SET_CONDITION( mask, VER_SERVICEPACKMINOR, VER_GREATER_EQUAL );
-
-	return VerifyVersionInfo( &info, VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR, mask ) != FALSE;
+	VER_SET_CONDITION( Mask, VER_MAJORVERSION, VER_GREATER_EQUAL );
+	VER_SET_CONDITION( Mask, VER_MINORVERSION, VER_GREATER_EQUAL );
+	VER_SET_CONDITION( Mask, VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL );
+	VER_SET_CONDITION( Mask, VER_SERVICEPACKMINOR, VER_GREATER_EQUAL );
+	return VerifyVersionInfoW( &versionInfo, VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR, Mask ) != FALSE;
 }
 
 OSType GetOperatingSystemType( )
 {
-	const OSType types[] = { Windows10, Windows8, Windows7, WinVista, WinXP, Win2000 };
-	for (int i = 0; i < _countof( types ); ++i)
-		if (IsWindowsVersionOrLater( types[i] ))
-			return types[i];
+	const OSType osTypes[] = { Windows10, Windows8, Windows7, WinVista, WinXP, Win2000 };
+    for (int i = 0; i < _countof( osTypes ); ++i)
+    {
+        if (IsWindowsVersionOrLater( osTypes[i] ))
+            return osTypes[i];
+    }
 	return UnknownOS;
 }
 
 LONG GetProcessorArchitecture( )
 {
 	static LONG volatile nProcessorArchitecture = -1;
+
 	if (nProcessorArchitecture == -1)
 	{
 		SYSTEM_PROCESSOR_INFORMATION sProcInfo;
-		NTSTATUS nNtStatus;
+		NTSTATUS Status = STATUS_NOT_IMPLEMENTED;
 
-		nNtStatus = ntdll::RtlGetNativeSystemInformation != nullptr ?
-			ntdll::RtlGetNativeSystemInformation( (SYSTEM_INFORMATION_CLASS)SystemProcessorInformation, &sProcInfo, sizeof( sProcInfo ), NULL ) : STATUS_NOT_IMPLEMENTED;
-		if (nNtStatus == STATUS_NOT_IMPLEMENTED)
-		{
-			//tNtQuerySystemInformation fnQuerySystemInformation = (tNtQuerySystemInformation)Utils::GetLocalProcAddress(Utils::GetLocalModuleHandle("ntdll.dll"), "NtQuerySystemInformation");
-			nNtStatus = ntdll::NtQuerySystemInformation( (SYSTEM_INFORMATION_CLASS)SystemProcessorInformation, &sProcInfo, sizeof( sProcInfo ), NULL );
-		}
-		if (NT_SUCCESS( nNtStatus ))
-			InterlockedExchange( &nProcessorArchitecture, (LONG)(sProcInfo.ProcessorArchitecture) );
+        if (ntdll::RtlGetNativeSystemInformation != NULL)
+        {
+            Status = ntdll::RtlGetNativeSystemInformation( SystemProcessorInformation, &sProcInfo, sizeof( sProcInfo ), NULL );
+        }
+
+        if (Status == STATUS_NOT_IMPLEMENTED)
+        {
+            Status = ntdll::NtQuerySystemInformation( SystemProcessorInformation, &sProcInfo, sizeof( sProcInfo ), NULL );
+        }
+
+        if (NT_SUCCESS( Status ))
+        {
+            InterlockedExchange( &nProcessorArchitecture, (LONG)(sProcInfo.ProcessorArchitecture) );
+        }
 	}
 	return nProcessorArchitecture;
 }
 
 int GetProcessPlatform( HANDLE hProcess )
 {
+    PVOID Wow64Info;
+    NTSTATUS Status;
+
 	if (hProcess == (HANDLE)((LONG_PTR)-1))
 	{
-		#if defined(_M_IX86)
-		return 1; // ProcessPlatformX86;
-		#elif defined(_M_X64)
-		return 2; // ProcessPlatformX64
+		#if defined(_M_X64)
+        return ProcessPlatformX64;
+        #else
+        return ProcessPlatformX86;
 		#endif
 	}
+
 	switch (Utils::GetProcessorArchitecture( ))
 	{
 	case PROCESSOR_ARCHITECTURE_INTEL:
 		return ProcessPlatformX86;
 	case PROCESSOR_ARCHITECTURE_AMD64:
 		//check on 64-bit platforms
-		ULONG_PTR nWow64;
-		NTSTATUS nNtStatus;
-
-		nNtStatus = ntdll::NtQueryInformationProcess( hProcess, ProcessWow64Information, &nWow64, sizeof( nWow64 ), NULL );
-		if (NT_SUCCESS( nNtStatus ))
+        Status = ntdll::NtQueryInformationProcess( hProcess, ProcessWow64Information, &Wow64Info, sizeof( Wow64Info ), NULL );
+		if (NT_SUCCESS( Status ))
 		{
-			#ifdef _WIN64
-			return (nWow64 != 0) ? ProcessPlatformX86 : ProcessPlatformX64;
+            #if defined(_M_X64)
+            return (Wow64Info != NULL) ? ProcessPlatformX86 : ProcessPlatformX64;      	
 			#else
-			return (nWow64 == 0) ? ProcessPlatformX64 : ProcessPlatformX86;
+            return (Wow64Info == NULL) ? ProcessPlatformX64 : ProcessPlatformX86;
 			#endif
 		}
-		#ifdef _WIN64
-		return ProcessPlatformX64;
+
+        #if defined(_M_X64)
+        return ProcessPlatformX64;      
 		#else
-		return ProcessPlatformX86;
+        return ProcessPlatformX86;
 		#endif
-		break;
-		//case PROCESSOR_ARCHITECTURE_IA64:
-		//case PROCESSOR_ARCHITECTURE_ALPHA64:
+
+    //case PROCESSOR_ARCHITECTURE_IA64:
+    //case PROCESSOR_ARCHITECTURE_ALPHA64:
 	}
-	return STATUS_NOT_SUPPORTED;
+
+	return ProcessPlatformNotSupported;
 }
 
 HANDLE NtCreateThreadEx( HANDLE hProcess, LPVOID lpRemoteThreadStart, LPVOID lpParam, DWORD createFlags, DWORD* threadId )
 {
-	if (ntdll::NtCreateThreadEx == nullptr)
+    PS_ATTRIBUTE_LIST attrList;
+    CLIENT_ID clientId;
+    HANDLE hThread;
+
+	if (ntdll::NtCreateThreadEx == NULL)
 		return NULL;
 
-	PS_ATTRIBUTE_LIST attrList = { 0 };
-	CLIENT_ID cid = { 0 };
-
+    ZeroMemory( &attrList, sizeof( attrList ) );
 	attrList.Attributes[0].Attribute = ProcThreadAttributeValue( PsAttributeClientId, TRUE, FALSE, FALSE );
 	attrList.Attributes[0].Size = sizeof( CLIENT_ID );
-	attrList.Attributes[0].ValuePtr = (ULONG_PTR *)&cid;
+	attrList.Attributes[0].ValuePtr = (ULONG_PTR *)&clientId;
 	attrList.TotalLength = sizeof( PS_ATTRIBUTE_LIST );
 
-	HANDLE hRemoteThread = NULL;
-	HRESULT hRes = 0;
-
-	if (!NT_SUCCESS( ntdll::NtCreateThreadEx( &hRemoteThread, THREAD_ALL_ACCESS, NULL, hProcess, lpRemoteThreadStart, lpParam, createFlags, 0, 0x1000, 0x100000, &attrList ) ))
+	if (!NT_SUCCESS( ntdll::NtCreateThreadEx( &hThread, THREAD_ALL_ACCESS, NULL, hProcess, lpRemoteThreadStart, lpParam, createFlags, 0, 0x1000, 0x100000, &attrList ) ))
 		return NULL;
 
-	if (threadId) *threadId = (DWORD)cid.UniqueThread;
+	if (threadId) 
+        *threadId = (DWORD)clientId.UniqueThread;
 
-	return hRemoteThread;
+	return hThread;
 }
 
 HANDLE NtCreateThread( LPVOID lpRemoteThreadStart, LPVOID lpParam, DWORD createFlags, DWORD* threadId )

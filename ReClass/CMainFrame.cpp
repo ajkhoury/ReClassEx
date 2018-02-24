@@ -445,8 +445,7 @@ BOOL CMainFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
         if ((nID >= WM_CLASSMENU) && (nID < (WM_CLASSMENU + WM_MAXITEMS)))
         {       
             pChildClassFrame = STATIC_DOWNCAST( CClassFrame, 
-                CreateNewChild( RUNTIME_CLASS( CClassFrame ), 
-                    IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
+                CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClassExTYPE, g_ReClassApp.m_hMdiMenu, g_ReClassApp.m_hMdiAccel ) );
 
             pClass = g_ReClassApp.m_Classes[nID - WM_CLASSMENU];
 

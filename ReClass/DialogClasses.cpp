@@ -110,8 +110,7 @@ void CDialogClasses::OnOK( )
 		else
 		{
 			CClassFrame* pNewChildClassFrame = STATIC_DOWNCAST( CClassFrame, 
-                pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), 
-                    IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
+                pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClassExTYPE, g_ReClassApp.m_hMdiMenu, g_ReClassApp.m_hMdiAccel ) );
             pNewChildClassFrame->SetClass( g_ReClassApp.m_Classes[nItem] );
             pNewChildClassFrame->SetTitle( g_ReClassApp.m_Classes[nItem]->GetName( ) );
             pNewChildClassFrame->SetWindowText( g_ReClassApp.m_Classes[nItem]->GetName( ) );

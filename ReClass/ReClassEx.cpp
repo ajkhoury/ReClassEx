@@ -191,8 +191,9 @@ BOOL CReClassExApp::InitInstance( )
 	g_ViewFontName = _T( "Terminal" );
 
 	HINSTANCE hInst = AfxGetInstanceHandle( );
-	m_hMDIMenu = ::LoadMenu( hInst, MAKEINTRESOURCE( IDR_ReClass2016TYPE ) );
-	m_hMDIAccel = ::LoadAccelerators( hInst, MAKEINTRESOURCE( IDR_ReClass2016TYPE ) );
+
+	m_hMdiMenu = ::LoadMenu( hInst, MAKEINTRESOURCE( IDR_ReClassExTYPE ) );
+	m_hMdiAccel = ::LoadAccelerators( hInst, MAKEINTRESOURCE( IDR_ReClassExTYPE ) );
 
 	#define PushIcon(id) g_Icons.emplace_back(::LoadIcon(hInst, MAKEINTRESOURCE(id)));
 	PushIcon( IDI_ICON_OPEN );
@@ -220,26 +221,30 @@ BOOL CReClassExApp::InitInstance( )
 	PushIcon( IDI_ICON_CAMERA );
 	#undef PushIcon
 
-	CMainFrame* pFrame = new CMainFrame( );
-	if (!pFrame || !pFrame->LoadFrame( IDR_MAINFRAME ))
+	CMainFrame* pMainFrame = new CMainFrame( );
+	if (!pMainFrame || !pMainFrame->LoadFrame( IDR_MAINFRAME ))
 		return FALSE;
 
-	m_pMainWnd = pFrame;
+	m_pMainWnd = pMainFrame;
 
-	pFrame->m_hMenuDefault = m_hMDIMenu;
-	pFrame->m_hAccelTable = m_hMDIAccel;
+	pMainFrame->m_hMenuDefault = m_hMdiMenu;
+	pMainFrame->m_hAccelTable = m_hMdiAccel;
 
-	pFrame->ShowWindow( m_nCmdShow );
-	pFrame->UpdateWindow( );
+	pMainFrame->ShowWindow( m_nCmdShow );
+	pMainFrame->UpdateWindow( );
 
+    //
 	// Fix for 4k monitors
+    //
 	ResizeMemoryFont( g_FontWidth, g_FontHeight );
 
 	g_hProcess = NULL;
 	g_ProcessID = NULL;
 	g_AttachedProcessAddress = NULL;
 
+    //
 	// Initialize the Scintilla editor
+    //
 	if (!Scintilla_RegisterClasses( m_hInstance ))
 	{
 		AfxMessageBox( _T( "Scintilla failed to initiailze" ) );
@@ -273,14 +278,26 @@ BOOL CReClassExApp::InitInstance( )
 
 int CReClassExApp::ExitInstance( )
 {
+    //
+    // Unload any loaded plugins
+    //
+    UnloadPlugins( );
+
 	//
 	// Free resources
-	if (m_hMDIMenu != NULL)
-		FreeResource( m_hMDIMenu );
+    //
+    if (m_hMdiMenu != NULL)
+    {
+        FreeResource( m_hMdiMenu );
+        m_hMdiMenu = NULL;
+    }	
 
-	if (m_hMDIAccel != NULL)
-		FreeResource( m_hMDIAccel );
-
+    if (m_hMdiAccel != NULL)
+    {
+        FreeResource( m_hMdiAccel );
+        m_hMdiAccel = NULL;
+    }
+		
 	if (m_pConsole)
 	{
 		delete m_pConsole;
@@ -297,10 +314,12 @@ int CReClassExApp::ExitInstance( )
 
 	//
 	// Release Scintilla
+    //
 	Scintilla_ReleaseResources( );
 
 	//
 	// Write settings to profile
+    //
 	WriteProfileString( _T( "Typedefs" ), _T( "Hex" ),			g_tdHex );
 	WriteProfileString( _T( "Typedefs" ), _T( "Int64" ),		g_tdInt64 );
 	WriteProfileString( _T( "Typedefs" ), _T( "Int32" ),		g_tdInt32 );
@@ -352,11 +371,10 @@ int CReClassExApp::ExitInstance( )
 
 	WriteProfileInt( _T( "Class Generation" ), _T( "PrivatePadding" ), g_bPrivatePadding );
 	WriteProfileInt( _T( "Class Generation" ), _T( "ClipboardCopy" ), g_bClipboardCopy );
-
-	//
-	// Unload any loaded plugins
-	UnloadPlugins( );
-
+    
+    //
+    // Exit application instance.
+    //
 	return CWinAppEx::ExitInstance( );
 }
 
@@ -436,10 +454,13 @@ void CReClassExApp::CalcAllOffsets( )
 void CReClassExApp::OnFileNew( )
 {
 	CMainFrame* pMainFrame = STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
-	CClassFrame* pChildClassFrame = STATIC_DOWNCAST( CClassFrame, pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
-	CNodeClass* pClass = new CNodeClass;
-
-	pClass->m_pChildClassFrame = pChildClassFrame;
+	
+    CClassFrame* pChildClassFrame = STATIC_DOWNCAST( CClassFrame, 
+        pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClassExTYPE, m_hMdiMenu, m_hMdiAccel ) );
+	
+    CNodeClass* pClass = new CNodeClass;
+	
+    pClass->m_pChildClassFrame = pChildClassFrame;
     pChildClassFrame->SetClass( pClass );
 	g_ReClassApp.m_Classes.push_back( pClass );
 	
@@ -592,8 +613,11 @@ bool CReClassExApp::IsNodeValid( CNodeBase* pCheckNode )
 void CReClassExApp::OnButtonNewClass( )
 {
 	CMainFrame* pMainFrame = STATIC_DOWNCAST( CMainFrame, m_pMainWnd );
-	CClassFrame* pChildClassFrame = STATIC_DOWNCAST( CClassFrame, pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClass2016TYPE, m_hMDIMenu, m_hMDIAccel ) );
-	CNodeClass* pNewClass = new CNodeClass;
+	
+    CClassFrame* pChildClassFrame = STATIC_DOWNCAST( CClassFrame, 
+        pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClassExTYPE, m_hMdiMenu, m_hMdiAccel ) );
+	
+    CNodeClass* pNewClass = new CNodeClass;
 
     pNewClass->SetChildClassFrame( pChildClassFrame );
     pNewClass->m_Idx = g_ReClassApp.m_Classes.size( );

@@ -52,8 +52,8 @@ public:
 
 	void SaveXML( TCHAR* FileName );
 
-	HMENU  m_hMDIMenu;
-	HACCEL m_hMDIAccel;
+	HMENU  m_hMdiMenu;
+	HACCEL m_hMdiAccel;
 
 	UINT  m_nAppLook;
 	BOOL  m_bHiColorIcons;

@@ -136,10 +136,10 @@ inline int CDialogModules::FindModuleByName( const TCHAR* szName )
 	return -1;
 }
 
-__inline CNodeClass* CDialogModules::GetClassByName( const TCHAR* szClassName )
+inline CNodeClass* CDialogModules::GetClassByName( const TCHAR* szClassName )
 {
 	auto iter = std::find_if( g_ReClassApp.m_Classes.begin( ), g_ReClassApp.m_Classes.end( ), 
-							  [szClassName] ( const CNodeClass* value ) -> bool { return (value->GetName( ).CompareNoCase( szClassName ) == 0); } );
+							  [szClassName] ( const CNodeClass* pNode ) -> bool { return (pNode->GetName( ).CompareNoCase( szClassName ) == 0); } );
 	return (iter != g_ReClassApp.m_Classes.end( )) ? *iter : NULL;
 }
 
@@ -178,8 +178,7 @@ void CDialogModules::SetSelected( )
 			else
 			{
 				CClassFrame* pNewChildClassFrame = STATIC_DOWNCAST( CClassFrame, 
-                    pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), 
-                        IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ) );
+                    pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClassExTYPE, g_ReClassApp.m_hMdiMenu, g_ReClassApp.m_hMdiAccel ) );
 
                 pNewChildClassFrame->SetClass( pNewClass );
                 pNewChildClassFrame->SetTitle( pNewClass->GetName( ) );
@@ -194,14 +193,13 @@ void CDialogModules::SetSelected( )
 		{
 			CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetApp( )->m_pMainWnd);
 			CClassFrame* pChildClassFrame = STATIC_DOWNCAST( CClassFrame, 
-                pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), 
-                    IDR_ReClass2016TYPE, g_ReClassApp.m_hMDIMenu, g_ReClassApp.m_hMDIAccel ));
+                pMainFrame->CreateNewChild( RUNTIME_CLASS( CClassFrame ), IDR_ReClassExTYPE, g_ReClassApp.m_hMdiMenu, g_ReClassApp.m_hMdiAccel ));
 
 			pNewClass = new CNodeClass;
 			pNewClass->SetName( ClassName );
 
 			TCHAR strStart[64];
-			_stprintf( strStart, _T( "%IX" ), mod.Start );
+			_stprintf_s( strStart, 64, _T( "%IX" ), mod.Start );
 			pNewClass->SetOffsetString( strStart );
 			pNewClass->SetOffset( mod.Start );
 			pNewClass->m_pChildClassFrame = pChildClassFrame;
@@ -230,12 +228,12 @@ void CDialogModules::SetSelected( )
 
 int CALLBACK CDialogModules::CompareFunction( LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort )
 {
-	COMPARESTRUCT* compare = (COMPARESTRUCT*)lParamSort;
-	if (compare)
+	LPCOMPARESTRUCT Compare = (LPCOMPARESTRUCT)lParamSort;
+	if (Compare)
 	{
-		CListCtrl* pListCtrl = (CListCtrl*)compare->pListCtrl;
-		int column = compare->iColumn;
-		bool ascending = compare->bAscending;
+		CListCtrl* pListCtrl = (CListCtrl*)Compare->pListCtrl;
+		int column = Compare->iColumn;
+		bool ascending = Compare->bAscending;
 
 		int item1 = ascending ? static_cast<int>(lParam1) : static_cast<int>(lParam2);
 		int item2 = ascending ? static_cast<int>(lParam2) : static_cast<int>(lParam1);

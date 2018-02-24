@@ -37,12 +37,11 @@ private:
 	int FindModuleByName( const TCHAR* szName );
 	CNodeClass* GetClassByName( const TCHAR* szClassName );
 
-	typedef struct COMPARESTRUCT
-	{
+	typedef struct _COMPARESTRUCT {
 		CListCtrl* pListCtrl;
 		int iColumn;
 		bool bAscending;
-	} *LPCOMPARESTRUCT;
+	} COMPARESTRUCT, *LPCOMPARESTRUCT;
 
 	static int CALLBACK CompareFunction( LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort );
 

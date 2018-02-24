@@ -69,7 +69,7 @@ LoadPlugins(
 
             PluginSettingDlgFunction = (DLGPROC)GetProcAddress( PluginBase, "PluginSettingsDlg" );
 
-			Plugin = new RECLASS_PLUGIN;
+			Plugin = (PRECLASS_PLUGIN)_aligned_malloc( sizeof( RECLASS_PLUGIN ), 16 );
 			wcscpy_s( Plugin->FileName, FileData.cFileName );
 			Plugin->LoadedBase = PluginBase;
 			Plugin->InitFunction = PluginInitFunction;
@@ -78,17 +78,13 @@ LoadPlugins(
 
 			if (PluginInitFunction( &Plugin->Info ))
 			{
-				#ifdef UNICODE
-				Plugin->State = g_ReClassApp.GetProfileInt( L"PluginState", Plugin->Info.Name, 1 ) == 1;
-				#else
-				Plugin->State = g_ReClassApp.GetProfileInt( "PluginState", CW2A( Plugin->Info.Name ), 1 ) == 1;
-				#endif
+				Plugin->State = g_ReClassApp.GetProfileIntW( L"PluginState", Plugin->Info.Name, 1 ) == 1;
 
 				if (Plugin->Info.DialogId == -1)
-					Plugin->SettingDlgFunction = nullptr;
+					Plugin->SettingDlgFunction = NULL;
 
 				PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), FileData.cFileName, Plugin->Info.Name, Plugin->Info.Version, Plugin->Info.About );
-				if (Plugin->StateChangeFunction != nullptr)
+				if (Plugin->StateChangeFunction)
 					Plugin->StateChangeFunction( Plugin->State );
 
 				g_LoadedPlugins.push_back( Plugin );
@@ -110,7 +106,7 @@ UnloadPlugins(
 	for (PRECLASS_PLUGIN Plugin : g_LoadedPlugins)
 	{
 		FreeLibrary( Plugin->LoadedBase );
-		delete Plugin;
+		_aligned_free( Plugin );
 	}
 	g_LoadedPlugins.clear( );
 }

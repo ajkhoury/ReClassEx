@@ -28,8 +28,8 @@ PVOID GetLocalModuleBaseW( LPCWSTR ModuleName );
 #define GetLocalProcAddress GetLocalProcAddressA
 #endif
 
-BOOLEAN SetPrivilege( HANDLE hToken, LPCTSTR lpPrivilege, BOOLEAN bEnablePrivilege );
-BOOLEAN SetDebugPrivilege( BOOLEAN bEnable );
+bool SetPrivilege( HANDLE hToken, LPCTSTR lpPrivilege, BOOLEAN bEnablePrivilege );
+bool SetDebugPrivilege( BOOLEAN bEnable );
 
 
 #ifdef _DEBUG
@@ -43,8 +43,7 @@ static bool CreateDbgConsole( const TCHAR* lpConsoleTitle )
 	{
 		if (!AllocConsole( ))
 			return false;
-		errno_t ret = freopen_s( &ConsoleStream, "CONOUT$", "w", stdout );
-		if (ret != 0)
+		if (freopen_s( &ConsoleStream, "CONOUT$", "w", stdout ) != ERROR_SUCCESS)
 			return false;
 		SetConsoleTitle( lpConsoleTitle );
 	}
@@ -67,74 +66,72 @@ static CString GetLastErrorString( )
 }
 #endif
 
-static size_t FindPattern( size_t start_offset, DWORD size, unsigned char pattern[], int n )
+static size_t FindPattern( size_t startAddress, unsigned int searchSize, unsigned char pattern[], int patternSize )
 {
-	//printf("n = %i\n", n);
-	char mask[256];
-	for (int i = 0; i <= n; i++)
-	{
-		if (i == n) mask[i] = '\0';
-		else if (pattern[i] == 0xCC) mask[i] = '?';
-		else mask[i] = 'x';
-	}
+    ULONG pos = 0;
+    PUCHAR start = (PUCHAR)startAddress;
+    PUCHAR end = start + searchSize - patternSize;
+    PUCHAR ptr;
 
-	int pos = 0;
-	int searchLen = (int)strlen( mask ) - 1;
-	for (size_t retAddress = start_offset; retAddress < start_offset + size; retAddress++)
-	{
-		if (*(BYTE*)retAddress == pattern[pos] || mask[pos] == '?')
-		{
-			if (mask[pos + 1] == '\0')
-				return (retAddress - searchLen);
-			pos++;
-		}
-		else
-			pos = 0;
-	}
-	return NULL;
+    for (ptr = start; ptr <= end; ptr++)
+    {
+        if (*ptr == pattern[pos] || pattern[pos] == 0xCC)
+        {
+            if (++pos == patternSize)
+                return (ULONG_PTR)ptr - searchSize;
+        }
+        else
+        {
+            pos = 0;
+        }
+    }
+
+    return 0;
 }
 
-template<int N> __inline size_t FindPattern( size_t start_offset, DWORD size, unsigned char( &pattern )[N] )
+template<int N> 
+inline size_t FindPattern( size_t startAddress, unsigned int searchSize, unsigned char( &pattern )[N] )
 {
-	return FindPattern( start_offset, size, pattern, N );
+	return FindPattern( startAddress, searchSize, pattern, N );
 }
 
 static CString GetVersionInfo( const TCHAR* versionKey )
 {
-	CString strResult;
-	HRSRC hVersion = FindResource( NULL, MAKEINTRESOURCE( VS_VERSION_INFO ), VS_FILE_INFO );
+    HRSRC hVersion;
+    HGLOBAL hGlobal;
+    LPVOID lpVersionInfo;
+
+    struct LANGANDCODEPAGE {
+        WORD wLanguage;
+        WORD wCodePage;
+    } *lpTranslate;
+    UINT uiSize;
+    
+    BYTE* lpData;
+    CString strQuery;
+
+    CString strResult;
+
+	hVersion = FindResource( NULL, MAKEINTRESOURCE( VS_VERSION_INFO ), VS_FILE_INFO );
 	if (hVersion != NULL)
 	{
-		HGLOBAL hGlobal = LoadResource( NULL, hVersion );
+		hGlobal = LoadResource( NULL, hVersion );
 		if (hGlobal != NULL)
 		{
-			LPVOID versionInfo = LockResource( hGlobal );
-			if (versionInfo != NULL)
-			{
-				struct LANGANDCODEPAGE
+            lpVersionInfo = LockResource( hGlobal );
+			if (lpVersionInfo != NULL)
+			{          
+				if (VerQueryValue( lpVersionInfo, _T( "\\VarFileInfo\\Translation" ), (LPVOID*)&lpTranslate, &uiSize ) && uiSize > 0)
 				{
-					WORD wLanguage;
-					WORD wCodePage;
-				} *lpTranslate;
-
-				UINT uiSize;
-
-				if (VerQueryValue( versionInfo, _T( "\\VarFileInfo\\Translation" ), (LPVOID*)&lpTranslate, &uiSize ) && uiSize > 0)
-				{
-					// Version information
-					BYTE* lpb;
-					CString strQuery;
+					// Version information			
 					strQuery.Format( _T( "\\StringFileInfo\\%04x%04x\\%s" ), lpTranslate->wLanguage, lpTranslate->wCodePage, versionKey );
-					if (VerQueryValue( versionInfo, strQuery.GetString( ), (LPVOID*)&lpb, &uiSize ) && uiSize > 0)
-					{
-						strResult = (LPCTSTR)lpb;
-					}
+					if (VerQueryValue( lpVersionInfo, strQuery.GetString( ), (LPVOID*)&lpData, &uiSize ) && uiSize > 0)
+						strResult = (LPCTSTR)lpData;
 				}
+                ::UnlockResource( hGlobal );
 			}
-		}
-
-		UnlockResource( hGlobal );
-		FreeResource( hGlobal );
+            ::FreeResource( hGlobal );
+		}		
 	}
 
 	return strResult;
@@ -168,8 +165,7 @@ static T* GenerateRandomString( T* RandomString, ULONG Length )
 	return RandomString;
 }
 
-enum OSType
-{
+enum OSType {
 	UnknownOS = 0,
 	Win2000 = 0x4105,
 	WinXP = 0x4106,
@@ -177,19 +173,17 @@ enum OSType
 	Windows7 = 0x4108,
 	Windows8 = 0x4109,
 	Windows10 = 0x4110,
-
-	Windows = 0x4000,   /**< To test whether any version of Windows is running,
-						you can use the expression ((getOperatingSystemType() & Windows) != 0). */
+	Windows = 0x4000,
 };
 
-enum PlatformType
-{
-	UnknownPlatform = 0,
-	ProcessPlatformX86 = 1,
-	ProcessPlatformX64 = 2
+enum PlatformType {
+    UnknownPlatform = 0,
+    ProcessPlatformX86 = 1,
+    ProcessPlatformX64 = 2,
+    ProcessPlatformNotSupported = -1
 };
 
-BOOLEAN IsWindowsVersionOrLater( OSType target );
+bool IsWindowsVersionOrLater( OSType target );
 LONG GetProcessorArchitecture( );
 OSType GetOperatingSystemType( );
 int GetProcessPlatform( HANDLE hProcess );

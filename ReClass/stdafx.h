@@ -285,7 +285,7 @@ static TCHAR s_ReClassLogBuf[1024]; \
 #define PrintOut(fmt, ...) { \
 do { \
 	if (fmt) { \
-		_sntprintf(s_ReClassLogBuf, 1024, fmt, ##__VA_ARGS__); \
+		_sntprintf_s(s_ReClassLogBuf, 1024, fmt, ##__VA_ARGS__); \
 		g_ReClassApp.m_pConsole->PrintText(s_ReClassLogBuf); \
 	} \
 } while (0);\
