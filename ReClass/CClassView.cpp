@@ -582,8 +582,8 @@ void CClassView::OnLButtonDown( UINT nFlags, CPoint point )
             if ((m_Hotspots[i].Type == HS_CHANGE_A) || (m_Hotspots[i].Type == HS_CHANGE_X))
             {
                 CMenu Menu;
-                CImage img;
-                CBitmap bmp;
+                HBITMAP hClassBitmap;
+                CBitmap Bmp;
 
                 std::vector<std::pair<CString, size_t>> ClassRefs;
 
@@ -599,9 +599,9 @@ void CClassView::OnLButtonDown( UINT nFlags, CPoint point )
 
                 Menu.CreatePopupMenu( );
 
-                img.LoadFromResource( AfxGetResourceHandle( ), IDB_CLASSBITMAP );
-
-                bmp.Attach( img.Detach( ) );
+                hClassBitmap = (HBITMAP)::LoadImage( AfxGetResourceHandle( ), MAKEINTRESOURCE( IDB_CLASSBITMAP ), 
+                                                        IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION );
+                Bmp.Attach( hClassBitmap );
 
                 for (m = 0; m < g_ReClassApp.m_Classes.size( ); m++)
                 {
@@ -620,11 +620,11 @@ void CClassView::OnLButtonDown( UINT nFlags, CPoint point )
                     for (j = 0; j < out[s].second.size( ); j++)
                     {
                         MenuInner.AppendMenu( MF_STRING | MF_ENABLED, WM_CHANGECLASSMENU + out[s].second[j].second, out[s].second[j].first );
-                        MenuInner.SetMenuItemBitmaps( (UINT)j, MF_BYPOSITION, &bmp, &bmp );
+                        MenuInner.SetMenuItemBitmaps( (UINT)j, MF_BYPOSITION, &Bmp, &Bmp );
                     }
 
                     Menu.AppendMenu( MF_POPUP, (UINT_PTR)MenuInner.m_hMenu, CString( out[s].first ) );
-                    Menu.SetMenuItemBitmaps( (UINT)s, MF_BYPOSITION, &bmp, &bmp );
+                    Menu.SetMenuItemBitmaps( (UINT)s, MF_BYPOSITION, &Bmp, &Bmp );
                 }
 
                 Menu.TrackPopupMenu( TPM_LEFTALIGN | TPM_NOANIMATION, pos.left, pos.bottom, this );
