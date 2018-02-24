@@ -370,14 +370,14 @@ UndecorateSymbolName(
         {
             if (pfUnDname( outputString, name, maxStringLength - 1, AllocIt, FreeIt, (USHORT)flags ))
             {
-                rc = strlen( outputString );
+                rc = (DWORD)strlen( outputString );
             }
         }     
     }
     else
     {
         strncpy_s( outputString, maxStringLength, "Unable to load msvcrt!__unDName", maxStringLength );
-        rc = strlen( outputString );
+        rc = (DWORD)strlen( outputString );
         SetLastError( ERROR_MOD_NOT_FOUND );
     }
 
