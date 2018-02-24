@@ -272,34 +272,34 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\Images\about.bmp" />
-    <None Include="..\Images\add.ico" />
-    <None Include="..\Images\array.ico" />
-    <None Include="..\Images\arrow_icon.ico" />
-    <None Include="..\Images\button.bmp" />
-    <None Include="..\Images\camera.ico" />
-    <None Include="..\Images\close.ico" />
-    <None Include="..\Images\closed.ico" />
-    <None Include="..\Images\custom.ico" />
-    <None Include="..\Images\enum.ico" />
-    <None Include="..\Images\exchange.ico" />
-    <None Include="..\Images\float.ico" />
-    <None Include="..\Images\general_class_VS.ico" />
-    <None Include="..\Images\general_interface_VS.ico" />
-    <None Include="..\Images\general_method_VS.ico" />
-    <None Include="..\Images\icon.bmp" />
-    <None Include="..\Images\icon.ico" />
-    <None Include="..\Images\left.ico" />
-    <None Include="..\Images\matrix.ico" />
-    <None Include="..\Images\open.ico" />
-    <None Include="..\Images\pointer.ico" />
-    <None Include="..\Images\reclass.png" />
-    <None Include="..\Images\right.ico" />
-    <None Include="..\Images\signed.ico" />
-    <None Include="..\Images\speles_random_ico.ico" />
-    <None Include="..\Images\text.ico" />
-    <None Include="..\Images\unsigned.ico" />
-    <None Include="..\Images\vector.ico" />
+    <None Include="res\icons\about.bmp" />
+    <None Include="res\icons\add.ico" />
+    <None Include="res\icons\array.ico" />
+    <None Include="res\icons\arrow_icon.ico" />
+    <None Include="res\icons\button.bmp" />
+    <None Include="res\icons\camera.ico" />
+    <None Include="res\icons\close.ico" />
+    <None Include="res\icons\closed.ico" />
+    <None Include="res\icons\custom.ico" />
+    <None Include="res\icons\enum.ico" />
+    <None Include="res\icons\exchange.ico" />
+    <None Include="res\icons\float.ico" />
+    <None Include="res\icons\general_class_VS.ico" />
+    <None Include="res\icons\general_interface_VS.ico" />
+    <None Include="res\icons\general_method_VS.ico" />
+    <None Include="res\icons\icon.bmp" />
+    <None Include="res\icons\icon.ico" />
+    <None Include="res\icons\left.ico" />
+    <None Include="res\icons\matrix.ico" />
+    <None Include="res\icons\open.ico" />
+    <None Include="res\icons\pointer.ico" />
+    <None Include="res\icons\reclass.png" />
+    <None Include="res\icons\right.ico" />
+    <None Include="res\icons\signed.ico" />
+    <None Include="res\icons\speles_random_ico.ico" />
+    <None Include="res\icons\text.ico" />
+    <None Include="res\icons\unsigned.ico" />
+    <None Include="res\icons\vector.ico" />
     <MASM Include="Intrinsics32.asm">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
