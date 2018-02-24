@@ -52,20 +52,24 @@ PVOID GetLocalModuleBaseA( LPCSTR ModuleName )
 
 PVOID GetLocalProcAddressA( PVOID ModuleBase, PCHAR ProcName )
 {
-	PIMAGE_NT_HEADERS NtHdr = NULL;
-	PIMAGE_EXPORT_DIRECTORY ExportDirectory = NULL;
-	ULONG ExportSize = 0;
-	PUSHORT OrdsTable = NULL;
-	PULONG NamesTable = NULL;
-	PULONG FuncsTable = NULL;
+    PIMAGE_DOS_HEADER DosHdr;
+	PIMAGE_NT_HEADERS NtHdr;
+	PIMAGE_EXPORT_DIRECTORY ExportDirectory;
+    ULONG ExportSize;
+	PUSHORT OrdsTable;
+	PULONG NamesTable;
+	PULONG FuncsTable;
 	
 	ULONG_PTR Address = 0;
 
-	if (ModuleBase == NULL)
+	if (!ModuleBase)
 		return NULL;
 
-	NtHdr = (PIMAGE_NT_HEADERS)ImageNtHeader( ModuleBase );
-	if (!NtHdr) // Not a PE file
+    DosHdr = (PIMAGE_DOS_HEADER)ModuleBase;
+    if (DosHdr->e_magic != IMAGE_DOS_SIGNATURE)
+        return NULL;
+	NtHdr = (PIMAGE_NT_HEADERS)((PCHAR)ModuleBase + DosHdr->e_lfanew);
+	if (NtHdr->Signature != IMAGE_NT_SIGNATURE) // Not a PE file
 		return NULL;
 
 	// 64 bit image

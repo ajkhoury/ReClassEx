@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "Symbols.h"
+
+
+
 #include <fstream>
 
 Symbols::Symbols( ) :
@@ -329,6 +332,108 @@ SymbolReader* Symbols::GetSymbolsForModuleName( CString ModuleName )
 	if (iter != m_SymbolNames.end( ))
 		script = iter->second;
 	return script;
+}
+
+typedef void*( CDECL * Alloc_t )(unsigned int);
+typedef void( CDECL * Free_t )(void *);
+typedef PCHAR( CDECL *PUNDNAME )(char *, const char *, int, Alloc_t, Free_t, unsigned short);
+
+void *CDECL AllocIt( unsigned int cb ) { return HeapAlloc( GetProcessHeap( ), 0, cb ); }
+void CDECL FreeIt( void * p ) { HeapFree( GetProcessHeap( ), 0, p ); }
+
+DWORD
+WINAPI
+UndecorateSymbolName(
+    LPCSTR name,
+    LPSTR outputString,
+    DWORD maxStringLength,
+    DWORD flags
+)
+{
+    static HMODULE hMsvcrt = NULL;
+    static PUNDNAME pfUnDname = NULL;
+
+    DWORD rc;
+
+    if (!hMsvcrt)
+    {
+        hMsvcrt = (HMODULE)Utils::GetLocalModuleBase( _T( "msvcrt.dll" ) );
+        if (hMsvcrt)
+            pfUnDname = (PUNDNAME)Utils::GetLocalProcAddress( hMsvcrt, _T( "__unDName" ) );
+    }
+
+    rc = 0;
+    
+    if (pfUnDname) 
+    {
+        if (name && outputString && maxStringLength >= 2)
+        {
+            if (pfUnDname( outputString, name, maxStringLength - 1, AllocIt, FreeIt, (USHORT)flags ))
+            {
+                rc = strlen( outputString );
+            }
+        }     
+    }
+    else
+    {
+        rc = strlen( strncpy( outputString, "Unable to load msvcrt!__unDName", maxStringLength ) );
+        SetLastError( ERROR_MOD_NOT_FOUND );
+    }
+
+    if (!rc)
+        SetLastError( ERROR_INVALID_PARAMETER );
+
+    return rc;
+}
+
+DWORD
+WINAPI
+UndecorateSymbolNameUnicode(
+    LPCWSTR name,
+    LPWSTR outputString,
+    DWORD maxStringLength,
+    DWORD flags
+)
+{
+    LPSTR AnsiName;
+    LPSTR AnsiOutputString;
+    int AnsiNameLength;
+    DWORD rc;
+
+    AnsiNameLength = WideCharToMultiByte( CP_ACP, WC_COMPOSITECHECK | WC_SEPCHARS, name, -1, NULL, 0, NULL, NULL );
+    if (!AnsiNameLength)
+        return 0;
+
+    AnsiName = (char *)AllocIt( AnsiNameLength );
+    if (!AnsiName)
+    {
+        SetLastError( ERROR_NOT_ENOUGH_MEMORY );
+        return 0;
+    }
+
+    ZeroMemory( AnsiName, 0, AnsiNameLength );
+    if (!WideCharToMultiByte( CP_ACP, WC_COMPOSITECHECK | WC_SEPCHARS, name, -1, AnsiName, AnsiNameLength, NULL, NULL ))
+    {
+        FreeIt( AnsiName );
+        return 0;
+    }
+
+    AnsiOutputString = (LPSTR)AllocIt( maxStringLength + 1 );
+    if (!AnsiOutputString)
+    {
+        FreeIt( AnsiName );
+        SetLastError( ERROR_NOT_ENOUGH_MEMORY );
+        return 0;
+    }
+
+    *AnsiOutputString = '\0';
+    rc = UndecorateSymbolName( AnsiName, AnsiOutputString, maxStringLength, flags );
+    MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, AnsiOutputString, -1, outputString, maxStringLength );
+
+    FreeIt( AnsiName );
+    FreeIt( AnsiOutputString );
+
+    return rc;
 }
 
 
