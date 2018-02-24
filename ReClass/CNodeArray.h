@@ -19,5 +19,5 @@ public:
 protected:
 	CNodeClass* m_pNode;
 	ULONG m_ulTotal;
-	int m_iCurrent;
+	INT m_iCurrent;
 };

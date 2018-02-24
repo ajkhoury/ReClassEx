@@ -11,15 +11,15 @@ public:
 
 	virtual void Update( const PHOTSPOT Spot );
 
-	inline size_t Count( void ) { return m_PtrCount; }
-    inline void SetCount( size_t Count ) { m_PtrCount = Count; }
+	inline ULONG Count( void ) { return m_ulPtrCount; }
+    inline void SetCount( ULONG Count ) { m_ulPtrCount = Count; }
 
-	void SetClass( CNodeClass* pNode ) { m_NodePtr->SetClass( pNode ); }
-	CNodeClass* GetClass( void ) { return m_NodePtr->GetClass( ); }
+	void SetClass( CNodeClass* pNode ) { m_pNodePtr->SetClass( pNode ); }
+	CNodeClass* GetClass( void ) { return m_pNodePtr->GetClass( ); }
 
 protected:
-	CNodePtr* m_NodePtr;
-	size_t m_PtrCount;
-	unsigned m_CurrentIndex = 0;
+	CNodePtr* m_pNodePtr;
+    ULONG m_ulPtrCount;
+	INT m_iCurrentIndex;
 };
 

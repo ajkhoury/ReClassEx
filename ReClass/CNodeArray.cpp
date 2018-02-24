@@ -10,25 +10,28 @@ CNodeArray::CNodeArray( )
 
 void CNodeArray::Update( const PHOTSPOT Spot )
 {
-    int IntValue;
+    LONG LongValue;
+    ULONG UlongValue;
 
 	StandardUpdate( Spot );
 
-    IntValue = _ttoi( Spot->Text.GetString( ) );
-	if (IntValue < 0)
+    LongValue = _ttol( Spot->Text.GetString( ) );
+	if (LongValue < 0)
 		return;
+
+    UlongValue = (ULONG)LongValue;
 
 	if (Spot->Id == 0)
 	{
-		if (IntValue == 0)
+		if (UlongValue == 0)
 			return;
-		m_ulTotal = (ULONG)IntValue;
+		m_ulTotal = UlongValue;
 	}
 	else if (Spot->Id == 1)
 	{
-		if (IntValue >= m_ulTotal)
+		if (UlongValue >= m_ulTotal)
 			return;
-		m_iCurrent = IntValue;
+		m_iCurrent = UlongValue;
 	}
 	else if (Spot->Id == 2)
 	{
@@ -37,7 +40,7 @@ void CNodeArray::Update( const PHOTSPOT Spot )
 	}
 	else if (Spot->Id == 3)
 	{
-		if ((ULONG)m_iCurrent < m_ulTotal - 1)
+		if (m_iCurrent < (INT)m_ulTotal - 1)
 			m_iCurrent++;
 	}
 }
@@ -70,7 +73,7 @@ NODESIZE CNodeArray::Draw( const PVIEWINFO View, int x, int y )
 	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Array " ) );
 	tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "[" ) );
-	tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%i" ), m_ulTotal );
+	tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%u" ), m_ulTotal );
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "]" ) );
 
 	tx = AddIcon( View, tx, y, ICON_LEFT, HS_SELECT, HS_CLICK );
@@ -79,7 +82,7 @@ NODESIZE CNodeArray::Draw( const PVIEWINFO View, int x, int y )
 	tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( ")" ) );
 	tx = AddIcon( View, tx, y, ICON_RIGHT, HS_DROP, HS_CLICK );
 
-	tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( "<%s Size=%i>" ), m_pNode->GetName( ), GetMemorySize( ) );
+	tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( "<%s Size=%u>" ), m_pNode->GetName( ), GetMemorySize( ) );
 	tx = AddIcon( View, tx, y, ICON_CHANGE, HS_CLICK, HS_CHANGE_X );
 
 	tx += g_FontWidth;

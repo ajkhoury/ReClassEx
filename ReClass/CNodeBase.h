@@ -133,15 +133,15 @@ public:
 	inline void SetParent( CNodeBase* newParentNode ) { m_pParentNode = newParentNode; }
 
 	inline void AddNode( CNodeBase* newNode ) { m_ChildNodes.push_back( newNode ); }
-	inline void InsertNode( int idx, CNodeBase* newNode ) { m_ChildNodes.insert( m_ChildNodes.begin( ) + idx, newNode ); }
-	inline CNodeBase* GetNode( int idx ) { return (CNodeBase*)m_ChildNodes[idx]; }
+	inline void InsertNode( size_t idx, CNodeBase* newNode ) { m_ChildNodes.insert( m_ChildNodes.begin( ) + idx, newNode ); }
+	inline CNodeBase* GetNode( size_t idx ) { return (CNodeBase*)m_ChildNodes[idx]; }
 	inline int FindNode( CNodeBase* pNode ) {
 		auto found = std::find( m_ChildNodes.begin( ), m_ChildNodes.end( ), pNode );
 		return (found != m_ChildNodes.end( )) ? (int)(found - m_ChildNodes.begin( )) : -1;
 	}
-	inline void SetNode( int idx, CNodeBase* newNode ) { m_ChildNodes[idx] = newNode; }
-	inline void DeleteNode( int idx ) { if (m_ChildNodes[idx]) { delete(m_ChildNodes[idx]); RemoveNode( idx ); } }
-	inline void RemoveNode( int idx ) { m_ChildNodes.erase( m_ChildNodes.begin( ) + idx ); }
+	inline void SetNode( size_t idx, CNodeBase* newNode ) { m_ChildNodes[idx] = newNode; }
+	inline void DeleteNode( size_t idx ) { if (m_ChildNodes[idx]) { delete(m_ChildNodes[idx]); RemoveNode( idx ); } }
+	inline void RemoveNode( size_t idx ) { m_ChildNodes.erase( m_ChildNodes.begin( ) + idx ); }
 	inline size_t NodeCount( ) const { return m_ChildNodes.size( ); }
 
 	inline bool IsHidden( ) { return m_bHidden; }

@@ -53,3 +53,4 @@ DriverPlugin_dbg.rc-plugin64d
 *.db-shm
 *.rc-plugin64d
 /ReClass/plugins/TestPlugin_dbg.lib
+*.tmp

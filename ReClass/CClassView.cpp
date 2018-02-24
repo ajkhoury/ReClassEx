@@ -620,11 +620,11 @@ void CClassView::OnLButtonDown( UINT nFlags, CPoint point )
                     for (j = 0; j < out[s].second.size( ); j++)
                     {
                         MenuInner.AppendMenu( MF_STRING | MF_ENABLED, WM_CHANGECLASSMENU + out[s].second[j].second, out[s].second[j].first );
-                        MenuInner.SetMenuItemBitmaps( j, MF_BYPOSITION, &bmp, &bmp );
+                        MenuInner.SetMenuItemBitmaps( (UINT)j, MF_BYPOSITION, &bmp, &bmp );
                     }
 
                     Menu.AppendMenu( MF_POPUP, (UINT_PTR)MenuInner.m_hMenu, CString( out[s].first ) );
-                    Menu.SetMenuItemBitmaps( s, MF_BYPOSITION, &bmp, &bmp );
+                    Menu.SetMenuItemBitmaps( (UINT)s, MF_BYPOSITION, &bmp, &bmp );
                 }
 
                 Menu.TrackPopupMenu( TPM_LEFTALIGN | TPM_NOANIMATION, pos.left, pos.bottom, this );

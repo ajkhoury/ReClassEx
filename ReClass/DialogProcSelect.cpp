@@ -290,14 +290,14 @@ void CDialogProcSelect::OnAttachButton( )
                     ProgressBar.SetStep( 1 );
                     ProgressBar.SetText( _T( "Symbols loading: " ) );
 
-					for (ULONG i = 0; i < g_MemMapModules.size( ); i++)
+					for (size_t i = 0; i < g_MemMapModules.size( ); i++)
 					{
 						TCHAR ProgressText[256];
 						MemMapInfo *CurrentModule = &g_MemMapModules[i];
 
                         ProgressBar.SetRange32( 0, (int)g_MemMapModules.size( ) );
 
-						_stprintf_s( ProgressText, _T( "[%d/%d] %s" ), i + 1, g_MemMapModules.size( ), CurrentModule->Name.GetString( ) );
+						_stprintf_s( ProgressText, _T( "[%d/%d] %s" ), (UINT)i + 1, (UINT)g_MemMapModules.size( ), CurrentModule->Name.GetString( ) );
                         StatusBar->SetPaneText( 1, ProgressText );
 
 						//MemMapInfo* pCurrentModule = new MemMapInfo( CurrentModule );

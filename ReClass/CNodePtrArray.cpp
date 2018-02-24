@@ -2,9 +2,9 @@
 #include "CNodePtrArray.h"
 
 CNodePtrArray::CNodePtrArray( )
-    : m_PtrCount( 1 )
-    , m_CurrentIndex( 0 )
-    , m_NodePtr( new CNodePtr )
+    : m_ulPtrCount( 1 )
+    , m_iCurrentIndex( 0 )
+    , m_pNodePtr( new CNodePtr )
 {
     m_nodeType = nt_ptrarray;
 }
@@ -35,16 +35,16 @@ NODESIZE CNodePtrArray::Draw( const PVIEWINFO View, int x, int y )
     tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "ArrayOfPointers " ) );
     tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
     tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "[" ) );
-    tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%i" ), m_PtrCount );
+    tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%u" ), m_ulPtrCount );
     tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "]" ) );
 
     tx = AddIcon( View, tx, y, ICON_LEFT, HS_SELECT, HS_CLICK );
     tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "(" ) );
-    tx = AddText( View, tx, y, g_crIndex, 1, _T( "%i" ), m_CurrentIndex );
+    tx = AddText( View, tx, y, g_crIndex, 1, _T( "%i" ), m_iCurrentIndex );
     tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( ")" ) );
     tx = AddIcon( View, tx, y, ICON_RIGHT, HS_DROP, HS_CLICK );
 
-    tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( "<%s* Size=%i>" ), m_NodePtr->GetClass( )->GetName( ), GetMemorySize( ) );
+    tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( "<%s* Size=%u>" ), m_pNodePtr->GetClass( )->GetName( ), GetMemorySize( ) );
     tx = AddIcon( View, tx, y, ICON_CHANGE, HS_CLICK, HS_CHANGE_X );
 
     tx += g_FontWidth;
@@ -53,19 +53,19 @@ NODESIZE CNodePtrArray::Draw( const PVIEWINFO View, int x, int y )
     y += g_FontHeight;
     if (m_LevelsOpen[View->Level])
     {
-        if (IsMemory( View->Address + m_Offset + (sizeof( uintptr_t ) * m_CurrentIndex) ))
+        if (IsMemory( View->Address + m_Offset + (sizeof( ULONG_PTR ) * m_iCurrentIndex) ))
         {
-            ClassSize = m_NodePtr->GetClass( )->GetMemorySize( );
-            m_NodePtr->Memory( )->SetSize( ClassSize );
+            ClassSize = m_pNodePtr->GetClass( )->GetMemorySize( );
+            m_pNodePtr->Memory( )->SetSize( ClassSize );
 
             VIEWINFO NewView;
             memcpy( &NewView, View, sizeof( NewView ) );
-            NewView.Data = m_NodePtr->Memory( )->Data( );
-            NewView.Address = *(uintptr_t*)(View->Data + m_Offset + (sizeof( uintptr_t ) * m_CurrentIndex));
+            NewView.Data = m_pNodePtr->Memory( )->Data( );
+            NewView.Address = *(ULONG_PTR*)(View->Data + m_Offset + (sizeof( ULONG_PTR ) * m_iCurrentIndex));
 
             ReClassReadMemory( (LPVOID)NewView.Address, (LPVOID)NewView.Data, ClassSize );
 
-            ChildDrawSize = m_NodePtr->GetClass( )->Draw( &NewView, x, y );
+            ChildDrawSize = m_pNodePtr->GetClass( )->Draw( &NewView, x, y );
 
             y = ChildDrawSize.y;
             if (ChildDrawSize.x > DrawSize.x)
@@ -79,36 +79,43 @@ NODESIZE CNodePtrArray::Draw( const PVIEWINFO View, int x, int y )
 
 ULONG CNodePtrArray::GetMemorySize( )
 {
-    return m_NodePtr->GetMemorySize( ) * m_PtrCount;
+    return m_pNodePtr->GetMemorySize( ) * m_ulPtrCount;
 }
 
 void CNodePtrArray::Update( const PHOTSPOT Spot )
 {
+    LONG LongValue;
+    ULONG UlongValue;
+
     StandardUpdate( Spot );
 
-    int v = _ttoi( Spot->Text.GetString( ) );
-    if (v < 0) return;
+    LongValue = _ttol( Spot->Text.GetString( ) );
+    if (LongValue < 0)
+        return;
+
+    UlongValue = (ULONG)LongValue;
 
     if (Spot->Id == 0)
     {
-        if (v == 0)
+        if (UlongValue == 0)
             return;
-        m_PtrCount = (size_t)v;
+        m_ulPtrCount = UlongValue;
     }
     else if (Spot->Id == 1)
     {
-        if (v >= (int)m_PtrCount) return;
-        m_CurrentIndex = (int)v;
+        if (UlongValue >= m_ulPtrCount) 
+            return;
+        m_iCurrentIndex = UlongValue;
     }
     else if (Spot->Id == 2)
     {
-        if (m_CurrentIndex > 0)
-            m_CurrentIndex--;
+        if (m_iCurrentIndex > 0)
+            m_iCurrentIndex--;
     }
     else if (Spot->Id == 3)
     {
-        if ((size_t)m_CurrentIndex < m_PtrCount - 1)
-            m_CurrentIndex++;
+        if (m_iCurrentIndex < (INT)m_ulPtrCount - 1)
+            m_iCurrentIndex++;
     }
 }
 
