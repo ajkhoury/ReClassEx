@@ -8,7 +8,7 @@ public:
 
 	virtual void Update( const PHOTSPOT Spot );
 
-	virtual ULONG GetMemorySize( ) { return sizeof( unsigned __int16 ); }
+	virtual ULONG GetMemorySize( ) { return sizeof( WORD ); }
 
 	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 };

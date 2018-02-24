@@ -46,8 +46,8 @@
 // Scintilla parser
 //
 #define PLAT_WIN 1
-#include "..\\scintilla\\include\\SciLexer.h"
-#include "..\\scintilla\\include\\Scintilla.h"
+#include "SciLexer.h"
+#include "Scintilla.h"
 
 // A few basic colors for scintilla editor
 const COLORREF black = RGB( 0, 0, 0 );
@@ -67,7 +67,6 @@ const COLORREF purple = RGB( 128, 0, 255 );
 //
 // TinyXml parser
 //
-//#include "tinyxml2_unicode.h"
 #include "tinyxml2.h"
 using namespace tinyxml2;
 

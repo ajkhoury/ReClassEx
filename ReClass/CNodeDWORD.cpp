@@ -8,26 +8,25 @@ CNodeDword::CNodeDword( )
 
 void CNodeDword::Update( const PHOTSPOT Spot )
 {
-    unsigned __int32 UInt32Value;
+    DWORD DwordValue;
 
 	StandardUpdate( Spot );
 
-    UInt32Value = _tcstoul( Spot->Text.GetString( ), NULL, g_bUnsignedHex ? 16 : 10 );
+    DwordValue = _tcstoul( Spot->Text.GetString( ), NULL, g_bUnsignedHex ? 16 : 10 );
 	if (Spot->Id == 0)
-		ReClassWriteMemory( (LPVOID)Spot->Address, &UInt32Value, sizeof( unsigned long ) );
+		ReClassWriteMemory( (LPVOID)Spot->Address, &DwordValue, sizeof( DWORD ) );
 }
 
 NODESIZE CNodeDword::Draw( const PVIEWINFO View, int x, int y )
 {
     int tx;
     NODESIZE DrawSize;
-    unsigned __int32* Data;
+    DWORD* Data;
 
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-    
-    Data = (unsigned __int32*)(View->Data + m_Offset);
+    Data = (DWORD*)(View->Data + m_Offset);
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );

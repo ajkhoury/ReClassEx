@@ -9,25 +9,25 @@ CNodeWord::CNodeWord( )
 
 void CNodeWord::Update( const PHOTSPOT Spot )
 {
-    unsigned __int16 UInt16Value;
+    WORD Uint16Value;
 
 	StandardUpdate( Spot );
 
-    UInt16Value = (unsigned __int16)_tcstoul( Spot->Text.GetString( ), NULL, g_bUnsignedHex ? 16 : 10 );
+    Uint16Value = (WORD)_tcstoul( Spot->Text.GetString( ), NULL, g_bUnsignedHex ? 16 : 10 );
 	if (Spot->Id == 0)
-		ReClassWriteMemory( (LPVOID)Spot->Address, &UInt16Value, sizeof( unsigned __int16 ) );
+		ReClassWriteMemory( (LPVOID)Spot->Address, &Uint16Value, sizeof( WORD ) );
 }
 
 NODESIZE CNodeWord::Draw( const PVIEWINFO View, int x, int y )
 {
     int tx;
     NODESIZE DrawSize;
-    unsigned __int16 *Data;
+    WORD *Data;
 
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
 
-    Data = (unsigned __int16*)(View->Data + m_Offset);
+    Data = (WORD*)(View->Data + m_Offset);
 
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );

@@ -1714,7 +1714,7 @@ void CClassView::ReplaceSelectedWithType( NodeType Type )
 
 void CClassView::ClearSelection( )
 {
-    for (int i = 0; i < m_Selected.size( ); i++)
+    for (size_t i = 0; i < m_Selected.size( ); i++)
         m_Selected[i].Object->Unselect( );
     m_Selected.clear( );
 }

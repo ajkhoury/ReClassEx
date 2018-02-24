@@ -66,95 +66,95 @@
     <None Include="res\icon1.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\Images\general_class_VS.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\general_method_VS.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\open.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\closed.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\general_interface_VS.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\close.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\add.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\speles_random_ico.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\arrow_icon.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\pointer.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\array.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\custom.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\enum.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\float.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\left.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\right.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\matrix.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\signed.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\text.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\unsigned.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\vector.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\icon.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\icon.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\button.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\about.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\exchange.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\camera.ico">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="res\classicon.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\Images\reclass.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\symsrv32.dll" />
     <None Include="res\symsrv64.dll" />
+    <None Include="res\icons\about.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\add.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\array.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\arrow_icon.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\button.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\camera.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\close.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\closed.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\custom.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\enum.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\exchange.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\float.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\general_class_VS.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\general_interface_VS.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\general_method_VS.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\icon.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\icon.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\left.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\matrix.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\open.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\pointer.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\reclass.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\right.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\signed.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\speles_random_ico.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\text.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\unsigned.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\icons\vector.ico">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

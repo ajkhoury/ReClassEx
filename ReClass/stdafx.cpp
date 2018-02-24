@@ -128,7 +128,7 @@ CStringA ReadMemoryStringA( ULONG_PTR address, SIZE_T max )
 
 	if (ReClassReadMemory( (PVOID)address, (LPVOID)buffer.get( ), max, &bytesRead ) != 0)
 	{
-		for (int i = 0; i < bytesRead; i++)
+		for (size_t i = 0; i < bytesRead; i++)
 		{
 			if (!(buffer[i] > 0x1F && buffer[i] < 0xFF && buffer[i] != 0x7F) && buffer[i] != '\0')
 				buffer[i] = '.';
@@ -154,7 +154,7 @@ CStringW ReadMemoryStringW( ULONG_PTR address, SIZE_T max )
 	{
 		bytesRead /= sizeof( wchar_t );
 
-		for (int i = 0; i < bytesRead; i++)
+		for (size_t i = 0; i < bytesRead; i++)
 		{
 			if (!(buffer[i] > 0x1F && buffer[i] < 0xFF && buffer[i] != 0x7F) && buffer[i] != '\0')
 				buffer[i] = '.';

@@ -8,25 +8,25 @@ CNodeQword::CNodeQword( )
 
 void CNodeQword::Update( const PHOTSPOT Spot )
 {
-    unsigned __int64 UInt64Value;
+    UINT64 Uint64Value;
 
 	StandardUpdate( Spot );
 
-    UInt64Value = _tcstoull( Spot->Text.GetString( ), NULL, g_bUnsignedHex ? 16 : 10 );
+    Uint64Value = _tcstoull( Spot->Text.GetString( ), NULL, g_bUnsignedHex ? 16 : 10 );
 	if (Spot->Id == 0)
-		ReClassWriteMemory( (LPVOID)Spot->Address, &UInt64Value, sizeof( unsigned __int64 ) );
+		ReClassWriteMemory( (LPVOID)Spot->Address, &Uint64Value, sizeof( UINT64 ) );
 }
 
 NODESIZE CNodeQword::Draw( const PVIEWINFO View, int x, int y )
 {
     int tx;
     NODESIZE DrawSize;
-    unsigned __int64* Data;
+    UINT64* Data;
 
 	if (m_bHidden)
 		return DrawHidden( View, x, y );
    
-    Data = (unsigned __int64*)(View->Data + m_Offset);
+    Data = (UINT64*)(View->Data + m_Offset);
 	AddSelection( View, 0, y, g_FontHeight );
 	AddDelete( View, x, y );
 	AddTypeDrop( View, x, y );
