@@ -35,12 +35,12 @@
 ; );
 ;************************************
 ReadFS PROC, arg1:DWORD
-	push ecx
-	mov ecx, arg1
-	assume fs:nothing
-	mov eax, fs:[ecx]
-	pop ecx
-	ret
+    push ecx
+    mov ecx, arg1
+    assume fs:nothing
+    mov eax, fs:[ecx]
+    pop ecx
+    ret
 ReadFS ENDP
 
 END

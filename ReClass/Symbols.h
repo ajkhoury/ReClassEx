@@ -6,29 +6,29 @@
 class Symbols
 {
 public:
-	Symbols( );
-	~Symbols( );
+    Symbols( );
+    ~Symbols( );
 
-	void ResolveSearchPath( );
-	BOOLEAN WriteSymSrvDll( );
+    void ResolveSearchPath( );
+    BOOLEAN WriteSymSrvDll( );
 
-	void Cleanup( );
-	BOOLEAN Init( );
-	BOOLEAN IsInitialized( ) { return m_bInitialized; }
+    void Cleanup( );
+    BOOLEAN Init( );
+    BOOLEAN IsInitialized( ) const { return m_bInitialized; }
 
-	BOOLEAN LoadSymbolsForModule( CString szModulePath, ULONG_PTR ModuleBaseAddress, ULONG SizeOfModule );
-	BOOLEAN LoadSymbolsForPdb( CString szPdbPath );
+    BOOLEAN LoadSymbolsForModule( CString szModulePath, ULONG_PTR ModuleBaseAddress, ULONG SizeOfModule );
+    BOOLEAN LoadSymbolsForPdb( CString szPdbPath );
 
-	SymbolReader* GetSymbolsForModuleAddress( ULONG_PTR ModuleAddress );
-	SymbolReader* GetSymbolsForModuleName( CString ModuleName );
+    SymbolReader* GetSymbolsForModuleAddress( ULONG_PTR ModuleAddress );
+    SymbolReader* GetSymbolsForModuleName( CString ModuleName );
 
 private:
-	RTL_CRITICAL_SECTION m_CriticalSection;
+    RTL_CRITICAL_SECTION m_CriticalSection;
 
-	std::map<CString, SymbolReader*> m_SymbolNames;
-	std::map<ULONG_PTR, SymbolReader*> m_SymbolAddresses;
+    std::map<CString, SymbolReader*> m_SymbolNames;
+    std::map<ULONG_PTR, SymbolReader*> m_SymbolAddresses;
 
-	BOOLEAN m_bInitialized;
+    BOOLEAN m_bInitialized;
 
-	CString m_strSearchPath;
+    CString m_strSearchPath;
 };

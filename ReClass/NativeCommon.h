@@ -92,21 +92,21 @@ typedef GUID *PGUID;
 
 typedef enum _WAIT_TYPE
 {
-	WaitAll,
-	WaitAny,
-	WaitNotification
+    WaitAll,
+    WaitAny,
+    WaitNotification
 } WAIT_TYPE;
 
 typedef enum _TIMER_TYPE
 {
-	NotificationTimer,
-	SynchronizationTimer
+    NotificationTimer,
+    SynchronizationTimer
 } TIMER_TYPE;
 
 typedef enum _EVENT_TYPE
 {
-	NotificationEvent,
-	SynchronizationEvent
+    NotificationEvent,
+    SynchronizationEvent
 } EVENT_TYPE;
 
 
@@ -116,8 +116,8 @@ typedef enum _EVENT_TYPE
 
 typedef struct _CLIENT_ID
 {
-	HANDLE					UniqueProcess;
-	HANDLE					UniqueThread;
+    HANDLE					UniqueProcess;
+    HANDLE					UniqueThread;
 } CLIENT_ID, *PCLIENT_ID;
 
 typedef struct _CLIENT_ID32
@@ -134,19 +134,19 @@ typedef struct _CLIENT_ID64
 
 typedef struct _SINGLE_LIST_ENTRY64
 {
-	ULONGLONG Next;
+    ULONGLONG Next;
 } SINGLE_LIST_ENTRY64, *PSINGLE_LIST_ENTRY64;
 
 typedef struct _SINGLE_LIST_ENTRY32
 {
-	ULONG Next;
+    ULONG Next;
 } SINGLE_LIST_ENTRY32, *PSINGLE_LIST_ENTRY32;
 
 typedef struct _ANSI_STRING
 {
-	USHORT Length;
-	USHORT MaximumLength;
-	PSTR Buffer;
+    USHORT Length;
+    USHORT MaximumLength;
+    PSTR Buffer;
 } STRING, ANSI_STRING, OEM_STRING, *PSTRING, *PANSI_STRING, *POEM_STRING;
 typedef const STRING *PCSTRING;
 typedef const ANSI_STRING *PCANSI_STRING;
@@ -154,9 +154,9 @@ typedef const OEM_STRING *PCOEM_STRING;
 
 typedef struct _UNICODE_STRING
 {
-	USHORT Length;
-	USHORT MaximumLength;
-	PWSTR Buffer;
+    USHORT Length;
+    USHORT MaximumLength;
+    PWSTR Buffer;
 } UNICODE_STRING, *PUNICODE_STRING;
 typedef const UNICODE_STRING *PCUNICODE_STRING;
 
@@ -171,9 +171,9 @@ typedef STRING64 ANSI_STRING64, *PANSI_STRING64;
 
 typedef struct _STRING32
 {
-	USHORT   Length;
-	USHORT   MaximumLength;
-	ULONG  Buffer;
+    USHORT   Length;
+    USHORT   MaximumLength;
+    ULONG  Buffer;
 } STRING32;
 typedef STRING32 *PSTRING32;
 typedef STRING32 UNICODE_STRING32;
@@ -181,14 +181,14 @@ typedef UNICODE_STRING32 *PUNICODE_STRING32;
 
 typedef struct _CURDIR
 {
-	UNICODE_STRING DosPath;
-	PVOID Handle;
+    UNICODE_STRING DosPath;
+    PVOID Handle;
 } CURDIR, *PCURDIR;
 
 typedef struct _CURDIR64
 {
-	UNICODE_STRING64 DosPath;
-	ULONGLONG Handle;
+    UNICODE_STRING64 DosPath;
+    ULONGLONG Handle;
 } CURDIR64, *PCURDIR64;
 
 typedef struct _CURDIR32

@@ -1,13 +1,12 @@
 #pragma once
 
-class CNodeMatrix : public CNodeBase
-{
+class CNodeMatrix : public CNodeBase {
 public:
-	CNodeMatrix( );
+    CNodeMatrix( );
 
-	virtual void Update( const PHOTSPOT Spot );
+    virtual void Update( const PHOTSPOT Spot );
 
-	virtual ULONG GetMemorySize( ) { return 4 * 4 * sizeof( float ); }
+    virtual ULONG GetMemorySize( ) { return 4 * 4 * sizeof( float ); }
 
-	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
+    virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 };

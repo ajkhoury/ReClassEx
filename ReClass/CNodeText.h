@@ -2,20 +2,19 @@
 
 #include "CNodeBase.h"
 
-class CNodeText : public CNodeBase
-{
+class CNodeText : public CNodeBase {
 public:
-	CNodeText( );
+    CNodeText( );
 
-	virtual void Update( const PHOTSPOT Spot );
+    virtual void Update( const PHOTSPOT Spot );
 
-	virtual ULONG GetMemorySize( ) { return m_dwMemorySize; }
+    virtual ULONG GetMemorySize( ) { return m_dwMemorySize; }
 
-	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
+    virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
     inline void SetSize( DWORD size ) { m_dwMemorySize = size; }
-	inline DWORD GetSize( void ) { return m_dwMemorySize; }
+    inline DWORD GetSize( void ) { return m_dwMemorySize; }
 
 private:
-	DWORD m_dwMemorySize;
+    DWORD m_dwMemorySize;
 };

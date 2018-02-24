@@ -13,18 +13,18 @@
 
 
 typedef NTSTATUS( NTAPI *tNtOpenProcessToken )(
-	IN HANDLE ProcessHandle,
-	IN ACCESS_MASK DesiredAccess,
-	OUT PHANDLE TokenHandle
-	);
+    IN HANDLE ProcessHandle,
+    IN ACCESS_MASK DesiredAccess,
+    OUT PHANDLE TokenHandle
+    );
 
 typedef NTSTATUS( NTAPI *tNtAdjustPrivilegesToken )(
-	IN HANDLE TokenHandle,
-	IN BOOLEAN DisableAllPrivileges,
-	IN PTOKEN_PRIVILEGES NewState,
-	IN ULONG BufferLength,
-	OUT PTOKEN_PRIVILEGES PreviousState OPTIONAL,
-	OUT PULONG ReturnLength OPTIONAL
-	);
+    IN HANDLE TokenHandle,
+    IN BOOLEAN DisableAllPrivileges,
+    IN PTOKEN_PRIVILEGES NewState,
+    IN ULONG BufferLength,
+    OUT PTOKEN_PRIVILEGES PreviousState OPTIONAL,
+    OUT PULONG ReturnLength OPTIONAL
+    );
 
 

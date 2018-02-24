@@ -10,23 +10,23 @@ PluginInit(
     OUT LPRECLASS_PLUGIN_INFO lpRCInfo 
 )
 {
-	wcscpy_s( lpRCInfo->Name, L"Test Plugin Name" );
-	wcscpy_s( lpRCInfo->Version, L"1.0.0.2" );
-	wcscpy_s( lpRCInfo->About, L"This plugin is a test plugin" );
-	lpRCInfo->DialogId = IDD_SETTINGS_DLG;
+    wcscpy_s( lpRCInfo->Name, L"Test Plugin Name" );
+    wcscpy_s( lpRCInfo->Version, L"1.0.0.2" );
+    wcscpy_s( lpRCInfo->About, L"This plugin is a test plugin" );
+    lpRCInfo->DialogId = IDD_SETTINGS_DLG;
 
-	if (!ReClassIsReadMemoryOverriden( ) && !ReClassIsWriteMemoryOverriden( ))
-	{
-		if (ReClassOverrideMemoryOperations( ReadCallback, WriteCallback ) == FALSE)
-		{
-			ReClassPrintConsole( L"[TestPlugin] Failed to register read/write callbacks, failing PluginInit" );
-			return FALSE;
-		}
-	}
+    if (!ReClassIsReadMemoryOverriden( ) && !ReClassIsWriteMemoryOverriden( ))
+    {
+        if (ReClassOverrideMemoryOperations( ReadCallback, WriteCallback ) == FALSE)
+        {
+            ReClassPrintConsole( L"[TestPlugin] Failed to register read/write callbacks, failing PluginInit" );
+            return FALSE;
+        }
+    }
 
     gTestPluginState = TRUE;
 
-	return TRUE;
+    return TRUE;
 }
 
 VOID 
@@ -73,11 +73,11 @@ PluginSettingsDlg(
     IN LPARAM lParam 
 )
 {
-	switch (Msg)
-	{
+    switch (Msg)
+    {
 
-	case WM_INITDIALOG:
-	{
+    case WM_INITDIALOG:
+    {
         if (gTestPluginState)
         {
             //
@@ -103,21 +103,21 @@ PluginSettingsDlg(
             SendMessage( GetDlgItem( hWnd, IDC_CHECK_WRITE_MEMORY_OVERRIDE ), BM_SETCHECK, MAKEWPARAM( BST_UNCHECKED, 0 ), 0 );
             EnableWindow( GetDlgItem( hWnd, IDC_CHECK_WRITE_MEMORY_OVERRIDE ), FALSE );
         }
-	}
-	return TRUE;
+    }
+    return TRUE;
 
-	case WM_COMMAND:
-	{
-		WORD NotificationCode = HIWORD( wParam );
-		WORD ControlId = LOWORD( wParam );
-		HWND hControlWnd = (HWND)lParam;
-		
-		if (NotificationCode == BN_CLICKED)
-		{
-			BOOLEAN bChecked = (SendMessage( hControlWnd, BM_GETCHECK, 0, 0 ) == BST_CHECKED);
+    case WM_COMMAND:
+    {
+        WORD NotificationCode = HIWORD( wParam );
+        WORD ControlId = LOWORD( wParam );
+        HWND hControlWnd = (HWND)lParam;
+        
+        if (NotificationCode == BN_CLICKED)
+        {
+            BOOLEAN bChecked = (SendMessage( hControlWnd, BM_GETCHECK, 0, 0 ) == BST_CHECKED);
 
-			if (ControlId == IDC_CHECK_READ_MEMORY_OVERRIDE)
-			{
+            if (ControlId == IDC_CHECK_READ_MEMORY_OVERRIDE)
+            {
                 if (bChecked)
                 {
                     //
@@ -174,9 +174,9 @@ PluginSettingsDlg(
                         ReClassRemoveReadMemoryOverride( );
                     }
                 }			
-			}
-			else if (ControlId == IDC_CHECK_WRITE_MEMORY_OVERRIDE)
-			{
+            }
+            else if (ControlId == IDC_CHECK_WRITE_MEMORY_OVERRIDE)
+            {
                 if (bChecked)
                 {
                     //
@@ -236,19 +236,19 @@ PluginSettingsDlg(
                         ReClassRemoveWriteMemoryOverride( );
                     }
                 }
-			}
-		}	
-	}
-	break;
+            }
+        }	
+    }
+    break;
 
-	case WM_CLOSE:
-	{
-		EndDialog( hWnd, 0 );
-	}
-	break;
+    case WM_CLOSE:
+    {
+        EndDialog( hWnd, 0 );
+    }
+    break;
 
-	}
-	return FALSE;
+    }
+    return FALSE;
 }
 
 BOOL 
@@ -260,12 +260,12 @@ WriteCallback(
     OUT PSIZE_T BytesWritten 
 )
 {
-	DWORD OldProtect;
-	HANDLE ProcessHandle = ReClassGetProcessHandle( );
-	VirtualProtectEx( ProcessHandle, (PVOID)Address, Size, PAGE_EXECUTE_READWRITE, &OldProtect );
-	BOOL Retval = WriteProcessMemory( ProcessHandle, (PVOID)Address, Buffer, Size, BytesWritten );
-	VirtualProtectEx( ProcessHandle, (PVOID)Address, Size, OldProtect, NULL );
-	return Retval;
+    DWORD OldProtect;
+    HANDLE ProcessHandle = ReClassGetProcessHandle( );
+    VirtualProtectEx( ProcessHandle, (PVOID)Address, Size, PAGE_EXECUTE_READWRITE, &OldProtect );
+    BOOL Retval = WriteProcessMemory( ProcessHandle, (PVOID)Address, Buffer, Size, BytesWritten );
+    VirtualProtectEx( ProcessHandle, (PVOID)Address, Size, OldProtect, NULL );
+    return Retval;
 }
 
 BOOL 
@@ -277,9 +277,9 @@ ReadCallback(
     OUT PSIZE_T BytesRead 
 )
 {
-	HANDLE ProcessHandle = ReClassGetProcessHandle( );
-	BOOL Retval = ReadProcessMemory( ProcessHandle, (LPVOID)Address, Buffer, Size, BytesRead );
-	if (!Retval)
-		ZeroMemory( Buffer, Size );
-	return Retval;
+    HANDLE ProcessHandle = ReClassGetProcessHandle( );
+    BOOL Retval = ReadProcessMemory( ProcessHandle, (LPVOID)Address, Buffer, Size, BytesRead );
+    if (!Retval)
+        ZeroMemory( Buffer, Size );
+    return Retval;
 }

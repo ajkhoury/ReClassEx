@@ -6,224 +6,224 @@
 #include <fstream>
 
 Symbols::Symbols( ) :
-	m_bInitialized( FALSE )
+    m_bInitialized( FALSE )
 {
-	ResolveSearchPath( );
+    ResolveSearchPath( );
 
-	if (!WriteSymSrvDll( ))
-		throw std::exception( "WriteSymSrvDll_failed" );
+    if (!WriteSymSrvDll( ))
+        throw std::exception( "WriteSymSrvDll_failed" );
 
-	if (!Init( ))
-		throw std::exception( "init_failed" );
+    if (!Init( ))
+        throw std::exception( "init_failed" );
 
-	ntdll::RtlInitializeCriticalSection( &m_CriticalSection );
+    ntdll::RtlInitializeCriticalSection( &m_CriticalSection );
 }
 
 Symbols::~Symbols( )
 {
-	ntdll::RtlDeleteCriticalSection( &m_CriticalSection );
+    ntdll::RtlDeleteCriticalSection( &m_CriticalSection );
 
-	Cleanup( );
-	DeleteFile( _T( "symsrv.dll" ) );
+    Cleanup( );
+    DeleteFile( _T( "symsrv.dll" ) );
 }
 
 void Symbols::ResolveSearchPath( )
 {
-	CString searchPath;
-	LRESULT lRet;
-	HKEY hKey = NULL;
+    CString searchPath;
+    LRESULT lRet;
+    HKEY hKey = NULL;
 
-	//C:\Users\User\AppData\Local\Temp\SymbolCache
-	for (int i = 14; i >= 8; i--)
-	{
-		CString regPath = _T( "Software\\Microsoft\\VisualStudio\\" );
-		wchar_t version[4];
-		_itow_s( i, version, 10 );
+    //C:\Users\User\AppData\Local\Temp\SymbolCache
+    for (int i = 14; i >= 8; i--)
+    {
+        CString regPath = _T( "Software\\Microsoft\\VisualStudio\\" );
+        wchar_t version[4];
+        _itow_s( i, version, 10 );
 
-		#ifdef UNICODE
-		regPath.Append( version );
-		#else
-		regPath.Append( CW2A( version ) );
-		#endif
+        #ifdef UNICODE
+        regPath.Append( version );
+        #else
+        regPath.Append( CW2A( version ) );
+        #endif
 
-		regPath.Append( _T( ".0\\Debugger" ) );
+        regPath.Append( _T( ".0\\Debugger" ) );
 
-		lRet = RegOpenKeyEx( HKEY_CURRENT_USER, regPath.GetString( ), 0, KEY_READ, &hKey );
-		if (hKey)
-		{
-			TCHAR szBuffer[MAX_PATH];
-			DWORD dwBufferSize = MAX_PATH;
-			lRet = RegQueryValueEx( hKey, _T( "SymbolCacheDir" ), 0, NULL, (LPBYTE)szBuffer, &dwBufferSize );
-			if (lRet == ERROR_SUCCESS && szBuffer)
-			{
-				searchPath = szBuffer;
-				RegCloseKey( hKey );
-				break;
-			}
-			RegCloseKey( hKey );
-		}
-	}
+        lRet = RegOpenKeyEx( HKEY_CURRENT_USER, regPath.GetString( ), 0, KEY_READ, &hKey );
+        if (hKey)
+        {
+            TCHAR szBuffer[MAX_PATH];
+            DWORD dwBufferSize = MAX_PATH;
+            lRet = RegQueryValueEx( hKey, _T( "SymbolCacheDir" ), 0, NULL, (LPBYTE)szBuffer, &dwBufferSize );
+            if (lRet == ERROR_SUCCESS && szBuffer)
+            {
+                searchPath = szBuffer;
+                RegCloseKey( hKey );
+                break;
+            }
+            RegCloseKey( hKey );
+        }
+    }
 
-	if (!searchPath.IsEmpty( ))
-	{
-		m_strSearchPath.Format( _T( "srv*%s*http://msdl.microsoft.com/download/symbols" ), searchPath.GetString( ) );
-		PrintOut( _T( "Symbol server path found from Visual Studio config: %s" ), searchPath.GetString( ) );
-	}
-	else
-	{
-		TCHAR szWindowsDir[MAX_PATH];
-		GetCurrentDirectory( MAX_PATH, szWindowsDir );
-		m_strSearchPath.Format( _T( "srv*%s\\symbols*http://msdl.microsoft.com/download/symbols" ), szWindowsDir );
-		PrintOut( _T( "Symbol server path not found, using windows dir: %s" ), szWindowsDir );
-	}
+    if (!searchPath.IsEmpty( ))
+    {
+        m_strSearchPath.Format( _T( "srv*%s*http://msdl.microsoft.com/download/symbols" ), searchPath.GetString( ) );
+        PrintOut( _T( "Symbol server path found from Visual Studio config: %s" ), searchPath.GetString( ) );
+    }
+    else
+    {
+        TCHAR szWindowsDir[MAX_PATH];
+        GetCurrentDirectory( MAX_PATH, szWindowsDir );
+        m_strSearchPath.Format( _T( "srv*%s\\symbols*http://msdl.microsoft.com/download/symbols" ), szWindowsDir );
+        PrintOut( _T( "Symbol server path not found, using windows dir: %s" ), szWindowsDir );
+    }
 }
 
 BOOLEAN Symbols::WriteSymSrvDll( )
 {
-	HRSRC hSymSrvRes = NULL;
-	HGLOBAL hGlobal = NULL;
-	LPVOID pSymSrvData = NULL;
-	DWORD dwSymSrvDataSize = 0;
+    HRSRC hSymSrvRes = NULL;
+    HGLOBAL hGlobal = NULL;
+    LPVOID pSymSrvData = NULL;
+    DWORD dwSymSrvDataSize = 0;
 
-	#ifdef _WIN64
-	hSymSrvRes = FindResource( NULL, MAKEINTRESOURCE( IDR_RCDATA_SYMSRV64 ), RT_RCDATA );
-	#else
-	hSymSrvRes = FindResource( NULL, MAKEINTRESOURCE( IDR_RCDATA_SYMSRV32 ), RT_RCDATA );
-	#endif
-	if (hSymSrvRes != NULL)
-	{
-		hGlobal = LoadResource( NULL, hSymSrvRes );
-		if (hGlobal != NULL)
-		{
-			pSymSrvData = LockResource( hGlobal );
-			dwSymSrvDataSize = SizeofResource( NULL, hSymSrvRes );
-			if (pSymSrvData != NULL)
-			{
-				std::ofstream fSymSrvDll( _T( "symsrv.dll" ), std::ios::binary );
-				if (fSymSrvDll)
-				{
-					fSymSrvDll.write( (const char*)pSymSrvData, dwSymSrvDataSize );
-					fSymSrvDll.close( );
+    #ifdef _WIN64
+    hSymSrvRes = FindResource( NULL, MAKEINTRESOURCE( IDR_RCDATA_SYMSRV64 ), RT_RCDATA );
+    #else
+    hSymSrvRes = FindResource( NULL, MAKEINTRESOURCE( IDR_RCDATA_SYMSRV32 ), RT_RCDATA );
+    #endif
+    if (hSymSrvRes != NULL)
+    {
+        hGlobal = LoadResource( NULL, hSymSrvRes );
+        if (hGlobal != NULL)
+        {
+            pSymSrvData = LockResource( hGlobal );
+            dwSymSrvDataSize = SizeofResource( NULL, hSymSrvRes );
+            if (pSymSrvData != NULL)
+            {
+                std::ofstream fSymSrvDll( _T( "symsrv.dll" ), std::ios::binary );
+                if (fSymSrvDll)
+                {
+                    fSymSrvDll.write( (const char*)pSymSrvData, dwSymSrvDataSize );
+                    fSymSrvDll.close( );
 
-					UnlockResource( hGlobal );
-					FreeResource( hGlobal );
+                    UnlockResource( hGlobal );
+                    FreeResource( hGlobal );
 
-					return TRUE;
-				}
-			}
-		}
+                    return TRUE;
+                }
+            }
+        }
 
-		UnlockResource( hGlobal );
-		FreeResource( hGlobal );
-	}
+        UnlockResource( hGlobal );
+        FreeResource( hGlobal );
+    }
 
-	return FALSE;
+    return FALSE;
 }
 
 void Symbols::Cleanup( )
 {
-	if (m_bInitialized == TRUE)
-	{
-		for (auto it = m_SymbolAddresses.begin( ); it != m_SymbolAddresses.end( ); ++it)
-			delete it->second;
-		m_SymbolAddresses.clear( );
+    if (m_bInitialized == TRUE)
+    {
+        for (auto it = m_SymbolAddresses.begin( ); it != m_SymbolAddresses.end( ); ++it)
+            delete it->second;
+        m_SymbolAddresses.clear( );
 
-		for (auto it = m_SymbolNames.begin( ); it != m_SymbolNames.end( ); ++it)
-			delete it->second;
-		m_SymbolNames.clear( );
+        for (auto it = m_SymbolNames.begin( ); it != m_SymbolNames.end( ); ++it)
+            delete it->second;
+        m_SymbolNames.clear( );
 
-		CoUninitialize( );
+        CoUninitialize( );
 
-		m_bInitialized = FALSE;
-	}
+        m_bInitialized = FALSE;
+    }
 }
 
 BOOLEAN Symbols::Init( )
 {
-	if (m_bInitialized == FALSE)
-	{
-		HRESULT hr = S_OK;
-		hr = CoInitialize( NULL );
-		if (FAILED( hr ))
-		{
-			PrintOut( _T( "[Symbols::Init] CoInitialize failed - HRESULT = %08X" ), hr );
-			return FALSE;
-		}
-		m_bInitialized = TRUE;
-	}
-	return TRUE;
+    if (m_bInitialized == FALSE)
+    {
+        HRESULT hr = S_OK;
+        hr = CoInitialize( NULL );
+        if (FAILED( hr ))
+        {
+            PrintOut( _T( "[Symbols::Init] CoInitialize failed - HRESULT = %08X" ), hr );
+            return FALSE;
+        }
+        m_bInitialized = TRUE;
+    }
+    return TRUE;
 }
 
 BOOLEAN Symbols::LoadSymbolsForModule( CString ModulePath, ULONG_PTR ModuleBaseAddress, ULONG SizeOfModule )
 {
-	int idx = -1;
-	CString ModuleName;
-	const TCHAR* szSearchPath = NULL;
-	SymbolReader* reader = NULL;
-	BOOLEAN bSucc = FALSE;
+    int idx = -1;
+    CString ModuleName;
+    const TCHAR* szSearchPath = NULL;
+    SymbolReader* reader = NULL;
+    BOOLEAN bSucc = FALSE;
 
-	idx = ModulePath.ReverseFind( '/' );
-	if (idx == -1)
-		idx = ModulePath.ReverseFind( '\\' );
-	ModuleName = ModulePath.Mid( ++idx );
+    idx = ModulePath.ReverseFind( '/' );
+    if (idx == -1)
+        idx = ModulePath.ReverseFind( '\\' );
+    ModuleName = ModulePath.Mid( ++idx );
 
-	if (!m_strSearchPath.IsEmpty( ))
-		szSearchPath = m_strSearchPath.GetString( );
+    if (!m_strSearchPath.IsEmpty( ))
+        szSearchPath = m_strSearchPath.GetString( );
 
-	reader = new SymbolReader( );
+    reader = new SymbolReader( );
 
-	//ntdll::RtlEnterCriticalSection( &m_CriticalSection );
+    //ntdll::RtlEnterCriticalSection( &m_CriticalSection );
 
-	bSucc = reader->LoadFile( ModuleName, ModulePath, ModuleBaseAddress, SizeOfModule, szSearchPath );
+    bSucc = reader->LoadFile( ModuleName, ModulePath, ModuleBaseAddress, SizeOfModule, szSearchPath );
 
-	//ntdll::RtlLeaveCriticalSection( &m_CriticalSection );
+    //ntdll::RtlLeaveCriticalSection( &m_CriticalSection );
 
-	if (bSucc)
-	{
-		PrintOut( _T( "[Symbols::LoadSymbolsForModule] Symbols for module %s loaded" ), ModuleName.GetString( ) );
-		m_SymbolAddresses.insert( std::make_pair( ModuleBaseAddress, reader ) );
-		return TRUE;
-	}
+    if (bSucc)
+    {
+        PrintOut( _T( "[Symbols::LoadSymbolsForModule] Symbols for module %s loaded" ), ModuleName.GetString( ) );
+        m_SymbolAddresses.insert( std::make_pair( ModuleBaseAddress, reader ) );
+        return TRUE;
+    }
 
-	delete reader;
+    delete reader;
 
-	return FALSE;
+    return FALSE;
 }
 
 BOOLEAN Symbols::LoadSymbolsForPdb( CString PdbPath )
 {
-	int idx = -1;
-	CString PdbFileName;
-	const TCHAR* szSearchPath = NULL;
-	SymbolReader* reader = NULL;
-	BOOLEAN bSucc = FALSE;
+    int idx = -1;
+    CString PdbFileName;
+    const TCHAR* szSearchPath = NULL;
+    SymbolReader* reader = NULL;
+    BOOLEAN bSucc = FALSE;
 
-	idx = PdbPath.ReverseFind( '/' );
-	if (idx == -1)
-		idx = PdbPath.ReverseFind( '\\' );
-	PdbFileName = PdbPath.Mid( ++idx );
+    idx = PdbPath.ReverseFind( '/' );
+    if (idx == -1)
+        idx = PdbPath.ReverseFind( '\\' );
+    PdbFileName = PdbPath.Mid( ++idx );
 
-	if (!m_strSearchPath.IsEmpty( ))
-		szSearchPath = m_strSearchPath.GetString( );
+    if (!m_strSearchPath.IsEmpty( ))
+        szSearchPath = m_strSearchPath.GetString( );
 
-	reader = new SymbolReader( );
+    reader = new SymbolReader( );
 
-	ntdll::RtlEnterCriticalSection( &m_CriticalSection );
+    ntdll::RtlEnterCriticalSection( &m_CriticalSection );
 
-	bSucc = reader->LoadFile( PdbFileName, PdbPath, 0, 0, szSearchPath );
+    bSucc = reader->LoadFile( PdbFileName, PdbPath, 0, 0, szSearchPath );
 
-	ntdll::RtlLeaveCriticalSection( &m_CriticalSection );
+    ntdll::RtlLeaveCriticalSection( &m_CriticalSection );
 
-	if (bSucc)
-	{
-		PrintOut( _T( "[Symbols::LoadSymbolsForPdb] Symbols for module %s loaded" ), PdbFileName.GetString( ) );
-		m_SymbolNames.insert( std::make_pair( PdbFileName, reader ) );
-		return TRUE;
-	}
+    if (bSucc)
+    {
+        PrintOut( _T( "[Symbols::LoadSymbolsForPdb] Symbols for module %s loaded" ), PdbFileName.GetString( ) );
+        m_SymbolNames.insert( std::make_pair( PdbFileName, reader ) );
+        return TRUE;
+    }
 
-	delete reader;
+    delete reader;
 
-	return FALSE;
+    return FALSE;
 }
 
 //void Symbols::LoadModuleSymbols()
@@ -318,20 +318,20 @@ BOOLEAN Symbols::LoadSymbolsForPdb( CString PdbPath )
 
 SymbolReader* Symbols::GetSymbolsForModuleAddress( ULONG_PTR ModuleAddress )
 {
-	SymbolReader* script = NULL;
-	auto iter = m_SymbolAddresses.find( ModuleAddress );
-	if (iter != m_SymbolAddresses.end( ))
-		script = iter->second;
-	return script;
+    SymbolReader* script = NULL;
+    auto iter = m_SymbolAddresses.find( ModuleAddress );
+    if (iter != m_SymbolAddresses.end( ))
+        script = iter->second;
+    return script;
 }
 
 SymbolReader* Symbols::GetSymbolsForModuleName( CString ModuleName )
 {
-	SymbolReader* script = NULL;
-	auto iter = m_SymbolNames.find( ModuleName );
-	if (iter != m_SymbolNames.end( ))
-		script = iter->second;
-	return script;
+    SymbolReader* script = NULL;
+    auto iter = m_SymbolNames.find( ModuleName );
+    if (iter != m_SymbolNames.end( ))
+        script = iter->second;
+    return script;
 }
 
 typedef void*( CDECL * Alloc_t )(unsigned int);
@@ -376,7 +376,8 @@ UndecorateSymbolName(
     }
     else
     {
-        rc = strlen( strncpy( outputString, "Unable to load msvcrt!__unDName", maxStringLength ) );
+        strncpy_s( outputString, maxStringLength, "Unable to load msvcrt!__unDName", maxStringLength );
+        rc = strlen( outputString );
         SetLastError( ERROR_MOD_NOT_FOUND );
     }
 

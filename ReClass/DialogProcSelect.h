@@ -5,65 +5,64 @@
 
 // CDialogProcSelect dialog
 
-class CDialogProcSelect : public CDialogEx
-{
-	DECLARE_DYNAMIC(CDialogProcSelect)
+class CDialogProcSelect : public CDialogEx {
+    DECLARE_DYNAMIC( CDialogProcSelect )
 public:
-	CDialogProcSelect(CWnd* pParent = NULL);
-	virtual ~CDialogProcSelect();
+    CDialogProcSelect( CWnd* pParent = NULL );
+    virtual ~CDialogProcSelect( );
 
-	// Dialog Data
-	enum { IDD = IDD_DIALOGPROCSELECT };
+    // Dialog Data
+    enum { IDD = IDD_DIALOGPROCSELECT };
 
-	void ListRunningProcs( );
+    void ListRunningProcs( );
 
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	virtual BOOL OnInitDialog();
+    virtual void DoDataExchange( CDataExchange* pDX );    // DDX/DDV support
+    virtual BOOL OnInitDialog( );
 
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP( )
 
-	afx_msg void OnClose( );
-	afx_msg void OnAttachButton();
-	afx_msg void OnRefreshButton();
-	afx_msg void OnDblClkListControl(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult);
+    afx_msg void OnClose( );
+    afx_msg void OnAttachButton( );
+    afx_msg void OnRefreshButton( );
+    afx_msg void OnDblClkListControl( NMHDR* pNMHDR, LRESULT* pResult );
+    afx_msg void OnColumnClick( NMHDR* pNMHDR, LRESULT* pResult );
 
 private:
-	enum
-	{
-		COLUMN_PROCESSNAME = 0,
-		COLUMN_PROCESSID,
-		NUM_OF_COLUMNS
-	};
+    enum
+    {
+        COLUMN_PROCESSNAME = 0,
+        COLUMN_PROCESSID,
+        NUM_OF_COLUMNS
+    };
 
-	struct ProcessInfoStack
-	{
-		DWORD dwProcessId;
-		CString strProcessName;
-	};
+    struct ProcessInfoStack
+    {
+        DWORD dwProcessId;
+        CString strProcessName;
+    };
 
-	typedef struct _COMPARESTRUCT 
-	{
-		CListCtrl* pListCtrl;
-		INT iColumn;
-		BOOLEAN bAscending;
-	} COMPARESTRUCT, *PCOMPARESTRUCT, *LPCOMPARESTRUCT;
-	
-	static int CALLBACK CompareFunction(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort);
+    typedef struct _COMPARESTRUCT
+    {
+        CListCtrl* pListCtrl;
+        INT iColumn;
+        BOOLEAN bAscending;
+    } COMPARESTRUCT, *PCOMPARESTRUCT, *LPCOMPARESTRUCT;
 
-	//Controls
-	CListCtrl m_ProcessList;
-	CButton m_FilterCheck;
-	CButton m_LoadAllSymbols;
+    static int CALLBACK CompareFunction( LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort );
 
-	BOOLEAN m_bSortAscendingName;
-	BOOLEAN m_bSortAscendingId;
+    //Controls
+    CListCtrl m_ProcessList;
+    CButton m_FilterCheck;
+    CButton m_LoadAllSymbols;
 
-	CRect m_OriginalSize;
-	CImageList m_ProcessIcons;
+    BOOLEAN m_bSortAscendingName;
+    BOOLEAN m_bSortAscendingId;
 
-	//Misc
-	std::vector<ProcessInfoStack> m_ProcessInfos;
-	volatile BOOLEAN m_bLoadingProcesses;
-	
+    CRect m_OriginalSize;
+    CImageList m_ProcessIcons;
+
+    //Misc
+    std::vector<ProcessInfoStack> m_ProcessInfos;
+    volatile BOOLEAN m_bLoadingProcesses;
+
 };

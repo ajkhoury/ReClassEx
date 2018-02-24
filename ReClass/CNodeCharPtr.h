@@ -3,18 +3,17 @@
 #include "CNodeBase.h"
 #include "CMemory.h"
 
-class CNodeCharPtr : public CNodeBase
-{
+class CNodeCharPtr : public CNodeBase {
 public:
-	CNodeCharPtr( );
+    CNodeCharPtr( );
 
-	virtual void Update( const PHOTSPOT Spot );
+    virtual void Update( const PHOTSPOT Spot );
 
-	virtual ULONG GetMemorySize( ) { return sizeof( void* ); }
+    virtual ULONG GetMemorySize( ) { return sizeof( void* ); }
 
-	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
+    virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
 public:
-	CNodeBase* m_pNode;
-	CMemory m_Memory;
+    CNodeBase* m_pNode;
+    CMemory m_Memory;
 };

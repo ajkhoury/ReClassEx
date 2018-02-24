@@ -6,9 +6,9 @@ class CNodeQword : public CNodeBase {
 public:
     CNodeQword( );
 
-	virtual void Update( const PHOTSPOT Spot );
+    virtual void Update( const PHOTSPOT Spot );
 
-	virtual ULONG GetMemorySize( ) { return sizeof( UINT64 ); }
+    virtual ULONG GetMemorySize( ) { return sizeof( UINT64 ); }
 
-	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
+    virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 };

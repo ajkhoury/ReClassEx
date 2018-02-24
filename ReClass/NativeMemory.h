@@ -46,8 +46,8 @@
 
 typedef enum _SECTION_INHERIT
 {
-	ViewShare = 1,
-	ViewUnmap = 2
+    ViewShare = 1,
+    ViewUnmap = 2
 } SECTION_INHERIT;
 
 
@@ -57,33 +57,33 @@ typedef enum _SECTION_INHERIT
 
 typedef struct _MEMORY_FRAME_INFORMATION
 {
-	ULONGLONG UseDescription : 4; // MMPFNUSE_*
-	ULONGLONG ListDescription : 3; // MMPFNLIST_*
-	ULONGLONG Reserved0 : 1; // reserved for future expansion
-	ULONGLONG Pinned : 1; // 1 - pinned, 0 - not pinned
-	ULONGLONG DontUse : 48; // *_INFORMATION overlay
-	ULONGLONG Priority : 3; // rev
-	ULONGLONG Reserved : 4; // reserved for future expansion
+    ULONGLONG UseDescription : 4; // MMPFNUSE_*
+    ULONGLONG ListDescription : 3; // MMPFNLIST_*
+    ULONGLONG Reserved0 : 1; // reserved for future expansion
+    ULONGLONG Pinned : 1; // 1 - pinned, 0 - not pinned
+    ULONGLONG DontUse : 48; // *_INFORMATION overlay
+    ULONGLONG Priority : 3; // rev
+    ULONGLONG Reserved : 4; // reserved for future expansion
 } MEMORY_FRAME_INFORMATION;
 
 typedef struct _FILEOFFSET_INFORMATION
 {
-	ULONGLONG DontUse : 9; // MEMORY_FRAME_INFORMATION overlay
-	ULONGLONG Offset : 48; // mapped files
-	ULONGLONG Reserved : 7; // reserved for future expansion
+    ULONGLONG DontUse : 9; // MEMORY_FRAME_INFORMATION overlay
+    ULONGLONG Offset : 48; // mapped files
+    ULONGLONG Reserved : 7; // reserved for future expansion
 } FILEOFFSET_INFORMATION;
 
 typedef struct _PAGEDIR_INFORMATION
 {
-	ULONGLONG DontUse : 9; // MEMORY_FRAME_INFORMATION overlay
-	ULONGLONG PageDirectoryBase : 48; // private pages
-	ULONGLONG Reserved : 7; // reserved for future expansion
+    ULONGLONG DontUse : 9; // MEMORY_FRAME_INFORMATION overlay
+    ULONGLONG PageDirectoryBase : 48; // private pages
+    ULONGLONG Reserved : 7; // reserved for future expansion
 } PAGEDIR_INFORMATION;
 
 typedef struct _MMPFN_MEMSNAP_INFORMATION
 {
-	ULONG_PTR InitialPageFrameIndex;
-	ULONG_PTR Count;
+    ULONG_PTR InitialPageFrameIndex;
+    ULONG_PTR Count;
 } MMPFN_MEMSNAP_INFORMATION, *PMMPFN_MEMSNAP_INFORMATION;
 
 typedef struct _MMPFN_IDENTITY
@@ -109,23 +109,23 @@ typedef struct _MMPFN_IDENTITY
 
 typedef NTSTATUS (NTAPI *tNtAllocateVirtualMemory)(
     IN HANDLE ProcessHandle,
-	IN OUT PVOID *BaseAddress,
-	IN ULONG_PTR ZeroBits,
-	IN OUT PSIZE_T RegionSize,
-	IN ULONG AllocationType,
-	IN ULONG Protect
+    IN OUT PVOID *BaseAddress,
+    IN ULONG_PTR ZeroBits,
+    IN OUT PSIZE_T RegionSize,
+    IN ULONG AllocationType,
+    IN ULONG Protect
     );
 
 typedef NTSTATUS (NTAPI *tNtFreeVirtualMemory)(
-	IN HANDLE ProcessHandle,
-	IN OUT PVOID *BaseAddress,
-	IN OUT PSIZE_T RegionSize,
-	IN ULONG FreeType
+    IN HANDLE ProcessHandle,
+    IN OUT PVOID *BaseAddress,
+    IN OUT PSIZE_T RegionSize,
+    IN ULONG FreeType
     );
 
 typedef NTSTATUS (NTAPI *tNtReadVirtualMemory)(
     IN HANDLE ProcessHandle,
-	IN PVOID BaseAddress OPTIONAL,
+    IN PVOID BaseAddress OPTIONAL,
     OUT PVOID Buffer,
     IN SIZE_T BufferSize,
     OUT PSIZE_T NumberOfBytesRead OPTIONAL
@@ -133,37 +133,37 @@ typedef NTSTATUS (NTAPI *tNtReadVirtualMemory)(
 
 typedef NTSTATUS(NTAPI *tNtWriteVirtualMemory)(
     IN HANDLE ProcessHandle,
-	IN PVOID BaseAddress OPTIONAL,
+    IN PVOID BaseAddress OPTIONAL,
     IN PVOID Buffer,
-	IN SIZE_T BufferSize,
+    IN SIZE_T BufferSize,
     OUT PSIZE_T NumberOfBytesWritten OPTIONAL
     );
 
 typedef NTSTATUS(NTAPI *tNtProtectVirtualMemory)(
     IN HANDLE ProcessHandle,
-	IN OUT PVOID *BaseAddress,
-	IN OUT PSIZE_T RegionSize,
-	IN ULONG NewProtect,
+    IN OUT PVOID *BaseAddress,
+    IN OUT PSIZE_T RegionSize,
+    IN ULONG NewProtect,
     OUT PULONG OldProtect
     );
 
 typedef NTSTATUS(NTAPI *tNtLockVirtualMemory)(
-	IN HANDLE ProcessHandle,
+    IN HANDLE ProcessHandle,
     IN OUT PVOID *BaseAddress,
     IN OUT PSIZE_T RegionSize,
-	IN ULONG MapType
+    IN ULONG MapType
     );
 
 typedef NTSTATUS(NTAPI *tNtUnlockVirtualMemory)(
     IN HANDLE ProcessHandle,
     IN OUT PVOID *BaseAddress,
     IN OUT PSIZE_T RegionSize,
-	IN ULONG MapType
+    IN ULONG MapType
     );
 
 typedef NTSTATUS(NTAPI *tNtCreateSection)(
     OUT PHANDLE SectionHandle,
-	IN ACCESS_MASK DesiredAccess,
+    IN ACCESS_MASK DesiredAccess,
     IN POBJECT_ATTRIBUTES ObjectAttributes OPTIONAL,
     IN PLARGE_INTEGER MaximumSize OPTIONAL,
     IN ULONG SectionPageProtection,
@@ -183,23 +183,23 @@ typedef NTSTATUS(NTAPI *tNtMapViewOfSection)(
     IN OUT PVOID *BaseAddress,
     IN ULONG_PTR ZeroBits,
     IN SIZE_T CommitSize,
-	IN OUT PLARGE_INTEGER SectionOffset OPTIONAL,
-	IN OUT PSIZE_T ViewSize,
+    IN OUT PLARGE_INTEGER SectionOffset OPTIONAL,
+    IN OUT PSIZE_T ViewSize,
     IN SECTION_INHERIT InheritDisposition,
     IN ULONG AllocationType,
     IN ULONG Win32Protect
     );
 
 typedef NTSTATUS(NTAPI *tNtUnmapViewOfSection)(
-	IN HANDLE ProcessHandle,
-	IN PVOID BaseAddress OPTIONAL
+    IN HANDLE ProcessHandle,
+    IN PVOID BaseAddress OPTIONAL
     );
 
 #if (NTDDI_VERSION >= NTDDI_WIN8)
 typedef NTSTATUS(NTAPI *tNtUnmapViewOfSectionEx)(
     IN HANDLE ProcessHandle,
     IN PVOID BaseAddress OPTIONAL,
-	IN ULONG Flags
+    IN ULONG Flags
     );
 #endif
 
@@ -218,8 +218,8 @@ typedef NTSTATUS(NTAPI *tNtCreatePartition)(
 
 typedef NTSTATUS(NTAPI *tNtOpenPartition)(
     OUT PHANDLE PartitionHandle,
-	IN ACCESS_MASK DesiredAccess,
-	IN POBJECT_ATTRIBUTES ObjectAttributes
+    IN ACCESS_MASK DesiredAccess,
+    IN POBJECT_ATTRIBUTES ObjectAttributes
     );
 #endif
 
@@ -237,7 +237,7 @@ typedef NTSTATUS(NTAPI *tNtMapUserPhysicalPagesScatter)(
     );
 
 typedef NTSTATUS(NTAPI *tNtAllocateUserPhysicalPages)(
-	IN HANDLE ProcessHandle,
+    IN HANDLE ProcessHandle,
     IN OUT PULONG_PTR NumberOfPages,
     OUT PULONG_PTR UserPfnArray
     );
@@ -252,8 +252,8 @@ typedef NTSTATUS(NTAPI *tNtFreeUserPhysicalPages)(
 #if (NTDDI_VERSION >= NTDDI_VISTA)
 typedef NTSTATUS(NTAPI *tNtOpenSession)(
     OUT PHANDLE SessionHandle,
-	IN ACCESS_MASK DesiredAccess,
-	IN POBJECT_ATTRIBUTES ObjectAttributes
+    IN ACCESS_MASK DesiredAccess,
+    IN POBJECT_ATTRIBUTES ObjectAttributes
     );
 #endif
 
@@ -263,7 +263,7 @@ typedef NTSTATUS(NTAPI *tNtGetWriteWatch)(
     IN ULONG Flags,
     IN PVOID BaseAddress,
     IN SIZE_T RegionSize,
-	OUT PVOID *UserAddressArray,
+    OUT PVOID *UserAddressArray,
     IN OUT PULONG_PTR EntriesInUserAddressArray,
     OUT PULONG Granularity
     );
@@ -282,9 +282,9 @@ typedef NTSTATUS(NTAPI *tNtCreatePagingFile)(
     );
 
 typedef NTSTATUS(NTAPI *tNtFlushInstructionCache)(
-	IN HANDLE ProcessHandle,
-	IN PVOID BaseAddress OPTIONAL,
-	IN SIZE_T Length
+    IN HANDLE ProcessHandle,
+    IN PVOID BaseAddress OPTIONAL,
+    IN SIZE_T Length
     );
 
 typedef NTSTATUS(NTAPI *tNtFlushWriteBuffer)(

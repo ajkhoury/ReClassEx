@@ -4,11 +4,11 @@
 
 class CNodeDouble : public CNodeBase {
 public:
-	CNodeDouble( );
+    CNodeDouble( );
 
-	virtual void Update( const PHOTSPOT Spot );
+    virtual void Update( const PHOTSPOT Spot );
 
-	virtual ULONG GetMemorySize( void ) { return sizeof( double ); }
+    virtual ULONG GetMemorySize( void ) { return sizeof( double ); }
 
-	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
+    virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 };

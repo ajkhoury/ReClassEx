@@ -2,14 +2,13 @@
 
 #include "CNodeBase.h"
 
-class CNodeBits : public CNodeBase
-{
+class CNodeBits : public CNodeBase {
 public:
-	CNodeBits( );
+    CNodeBits( );
 
-	virtual void Update( const PHOTSPOT Spot );
+    virtual void Update( const PHOTSPOT Spot );
 
-	virtual ULONG GetMemorySize( ) { return 1; }
+    virtual ULONG GetMemorySize( ) { return 1; }
 
-	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
+    virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 };

@@ -171,126 +171,126 @@
 // Working set operation types
 typedef enum _PROCESS_WORKING_SET_OPERATION
 {
-	ProcessWorkingSetSwap,
-	ProcessWorkingSetEmpty,
-	ProcessWorkingSetOperationMax
+    ProcessWorkingSetSwap,
+    ProcessWorkingSetEmpty,
+    ProcessWorkingSetOperationMax
 } PROCESS_WORKING_SET_OPERATION;
 
 // Process protection types and signers
 typedef enum _PS_PROTECTED_TYPE
 {
-	PsProtectedTypeNone,
-	PsProtectedTypeProtectedLight,
-	PsProtectedTypeProtected,
-	PsProtectedTypeMax
+    PsProtectedTypeNone,
+    PsProtectedTypeProtectedLight,
+    PsProtectedTypeProtected,
+    PsProtectedTypeMax
 } PS_PROTECTED_TYPE;
 
 typedef enum _PS_PROTECTED_SIGNER
 {
-	PsProtectedSignerNone,
-	PsProtectedSignerAuthenticode,
-	PsProtectedSignerCodeGen,
-	PsProtectedSignerAntimalware,
-	PsProtectedSignerLsa,
-	PsProtectedSignerWindows,
-	PsProtectedSignerWinTcb,
-	PsProtectedSignerMax
+    PsProtectedSignerNone,
+    PsProtectedSignerAuthenticode,
+    PsProtectedSignerCodeGen,
+    PsProtectedSignerAntimalware,
+    PsProtectedSignerLsa,
+    PsProtectedSignerWindows,
+    PsProtectedSignerWinTcb,
+    PsProtectedSignerMax
 } PS_PROTECTED_SIGNER;
 
 typedef enum _PS_ATTRIBUTE_NUM
 {
-	PsAttributeParentProcess, // in HANDLE
-	PsAttributeDebugPort, // in HANDLE
-	PsAttributeToken, // in HANDLE
-	PsAttributeClientId, // out PCLIENT_ID
-	PsAttributeTebAddress, // out PTEB *
-	PsAttributeImageName, // in PWSTR
-	PsAttributeImageInfo, // out PSECTION_IMAGE_INFORMATION
-	PsAttributeMemoryReserve, // in PPS_MEMORY_RESERVE
-	PsAttributePriorityClass, // in UCHAR
-	PsAttributeErrorMode, // in ULONG
-	PsAttributeStdHandleInfo, // 10, in PPS_STD_HANDLE_INFO
-	PsAttributeHandleList, // in PHANDLE
-	PsAttributeGroupAffinity, // in PGROUP_AFFINITY
-	PsAttributePreferredNode, // in PUSHORT
-	PsAttributeIdealProcessor, // in PPROCESSOR_NUMBER
-	PsAttributeUmsThread, // ? in PUMS_CREATE_THREAD_ATTRIBUTES
-	PsAttributeMitigationOptions, // in UCHAR
-	PsAttributeProtectionLevel,
-	PsAttributeSecureProcess, // since THRESHOLD
-	PsAttributeJobList,
-	PsAttributeMax
+    PsAttributeParentProcess, // in HANDLE
+    PsAttributeDebugPort, // in HANDLE
+    PsAttributeToken, // in HANDLE
+    PsAttributeClientId, // out PCLIENT_ID
+    PsAttributeTebAddress, // out PTEB *
+    PsAttributeImageName, // in PWSTR
+    PsAttributeImageInfo, // out PSECTION_IMAGE_INFORMATION
+    PsAttributeMemoryReserve, // in PPS_MEMORY_RESERVE
+    PsAttributePriorityClass, // in UCHAR
+    PsAttributeErrorMode, // in ULONG
+    PsAttributeStdHandleInfo, // 10, in PPS_STD_HANDLE_INFO
+    PsAttributeHandleList, // in PHANDLE
+    PsAttributeGroupAffinity, // in PGROUP_AFFINITY
+    PsAttributePreferredNode, // in PUSHORT
+    PsAttributeIdealProcessor, // in PPROCESSOR_NUMBER
+    PsAttributeUmsThread, // ? in PUMS_CREATE_THREAD_ATTRIBUTES
+    PsAttributeMitigationOptions, // in UCHAR
+    PsAttributeProtectionLevel,
+    PsAttributeSecureProcess, // since THRESHOLD
+    PsAttributeJobList,
+    PsAttributeMax
 } PS_ATTRIBUTE_NUM;
 
 typedef enum _PS_CREATE_STATE
 {
-	PsCreateInitialState,
-	PsCreateFailOnFileOpen,
-	PsCreateFailOnSectionCreate,
-	PsCreateFailExeFormat,
-	PsCreateFailMachineMismatch,
-	PsCreateFailExeName, // Debugger specified
-	PsCreateSuccess,
-	PsCreateMaximumStates
+    PsCreateInitialState,
+    PsCreateFailOnFileOpen,
+    PsCreateFailOnSectionCreate,
+    PsCreateFailExeFormat,
+    PsCreateFailMachineMismatch,
+    PsCreateFailExeName, // Debugger specified
+    PsCreateSuccess,
+    PsCreateMaximumStates
 } PS_CREATE_STATE;
 
 typedef enum _KTHREAD_STATE
 {
-	Initialized,
-	Ready,
-	Running,
-	Standby,
-	Terminated,
-	Waiting,
-	Transition,
-	DeferredReady,
-	GateWaitObsolete,
-	WaitingForProcessInSwap,
-	MaximumThreadState
+    Initialized,
+    Ready,
+    Running,
+    Standby,
+    Terminated,
+    Waiting,
+    Transition,
+    DeferredReady,
+    GateWaitObsolete,
+    WaitingForProcessInSwap,
+    MaximumThreadState
 } KTHREAD_STATE, *PKTHREAD_STATE;
 
 typedef enum _KWAIT_REASON
 {
-	Executive,
-	FreePage,
-	PageIn,
-	PoolAllocation,
-	DelayExecution,
-	Suspended,
-	UserRequest,
-	WrExecutive,
-	WrFreePage,
-	WrPageIn,
-	WrPoolAllocation,
-	WrDelayExecution,
-	WrSuspended,
-	WrUserRequest,
-	WrEventPair,
-	WrQueue,
-	WrLpcReceive,
-	WrLpcReply,
-	WrVirtualMemory,
-	WrPageOut,
-	WrRendezvous,
-	WrKeyedEvent,
-	WrTerminated,
-	WrProcessInSwap,
-	WrCpuRateControl,
-	WrCalloutStack,
-	WrKernel,
-	WrResource,
-	WrPushLock,
-	WrMutex,
-	WrQuantumEnd,
-	WrDispatchInt,
-	WrPreempted,
-	WrYieldExecution,
-	WrFastMutex,
-	WrGuardedMutex,
-	WrRundown,
-	WrAlertByThreadId,
-	WrDeferredPreempt,
-	MaximumWaitReason
+    Executive,
+    FreePage,
+    PageIn,
+    PoolAllocation,
+    DelayExecution,
+    Suspended,
+    UserRequest,
+    WrExecutive,
+    WrFreePage,
+    WrPageIn,
+    WrPoolAllocation,
+    WrDelayExecution,
+    WrSuspended,
+    WrUserRequest,
+    WrEventPair,
+    WrQueue,
+    WrLpcReceive,
+    WrLpcReply,
+    WrVirtualMemory,
+    WrPageOut,
+    WrRendezvous,
+    WrKeyedEvent,
+    WrTerminated,
+    WrProcessInSwap,
+    WrCpuRateControl,
+    WrCalloutStack,
+    WrKernel,
+    WrResource,
+    WrPushLock,
+    WrMutex,
+    WrQuantumEnd,
+    WrDispatchInt,
+    WrPreempted,
+    WrYieldExecution,
+    WrFastMutex,
+    WrGuardedMutex,
+    WrRundown,
+    WrAlertByThreadId,
+    WrDeferredPreempt,
+    MaximumWaitReason
 } KWAIT_REASON, *PKWAIT_REASON;
 
 
@@ -300,58 +300,58 @@ typedef enum _KWAIT_REASON
 
 typedef struct _VM_COUNTERS
 {
-	SIZE_T PeakVirtualSize;
-	SIZE_T VirtualSize;
-	ULONG PageFaultCount;
-	SIZE_T PeakWorkingSetSize;
-	SIZE_T WorkingSetSize;
-	SIZE_T QuotaPeakPagedPoolUsage;
-	SIZE_T QuotaPagedPoolUsage;
-	SIZE_T QuotaPeakNonPagedPoolUsage;
-	SIZE_T QuotaNonPagedPoolUsage;
-	SIZE_T PagefileUsage;
-	SIZE_T PeakPagefileUsage;
+    SIZE_T PeakVirtualSize;
+    SIZE_T VirtualSize;
+    ULONG PageFaultCount;
+    SIZE_T PeakWorkingSetSize;
+    SIZE_T WorkingSetSize;
+    SIZE_T QuotaPeakPagedPoolUsage;
+    SIZE_T QuotaPagedPoolUsage;
+    SIZE_T QuotaPeakNonPagedPoolUsage;
+    SIZE_T QuotaNonPagedPoolUsage;
+    SIZE_T PagefileUsage;
+    SIZE_T PeakPagefileUsage;
 } VM_COUNTERS, *PVM_COUNTERS;
 
 typedef struct _VM_COUNTERS_EX
 {
-	SIZE_T PeakVirtualSize;
-	SIZE_T VirtualSize;
-	ULONG PageFaultCount;
-	SIZE_T PeakWorkingSetSize;
-	SIZE_T WorkingSetSize;
-	SIZE_T QuotaPeakPagedPoolUsage;
-	SIZE_T QuotaPagedPoolUsage;
-	SIZE_T QuotaPeakNonPagedPoolUsage;
-	SIZE_T QuotaNonPagedPoolUsage;
-	SIZE_T PagefileUsage;
-	SIZE_T PeakPagefileUsage;
-	SIZE_T PrivateUsage;
+    SIZE_T PeakVirtualSize;
+    SIZE_T VirtualSize;
+    ULONG PageFaultCount;
+    SIZE_T PeakWorkingSetSize;
+    SIZE_T WorkingSetSize;
+    SIZE_T QuotaPeakPagedPoolUsage;
+    SIZE_T QuotaPagedPoolUsage;
+    SIZE_T QuotaPeakNonPagedPoolUsage;
+    SIZE_T QuotaNonPagedPoolUsage;
+    SIZE_T PagefileUsage;
+    SIZE_T PeakPagefileUsage;
+    SIZE_T PrivateUsage;
 } VM_COUNTERS_EX, *PVM_COUNTERS_EX;
 
 typedef struct _VM_COUNTERS_EX2
 {
-	VM_COUNTERS_EX CountersEx;
-	SIZE_T PrivateWorkingSetSize;
-	SIZE_T SharedCommitUsage;
+    VM_COUNTERS_EX CountersEx;
+    SIZE_T PrivateWorkingSetSize;
+    SIZE_T SharedCommitUsage;
 } VM_COUNTERS_EX2, *PVM_COUNTERS_EX2;
 
 typedef struct _PS_ATTRIBUTE
 {
-	ULONG Attribute;
-	SIZE_T Size;
-	union
-	{
-		ULONG Value;
-		PVOID ValuePtr;
-	};
-	PSIZE_T ReturnLength;
+    ULONG Attribute;
+    SIZE_T Size;
+    union
+    {
+        ULONG Value;
+        PVOID ValuePtr;
+    };
+    PSIZE_T ReturnLength;
 } PS_ATTRIBUTE, *PPS_ATTRIBUTE;
 
 typedef struct _PS_ATTRIBUTE_LIST
 {
-	SIZE_T TotalLength;
-	PS_ATTRIBUTE Attributes[1];
+    SIZE_T TotalLength;
+    PS_ATTRIBUTE Attributes[1];
 } PS_ATTRIBUTE_LIST, *PPS_ATTRIBUTE_LIST;
 
 #define PsAttributeValue(Number, Thread, Input, Unknown) \
@@ -395,77 +395,77 @@ typedef struct _PS_ATTRIBUTE_LIST
 
 typedef struct _PS_CREATE_INFO
 {
-	SIZE_T Size;
-	PS_CREATE_STATE State;
-	union
-	{
-		// PsCreateInitialState
-		struct
-		{
-			union
-			{
-				ULONG InitFlags;
-				struct
-				{
-					UCHAR WriteOutputOnExit : 1;
-					UCHAR DetectManifest : 1;
-					UCHAR IFEOSkipDebugger : 1;
-					UCHAR IFEODoNotPropagateKeyState : 1;
-					UCHAR SpareBits1 : 4;
-					UCHAR SpareBits2 : 8;
-					USHORT ProhibitedImageCharacteristics : 16;
-				};
-			};
-			ACCESS_MASK AdditionalFileAccess;
-		} InitState;
+    SIZE_T Size;
+    PS_CREATE_STATE State;
+    union
+    {
+        // PsCreateInitialState
+        struct
+        {
+            union
+            {
+                ULONG InitFlags;
+                struct
+                {
+                    UCHAR WriteOutputOnExit : 1;
+                    UCHAR DetectManifest : 1;
+                    UCHAR IFEOSkipDebugger : 1;
+                    UCHAR IFEODoNotPropagateKeyState : 1;
+                    UCHAR SpareBits1 : 4;
+                    UCHAR SpareBits2 : 8;
+                    USHORT ProhibitedImageCharacteristics : 16;
+                };
+            };
+            ACCESS_MASK AdditionalFileAccess;
+        } InitState;
 
-		// PsCreateFailOnSectionCreate
-		struct
-		{
-			HANDLE FileHandle;
-		} FailSection;
+        // PsCreateFailOnSectionCreate
+        struct
+        {
+            HANDLE FileHandle;
+        } FailSection;
 
-		// PsCreateFailExeFormat
-		struct
-		{
-			USHORT DllCharacteristics;
-		} ExeFormat;
+        // PsCreateFailExeFormat
+        struct
+        {
+            USHORT DllCharacteristics;
+        } ExeFormat;
 
-		// PsCreateFailExeName
-		struct
-		{
-			HANDLE IFEOKey;
-		} ExeName;
+        // PsCreateFailExeName
+        struct
+        {
+            HANDLE IFEOKey;
+        } ExeName;
 
-		// PsCreateSuccess
-		struct
-		{
-			union
-			{
-				ULONG OutputFlags;
-				struct
-				{
-					UCHAR ProtectedProcess : 1;
-					UCHAR AddressSpaceOverride : 1;
-					UCHAR DevOverrideEnabled : 1; // from Image File Execution Options
-					UCHAR ManifestDetected : 1;
-					UCHAR ProtectedProcessLight : 1;
-					UCHAR SpareBits1 : 3;
-					UCHAR SpareBits2 : 8;
-					USHORT SpareBits3 : 16;
-				};
-			};
-			HANDLE FileHandle;
-			HANDLE SectionHandle;
-			ULONGLONG UserProcessParametersNative;
-			ULONG UserProcessParametersWow64;
-			ULONG CurrentParameterFlags;
-			ULONGLONG PebAddressNative;
-			ULONG PebAddressWow64;
-			ULONGLONG ManifestAddress;
-			ULONG ManifestSize;
-		} SuccessState;
-	};
+        // PsCreateSuccess
+        struct
+        {
+            union
+            {
+                ULONG OutputFlags;
+                struct
+                {
+                    UCHAR ProtectedProcess : 1;
+                    UCHAR AddressSpaceOverride : 1;
+                    UCHAR DevOverrideEnabled : 1; // from Image File Execution Options
+                    UCHAR ManifestDetected : 1;
+                    UCHAR ProtectedProcessLight : 1;
+                    UCHAR SpareBits1 : 3;
+                    UCHAR SpareBits2 : 8;
+                    USHORT SpareBits3 : 16;
+                };
+            };
+            HANDLE FileHandle;
+            HANDLE SectionHandle;
+            ULONGLONG UserProcessParametersNative;
+            ULONG UserProcessParametersWow64;
+            ULONG CurrentParameterFlags;
+            ULONGLONG PebAddressNative;
+            ULONG PebAddressWow64;
+            ULONGLONG ManifestAddress;
+            ULONG ManifestSize;
+        } SuccessState;
+    };
 } PS_CREATE_INFO, *PPS_CREATE_INFO;
 
 
@@ -484,83 +484,83 @@ typedef struct _PS_CREATE_INFO
 #define NtCurrentThreadId()		(NtCurrentTeb()->ClientId.UniqueThread)
 
 typedef NTSTATUS( NTAPI *tNtCreateThreadEx )(
-	OUT PHANDLE ThreadHandle,
-	IN ACCESS_MASK DesiredAccess,
-	IN POBJECT_ATTRIBUTES ObjectAttributes OPTIONAL,
-	IN HANDLE ProcessHandle,
-	IN PVOID StartRoutine, // PUSER_THREAD_START_ROUTINE
-	IN PVOID Argument OPTIONAL,
-	IN ULONG CreateFlags, // THREAD_CREATE_FLAGS_*
-	IN SIZE_T ZeroBits,
-	IN SIZE_T StackSize,
-	IN SIZE_T MaximumStackSize,
-	IN PPS_ATTRIBUTE_LIST AttributeList OPTIONAL
-	);
+    OUT PHANDLE ThreadHandle,
+    IN ACCESS_MASK DesiredAccess,
+    IN POBJECT_ATTRIBUTES ObjectAttributes OPTIONAL,
+    IN HANDLE ProcessHandle,
+    IN PVOID StartRoutine, // PUSER_THREAD_START_ROUTINE
+    IN PVOID Argument OPTIONAL,
+    IN ULONG CreateFlags, // THREAD_CREATE_FLAGS_*
+    IN SIZE_T ZeroBits,
+    IN SIZE_T StackSize,
+    IN SIZE_T MaximumStackSize,
+    IN PPS_ATTRIBUTE_LIST AttributeList OPTIONAL
+    );
 
 typedef NTSTATUS( NTAPI *tNtCreateThread )(
-	OUT PHANDLE ThreadHandle,
-	IN ACCESS_MASK DesiredAccess,
-	IN POBJECT_ATTRIBUTES ObjectAttributes OPTIONAL,
-	IN HANDLE ProcessHandle,
-	OUT PCLIENT_ID ClientId,
-	IN PCONTEXT ThreadContext,
-	IN PINITIAL_TEB InitialTeb,
-	IN BOOLEAN CreateSuspended
-	);
+    OUT PHANDLE ThreadHandle,
+    IN ACCESS_MASK DesiredAccess,
+    IN POBJECT_ATTRIBUTES ObjectAttributes OPTIONAL,
+    IN HANDLE ProcessHandle,
+    OUT PCLIENT_ID ClientId,
+    IN PCONTEXT ThreadContext,
+    IN PINITIAL_TEB InitialTeb,
+    IN BOOLEAN CreateSuspended
+    );
 
 typedef NTSTATUS( NTAPI *tNtOpenThread )(
-	OUT PHANDLE ThreadHandle,
-	IN ACCESS_MASK DesiredAccess,
-	IN POBJECT_ATTRIBUTES ObjectAttributes,
-	IN PCLIENT_ID ClientId OPTIONAL
-	);
+    OUT PHANDLE ThreadHandle,
+    IN ACCESS_MASK DesiredAccess,
+    IN POBJECT_ATTRIBUTES ObjectAttributes,
+    IN PCLIENT_ID ClientId OPTIONAL
+    );
 
 typedef NTSTATUS( NTAPI *tNtTerminateThread )(
-	IN HANDLE ThreadHandle,
-	IN UINT ExitCode
-	);
+    IN HANDLE ThreadHandle,
+    IN UINT ExitCode
+    );
 
 typedef NTSTATUS( NTAPI *tNtSuspendThread )(
-	IN HANDLE ThreadHandle,
-	OUT PULONG PreviousSuspendCount OPTIONAL
-	);
+    IN HANDLE ThreadHandle,
+    OUT PULONG PreviousSuspendCount OPTIONAL
+    );
 
 typedef NTSTATUS( NTAPI *tNtResumeThread )(
-	IN HANDLE ThreadHandle,
-	OUT PULONG SuspendCount OPTIONAL
-	);
+    IN HANDLE ThreadHandle,
+    OUT PULONG SuspendCount OPTIONAL
+    );
 
 typedef VOID( *PPS_APC_ROUTINE )(
-	IN PVOID ApcArgument1 OPTIONAL,
-	IN PVOID ApcArgument2 OPTIONAL,
-	IN PVOID ApcArgument3 OPTIONAL
-	);
+    IN PVOID ApcArgument1 OPTIONAL,
+    IN PVOID ApcArgument2 OPTIONAL,
+    IN PVOID ApcArgument3 OPTIONAL
+    );
 
 typedef NTSTATUS( NTAPI *tNtQueueApcThread )(
-	IN HANDLE ThreadHandle,
-	IN PPS_APC_ROUTINE ApcRoutine,
-	IN PVOID ApcArgument1 OPTIONAL,
-	IN PVOID ApcArgument2 OPTIONAL,
-	IN PVOID ApcArgument3 OPTIONAL
-	);
+    IN HANDLE ThreadHandle,
+    IN PPS_APC_ROUTINE ApcRoutine,
+    IN PVOID ApcArgument1 OPTIONAL,
+    IN PVOID ApcArgument2 OPTIONAL,
+    IN PVOID ApcArgument3 OPTIONAL
+    );
 
 #if (NTDDI_VERSION >= NTDDI_WIN7)
 typedef NTSTATUS( NTAPI *tNtQueueApcThreadEx )(
-	IN HANDLE ThreadHandle,
-	IN HANDLE UserApcReserveHandle OPTIONAL,
-	IN PPS_APC_ROUTINE ApcRoutine,
-	IN PVOID ApcArgument1 OPTIONAL,
-	IN PVOID ApcArgument2 OPTIONAL,
-	IN PVOID ApcArgument3 OPTIONAL
-	);
+    IN HANDLE ThreadHandle,
+    IN HANDLE UserApcReserveHandle OPTIONAL,
+    IN PPS_APC_ROUTINE ApcRoutine,
+    IN PVOID ApcArgument1 OPTIONAL,
+    IN PVOID ApcArgument2 OPTIONAL,
+    IN PVOID ApcArgument3 OPTIONAL
+    );
 #endif
 
 typedef NTSTATUS(NTAPI *tNtCreateProcess)(
     OUT PHANDLE ProcessHandle,
     IN ACCESS_MASK DesiredAccess,
     IN POBJECT_ATTRIBUTES ObjectAttributes OPTIONAL,
-	IN HANDLE ParentProcess,
-	IN BOOLEAN InheritObjectTable,
+    IN HANDLE ParentProcess,
+    IN BOOLEAN InheritObjectTable,
     IN HANDLE SectionHandle OPTIONAL,
     IN HANDLE DebugPort OPTIONAL,
     IN HANDLE ExceptionPort OPTIONAL
@@ -570,30 +570,30 @@ typedef NTSTATUS(NTAPI *tNtCreateProcessEx)(
     OUT PHANDLE ProcessHandle,
     IN ACCESS_MASK DesiredAccess,
     IN POBJECT_ATTRIBUTES ObjectAttributes OPTIONAL,
-	IN HANDLE ParentProcess,
-	IN ULONG Flags,
+    IN HANDLE ParentProcess,
+    IN ULONG Flags,
     IN HANDLE SectionHandle OPTIONAL,
     IN HANDLE DebugPort OPTIONAL,
     IN HANDLE ExceptionPort OPTIONAL,
-	IN ULONG JobMemberLevel
+    IN ULONG JobMemberLevel
     );
 
 typedef NTSTATUS( NTAPI *tNtOpenProcess )(
-	OUT PHANDLE ProcessHandle,
-	IN ACCESS_MASK AccessMask,
-	IN POBJECT_ATTRIBUTES ObjectAttributes,
-	IN PCLIENT_ID ClientId
-	);
+    OUT PHANDLE ProcessHandle,
+    IN ACCESS_MASK AccessMask,
+    IN POBJECT_ATTRIBUTES ObjectAttributes,
+    IN PCLIENT_ID ClientId
+    );
 
 typedef NTSTATUS( NTAPI *tNtTerminateProcess )(
-	IN HANDLE ProcessHandle OPTIONAL,
-	IN NTSTATUS ExitStatus
-	);
+    IN HANDLE ProcessHandle OPTIONAL,
+    IN NTSTATUS ExitStatus
+    );
 
 typedef NTSTATUS( NTAPI *tNtSuspendProcess )(
-	IN HANDLE ProcessHandle
-	);
+    IN HANDLE ProcessHandle
+    );
 
 typedef NTSTATUS( NTAPI *tNtResumeProcess )(
-	IN HANDLE ProcessHandle
-	);
+    IN HANDLE ProcessHandle
+    );

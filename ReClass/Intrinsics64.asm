@@ -29,8 +29,8 @@
 ; );
 ;************************************
 ReadGS PROC
-	mov rax, gs:[rcx]
-	ret
+    mov rax, gs:[rcx]
+    ret
 ReadGS ENDP
 
 END

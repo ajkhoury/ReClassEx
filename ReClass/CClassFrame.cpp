@@ -9,15 +9,15 @@
 IMPLEMENT_DYNCREATE( CClassFrame, CMDIChildWndEx )
 
 BEGIN_MESSAGE_MAP( CClassFrame, CMDIChildWndEx )
-	ON_COMMAND( ID_FILE_CLOSE, &CClassFrame::OnFileClose )
-	ON_WM_SETFOCUS( )
-	ON_WM_CREATE( )
+    ON_COMMAND( ID_FILE_CLOSE, &CClassFrame::OnFileClose )
+    ON_WM_SETFOCUS( )
+    ON_WM_CREATE( )
 END_MESSAGE_MAP( )
 
 // CChildFrame construction/destruction
 
 CClassFrame::CClassFrame( )
-	: m_pClassView( NULL )
+    : m_pClassView( NULL )
 {
 }
 
@@ -26,37 +26,37 @@ CClassFrame::~CClassFrame( )
     //
     // Cleanup!
     //
-	if (m_pClassView != NULL)
-	{
-		delete m_pClassView;
-		m_pClassView = NULL;
-	}
+    if (m_pClassView != NULL)
+    {
+        delete m_pClassView;
+        m_pClassView = NULL;
+    }
 }
 
 BOOL CClassFrame::PreCreateWindow( CREATESTRUCT& cs )
 {
-	if (!CMDIChildWndEx::PreCreateWindow( cs ))
-		return FALSE;
+    if (!CMDIChildWndEx::PreCreateWindow( cs ))
+        return FALSE;
 
     //
     // Modify the Window class and style
-	//
+    //
     cs.dwExStyle &= ~WS_EX_CLIENTEDGE;
-	cs.lpszClass = AfxRegisterWndClass( 0 );
+    cs.lpszClass = AfxRegisterWndClass( 0 );
 
-	return TRUE;
+    return TRUE;
 }
 
 // CChildFrame diagnostics
 #ifdef _DEBUG
 void CClassFrame::AssertValid( ) const
 {
-	CMDIChildWndEx::AssertValid( );
+    CMDIChildWndEx::AssertValid( );
 }
 
 void CClassFrame::Dump( CDumpContext& dc ) const
 {
-	CMDIChildWndEx::Dump( dc );
+    CMDIChildWndEx::Dump( dc );
 }
 #endif //_DEBUG
 
@@ -64,21 +64,21 @@ void CClassFrame::Dump( CDumpContext& dc ) const
 void CClassFrame::OnFileClose( )
 {
     //
-	// To close the frame, just send a WM_CLOSE, which is the equivalent
-	// choosing close from the system menu.
+    // To close the frame, just send a WM_CLOSE, which is the equivalent
+    // choosing close from the system menu.
     //
-	SendMessage( WM_CLOSE );
+    SendMessage( WM_CLOSE );
 }
 
 int CClassFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
 {
-	if (CMDIChildWndEx::OnCreate( lpCreateStruct ) == -1)
-		return -1;
+    if (CMDIChildWndEx::OnCreate( lpCreateStruct ) == -1)
+        return -1;
 
     //
-	// Create a view to occupy the client area of the frame
+    // Create a view to occupy the client area of the frame
     //
-	m_pClassView = new CClassView;
+    m_pClassView = new CClassView;
     if (m_pClassView)
     {
         if (m_pClassView->Create( NULL, NULL, 
@@ -87,28 +87,28 @@ int CClassFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
             return 0;
         }     
     }
-			
-	TRACE0( "Failed to create view window!\n" );
-	return -1;
+            
+    TRACE0( "Failed to create view window!\n" );
+    return -1;
 }
 
 void CClassFrame::OnSetFocus( CWnd* pOldWnd )
 {
-	CMDIChildWndEx::OnSetFocus( pOldWnd );
+    CMDIChildWndEx::OnSetFocus( pOldWnd );
 
-	m_pClassView->SetFocus( );
+    m_pClassView->SetFocus( );
 }
 
 BOOL CClassFrame::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo )
 {
     //
-	// Let the view have first crack at the command
+    // Let the view have first crack at the command
     //
-	if (m_pClassView->OnCmdMsg( nID, nCode, pExtra, pHandlerInfo ))
-		return TRUE;
+    if (m_pClassView->OnCmdMsg( nID, nCode, pExtra, pHandlerInfo ))
+        return TRUE;
 
     //
-	// Otherwise, do default handling
+    // Otherwise, do default handling
     //
-	return CMDIChildWndEx::OnCmdMsg( nID, nCode, pExtra, pHandlerInfo );
+    return CMDIChildWndEx::OnCmdMsg( nID, nCode, pExtra, pHandlerInfo );
 }

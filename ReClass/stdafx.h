@@ -245,17 +245,17 @@ ULONG_PTR ConvertStrToAddress( CString str );
 
 struct MemMapInfo
 {
-	ULONG_PTR  Start;
-	ULONG_PTR  End;
-	DWORD   Size;
-	CString Name;
-	CString Path;
+    ULONG_PTR  Start;
+    ULONG_PTR  End;
+    DWORD   Size;
+    CString Name;
+    CString Path;
 };
 
 struct AddressName
 {
-	CString Name;
-	ULONG_PTR Address;
+    CString Name;
+    ULONG_PTR Address;
 };
 
 //
@@ -283,10 +283,10 @@ static TCHAR s_ReClassLogBuf[1024]; \
 
 #define PrintOut(fmt, ...) { \
 do { \
-	if (fmt) { \
-		_sntprintf_s(s_ReClassLogBuf, 1024, fmt, ##__VA_ARGS__); \
-		g_ReClassApp.m_pConsole->PrintText(s_ReClassLogBuf); \
-	} \
+    if (fmt) { \
+        _sntprintf_s(s_ReClassLogBuf, 1024, fmt, ##__VA_ARGS__); \
+        g_ReClassApp.m_pConsole->PrintText(s_ReClassLogBuf); \
+    } \
 } while (0);\
 }
 

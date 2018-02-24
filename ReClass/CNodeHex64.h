@@ -4,11 +4,11 @@
 
 class CNodeHex64 : public CNodeBase {
 public:
-	CNodeHex64( );
+    CNodeHex64( );
 
-	virtual void Update( const PHOTSPOT Spot );
+    virtual void Update( const PHOTSPOT Spot );
 
-	virtual ULONG GetMemorySize( ) { return sizeof( __int64 ); }
+    virtual ULONG GetMemorySize( ) { return sizeof( __int64 ); }
 
-	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
+    virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 };

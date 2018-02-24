@@ -5,7 +5,7 @@
 class CNodeUnicode : public CNodeBase
 {
 public:
-	CNodeUnicode( );
+    CNodeUnicode( );
 
     virtual void Update( const PHOTSPOT Spot );
     

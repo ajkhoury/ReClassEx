@@ -2,8 +2,12 @@
 
 #pragma warning(disable : 4996)
 
-// For demangling rtti names
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+//
+// For demangling rtti names
 //
 // UnDecorateSymbolName Flags
 //
@@ -91,3 +95,7 @@ UndecorateSymbolNameUnicode(
 #endif
 
 #pragma warning(default : 4996)
+
+#ifdef __cplusplus
+} // extern "C"
+#endif

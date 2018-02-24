@@ -46,21 +46,21 @@
     }
 
 #define InitializeObjectAttributes64(p,n,a,r,s) { \
-	(p)->Length = sizeof(_OBJECT_ATTRIBUTES64); \
-	(p)->RootDirectory = r; \
-	(p)->Attributes = a; \
-	(p)->ObjectName = n; \
-	(p)->SecurityDescriptor = s; \
-	(p)->SecurityQualityOfService = NULL; \
+    (p)->Length = sizeof(_OBJECT_ATTRIBUTES64); \
+    (p)->RootDirectory = r; \
+    (p)->Attributes = a; \
+    (p)->ObjectName = n; \
+    (p)->SecurityDescriptor = s; \
+    (p)->SecurityQualityOfService = NULL; \
 }
 
 #define InitializeObjectAttributes32(p,n,a,r,s) { \
-	(p)->Length = sizeof(_OBJECT_ATTRIBUTES32); \
-	(p)->RootDirectory = r; \
-	(p)->Attributes = a; \
-	(p)->ObjectName = n; \
-	(p)->SecurityDescriptor = s; \
-	(p)->SecurityQualityOfService = NULL; \
+    (p)->Length = sizeof(_OBJECT_ATTRIBUTES32); \
+    (p)->RootDirectory = r; \
+    (p)->Attributes = a; \
+    (p)->ObjectName = n; \
+    (p)->SecurityDescriptor = s; \
+    (p)->SecurityQualityOfService = NULL; \
 }
 
 
@@ -70,32 +70,32 @@
 
 enum _KOBJECTS
 {
-	EventNotificationObject = 0x0,
-	EventSynchronizationObject = 0x1,
-	MutantObject = 0x2,
-	ProcessObject = 0x3,
-	QueueObject = 0x4,
-	SemaphoreObject = 0x5,
-	ThreadObject = 0x6,
-	GateObject = 0x7,
-	TimerNotificationObject = 0x8,
-	TimerSynchronizationObject = 0x9,
-	Spare2Object = 0xa,
-	Spare3Object = 0xb,
-	Spare4Object = 0xc,
-	Spare5Object = 0xd,
-	Spare6Object = 0xe,
-	Spare7Object = 0xf,
-	Spare8Object = 0x10,
-	Spare9Object = 0x11,
-	ApcObject = 0x12,
-	DpcObject = 0x13,
-	DeviceQueueObject = 0x14,
-	EventPairObject = 0x15,
-	InterruptObject = 0x16,
-	ProfileObject = 0x17,
-	ThreadedDpcObject = 0x18,
-	MaximumKernelObject = 0x19,
+    EventNotificationObject = 0x0,
+    EventSynchronizationObject = 0x1,
+    MutantObject = 0x2,
+    ProcessObject = 0x3,
+    QueueObject = 0x4,
+    SemaphoreObject = 0x5,
+    ThreadObject = 0x6,
+    GateObject = 0x7,
+    TimerNotificationObject = 0x8,
+    TimerSynchronizationObject = 0x9,
+    Spare2Object = 0xa,
+    Spare3Object = 0xb,
+    Spare4Object = 0xc,
+    Spare5Object = 0xd,
+    Spare6Object = 0xe,
+    Spare7Object = 0xf,
+    Spare8Object = 0x10,
+    Spare9Object = 0x11,
+    ApcObject = 0x12,
+    DpcObject = 0x13,
+    DeviceQueueObject = 0x14,
+    EventPairObject = 0x15,
+    InterruptObject = 0x16,
+    ProfileObject = 0x17,
+    ThreadedDpcObject = 0x18,
+    MaximumKernelObject = 0x19,
 };
 
 
@@ -104,21 +104,21 @@ enum _KOBJECTS
 ///
 
 typedef NTSTATUS(NTAPI *tNtDuplicateObject)(
-	IN HANDLE SourceProcessHandle,
-	IN HANDLE SourceHandle,
-	IN HANDLE TargetProcessHandle OPTIONAL,
-	OUT PHANDLE TargetHandle OPTIONAL,
-	IN ACCESS_MASK DesiredAccess,
-	IN ULONG HandleAttributes,
-	IN ULONG Options
-	);
+    IN HANDLE SourceProcessHandle,
+    IN HANDLE SourceHandle,
+    IN HANDLE TargetProcessHandle OPTIONAL,
+    OUT PHANDLE TargetHandle OPTIONAL,
+    IN ACCESS_MASK DesiredAccess,
+    IN ULONG HandleAttributes,
+    IN ULONG Options
+    );
 
 typedef NTSTATUS(NTAPI *tNtMakeTemporaryObject)(
-	IN HANDLE Handle
-	);
+    IN HANDLE Handle
+    );
 
 typedef NTSTATUS(NTAPI *tNtMakePermanentObject)(
-	IN HANDLE Handle
+    IN HANDLE Handle
     );
 
 typedef NTSTATUS(NTAPI *tNtSignalAndWaitForSingleObject)(
@@ -136,19 +136,19 @@ typedef NTSTATUS(NTAPI *tNtWaitForSingleObject)(
 
 typedef NTSTATUS(NTAPI *tNtWaitForMultipleObjects)(
     IN ULONG Count,
-	IN HANDLE Handles[],
+    IN HANDLE Handles[],
     IN WAIT_TYPE WaitType,
     IN BOOLEAN Alertable,
-	IN PLARGE_INTEGER Timeout OPTIONAL
+    IN PLARGE_INTEGER Timeout OPTIONAL
     );
 
 #if (NTDDI_VERSION >= NTDDI_WS03)
 typedef NTSTATUS(NTAPI *tNtWaitForMultipleObjects32)(
-	IN ULONG Count,
-	IN LONG Handles[],
-	IN WAIT_TYPE WaitType,
-	IN BOOLEAN Alertable,
-	IN PLARGE_INTEGER Timeout OPTIONAL
+    IN ULONG Count,
+    IN LONG Handles[],
+    IN WAIT_TYPE WaitType,
+    IN BOOLEAN Alertable,
+    IN PLARGE_INTEGER Timeout OPTIONAL
     );
 #endif
 
@@ -162,7 +162,7 @@ typedef NTSTATUS(NTAPI *tNtQuerySecurityObject)(
     IN HANDLE Handle,
     IN SECURITY_INFORMATION SecurityInformation,
     IN OUT PSECURITY_DESCRIPTOR SecurityDescriptor OPTIONAL,
-	IN ULONG Length,
+    IN ULONG Length,
     OUT PULONG LengthNeeded
     );
 
@@ -178,16 +178,16 @@ typedef NTSTATUS(NTAPI *tNtCompareObjects)(
 #endif
 
 typedef NTSTATUS(NTAPI *tNtCreateSymbolicLinkObject)(
-	OUT PHANDLE LinkHandle,
-	IN ACCESS_MASK DesiredAccess,
-	IN POBJECT_ATTRIBUTES ObjectAttributes,
-	IN PUNICODE_STRING LinkTarget
+    OUT PHANDLE LinkHandle,
+    IN ACCESS_MASK DesiredAccess,
+    IN POBJECT_ATTRIBUTES ObjectAttributes,
+    IN PUNICODE_STRING LinkTarget
     );
 
 typedef NTSTATUS(NTAPI *tNtOpenSymbolicLinkObject)(
-	OUT PHANDLE LinkHandle,
-	IN ACCESS_MASK DesiredAccess,
-	IN POBJECT_ATTRIBUTES ObjectAttributes
+    OUT PHANDLE LinkHandle,
+    IN ACCESS_MASK DesiredAccess,
+    IN POBJECT_ATTRIBUTES ObjectAttributes
     );
 
 typedef NTSTATUS(NTAPI *tNtQuerySymbolicLinkObject)(

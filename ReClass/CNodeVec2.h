@@ -4,11 +4,11 @@
 
 class CNodeVec2 : public CNodeBase {
 public:
-	CNodeVec2( );
+    CNodeVec2( );
 
-	virtual void Update( const PHOTSPOT Spot );
+    virtual void Update( const PHOTSPOT Spot );
 
-	virtual ULONG GetMemorySize( ) { return sizeof( float ) * 2; }
+    virtual ULONG GetMemorySize( ) { return sizeof( float ) * 2; }
 
-	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
+    virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 };

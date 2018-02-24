@@ -9,8 +9,7 @@
 #include "Native.h"
 #include "Intrinsics.h"
 
-namespace Utils
-{
+namespace Utils {
 
 //
 // Forward declarations
@@ -39,30 +38,30 @@ bool SetDebugPrivilege( BOOLEAN bEnable );
 static FILE* ConsoleStream = 0;
 static bool CreateDbgConsole( const TCHAR* lpConsoleTitle )
 {
-	if (!ConsoleStream)
-	{
-		if (!AllocConsole( ))
-			return false;
-		if (freopen_s( &ConsoleStream, "CONOUT$", "w", stdout ) != ERROR_SUCCESS)
-			return false;
-		SetConsoleTitle( lpConsoleTitle );
-	}
-	return true;
+    if (!ConsoleStream)
+    {
+        if (!AllocConsole( ))
+            return false;
+        if (freopen_s( &ConsoleStream, "CONOUT$", "w", stdout ) != ERROR_SUCCESS)
+            return false;
+        SetConsoleTitle( lpConsoleTitle );
+    }
+    return true;
 }
 static void FreeDbgConsole( )
 {
-	if (ConsoleStream)
-	{
-		fclose( ConsoleStream );
-		FreeConsole( );
-		ConsoleStream = 0;
-	}
+    if (ConsoleStream)
+    {
+        fclose( ConsoleStream );
+        FreeConsole( );
+        ConsoleStream = 0;
+    }
 }
 static CString GetLastErrorString( )
 {
-	TCHAR buf[256];
-	int size = FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError( ), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), buf, 256, NULL );
-	return CString( buf, size );
+    TCHAR buf[256];
+    int size = FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError( ), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ), buf, 256, NULL );
+    return CString( buf, size );
 }
 #endif
 
@@ -92,7 +91,7 @@ static size_t FindPattern( size_t startAddress, unsigned int searchSize, unsigne
 template<int N> 
 inline size_t FindPattern( size_t startAddress, unsigned int searchSize, unsigned char( &pattern )[N] )
 {
-	return FindPattern( startAddress, searchSize, pattern, N );
+    return FindPattern( startAddress, searchSize, pattern, N );
 }
 
 static CString GetVersionInfo( const TCHAR* versionKey )
@@ -112,68 +111,68 @@ static CString GetVersionInfo( const TCHAR* versionKey )
 
     CString strResult;
 
-	hVersion = FindResource( NULL, MAKEINTRESOURCE( VS_VERSION_INFO ), VS_FILE_INFO );
-	if (hVersion != NULL)
-	{
-		hGlobal = LoadResource( NULL, hVersion );
-		if (hGlobal != NULL)
-		{
+    hVersion = FindResource( NULL, MAKEINTRESOURCE( VS_VERSION_INFO ), VS_FILE_INFO );
+    if (hVersion != NULL)
+    {
+        hGlobal = LoadResource( NULL, hVersion );
+        if (hGlobal != NULL)
+        {
             lpVersionInfo = LockResource( hGlobal );
-			if (lpVersionInfo != NULL)
-			{          
-				if (VerQueryValue( lpVersionInfo, _T( "\\VarFileInfo\\Translation" ), (LPVOID*)&lpTranslate, &uiSize ) && uiSize > 0)
-				{
-					// Version information			
-					strQuery.Format( _T( "\\StringFileInfo\\%04x%04x\\%s" ), lpTranslate->wLanguage, lpTranslate->wCodePage, versionKey );
-					if (VerQueryValue( lpVersionInfo, strQuery.GetString( ), (LPVOID*)&lpData, &uiSize ) && uiSize > 0)
-						strResult = (LPCTSTR)lpData;
-				}
+            if (lpVersionInfo != NULL)
+            {          
+                if (VerQueryValue( lpVersionInfo, _T( "\\VarFileInfo\\Translation" ), (LPVOID*)&lpTranslate, &uiSize ) && uiSize > 0)
+                {
+                    // Version information			
+                    strQuery.Format( _T( "\\StringFileInfo\\%04x%04x\\%s" ), lpTranslate->wLanguage, lpTranslate->wCodePage, versionKey );
+                    if (VerQueryValue( lpVersionInfo, strQuery.GetString( ), (LPVOID*)&lpData, &uiSize ) && uiSize > 0)
+                        strResult = (LPCTSTR)lpData;
+                }
                 ::UnlockResource( hGlobal );
-			}
+            }
             ::FreeResource( hGlobal );
-		}		
-	}
+        }		
+    }
 
-	return strResult;
+    return strResult;
 }
 
 template<typename T>
 static T* GenerateRandomString( T* RandomString, ULONG Length )
 {
-	std::random_device RandomDevice;
-	std::mt19937_64 RNG( RandomDevice( ) );
-	std::uniform_int_distribution<int> Distribution( '0', 'z' );
+    std::random_device RandomDevice;
+    std::mt19937_64 RNG( RandomDevice( ) );
+    std::uniform_int_distribution<int> Distribution( '0', 'z' );
 
-	ULONG count = 0;
-	while (count < Length - 1)
-	{
-		T RandomChar = (T)Distribution( RNG );
+    ULONG count = 0;
+    while (count < Length - 1)
+    {
+        T RandomChar = (T)Distribution( RNG );
 
-		if (
-			(RandomChar >= '0' && RandomChar <= '9') ||
-			(RandomChar >= 'A' && RandomChar <= 'Z') ||
-			(RandomChar >= 'a' && RandomChar <= 'z')
-			)
-		{
-			RandomString[count] = RandomChar;
-			count++;
-		}
-	}
+        if (
+            (RandomChar >= '0' && RandomChar <= '9') ||
+            (RandomChar >= 'A' && RandomChar <= 'Z') ||
+            (RandomChar >= 'a' && RandomChar <= 'z')
+            )
+        {
+            RandomString[count] = RandomChar;
+            count++;
+        }
+    }
 
-	RandomString[Length - 1] = L'\0';
+    RandomString[Length - 1] = L'\0';
 
-	return RandomString;
+    return RandomString;
 }
 
 enum OSType {
-	UnknownOS = 0,
-	Win2000 = 0x4105,
-	WinXP = 0x4106,
-	WinVista = 0x4107,
-	Windows7 = 0x4108,
-	Windows8 = 0x4109,
-	Windows10 = 0x4110,
-	Windows = 0x4000,
+    UnknownOS = 0,
+    Win2000 = 0x4105,
+    WinXP = 0x4106,
+    WinVista = 0x4107,
+    Windows7 = 0x4108,
+    Windows8 = 0x4109,
+    Windows10 = 0x4110,
+    Windows = 0x4000,
 };
 
 enum PlatformType {

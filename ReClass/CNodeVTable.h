@@ -3,23 +3,22 @@
 #include "CNodeBase.h"
 #include "CMemory.h"
 
-class CNodeVTable : public CNodeBase
-{
+class CNodeVTable : public CNodeBase {
 public:
-	CNodeVTable( );
-	CNodeVTable( CWnd* pParentWindow );
+    CNodeVTable( );
+    CNodeVTable( CWnd* pParentWindow );
 
-	virtual void Update( const PHOTSPOT Spot );
+    virtual void Update( const PHOTSPOT Spot );
 
-	virtual ULONG GetMemorySize( ) { return sizeof( void* ); }
+    virtual ULONG GetMemorySize( ) { return sizeof( void* ); }
 
-	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
+    virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
-	inline bool IsInitialized( ) { return (m_pParentWindow != NULL); }
+    inline bool IsInitialized( ) { return (m_pParentWindow != NULL); }
 
-	void Initialize( CWnd* pParentWindow );
+    void Initialize( CWnd* pParentWindow );
 
 private:
-	CMemory m_Memory;
-	CWnd* m_pParentWindow;
+    CMemory m_Memory;
+    CWnd* m_pParentWindow;
 };

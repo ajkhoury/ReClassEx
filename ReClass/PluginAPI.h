@@ -53,10 +53,10 @@ typedef HANDLE( PLUGIN_CC *PPLUGIN_OPEN_THREAD_OPERATION )(
 // Basic ReClass Pugin Information Struct.
 //
 typedef DECLSPEC_ALIGN(16) struct _RECLASS_PLUGIN_INFO {
-	wchar_t Name[256];
-	wchar_t Version[256];
-	wchar_t About[2048];
-	int DialogId;
+    wchar_t Name[256];
+    wchar_t Version[256];
+    wchar_t About[2048];
+    int DialogId;
 } RECLASS_PLUGIN_INFO, *PRECLASS_PLUGIN_INFO, *LPRECLASS_PLUGIN_INFO;
 
 //
@@ -89,13 +89,13 @@ typedef VOID( PLUGIN_CC *PPLUGIN_STATE_CHANGE )(
 // Defines a ReClass Plugin.
 //
 typedef DECLSPEC_ALIGN(16) struct _RECLASS_PLUGIN {
-	RECLASS_PLUGIN_INFO Info;
-	wchar_t FileName[MAX_PATH];
-	BOOL State;
-	HMODULE LoadedBase;
-	PPLUGIN_INIT InitFunction;
-	PPLUGIN_STATE_CHANGE StateChangeFunction;
-	DLGPROC SettingDlgFunction;
+    RECLASS_PLUGIN_INFO Info;
+    wchar_t FileName[MAX_PATH];
+    BOOL State;
+    HMODULE LoadedBase;
+    PPLUGIN_INIT InitFunction;
+    PPLUGIN_STATE_CHANGE StateChangeFunction;
+    DLGPROC SettingDlgFunction;
 } RECLASS_PLUGIN, *PRECLASS_PLUGIN, *LPRECLASS_PLUGIN;
 
 

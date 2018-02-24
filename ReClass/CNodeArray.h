@@ -2,22 +2,22 @@
 
 class CNodeArray : public CNodeBase {
 public:
-	CNodeArray( );
+    CNodeArray( );
 
-	virtual void Update( const PHOTSPOT Spot );
+    virtual void Update( const PHOTSPOT Spot );
 
-	virtual ULONG GetMemorySize( );
+    virtual ULONG GetMemorySize( );
 
-	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
+    virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
-	inline void SetTotal( ULONG total ) { m_ulTotal = total; }
-	inline ULONG GetTotal( void ) { return m_ulTotal; }
+    inline void SetTotal( ULONG total ) { m_ulTotal = total; }
+    inline ULONG GetTotal( void ) { return m_ulTotal; }
 
-	inline void SetClass( CNodeClass* pNode ) { m_pNode = pNode; }
-	inline CNodeClass* GetClass( void ) { return m_pNode; }
+    inline void SetClass( CNodeClass* pNode ) { m_pNode = pNode; }
+    inline CNodeClass* GetClass( void ) { return m_pNode; }
 
 protected:
-	CNodeClass* m_pNode;
-	ULONG m_ulTotal;
-	INT m_iCurrent;
+    CNodeClass* m_pNode;
+    ULONG m_ulTotal;
+    INT m_iCurrent;
 };

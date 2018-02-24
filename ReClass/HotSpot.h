@@ -22,11 +22,11 @@
 #define HS_COMMENT 70
 
 typedef struct tagHOTSPOT {
-	CRect Rect;
-	CString Text;
-	ULONG_PTR Address;
-	INT Id;
-	INT Type;
-	UINT Level;
-	class CNodeBase* Object;
+    CRect Rect;
+    CString Text;
+    ULONG_PTR Address;
+    INT Id;
+    INT Type;
+    UINT Level;
+    class CNodeBase* Object;
 } HOTSPOT, *PHOTSPOT;
