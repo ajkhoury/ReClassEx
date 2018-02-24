@@ -1,6 +1,20 @@
 This is a complete port of ReClass to x64. ReClass was originally written by DrUnKeN ChEeTaH, later developed by @P47R!CK and @DogMatt. I will try to continue all the great work they've done over the years. I know there have been previous discussions on mods here and there. I will revisit all those ideas shortly, feel free to recommend any ideas and please post any problems you encounter running ReClass.
 
-Contact me by sending a message to dude719 @ unknowncheats.me
+You can contact me by sending an email to aidankhoury@gmail.com.
+
+[version 1.2.0]
+- View unsigned types in hexidecimal form via toggle.
+- Added status bar at the bottom to show symbol loading progress.
+- Updated to use the new Tinyxml2 library.
+- Many performance imporvements and bugfixes.
+
+[version 1.1.0]
+- Rebranded as ReClassEx
+- Process list dialog instead of scroll menu.
+- Added automatic resolving of symbols for each module in a process.
+- Added Ctrl+S hotkey for file saving (and other hotkeys).
+- Added Plugin API for making plugins.
+- Disassembly syntax highlighting (buggy).
 
 [version 1.0.1]
 - Up and down arrow hotkeys to switch nodes
@@ -17,7 +31,7 @@ Contact me by sending a message to dude719 @ unknowncheats.me
 - Added RTTI info for pointers
 - Cleaned up RTTI and made the RTTI string editable
 - Made addresses edittable for copy & pasting
-- Added memory swap option to switch endianness: thanks buddyfavors
+- Added memory swap option to switch endianness.
 - Added Bits type for a bit view instead of text
 - Added ability to input module names in address node (e.g. 'reclass.exe+0x40')
 - Added Module list with the ability to create a new class at module start address
