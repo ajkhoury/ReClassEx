@@ -54,3 +54,10 @@ DriverPlugin_dbg.rc-plugin64d
 *.rc-plugin64d
 /ReClass/plugins/TestPlugin_dbg.lib
 *.tmp
+/BIN/ReClassEx_dbg.lib
+/BIN/ReClassEx64_dbg.lib
+/BIN/ReClassEx64.lib
+/BIN/ReClassEx.lib
+/BIN/plugins-lol/TestPlugin.rc-plugin64
+/BIN/plugins-lol/TestPlugin.rc-plugin
+/BIN/plugins-lol/TestPlugin.lib
