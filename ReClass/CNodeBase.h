@@ -106,7 +106,7 @@ typedef struct _NODESIZE {
 class CNodeBase {
 public:
 	CNodeBase( );
-	~CNodeBase( ) { }
+	virtual ~CNodeBase( ) { }
 
 	virtual NODESIZE Draw( const PVIEWINFO View, int x, int y ) = 0;
 	virtual ULONG GetMemorySize( ) = 0;
