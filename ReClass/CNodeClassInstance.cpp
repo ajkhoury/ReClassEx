@@ -39,9 +39,9 @@ NODESIZE CNodeClassInstance::Draw( const PVIEWINFO View, int x, int y )
     tx = x;
     tx = AddAddressOffset( View, tx, y );
 
-    tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Instance " ) );
-    tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
-    tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( "<%s>" ), m_pNode->GetName( ) );
+    tx = AddText( View, tx, y, g_clrType, HS_NONE, _T( "Instance " ) );
+    tx = AddText( View, tx, y, g_clrName, HS_NAME, _T( "%s" ), m_strName );
+    tx = AddText( View, tx, y, g_clrValue, HS_NONE, _T( "<%s>" ), m_pNode->GetName( ) );
     tx = AddIcon( View, tx, y, ICON_CHANGE, HS_CLICK, HS_CHANGE_X );
 
     tx += g_FontWidth;

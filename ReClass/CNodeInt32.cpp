@@ -35,10 +35,10 @@ NODESIZE CNodeInt32::Draw( const PVIEWINFO View, int x, int y )
     tx = x + TXOFFSET;
     tx = AddIcon( View, tx, y, ICON_INTEGER, HS_NONE, HS_NONE );
     tx = AddAddressOffset( View, tx, y );
-    tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Int32 " ) );
-    tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
-    tx = AddText( View, tx, y, g_crName, HS_NONE, _T( " = " ) );
-    tx = AddText( View, tx, y, g_crValue, HS_EDIT, _T( "%i" ), *Data ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrType, HS_NONE, _T( "Int32 " ) );
+    tx = AddText( View, tx, y, g_clrName, HS_NAME, _T( "%s" ), m_strName );
+    tx = AddText( View, tx, y, g_clrName, HS_NONE, _T( " = " ) );
+    tx = AddText( View, tx, y, g_clrValue, HS_EDIT, _T( "%i" ), *Data ) + g_FontWidth;
     tx = AddComment( View, tx, y );
 
     DrawSize.x = tx;

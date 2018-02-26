@@ -36,16 +36,16 @@ static const char g_cppKeyWords[] =
 
 // Default color scheme
 static SCINTILLA_COLORS s_rgbSyntaxCpp[] = {
-    { SCE_C_COMMENT,		green },
-    { SCE_C_COMMENTLINE,	green },
-    { SCE_C_COMMENTDOC,		green },
-    { SCE_C_NUMBER,			darkblue },
-    { SCE_C_STRING,			red },
-    { SCE_C_CHARACTER,		yellow },
-    { SCE_C_UUID,			cyan },
-    { SCE_C_OPERATOR,		red },
-    { SCE_C_PREPROCESSOR,	blue },
-    { SCE_C_WORD,			blue },
+    { SCE_C_COMMENT,		RGB_GREEN },
+    { SCE_C_COMMENTLINE,	RGB_GREEN },
+    { SCE_C_COMMENTDOC,		RGB_DARKGREEN },
+    { SCE_C_NUMBER,			RGB_DARKBLUE },
+    { SCE_C_STRING,			RGB_ORANGE },
+    { SCE_C_CHARACTER,		RGB_YELLOW },
+    { SCE_C_UUID,			RGB_CYAN },
+    { SCE_C_OPERATOR,		RGB_RED },
+    { SCE_C_PREPROCESSOR,	RGB_PURPLE },
+    { SCE_C_WORD,			RGB_BLUE },
     { -1,					0 }
 };
 
@@ -118,7 +118,7 @@ void CDialogEdit::InitialiseEditor( )
     m_Edit.SetKeywords( 0, g_cppKeyWords );
 
     // Set up the global default style. These attributes are used wherever no explicit choices are made.
-    SetStyle( STYLE_DEFAULT, black, white, 10, "Courier New" );
+    SetStyle( STYLE_DEFAULT, RGB_BLACK, RGB_WHITE, 10, "Courier New" );
 
     // Set caret foreground color
     //SendEditor(SCI_SETCARETFORE, RGB(255, 255, 255));

@@ -2,13 +2,13 @@
 #include "CNodeFunctionPtr.h"
 
 static SCINTILLA_COLORS s_rgbSyntaxAsm[] = {
-    { SCE_ASM_COMMENT,		green },
-    { SCE_ASM_NUMBER,		darkyellow },
-    { SCE_ASM_STRING,		orange },
-    { SCE_ASM_REGISTER,		lightred },
-    { SCE_ASM_DIRECTIVE,	magenta },
-    { SCE_ASM_OPERATOR,		blue },
-    { SCE_ASM_DIRECTIVE,	purple },
+    { SCE_ASM_COMMENT,		RGB_GREEN },
+    { SCE_ASM_NUMBER,		RGB_DARKYELLOW },
+    { SCE_ASM_STRING,		RGB_ORANGE },
+    { SCE_ASM_REGISTER,		RGB_LIGHTRED },
+    { SCE_ASM_DIRECTIVE,	RGB_MAGENTA },
+    { SCE_ASM_OPERATOR,		RGB_BLUE },
+    { SCE_ASM_DIRECTIVE,	RGB_PURPLE },
     { -1,					0 }
 };
 
@@ -74,11 +74,11 @@ NODESIZE CNodeFunctionPtr::Draw( const PVIEWINFO View, int x, int y )
 
     if (m_pParentNode->GetType( ) != nt_vtable)
     {
-        tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "FunctionPtr" ) );
+        tx = AddText( View, tx, y, g_clrType, HS_NONE, _T( "FunctionPtr" ) );
     }
     else
     {
-        tx = AddText( View, tx, y, g_crFunction, HS_NONE, _T( "(%i)" ), m_Offset / sizeof( ULONG_PTR ) );
+        tx = AddText( View, tx, y, g_clrFunction, HS_NONE, _T( "(%i)" ), m_Offset / sizeof( ULONG_PTR ) );
     }
 
     tx = AddIcon( View, tx, y, ICON_CAMERA, HS_EDIT, HS_CLICK );
@@ -86,11 +86,11 @@ NODESIZE CNodeFunctionPtr::Draw( const PVIEWINFO View, int x, int y )
 
     if (m_strName.IsEmpty( ))
     {
-        tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "Function_%i" ), m_Offset / sizeof( ULONG_PTR ) );
+        tx = AddText( View, tx, y, g_clrName, HS_NAME, _T( "Function_%i" ), m_Offset / sizeof( ULONG_PTR ) );
     }
     else
     {
-        tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
+        tx = AddText( View, tx, y, g_clrName, HS_NAME, _T( "%s" ), m_strName );
     }
 
     tx += g_FontWidth;
@@ -106,7 +106,7 @@ NODESIZE CNodeFunctionPtr::Draw( const PVIEWINFO View, int x, int y )
         //for (size_t i = 0; i < m_Assembly.size( ); i++)
         //{
         //	y += g_FontHeight;
-        //	AddText( View, ax, y, g_crHex, HS_EDIT, "%s", m_Assembly[i].GetBuffer( ) );
+        //	AddText( View, ax, y, g_clrHex, HS_EDIT, "%s", m_Assembly[i].GetBuffer( ) );
         //}
 
         y += g_FontHeight;
@@ -155,7 +155,7 @@ void CNodeFunctionPtr::Initialize( CWnd* pParentWindow, ULONG_PTR Address )
 
     m_pAssemblyWindow = new CScintillaEdit;
 
-    m_pParentWindow = static_cast<CWnd*>(pParentWindow);
+    m_pParentWindow = pParentWindow;
 
     m_pAssemblyWindow->Create( WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, CRect( 0, 0, 0, 0 ), m_pParentWindow, 0 );
     m_pAssemblyWindow->ShowWindow( SW_HIDE ); // Hide the window until we open the level
@@ -165,8 +165,8 @@ void CNodeFunctionPtr::Initialize( CWnd* pParentWindow, ULONG_PTR Address )
     m_pAssemblyWindow->SetLexer( SCLEX_ASM );
     m_pAssemblyWindow->SetStyleBits( 5 );
     m_pAssemblyWindow->SetTabWidth( 2 );
-    m_pAssemblyWindow->SetForeground( STYLE_DEFAULT, black );
-    m_pAssemblyWindow->SetBackground( STYLE_DEFAULT, g_crBackground );
+    m_pAssemblyWindow->SetForeground( STYLE_DEFAULT, RGB_BLACK );
+    m_pAssemblyWindow->SetBackground( STYLE_DEFAULT, g_clrBackground );
     m_pAssemblyWindow->SetSize( STYLE_DEFAULT, FONT_DEFAULT_SIZE );
     m_pAssemblyWindow->SetHorizontalScrollVisible( FALSE );
     m_pAssemblyWindow->SetVerticalScrollVisible( FALSE );

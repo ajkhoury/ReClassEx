@@ -37,13 +37,13 @@ NODESIZE CNodeHex32::Draw( const PVIEWINFO View, int x, int y )
         // TODO these are the dots, do alignment instead of 4
         CStringA str = GetStringFromMemoryA( (const char*)Data, 4 );
         str += "     ";
-        tx = AddText( View, tx, y, g_crChar, HS_NONE, "%s", str );
+        tx = AddText( View, tx, y, g_clrChar, HS_NONE, "%s", str );
     }
 
-    tx = AddText( View, tx, y, g_crHex, 0, _T( "%0.2X" ), Data[0] ) + g_FontWidth;
-    tx = AddText( View, tx, y, g_crHex, 1, _T( "%0.2X" ), Data[1] ) + g_FontWidth;
-    tx = AddText( View, tx, y, g_crHex, 2, _T( "%0.2X" ), Data[2] ) + g_FontWidth;
-    tx = AddText( View, tx, y, g_crHex, 3, _T( "%0.2X" ), Data[3] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 0, _T( "%0.2X" ), Data[0] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 1, _T( "%0.2X" ), Data[1] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 2, _T( "%0.2X" ), Data[2] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 3, _T( "%0.2X" ), Data[3] ) + g_FontWidth;
     tx = AddComment( View, tx, y );
 
     DrawSize.x = tx;

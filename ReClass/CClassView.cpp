@@ -728,7 +728,7 @@ void CClassView::OnPaint( )
     GetClientRect( &ClientRect );
     //ClientRect.bottom += g_FontHeight;
 
-    Dc->FillSolidRect( &ClientRect, g_crBackground );
+    Dc->FillSolidRect( &ClientRect, g_clrBackground );
 
     if (m_pClass != NULL)
     {
@@ -1323,8 +1323,8 @@ void CClassView::AddBytes( CNodeClass* pClass, DWORD Length )
         {
             CNodeVTable* pVTable = (CNodeVTable*)pClass; // force this cast
             if (!pVTable->IsInitialized( ))
-                pVTable->Initialize( static_cast<CWnd*>(this) );
-            pNode = new CNodeFunctionPtr( static_cast<CWnd*>(this), pClass->GetOffset( ) + (pClass->NodeCount( ) * sizeof( size_t )) );
+                pVTable->Initialize( this );
+            pNode = new CNodeFunctionPtr( this, pClass->GetOffset( ) + (pClass->NodeCount( ) * sizeof( size_t )) );
         }
         else
         {
@@ -1343,8 +1343,8 @@ void CClassView::AddBytes( CNodeClass* pClass, DWORD Length )
         {
             CNodeVTable* pVTable = (CNodeVTable*)pClass;
             if (!pVTable->IsInitialized( ))
-                pVTable->Initialize( static_cast<CWnd*>(this) );
-            pNode = new CNodeFunctionPtr( static_cast<CWnd*>(this), pClass->GetOffset( ) + ((pClass->NodeCount( ) + i) * sizeof( size_t )) );
+                pVTable->Initialize( this );
+            pNode = new CNodeFunctionPtr( this, pClass->GetOffset( ) + ((pClass->NodeCount( ) + i) * sizeof( size_t )) );
         }
         else
         {
@@ -1609,9 +1609,7 @@ void CClassView::ReplaceSelectedWithType( NodeType Type )
 {
     std::vector<CNodeBase*> newSelected;
 
-#if defined(_DEBUG)
-    PrintOut( _T( "Replace Node Type %s" ), NodeTypeToString( Type ) );
-#endif
+    PrintOutDbg( _T( "Replace Node Type %s" ), NodeTypeToString( Type ) );
 
     for (size_t i = 0; i < m_Selected.size( ); i++)
     {
@@ -1646,9 +1644,9 @@ void CClassView::ReplaceSelectedWithType( NodeType Type )
             for (int i = 0; i < 10; i++)
             {
                 CNodeVTable* pVTable = (CNodeVTable*)pNewNode;
-                pVTable->Initialize( static_cast<CWnd*>(this) );
+                pVTable->Initialize( this );
 
-                CNodeFunctionPtr* pFunctionPtr = new CNodeFunctionPtr( static_cast<CWnd*>(this), pVTable->GetOffset( ) + (i * sizeof( size_t )) );
+                CNodeFunctionPtr* pFunctionPtr = new CNodeFunctionPtr( this, pVTable->GetOffset( ) + (i * sizeof( size_t )) );
                 pFunctionPtr->SetOffset( pVTable->GetOffset( ) + (i * sizeof( size_t )) );
                 pFunctionPtr->SetParent( pVTable );
 

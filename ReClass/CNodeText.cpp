@@ -45,18 +45,18 @@ NODESIZE CNodeText::Draw( const PVIEWINFO View, int x, int y )
     tx = x + TXOFFSET;
     tx = AddIcon( View, tx, y, ICON_TEXT, HS_NONE, HS_NONE );
     tx = AddAddressOffset( View, tx, y );
-    tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Text " ) );
-    tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
-    tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "[" ) );
-    tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%i" ), GetMemorySize( ) );
-    tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "]" ) );
+    tx = AddText( View, tx, y, g_clrType, HS_NONE, _T( "Text " ) );
+    tx = AddText( View, tx, y, g_clrName, HS_NAME, _T( "%s" ), m_strName );
+    tx = AddText( View, tx, y, g_clrIndex, HS_NONE, _T( "[" ) );
+    tx = AddText( View, tx, y, g_clrIndex, HS_EDIT, _T( "%i" ), GetMemorySize( ) );
+    tx = AddText( View, tx, y, g_clrIndex, HS_NONE, _T( "]" ) );
 
     if (VALID( Data ))
     {
         CStringA MemoryString( GetStringFromMemoryA( Data, GetMemorySize( ) ) );
-        tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( " = '" ) );
-        tx = AddText( View, tx, y, g_crChar, 1, "%.150s", MemoryString.GetBuffer( ) );
-        tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( "' " ) ) + g_FontWidth;
+        tx = AddText( View, tx, y, g_clrChar, HS_NONE, _T( " = '" ) );
+        tx = AddText( View, tx, y, g_clrChar, 1, "%.150s", MemoryString.GetBuffer( ) );
+        tx = AddText( View, tx, y, g_clrChar, HS_NONE, _T( "' " ) ) + g_FontWidth;
     }
 
     tx = AddComment( View, tx, y );

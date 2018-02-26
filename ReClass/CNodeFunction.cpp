@@ -2,13 +2,13 @@
 #include "CNodeFunction.h"
 
 static SCINTILLA_COLORS s_rgbSyntaxAsm[] = {
-    { SCE_ASM_COMMENT,		green },
-    { SCE_ASM_NUMBER,		darkyellow },
-    { SCE_ASM_STRING,		orange },
-    { SCE_ASM_REGISTER,		lightred },
-    { SCE_ASM_DIRECTIVE,	magenta },
-    { SCE_ASM_OPERATOR,		blue },
-    { SCE_ASM_DIRECTIVE,	purple },
+    { SCE_ASM_COMMENT,		RGB_GREEN },
+    { SCE_ASM_NUMBER,		RGB_DARKYELLOW },
+    { SCE_ASM_STRING,		RGB_ORANGE },
+    { SCE_ASM_REGISTER,		RGB_LIGHTRED },
+    { SCE_ASM_DIRECTIVE,	RGB_MAGENTA },
+    { SCE_ASM_OPERATOR,		RGB_BLUE },
+    { SCE_ASM_DIRECTIVE,	RGB_PURPLE },
     { -1,					0 }
 };
 
@@ -67,12 +67,12 @@ NODESIZE CNodeFunction::Draw( const PVIEWINFO View, int x, int y )
     ax = tx;
     tx = AddAddressOffset( View, tx, y );
 
-    tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Function" ) );
+    tx = AddText( View, tx, y, g_clrType, HS_NONE, _T( "Function" ) );
 
     tx = AddIcon( View, tx, y, ICON_CAMERA, HS_EDIT, HS_CLICK );
     tx += g_FontWidth;
 
-    tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
+    tx = AddText( View, tx, y, g_clrName, HS_NAME, _T( "%s" ), m_strName );
     tx += g_FontWidth;
 
     if (m_nLines > 0)
@@ -134,8 +134,8 @@ void CNodeFunction::Initialize( CClassView* pParentWindow, ULONG_PTR Address )
     m_pEdit->SetLexer( SCLEX_ASM );
     m_pEdit->SetStyleBits( 5 );
     m_pEdit->SetTabWidth( 2 );
-    m_pEdit->SetForeground( STYLE_DEFAULT, black );
-    m_pEdit->SetBackground( STYLE_DEFAULT, g_crBackground );
+    m_pEdit->SetForeground( STYLE_DEFAULT, RGB_BLACK );
+    m_pEdit->SetBackground( STYLE_DEFAULT, g_clrBackground );
     m_pEdit->SetSize( STYLE_DEFAULT, FONT_DEFAULT_SIZE );
     m_pEdit->SetHorizontalScrollVisible( FALSE );
     m_pEdit->SetVerticalScrollVisible( FALSE );

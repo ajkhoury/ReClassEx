@@ -38,10 +38,10 @@ NODESIZE CNodeBits::Draw( const PVIEWINFO View, int x, int y )
         BitArray<UCHAR> bits;
         bits.SetValue( Data[0] );
 
-        tx = AddText( View, tx, y, g_crChar, HS_EDIT, "%s ", bits.GetBitsReverseString( ) );
+        tx = AddText( View, tx, y, g_clrChar, HS_EDIT, "%s ", bits.GetBitsReverseString( ) );
     }
 
-    tx = AddText( View, tx, y, g_crHex, 0, _T( "%0.2X" ), Data[0] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 0, _T( "%0.2X" ), Data[0] ) + g_FontWidth;
     tx = AddComment( View, tx, y );
 
     DrawSize.x = tx;

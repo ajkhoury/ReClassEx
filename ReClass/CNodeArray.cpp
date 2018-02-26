@@ -70,19 +70,19 @@ NODESIZE CNodeArray::Draw( const PVIEWINFO View, int x, int y )
     int tx = x;
     tx = AddAddressOffset( View, tx, y );
 
-    tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Array " ) );
-    tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
-    tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "[" ) );
-    tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%u" ), m_ulTotal );
-    tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "]" ) );
+    tx = AddText( View, tx, y, g_clrType, HS_NONE, _T( "Array " ) );
+    tx = AddText( View, tx, y, g_clrName, HS_NAME, _T( "%s" ), m_strName );
+    tx = AddText( View, tx, y, g_clrIndex, HS_NONE, _T( "[" ) );
+    tx = AddText( View, tx, y, g_clrIndex, HS_EDIT, _T( "%u" ), m_ulTotal );
+    tx = AddText( View, tx, y, g_clrIndex, HS_NONE, _T( "]" ) );
 
     tx = AddIcon( View, tx, y, ICON_LEFT, HS_SELECT, HS_CLICK );
-    tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "(" ) );
-    tx = AddText( View, tx, y, g_crIndex, 1, _T( "%i" ), m_iCurrent );
-    tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( ")" ) );
+    tx = AddText( View, tx, y, g_clrIndex, HS_NONE, _T( "(" ) );
+    tx = AddText( View, tx, y, g_clrIndex, 1, _T( "%i" ), m_iCurrent );
+    tx = AddText( View, tx, y, g_clrIndex, HS_NONE, _T( ")" ) );
     tx = AddIcon( View, tx, y, ICON_RIGHT, HS_DROP, HS_CLICK );
 
-    tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( "<%s Size=%u>" ), m_pNode->GetName( ), GetMemorySize( ) );
+    tx = AddText( View, tx, y, g_clrValue, HS_NONE, _T( "<%s Size=%u>" ), m_pNode->GetName( ), GetMemorySize( ) );
     tx = AddIcon( View, tx, y, ICON_CHANGE, HS_CLICK, HS_CHANGE_X );
 
     tx += g_FontWidth;

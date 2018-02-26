@@ -33,9 +33,9 @@ NODESIZE CNodePtr::Draw( const PVIEWINFO View, int x, int y )
     x = AddIcon( View, x, y, ICON_POINTER, -1, -1 );
 
     tx = AddAddressOffset( View, x, y );
-    tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Ptr " ) );
-    tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
-    tx = AddText( View, tx, y, g_crValue, HS_NONE, _T( " <%s>" ), m_pClassNode->GetName( ) );
+    tx = AddText( View, tx, y, g_clrType, HS_NONE, _T( "Ptr " ) );
+    tx = AddText( View, tx, y, g_clrName, HS_NAME, _T( "%s" ), m_strName );
+    tx = AddText( View, tx, y, g_clrValue, HS_NONE, _T( " <%s>" ), m_pClassNode->GetName( ) );
     tx = AddIcon( View, tx, y, ICON_CHANGE, HS_CLICK, HS_CHANGE_A );
 
     tx += g_FontWidth;

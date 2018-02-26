@@ -174,21 +174,21 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
     // Update Colors
     //
     CMFCRibbonColorButton* Color;
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_BACKGROUND ));  Color->SetColor( g_crBackground );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_SELECT ));      Color->SetColor( g_crSelect );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HIDDEN ));      Color->SetColor( g_crHidden );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_OFFSET ));      Color->SetColor( g_crOffset );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_ADDRESS ));     Color->SetColor( g_crAddress );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_TYPE ));        Color->SetColor( g_crType );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_NAME ));        Color->SetColor( g_crName );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_INDEX ));       Color->SetColor( g_crIndex );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_VALUE ));       Color->SetColor( g_crValue );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_COMMENT ));     Color->SetColor( g_crComment );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_VTABLE ));      Color->SetColor( g_crVTable );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_FUNCTION ));    Color->SetColor( g_crFunction );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_TEXT ));        Color->SetColor( g_crChar );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_CUSTOM ));      Color->SetColor( g_crCustom );
-    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HEX ));         Color->SetColor( g_crHex );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_BACKGROUND ));  Color->SetColor( g_clrBackground );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_SELECT ));      Color->SetColor( g_clrSelect );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HIDDEN ));      Color->SetColor( g_clrHidden );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_OFFSET ));      Color->SetColor( g_clrOffset );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_ADDRESS ));     Color->SetColor( g_clrAddress );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_TYPE ));        Color->SetColor( g_clrType );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_NAME ));        Color->SetColor( g_clrName );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_INDEX ));       Color->SetColor( g_clrIndex );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_VALUE ));       Color->SetColor( g_clrValue );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_COMMENT ));     Color->SetColor( g_clrComment );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_VTABLE ));      Color->SetColor( g_clrVTable );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_FUNCTION ));    Color->SetColor( g_clrFunction );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_TEXT ));        Color->SetColor( g_clrChar );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_CUSTOM ));      Color->SetColor( g_clrCustom );
+    Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HEX ));         Color->SetColor( g_clrHex );
 
     //
     // Update memory map every 5 seconds
@@ -210,63 +210,63 @@ void CMainFrame::OnSize( UINT nType, int cx, int cy )
 
 void CMainFrame::OnButtonClrBackground( )
 {
-    g_crBackground = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_BACKGROUND ))->GetColor( );
+    g_clrBackground = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_BACKGROUND ))->GetColor( );
 }
 void CMainFrame::OnButtonClrSelect( )
 {
-    g_crSelect = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_SELECT ))->GetColor( );
+    g_clrSelect = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_SELECT ))->GetColor( );
 }
 void CMainFrame::OnButtonClrHidden( )
 {
-    g_crHidden = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HIDDEN ))->GetColor( );
+    g_clrHidden = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HIDDEN ))->GetColor( );
 }
 void CMainFrame::OnButtonClrOffset( )
 {
-    g_crOffset = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_OFFSET ))->GetColor( );
+    g_clrOffset = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_OFFSET ))->GetColor( );
 }
 void CMainFrame::OnButtonClrAddress( )
 {
-    g_crAddress = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_ADDRESS ))->GetColor( );
+    g_clrAddress = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_ADDRESS ))->GetColor( );
 }
 void CMainFrame::OnButtonClrHex( )
 {
-    g_crHex = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HEX ))->GetColor( );
+    g_clrHex = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HEX ))->GetColor( );
 }
 void CMainFrame::OnButtonClrType( )
 {
-    g_crType = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_TYPE ))->GetColor( );
+    g_clrType = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_TYPE ))->GetColor( );
 }
 void CMainFrame::OnButtonClrName( )
 {
-    g_crName = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_NAME ))->GetColor( );
+    g_clrName = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_NAME ))->GetColor( );
 }
 void CMainFrame::OnButtonClrValue( )
 {
-    g_crValue = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_VALUE ))->GetColor( );
+    g_clrValue = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_VALUE ))->GetColor( );
 }
 void CMainFrame::OnButtonClrIndex( )
 {
-    g_crIndex = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_INDEX ))->GetColor( );
+    g_clrIndex = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_INDEX ))->GetColor( );
 }
 void CMainFrame::OnButtonClrComment( )
 {
-    g_crComment = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_COMMENT ))->GetColor( );
+    g_clrComment = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_COMMENT ))->GetColor( );
 }
 void CMainFrame::OnButtonClrText( )
 {
-    g_crChar = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_TEXT ))->GetColor( );
+    g_clrChar = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_TEXT ))->GetColor( );
 }
 void CMainFrame::OnButtonClrVtable( )
 {
-    g_crVTable = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_VTABLE ))->GetColor( );
+    g_clrVTable = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_VTABLE ))->GetColor( );
 }
 void CMainFrame::OnButtonClrFunction( )
 {
-    g_crFunction = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_FUNCTION ))->GetColor( );
+    g_clrFunction = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_FUNCTION ))->GetColor( );
 }
 void CMainFrame::OnButtonClrCustom( )
 {
-    g_crCustom = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_CUSTOM ))->GetColor( );
+    g_clrCustom = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_CUSTOM ))->GetColor( );
 }
 
 BOOL CMainFrame::PreCreateWindow( CREATESTRUCT& cs )

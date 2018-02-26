@@ -50,19 +50,20 @@
 #include "Scintilla.h"
 
 // A few basic colors for scintilla editor
-const COLORREF black = RGB( 0, 0, 0 );
-const COLORREF white = RGB( 255, 255, 255 );
-const COLORREF green = RGB( 0, 200, 0 );
-const COLORREF red = RGB( 255, 0, 0 );
-const COLORREF lightred = RGB( 255, 100, 100 );
-const COLORREF blue = RGB( 0, 0, 255 );
-const COLORREF darkblue = RGB( 0, 0, 150 );
-const COLORREF yellow = RGB( 255, 255, 0 );
-const COLORREF darkyellow = RGB( 100, 100, 0 );
-const COLORREF orange = RGB( 255, 175, 65 );
-const COLORREF magenta = RGB( 255, 0, 255 );
-const COLORREF cyan = RGB( 0, 255, 255 );
-const COLORREF purple = RGB( 128, 0, 255 );
+#define RGB_BLACK       RGB( 0, 0, 0 )
+#define RGB_WHITE       RGB( 255, 255, 255 )
+#define RGB_GREEN       RGB( 0, 200, 0 )
+#define RGB_DARKGREEN   RGB( 0, 100, 0 )
+#define RGB_RED         RGB( 255, 0, 0 )
+#define RGB_LIGHTRED    RGB( 255, 100, 100 )
+#define RGB_BLUE        RGB( 0, 0, 255 )
+#define RGB_DARKBLUE    RGB( 0, 0, 150 )
+#define RGB_YELLOW      RGB( 255, 255, 0 )
+#define RGB_DARKYELLOW  RGB( 100, 100, 0 )
+#define RGB_ORANGE      RGB( 255, 175, 65 )
+#define RGB_MAGENTA     RGB( 255, 0, 255 )
+#define RGB_CYAN        RGB( 0, 255, 255 )
+#define RGB_PURPLE      RGB( 128, 0, 255 )
 
 //
 // TinyXml parser
@@ -103,21 +104,21 @@ extern std::vector<struct AddressName> g_CustomNames;
 
 extern std::vector<HICON> g_Icons;
 
-extern COLORREF g_crBackground;
-extern COLORREF g_crSelect;
-extern COLORREF g_crHidden;
-extern COLORREF g_crOffset;
-extern COLORREF g_crAddress;
-extern COLORREF g_crType;
-extern COLORREF g_crName;
-extern COLORREF g_crIndex;
-extern COLORREF g_crValue;
-extern COLORREF g_crComment;
-extern COLORREF g_crVTable;
-extern COLORREF g_crFunction;
-extern COLORREF g_crChar;
-extern COLORREF g_crCustom;
-extern COLORREF g_crHex;
+extern COLORREF g_clrBackground;
+extern COLORREF g_clrSelect;
+extern COLORREF g_clrHidden;
+extern COLORREF g_clrOffset;
+extern COLORREF g_clrAddress;
+extern COLORREF g_clrType;
+extern COLORREF g_clrName;
+extern COLORREF g_clrIndex;
+extern COLORREF g_clrValue;
+extern COLORREF g_clrComment;
+extern COLORREF g_clrVTable;
+extern COLORREF g_clrFunction;
+extern COLORREF g_clrChar;
+extern COLORREF g_clrCustom;
+extern COLORREF g_clrHex;
 
 #define FONT_DEFAULT_WIDTH	8
 #define FONT_DEFAULT_HEIGHT 16

@@ -36,18 +36,18 @@ NODESIZE CNodeVec3::Draw( const PVIEWINFO View, int x, int y )
 	int tx = x + TXOFFSET;
 	tx = AddIcon( View, tx, y, ICON_VECTOR, HS_NONE, HS_NONE );
 	tx = AddAddressOffset( View, tx, y );
-	tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Vec3 " ) );
-	tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
+	tx = AddText( View, tx, y, g_clrType, HS_NONE, _T( "Vec3 " ) );
+	tx = AddText( View, tx, y, g_clrName, HS_NAME, _T( "%s" ), m_strName );
 	tx = AddOpenClose( View, tx, y );
 	if (m_LevelsOpen[View->Level])
 	{
-		tx = AddText( View, tx, y, g_crName, HS_NONE, _T( "(" ) );
-		tx = AddText( View, tx, y, g_crValue, 0, _T( "%0.3f" ), Data[0] );
-		tx = AddText( View, tx, y, g_crName, HS_NONE, _T( "," ) );
-		tx = AddText( View, tx, y, g_crValue, 1, _T( "%0.3f" ), Data[1] );
-		tx = AddText( View, tx, y, g_crName, HS_NONE, _T( "," ) );
-		tx = AddText( View, tx, y, g_crValue, 2, _T( "%0.3f" ), Data[2] );
-		tx = AddText( View, tx, y, g_crName, HS_NONE, _T( ")" ) );
+		tx = AddText( View, tx, y, g_clrName, HS_NONE, _T( "(" ) );
+		tx = AddText( View, tx, y, g_clrValue, 0, _T( "%0.3f" ), Data[0] );
+		tx = AddText( View, tx, y, g_clrName, HS_NONE, _T( "," ) );
+		tx = AddText( View, tx, y, g_clrValue, 1, _T( "%0.3f" ), Data[1] );
+		tx = AddText( View, tx, y, g_clrName, HS_NONE, _T( "," ) );
+		tx = AddText( View, tx, y, g_clrValue, 2, _T( "%0.3f" ), Data[2] );
+		tx = AddText( View, tx, y, g_clrName, HS_NONE, _T( ")" ) );
 	}
 	tx += g_FontWidth;
 	tx = AddComment( View, tx, y );

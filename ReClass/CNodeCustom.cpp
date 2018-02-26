@@ -36,11 +36,11 @@ NODESIZE CNodeCustom::Draw( const PVIEWINFO View, int x, int y )
     tx = x + TXOFFSET;
     tx = AddIcon( View, tx, y, ICON_CUSTOM, HS_NONE, HS_NONE );
     tx = AddAddressOffset( View, tx, y );
-    tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "Custom " ) );
-    tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "[" ) );
-    tx = AddText( View, tx, y, g_crIndex, HS_EDIT, _T( "%i" ), m_ulMemorySize );
-    tx = AddText( View, tx, y, g_crIndex, HS_NONE, _T( "] " ) );
-    tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrType, HS_NONE, _T( "Custom " ) );
+    tx = AddText( View, tx, y, g_clrIndex, HS_NONE, _T( "[" ) );
+    tx = AddText( View, tx, y, g_clrIndex, HS_EDIT, _T( "%i" ), m_ulMemorySize );
+    tx = AddText( View, tx, y, g_clrIndex, HS_NONE, _T( "] " ) );
+    tx = AddText( View, tx, y, g_clrName, HS_NAME, _T( "%s" ), m_strName ) + g_FontWidth;
     tx = AddComment( View, tx, y );
     
     DrawSize.x = tx;

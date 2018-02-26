@@ -36,17 +36,17 @@ static const char g_ConsoleKeyWords[] =
 
 // Default color scheme
 static SCINTILLA_COLORS g_rgbSyntaxConsole[] = {
-    { SCE_C_COMMENT,		green },
-    { SCE_C_COMMENTLINE,	green },
-    { SCE_C_COMMENTDOC,		green },
-    { SCE_C_NUMBER,			darkyellow },
-    { SCE_C_STRING,			orange },
-    { SCE_C_CHARACTER,		darkblue },
-    { SCE_C_UUID,			cyan },
-    { SCE_C_OPERATOR,		red },
-    { SCE_C_PREPROCESSOR,	purple },
-    { SCE_C_WORD,			blue },
-    { SCE_C_WORD2,			cyan },
+    { SCE_C_COMMENT,		RGB_GREEN },
+    { SCE_C_COMMENTLINE,	RGB_GREEN },
+    { SCE_C_COMMENTDOC,		RGB_DARKGREEN },
+    { SCE_C_NUMBER,			RGB_DARKYELLOW },
+    { SCE_C_STRING,			RGB_ORANGE },
+    { SCE_C_CHARACTER,		RGB_DARKBLUE },
+    { SCE_C_UUID,			RGB_CYAN },
+    { SCE_C_OPERATOR,		RGB_RED },
+    { SCE_C_PREPROCESSOR,	RGB_PURPLE },
+    { SCE_C_WORD,			RGB_BLUE },
+    { SCE_C_WORD2,			RGB_CYAN },
     { -1,					0 }
 };
 
@@ -168,7 +168,7 @@ void CDialogConsole::InitialiseEditor( )
     m_Edit.SetKeywords( 0, g_ConsoleKeyWords );
 
     // Set up the global default style. These attributes are used wherever no explicit choices are made.
-    SetStyle( STYLE_DEFAULT, black, white, 10, "Segoe UI" );
+    SetStyle( STYLE_DEFAULT, RGB_BLACK, RGB_WHITE, 10, "Segoe UI" );
 
     // Set caret foreground color
     //SendEditor(SCI_SETCARETFORE, RGB(255, 255, 255));

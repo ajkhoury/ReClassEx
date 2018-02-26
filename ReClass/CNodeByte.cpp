@@ -36,10 +36,10 @@ NODESIZE CNodeByte::Draw( const PVIEWINFO View, int x, int y )
     tx = x + TXOFFSET;
     tx = AddIcon( View, tx, y, ICON_UNSIGNED, HS_NONE, HS_NONE );
     tx = AddAddressOffset( View, tx, y );
-    tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "BYTE  " ) );
-    tx = AddText( View, tx, y, g_crName, HS_NAME, _T( "%s" ), m_strName );
-    tx = AddText( View, tx, y, g_crName, HS_NONE, _T( " = " ) );
-    tx = AddText( View, tx, y, g_crValue, HS_EDIT, g_bUnsignedHex ? _T( "0x%02X" ) : _T( "%u" ), Data[0] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrType, HS_NONE, _T( "BYTE  " ) );
+    tx = AddText( View, tx, y, g_clrName, HS_NAME, _T( "%s" ), m_strName );
+    tx = AddText( View, tx, y, g_clrName, HS_NONE, _T( " = " ) );
+    tx = AddText( View, tx, y, g_clrValue, HS_EDIT, g_bUnsignedHex ? _T( "0x%02X" ) : _T( "%u" ), Data[0] ) + g_FontWidth;
     tx = AddComment( View, tx, y );
 
     DrawSize.x = tx;

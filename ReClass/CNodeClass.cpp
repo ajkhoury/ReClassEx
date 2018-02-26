@@ -59,20 +59,20 @@ NODESIZE CNodeClass::Draw( const PVIEWINFO View, int x, int y )
     tx = x;
 
     x = AddIcon( View, x, y, ICON_CLASS, -1, -1 );
-    x = AddText( View, x, y, g_crOffset, 0, _T( "%s" ), m_strOffset ) + g_FontWidth;
+    x = AddText( View, x, y, g_clrOffset, 0, _T( "%s" ), m_strOffset ) + g_FontWidth;
 
     // x += ( NumDigits( m_Offset ) ) * FontWidth;
     // TODO, figure this out better
     // x += ( ( NumDigits( m_Offset ) - 7 ) * FontWidth ) / 2;
     // printf( "Print %s at %d\n", m_strOffset, x );
 
-    x = AddText( View, x, y, g_crIndex, HS_NONE, _T( "(" ) );
-    x = AddText( View, x, y, g_crIndex, HS_OPENCLOSE, _T( "%i" ), m_Idx );
-    x = AddText( View, x, y, g_crIndex, HS_NONE, _T( ")" ) );
+    x = AddText( View, x, y, g_clrIndex, HS_NONE, _T( "(" ) );
+    x = AddText( View, x, y, g_clrIndex, HS_OPENCLOSE, _T( "%i" ), m_Idx );
+    x = AddText( View, x, y, g_clrIndex, HS_NONE, _T( ")" ) );
 
-    x = AddText( View, x, y, g_crType, HS_NONE, _T( "Class " ) );
-    x = AddText( View, x, y, g_crName, HS_NAME, m_strName ) + g_FontWidth;
-    x = AddText( View, x, y, g_crValue, HS_NONE, _T( "[%i]" ), GetMemorySize( ) ) + g_FontWidth;
+    x = AddText( View, x, y, g_clrType, HS_NONE, _T( "Class " ) );
+    x = AddText( View, x, y, g_clrName, HS_NAME, m_strName ) + g_FontWidth;
+    x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "[%i]" ), GetMemorySize( ) ) + g_FontWidth;
     x = AddComment( View, x, y );
 
     DrawSize.x = x;

@@ -36,10 +36,10 @@ NODESIZE CNodeHex8::Draw( const PVIEWINFO View, int x, int y )
     {
         CStringA str = GetStringFromMemoryA( (const char*)Data, 1 );
         str += "        ";
-        tx = AddText( View, tx, y, g_crChar, HS_NONE, "%s", str.GetBuffer( ) );
+        tx = AddText( View, tx, y, g_clrChar, HS_NONE, "%s", str.GetBuffer( ) );
     }
 
-    tx = AddText( View, tx, y, g_crHex, 0, _T( "%0.2X" ), Data[0] & 0xFF ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 0, _T( "%0.2X" ), Data[0] & 0xFF ) + g_FontWidth;
     tx = AddComment( View, tx, y );
 
     DrawSize.x = tx;

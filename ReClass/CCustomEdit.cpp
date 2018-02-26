@@ -11,14 +11,14 @@ END_MESSAGE_MAP( )
 
 BOOL CCustomEdit::Create( DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID )
 {
-    m_brBackGnd = CreateSolidBrush( g_crSelect );
+    m_brBackGnd = CreateSolidBrush( g_clrSelect );
     dwStyle = dwStyle | ES_AUTOHSCROLL; // ICY
     return CEdit::Create( dwStyle, rect, pParentWnd, nID );
 }
 
 HBRUSH CCustomEdit::CtlColor( CDC* pDC, UINT nCtlColor )
 {
-    pDC->SetBkColor( g_crSelect );
+    pDC->SetBkColor( g_clrSelect );
     return m_brBackGnd;
 }
 

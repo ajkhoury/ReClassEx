@@ -38,12 +38,12 @@ NODESIZE CNodeVTable::Draw( const PVIEWINFO View, int x, int y )
 
     int tx = x;
     x = AddAddressOffset( View, x, y );
-    x = AddText( View, x, y, g_crVTable, HS_NONE, _T( "VTable[%i]" ), m_ChildNodes.size( ) ) + g_FontWidth;
+    x = AddText( View, x, y, g_clrVTable, HS_NONE, _T( "VTable[%i]" ), m_ChildNodes.size( ) ) + g_FontWidth;
 
     //if (m_strName.IsEmpty())
-    x = AddText( View, x, y, g_crName, HS_NAME, _T( "%s" ), m_strName ) + g_FontWidth;
+    x = AddText( View, x, y, g_clrName, HS_NAME, _T( "%s" ), m_strName ) + g_FontWidth;
     //else
-    //	x = AddText(View, x, y, g_crName, HS_NONE, _T("%s_vtable"), pParent->m_strName) + FontWidth;
+    //	x = AddText(View, x, y, g_clrName, HS_NONE, _T("%s_vtable"), pParent->m_strName) + FontWidth;
 
     x = AddComment( View, x, y );
 

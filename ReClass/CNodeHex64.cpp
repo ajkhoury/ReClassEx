@@ -35,17 +35,17 @@ NODESIZE CNodeHex64::Draw( const PVIEWINFO View, int x, int y )
     if (g_bText)
     {
         CStringA AsciiMemory = GetStringFromMemoryA( (const char*)Data, 8 ) + " ";
-        tx = AddText( View, tx, y, g_crChar, HS_NONE, "%s", AsciiMemory.GetBuffer( ) );
+        tx = AddText( View, tx, y, g_clrChar, HS_NONE, "%s", AsciiMemory.GetBuffer( ) );
     }
 
-    tx = AddText( View, tx, y, g_crHex, 0, _T( "%0.2X" ), Data[0] ) + g_FontWidth;
-    tx = AddText( View, tx, y, g_crHex, 1, _T( "%0.2X" ), Data[1] ) + g_FontWidth;
-    tx = AddText( View, tx, y, g_crHex, 2, _T( "%0.2X" ), Data[2] ) + g_FontWidth;
-    tx = AddText( View, tx, y, g_crHex, 3, _T( "%0.2X" ), Data[3] ) + g_FontWidth;
-    tx = AddText( View, tx, y, g_crHex, 4, _T( "%0.2X" ), Data[4] ) + g_FontWidth;
-    tx = AddText( View, tx, y, g_crHex, 5, _T( "%0.2X" ), Data[5] ) + g_FontWidth;
-    tx = AddText( View, tx, y, g_crHex, 6, _T( "%0.2X" ), Data[6] ) + g_FontWidth;
-    tx = AddText( View, tx, y, g_crHex, 7, _T( "%0.2X" ), Data[7] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 0, _T( "%0.2X" ), Data[0] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 1, _T( "%0.2X" ), Data[1] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 2, _T( "%0.2X" ), Data[2] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 3, _T( "%0.2X" ), Data[3] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 4, _T( "%0.2X" ), Data[4] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 5, _T( "%0.2X" ), Data[5] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 6, _T( "%0.2X" ), Data[6] ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrHex, 7, _T( "%0.2X" ), Data[7] ) + g_FontWidth;
     tx = AddComment( View, tx, y );
 
     DrawSize.x = tx;

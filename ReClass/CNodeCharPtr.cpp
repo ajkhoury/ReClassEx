@@ -41,32 +41,32 @@ NODESIZE CNodeCharPtr::Draw( const PVIEWINFO View, int x, int y )
     tx = x + TXOFFSET;
     tx = AddIcon( View, tx, y, ICON_INTEGER, HS_NONE, HS_NONE );
     tx = AddAddressOffset( View, tx, y );
-    tx = AddText( View, tx, y, g_crType, HS_NONE, _T( "PCHAR " ) );
-    tx = AddText( View, tx, y, g_crName, HS_NAME, m_strName );
+    tx = AddText( View, tx, y, g_clrType, HS_NONE, _T( "PCHAR " ) );
+    tx = AddText( View, tx, y, g_clrName, HS_NAME, m_strName );
 
-    //tx = AddText(View,tx,y,g_crName,HS_NONE," = ");
-    //tx = AddText(View,tx,y,g_crValue,0,"%lli",pMemory[0]) + FontWidth;
+    //tx = AddText(View,tx,y,g_clrName,HS_NONE," = ");
+    //tx = AddText(View,tx,y,g_clrValue,0,"%lli",pMemory[0]) + FontWidth;
     //tx = AddComment(View,tx,y);
 
     /*
     int tx = x + 16;
     tx = AddIcon(View,tx,y,ICON_TEXT,HS_NONE,HS_NONE);
     tx = AddAddressOffset(View,tx,y);
-    tx = AddText(View,tx,y,g_crType,HS_NONE,"Text ");
-    tx = AddText(View,tx,y,g_crName,69,"%s",m_strName);
-    tx = AddText(View,tx,y,g_crIndex,HS_NONE,"[");
-    tx = AddText(View,tx,y,g_crIndex,0,"%i",memsize);
-    tx = AddText(View,tx,y,g_crIndex,HS_NONE,"]");
+    tx = AddText(View,tx,y,g_clrType,HS_NONE,"Text ");
+    tx = AddText(View,tx,y,g_clrName,69,"%s",m_strName);
+    tx = AddText(View,tx,y,g_clrIndex,HS_NONE,"[");
+    tx = AddText(View,tx,y,g_clrIndex,0,"%i",memsize);
+    tx = AddText(View,tx,y,g_clrIndex,HS_NONE,"]");
     */
 
-    tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( " = '" ) );
+    tx = AddText( View, tx, y, g_clrChar, HS_NONE, _T( " = '" ) );
     if (VALID( Data ))
     {
         CStringA MemoryString( ReadMemoryStringA( *Data, 128 ) );
-        tx = AddText( View, tx, y, g_crChar, 1, "%s", MemoryString.GetBuffer( ) );
+        tx = AddText( View, tx, y, g_clrChar, 1, "%s", MemoryString.GetBuffer( ) );
     }
 
-    tx = AddText( View, tx, y, g_crChar, HS_NONE, _T( "' " ) ) + g_FontWidth;
+    tx = AddText( View, tx, y, g_clrChar, HS_NONE, _T( "' " ) ) + g_FontWidth;
     tx = AddComment( View, tx, y );
 
     DrawSize.x = tx;

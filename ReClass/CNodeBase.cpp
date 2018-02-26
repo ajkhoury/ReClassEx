@@ -133,18 +133,18 @@ int CNodeBase::AddAddressOffset( const PVIEWINFO View, int x, int y )
         //if (numdigits > 8)
         //	x += ((numdigits - 8) * FontWidth);
 
-        x = AddText( View, x, y, g_crOffset, HS_NONE, _T( "%0.4X" ), m_Offset ) + g_FontWidth;
+        x = AddText( View, x, y, g_clrOffset, HS_NONE, _T( "%0.4X" ), m_Offset ) + g_FontWidth;
         #else
-        x = AddText( View, x, y, g_crOffset, HS_NONE, _T( "%0.4X" ), m_Offset ) + g_FontWidth;
+        x = AddText( View, x, y, g_clrOffset, HS_NONE, _T( "%0.4X" ), m_Offset ) + g_FontWidth;
         #endif
     }
 
     if (g_bAddress)
     {
         #ifdef _WIN64
-        x = AddText( View, x, y, g_crAddress, HS_ADDRESS, _T( "%0.9I64X" ), View->Address + m_Offset ) + g_FontWidth;
+        x = AddText( View, x, y, g_clrAddress, HS_ADDRESS, _T( "%0.9I64X" ), View->Address + m_Offset ) + g_FontWidth;
         #else
-        x = AddText( View, x, y, g_crAddress, HS_ADDRESS, _T( "%0.8X" ), View->Address + m_Offset ) + g_FontWidth;
+        x = AddText( View, x, y, g_clrAddress, HS_ADDRESS, _T( "%0.8X" ), View->Address + m_Offset ) + g_FontWidth;
         #endif
     }
 
@@ -157,7 +157,7 @@ void CNodeBase::AddSelection( const PVIEWINFO View, int x, int y, int Height )
         return;
 
     if (m_bSelected)
-        View->Dc->FillSolidRect( 0, y, View->ClientRect->right, Height, g_crSelect );
+        View->Dc->FillSolidRect( 0, y, View->ClientRect->right, Height, g_clrSelect );
 
     CRect pos( 0, y, INT_MAX, y + Height );
     AddHotSpot( View, pos, CString( ), 0, HS_SELECT );
@@ -405,16 +405,16 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Address, int x, const PVIEWINFO View, int 
     }
 #endif
 
-    x = AddText( View, x, y, g_crOffset, HS_RTTI, _T( "%s" ), RttiString.GetString( ) );
+    x = AddText( View, x, y, g_clrOffset, HS_RTTI, _T( "%s" ), RttiString.GetString( ) );
 
     return x;
 }
 
 int CNodeBase::AddComment( const PVIEWINFO View, int x, int y )
 {
-    x = AddText( View, x, y, g_crComment, HS_NONE, _T( "//" ) );
+    x = AddText( View, x, y, g_clrComment, HS_NONE, _T( "//" ) );
     // Need the extra whitespace in "%s " after the %s to edit.
-    x = AddText( View, x, y, g_crComment, HS_COMMENT, _T( "%s " ), m_strComment );
+    x = AddText( View, x, y, g_clrComment, HS_COMMENT, _T( "%s " ), m_strComment );
 
     if (m_nodeType == nt_hex64)
     {
@@ -424,19 +424,19 @@ int CNodeBase::AddComment( const PVIEWINFO View, int x, int y )
         if (g_bFloat)
         {
             if (flVal > -99999.0 && flVal < 99999.0)
-                x = AddText( View, x, y, g_crValue, HS_NONE, _T( "(%0.3f)" ), flVal );
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%0.3f)" ), flVal );
             else
-                x = AddText( View, x, y, g_crValue, HS_NONE, _T( "(%0.3f)" ), 0.0f );
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%0.3f)" ), 0.0f );
         }
 
         if (g_bInt)
         {
             if (intVal > 0x6FFFFFFF && intVal < 0x7FFFFFFFFFFF)
-                x = AddText( View, x, y, g_crValue, HS_NONE, _T( "(%I64d|0x%IX)" ), intVal, intVal );
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%I64d|0x%IX)" ), intVal, intVal );
             else if (intVal == 0)
-                x = AddText( View, x, y, g_crValue, HS_NONE, _T( "(%I64d)" ), intVal );
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%I64d)" ), intVal );
             else
-                x = AddText( View, x, y, g_crValue, HS_NONE, _T( "(%I64d|0x%X)" ), intVal, intVal );
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%I64d|0x%X)" ), intVal, intVal );
         }
 
         // *** this is probably broken, let's fix it after
@@ -449,7 +449,7 @@ int CNodeBase::AddComment( const PVIEWINFO View, int x, int y )
                 //printf( "<%p> here\n", Val );
                 if (uintVal > 0x6FFFFFFF && uintVal < 0x7FFFFFFFFFFF)
                 {
-                    x = AddText( View, x, y, g_crOffset, HS_EDIT, _T( "*->%s " ), strAddress.GetString( ) );
+                    x = AddText( View, x, y, g_clrOffset, HS_EDIT, _T( "*->%s " ), strAddress.GetString( ) );
                     if (g_bRTTI)
                         x = ResolveRTTI( uintVal, x, View, y );
 
@@ -476,7 +476,7 @@ int CNodeBase::AddComment( const PVIEWINFO View, int x, int y )
                                 SymbolOut.Preallocate( 1024 );
                                 if (pSymbols->GetSymbolStringFromVA( uintVal, SymbolOut ))
                                 {
-                                    x = AddText( View, x, y, g_crOffset, HS_EDIT, _T( "%s " ), SymbolOut.GetString( ) );
+                                    x = AddText( View, x, y, g_clrOffset, HS_EDIT, _T( "%s " ), SymbolOut.GetString( ) );
                                 }
                             }
                         }
@@ -499,7 +499,7 @@ int CNodeBase::AddComment( const PVIEWINFO View, int x, int y )
                 if (bAddStr)
                 {
                     txt[63] = '\0';
-                    x = AddText( View, x, y, g_crChar, HS_NONE, _T( "'%hs'" ), txt );
+                    x = AddText( View, x, y, g_clrChar, HS_NONE, _T( "'%hs'" ), txt );
                 }
             }
         }
@@ -512,22 +512,22 @@ int CNodeBase::AddComment( const PVIEWINFO View, int x, int y )
         if (g_bFloat)
         {
             if (flVal > -99999.0 && flVal < 99999.0)
-                x = AddText( View, x, y, g_crValue, HS_NONE, _T( "(%0.3f)" ), flVal );
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%0.3f)" ), flVal );
             else
-                x = AddText( View, x, y, g_crValue, HS_NONE, _T( "(%0.3f)" ), 0.0f );
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%0.3f)" ), 0.0f );
         }
 
         if (g_bInt)
         {
             #if defined(_M_AMD64)
             if (intVal > 0x140000000 && intVal < 0x7FFFFFFFFFFF) // in 64 bit address range
-                x = AddText( View, x, y, g_crValue, HS_NONE, _T( "(%i|0x%IX)" ), intVal, intVal );
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%i|0x%IX)" ), intVal, intVal );
             else if (intVal > 0x400000 && intVal < 0x140000000)
-                x = AddText( View, x, y, g_crValue, HS_NONE, _T( "(%i|0x%X)" ), intVal, intVal );
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%i|0x%X)" ), intVal, intVal );
             else if (intVal == 0)
-                x = AddText( View, x, y, g_crValue, HS_NONE, _T( "(%i)" ), intVal );
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%i)" ), intVal );
             else
-                x = AddText( View, x, y, g_crValue, HS_NONE, _T( "(%i|0x%X)" ), intVal, intVal );
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%i|0x%X)" ), intVal, intVal );
             #else
             x = (intVal == 0) ? AddText( View, x, y, g_crValue, HS_NONE, _T( "(%i)" ), intVal ) : AddText( View, x, y, g_crValue, HS_NONE, _T( "(%i|0x%X)" ), intVal, intVal );
             #endif
@@ -545,7 +545,7 @@ int CNodeBase::AddComment( const PVIEWINFO View, int x, int y )
                 // Set to 0x110000000 instead
                 if (uintVal > 0x400000 && uintVal < 0x110000000)
                 {
-                    x = AddText( View, x, y, g_crOffset, HS_EDIT, _T( "*->%s " ), strAddress.GetString( ) );
+                    x = AddText( View, x, y, g_clrOffset, HS_EDIT, _T( "*->%s " ), strAddress.GetString( ) );
                     if (g_bRTTI)
                         x = ResolveRTTI( uintVal, x, View, y );
 
@@ -572,7 +572,7 @@ int CNodeBase::AddComment( const PVIEWINFO View, int x, int y )
                                 SymbolOut.Preallocate( 1024 );
                                 if (pSymbols->GetSymbolStringFromVA( uintVal, SymbolOut ))
                                 {
-                                    x = AddText( View, x, y, g_crOffset, HS_EDIT, _T( "%s " ), SymbolOut.GetString( ) );
+                                    x = AddText( View, x, y, g_clrOffset, HS_EDIT, _T( "%s " ), SymbolOut.GetString( ) );
                                 }
                             }
                         }
@@ -595,7 +595,7 @@ int CNodeBase::AddComment( const PVIEWINFO View, int x, int y )
                 if (bAddStr)
                 {
                     txt[63] = '\0'; // null terminte (even though we prolly dont have to)
-                    x = AddText( View, x, y, g_crChar, HS_NONE, _T( "'%hs'" ), txt );
+                    x = AddText( View, x, y, g_clrChar, HS_NONE, _T( "'%hs'" ), txt );
                 }
             }
         }
@@ -605,7 +605,14 @@ int CNodeBase::AddComment( const PVIEWINFO View, int x, int y )
         if (g_bInt)
         {
             short intVal = *((short*)&View->Data[m_Offset]);
-            x = (intVal == 0) ? AddText( View, x, y, g_crValue, HS_NONE, _T( "(%i)" ), intVal ) : AddText( View, x, y, g_crValue, HS_NONE, _T( "(0x%X)" ), intVal );
+            if (intVal == 0)
+            {
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%i)" ), intVal );
+            }
+            else
+            {
+                x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(0x%X)" ), intVal );
+            }
         }
     }
 
@@ -628,7 +635,7 @@ NODESIZE CNodeBase::DrawHidden( const PVIEWINFO View, int x, int y )
 {
     NODESIZE DrawSize;
 
-    View->Dc->FillSolidRect( 0, y, View->ClientRect->right, 1, m_bSelected ? g_crSelect : g_crHidden );
+    View->Dc->FillSolidRect( 0, y, View->ClientRect->right, 1, m_bSelected ? g_clrSelect : g_clrHidden );
 
     DrawSize.x = 0;
     DrawSize.y = y;
