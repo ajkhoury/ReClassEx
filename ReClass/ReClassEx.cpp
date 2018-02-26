@@ -66,34 +66,40 @@ CReClassExApp::CReClassExApp( )
 
 }
 
-void CReClassExApp::ResizeMemoryFont( int font_width, int font_height )
+void CReClassExApp::ResizeMemoryFont( int fontWidth, int fontHeight )
 {
     g_ViewFont.DeleteObject( );
 
-    HMODULE hSHCoreBase = (HMODULE)Utils::GetLocalModuleBaseW( L"shcore.dll" );
-    if (hSHCoreBase)
+    HMODULE hShcoreBase = (HMODULE)Utils::GetLocalModuleBase( _T( "shcore.dll" ) );
+    if (hShcoreBase)
     {
-        auto pfnGetProcessDpiAwareness = reinterpret_cast<decltype(&GetProcessDpiAwareness)>(Utils::GetLocalProcAddressW( hSHCoreBase, L"GetProcessDpiAwareness" ));
-        auto pfnGetDpiForMonitor = reinterpret_cast<decltype(&GetDpiForMonitor)>(Utils::GetLocalProcAddressW( hSHCoreBase, L"GetDpiForMonitor" ));
+        auto pfnGetProcessDpiAwareness = reinterpret_cast<decltype(&GetProcessDpiAwareness)>(Utils::GetLocalProcAddress( hShcoreBase, _T( "GetProcessDpiAwareness" ) ));
+        auto pfnGetDpiForMonitor = reinterpret_cast<decltype(&GetDpiForMonitor)>(Utils::GetLocalProcAddress( hShcoreBase, _T( "GetDpiForMonitor" ) ));
 
-        if (pfnGetProcessDpiAwareness != nullptr && pfnGetDpiForMonitor != nullptr)
+        if (pfnGetProcessDpiAwareness && pfnGetDpiForMonitor)
         {
-            PROCESS_DPI_AWARENESS dpi;
-            pfnGetProcessDpiAwareness( NULL, &dpi );
-            if (dpi == PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE || dpi == PROCESS_DPI_AWARENESS::PROCESS_SYSTEM_DPI_AWARE)
-            {
-                UINT dpiX, dpiY;
-                HMONITOR monitor = ::MonitorFromWindow( m_pMainWnd->GetSafeHwnd( ), MONITOR_DEFAULTTONEAREST );
-                pfnGetDpiForMonitor( monitor, MONITOR_DPI_TYPE::MDT_EFFECTIVE_DPI, &dpiX, &dpiY );
-                g_FontWidth = MulDiv( font_width, MulDiv( dpiX, 100, 96 ), 100 );
-                g_FontHeight = MulDiv( font_height, MulDiv( dpiY, 100, 96 ), 100 );
+            PROCESS_DPI_AWARENESS dpiValue;
+            UINT dpiX, dpiY;
+            HMONITOR hMonitor;
+
+            pfnGetProcessDpiAwareness( NULL, &dpiValue );
+            if (dpiValue == PROCESS_DPI_AWARENESS::PROCESS_PER_MONITOR_DPI_AWARE || 
+                dpiValue == PROCESS_DPI_AWARENESS::PROCESS_SYSTEM_DPI_AWARE)
+            {           
+                hMonitor = ::MonitorFromWindow( m_pMainWnd->GetSafeHwnd( ), MONITOR_DEFAULTTONEAREST );
+                pfnGetDpiForMonitor( hMonitor, MONITOR_DPI_TYPE::MDT_EFFECTIVE_DPI, &dpiX, &dpiY );
+                g_FontWidth = MulDiv( fontWidth, MulDiv( dpiX, 100, 96 ), 100 );
+                g_FontHeight = MulDiv( fontHeight, MulDiv( dpiY, 100, 96 ), 100 );
             }
         }
 
-        FreeLibrary( hSHCoreBase );
+        FreeLibrary( hShcoreBase );
     }
 
-    g_ViewFont.CreateFont( g_FontHeight, g_FontWidth, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, FIXED_PITCH, g_ViewFontName.GetBuffer( ) );
+    g_ViewFont.CreateFont( g_FontHeight, g_FontWidth, 0, 0, 
+        FW_NORMAL, FALSE, FALSE, FALSE, 0, 
+        OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, 
+        CLEARTYPE_QUALITY, FIXED_PITCH, g_ViewFontName.GetBuffer( ) );
 }
 
 BOOL CReClassExApp::InitInstance( )
@@ -127,9 +133,9 @@ BOOL CReClassExApp::InitInstance( )
     InitKeyboardManager( );
     InitTooltipManager( );
 
-    CMFCToolTipInfo ttParams;
-    ttParams.m_bVislManagerTheme = TRUE;
-    GetTooltipManager( )->SetTooltipParams( AFX_TOOLTIP_TYPE_ALL, RUNTIME_CLASS( CMFCToolTipCtrl ), &ttParams );
+    CMFCToolTipInfo toolTipInfo;
+    toolTipInfo.m_bVislManagerTheme = TRUE;
+    GetTooltipManager( )->SetTooltipParams( AFX_TOOLTIP_TYPE_ALL, RUNTIME_CLASS( CMFCToolTipCtrl ), &toolTipInfo );
 
     // Get registry entries
     SetRegistryKey( _T( "RC16" ) );
@@ -505,32 +511,30 @@ void CReClassExApp::OnFileImport( )
 
 void CReClassExApp::ClearSelection( )
 {
-    for (UINT i = 0; i < m_Classes.size( ); i++)
+    for (size_t c = 0; c < m_Classes.size( ); c++)
     {
-        m_Classes[i]->Unselect( );
-        for (UINT n = 0; n < m_Classes[i]->NodeCount( ); n++)
+        m_Classes[c]->Unselect( );
+        for (size_t n = 0; n < m_Classes[c]->NodeCount( ); n++)
         {
-            CNodeBase* pNode = m_Classes[i]->GetNode( n );
+            CNodeBase* pNode = m_Classes[c]->GetNode( n );
             pNode->Unselect( );
 
-            NodeType nt = pNode->GetType( );
-            if (nt == nt_vtable)
+            NodeType nodeType = pNode->GetType( );
+            if (nodeType == nt_vtable)
             {
-                CNodeVTable* pVTable = (CNodeVTable*)pNode;
-                for (UINT f = 0; f < pVTable->NodeCount( ); f++)
+                CNodeVTable* pVTable = static_cast<CNodeVTable*>(pNode);
+                for (size_t f = 0; f < pVTable->NodeCount( ); f++)
                 {
                     pVTable->GetNode( f )->Unselect( );
                 }
             }
-            if (nt == nt_array)
+            if (nodeType == nt_array)
             {
-                CNodeArray* pArray = (CNodeArray*)pNode;
-                pArray->Unselect( );
+                static_cast<CNodeArray*>(pNode)->Unselect( );
             }
-            if (nt == nt_pointer)
+            if (nodeType == nt_pointer)
             {
-                CNodePtr* pPtr = (CNodePtr*)pNode;
-                pPtr->Unselect( );
+                static_cast<CNodePtr*>(pNode)->Unselect( );
             }
         }
     }
@@ -538,30 +542,30 @@ void CReClassExApp::ClearSelection( )
 
 void CReClassExApp::ClearHidden( )
 {
-    for (UINT i = 0; i < m_Classes.size( ); i++)
+    for (size_t c = 0; c < m_Classes.size( ); c++)
     {
-        m_Classes[i]->Show( );
-        for (UINT n = 0; n < m_Classes[i]->NodeCount( ); n++)
+        m_Classes[c]->Show( );
+        for (size_t n = 0; n < m_Classes[c]->NodeCount( ); n++)
         {
-            CNodeBase* pNode = m_Classes[i]->GetNode( n );
+            CNodeBase* pNode = m_Classes[c]->GetNode( n );
             pNode->Show( );
 
             NodeType nt = pNode->GetType( );
             if (nt == nt_vtable)
             {
-                CNodeVTable* pVTable = (CNodeVTable*)pNode;
-                for (UINT f = 0; f < pVTable->NodeCount( ); f++)
+                CNodeVTable* pVTable = static_cast<CNodeVTable*>(pNode);
+                for (size_t f = 0; f < pVTable->NodeCount( ); f++)
+                {
                     pVTable->GetNode( f )->Show( );
+                }          
             }
             if (nt == nt_array)
             {
-                CNodeArray* pArray = (CNodeArray*)pNode;
-                pArray->Show( );
+                static_cast<CNodeArray*>(pNode)->Show( );
             }
             if (nt == nt_pointer)
             {
-                CNodePtr* pPtr = (CNodePtr*)pNode;
-                pPtr->Show( );
+                static_cast<CNodePtr*>(pNode)->Show( );
             }
         }
     }
@@ -569,34 +573,32 @@ void CReClassExApp::ClearHidden( )
 
 bool CReClassExApp::IsNodeValid( CNodeBase* pCheckNode )
 {
-    for (UINT i = 0; i < m_Classes.size( ); i++)
+    for (size_t c = 0; c < m_Classes.size( ); c++)
     {
-        for (UINT n = 0; n < m_Classes[i]->NodeCount( ); n++)
+        for (size_t n = 0; n < m_Classes[c]->NodeCount( ); n++)
         {
-            CNodeBase* pNode = m_Classes[i]->GetNode( n );
+            CNodeBase* pNode = m_Classes[c]->GetNode( n );
             if (pNode == pCheckNode)
                 return true;
 
-            NodeType nt = pNode->GetType( );
-            if (nt == nt_vtable)
+            NodeType nodeType = pNode->GetType( );
+            if (nodeType == nt_vtable)
             {
-                CNodeVTable* pVTable = (CNodeVTable*)pNode;
-                for (UINT f = 0; f < pVTable->NodeCount( ); f++)
+                CNodeVTable* pVTable = static_cast<CNodeVTable*>(pNode);
+                for (size_t f = 0; f < pVTable->NodeCount( ); f++)
                 {
                     if (pVTable->GetNode( f ) == pCheckNode)
                         return true;
                 }
             }
-            if (nt == nt_array)
+            if (nodeType == nt_array)
             {
-                CNodeArray* pArray = (CNodeArray*)pNode;
-                if (pArray->GetClass( ) == pCheckNode)
+                if (static_cast<CNodeArray*>(pNode)->GetClass( ) == pCheckNode)
                     return true;
             }
-            if (nt == nt_pointer)
+            if (nodeType == nt_pointer)
             {
-                CNodePtr* pPtr = (CNodePtr*)pNode;
-                if (pPtr->GetClass( ) == pCheckNode)
+                if (static_cast<CNodePtr*>(pNode)->GetClass( ) == pCheckNode)
                     return true;
             }
         }
@@ -1030,7 +1032,7 @@ void CReClassExApp::OnFileOpen( )
     CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, m_pMainWnd );
     CMDIChildWnd* pChildWnd = pFrame->MDIGetActive( );
 
-    while ( pChildWnd )
+    while (pChildWnd)
     {
         pChildWnd->SendMessage( WM_CLOSE, 0, 0 );
         pChildWnd = pFrame->MDIGetActive( );
@@ -1605,13 +1607,14 @@ void CReClassExApp::DeleteClass( CNodeClass* pClass )
     if (pNode)
     {
         //PrintOutDbg( _T( "Class still has a reference in %s.%s" ), pNode->GetParent( )->GetName( ).GetString( ), pNode->GetName( ).GetString( ) );
-        CString msg;
-        msg.Format( _T( "Class still has a reference in %s.%s" ), pNode->GetParent( )->GetName( ).GetString( ), pNode->GetName( ).GetString( ) );
+        CString msg; 
+        msg.Format( _T( "Class still has a reference in %s.%s" ), 
+            pNode->GetParent( )->GetName( ).GetString( ), pNode->GetName( ).GetString( ) );
         GetMainWnd( )->MessageBox( msg );
         return;
     }
 
-    for (UINT i = 0; i < m_Classes.size( ); i++)
+    for (size_t i = 0; i < m_Classes.size( ); i++)
     {
         if (m_Classes[i] == pClass)
         {
@@ -1623,33 +1626,29 @@ void CReClassExApp::DeleteClass( CNodeClass* pClass )
 
 CNodeBase* CReClassExApp::IsNodeRef( CNodeBase* pTestNode )
 {
-    for (UINT c = 0; c < m_Classes.size( ); c++)
+    for (size_t c = 0; c < m_Classes.size( ); c++)
     {
-        CNodeClass* pClass = (CNodeClass*)m_Classes[c];
-        for (UINT n = 0; n < pClass->NodeCount( ); n++)
+        for (size_t n = 0; n < m_Classes[c]->NodeCount( ); n++)
         {
-            CNodeBase* pNode = pClass->GetNode( n );
+            CNodeBase* pNode = m_Classes[c]->GetNode( n );
             if (!pNode)
                 continue;
 
-            NodeType nt = pNode->GetType( );
-            if (nt == nt_instance)
+            NodeType nodeType = pNode->GetType( );
+            if (nodeType == nt_instance)
             {
-                CNodeClassInstance* pClassInstance = (CNodeClassInstance*)pNode;
-                if (pClassInstance->GetClass( ) == pTestNode)
-                    return pClassInstance;
+                if (static_cast<CNodeClassInstance*>(pNode)->GetClass( ) == pTestNode)
+                    return pNode;
             }
-            else if (nt == nt_pointer)
+            else if (nodeType == nt_pointer)
             {
-                CNodePtr* pPointer = (CNodePtr*)pNode;
-                if (pPointer->GetClass( ) == pTestNode)
-                    return pPointer;
+                if (static_cast<CNodePtr*>(pNode)->GetClass( ) == pTestNode)
+                    return pNode;
             }
-            else if (nt == nt_array)
+            else if (nodeType == nt_array)
             {
-                CNodeArray* pArray = (CNodeArray*)pNode;
-                if (pArray->GetClass( ) == pTestNode)
-                    return pArray;
+                if (static_cast<CNodePtr*>(pNode)->GetClass( ) == pTestNode)
+                    return pNode;
             }
         }
     }
@@ -1658,49 +1657,51 @@ CNodeBase* CReClassExApp::IsNodeRef( CNodeBase* pTestNode )
 
 void CReClassExApp::OnButtonClean( )
 {
-    CMDIFrameWnd* pFrame = STATIC_DOWNCAST( CMDIFrameWnd, m_pMainWnd );
-    CMDIChildWnd* wnd = pFrame->MDIGetActive( );
-    while (wnd)
-    {
-        wnd->SendMessage( WM_CLOSE, 0, 0 );
-        wnd = pFrame->MDIGetActive( );
-    }
-
+    size_t i, j, Count;
     std::vector<CNodeClass*> ClassesToCheck;
-    for (UINT i = 0; i < m_Classes.size( ); i++)
+    CMDIFrameWnd* pMainFrame;
+    CMDIChildWndEx* pChildWnd;
+
+    pMainFrame = STATIC_DOWNCAST( CMDIFrameWnd, m_pMainWnd );
+    pChildWnd = STATIC_DOWNCAST( CMDIChildWndEx, pMainFrame->MDIGetActive( ) );
+    while (pChildWnd)
+    {
+        pChildWnd->SendMessage( WM_CLOSE, 0, 0 );
+        pChildWnd = STATIC_DOWNCAST( CMDIChildWndEx, pMainFrame->MDIGetActive( ) );
+    }
+    
+    for (i = 0; i < m_Classes.size( ); i++)
     {
         if (IsNodeRef( m_Classes[i] ) == NULL)
             ClassesToCheck.push_back( m_Classes[i] );
     }
 
-    int count = 0;
-    for (UINT i = 0; i < ClassesToCheck.size( ); i++)
+    for (i = 0, Count = 0; i < ClassesToCheck.size( ); i++)
     {
         CNodeClass* pClass = ClassesToCheck[i];
         bool bCanDelete = true;
 
-        for (UINT n = 0; n < pClass->NodeCount( ); n++)
+        for (j = 0; j < pClass->NodeCount( ); j++)
         {
-            CNodeBase* pNode = pClass->GetNode( n );
+            CNodeBase* pNode = pClass->GetNode( j );
             NodeType Type = pNode->GetType( );
 
             if (Type == nt_hex64 || Type == nt_hex32 || Type == nt_hex16 || Type == nt_hex8)
                 continue;
 
             bCanDelete = false;
-
             break;
         }
 
         if (bCanDelete)
         {
-            count++;
+            Count++;
             DeleteClass( pClass );
         }
     }
     
-    //PrintOutDbg( _T( "Unused Classes removed: %i" ), count );
-    CString msg; msg.Format( _T( "Unused Classes removed: %i" ), count );
+    //PrintOutDbg( _T( "Unused Classes removed: %i" ), Count );
+    CString msg; msg.Format( _T( "Unused Classes removed: %i" ), Count );
     MessageBox( GetMainWnd( )->GetSafeHwnd( ), msg.GetString( ), _T( "Cleaner" ), MB_OK );
 }
 

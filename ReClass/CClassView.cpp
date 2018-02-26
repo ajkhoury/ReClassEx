@@ -2095,25 +2095,25 @@ BOOL CClassView::OnCmdMsg( UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO
     {
         if ((nID >= WM_CHANGECLASSMENU) && (nID < (WM_CHANGECLASSMENU + WM_MAXITEMS)))
         {
-            UINT idx = nID - WM_CHANGECLASSMENU;
+            UINT nIdx = nID - WM_CHANGECLASSMENU;
             CNodeBase* pNode = ExchangeTarget.Object;
             NodeType nodeType = pNode->GetType( );
 
             if (nodeType == nt_array)
             {
-                ((CNodeArray*)pNode)->SetClass( g_ReClassApp.m_Classes[idx] );
+                static_cast<CNodeArray*>(pNode)->SetClass( g_ReClassApp.m_Classes[nIdx] );
             }
             else if(nodeType == nt_ptrarray )
             {
-                ((CNodePtrArray*)pNode)->SetClass( g_ReClassApp.m_Classes[idx] );
+                static_cast<CNodePtrArray*>(pNode)->SetClass( g_ReClassApp.m_Classes[nIdx] );
             }
             else if (nodeType == nt_instance)
             {
-                ((CNodeClassInstance*)pNode)->SetClass( g_ReClassApp.m_Classes[idx] );
+                static_cast<CNodeClassInstance*>(pNode)->SetClass( g_ReClassApp.m_Classes[nIdx] );
             }
             else if (nodeType == nt_pointer)
             {
-                ((CNodePtr*)pNode)->SetClass( g_ReClassApp.m_Classes[idx] );
+                static_cast<CNodePtr*>(pNode)->SetClass( g_ReClassApp.m_Classes[nIdx] );
             }
 
             g_ReClassApp.CalcAllOffsets( );

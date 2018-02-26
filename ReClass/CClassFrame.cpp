@@ -64,7 +64,7 @@ void CClassFrame::Dump( CDumpContext& dc ) const
 void CClassFrame::OnFileClose( )
 {
     //
-    // To close the frame, just send a WM_CLOSE, which is the equivalent
+    // To close the frame, just send a WM_CLOSE, which is the equivalent of
     // choosing close from the system menu.
     //
     SendMessage( WM_CLOSE );

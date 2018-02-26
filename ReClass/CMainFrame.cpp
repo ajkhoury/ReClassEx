@@ -105,11 +105,12 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
     // Create tabs
     //
     CMDITabInfo MdiTabParams;
-    MdiTabParams.m_style = CMFCTabCtrl::STYLE_3D;
+    MdiTabParams.m_style = CMFCTabCtrl::STYLE_3D_ONENOTE;
     MdiTabParams.m_tabLocation = CMFCTabCtrl::LOCATION_TOP;
-    MdiTabParams.m_nTabBorderSize = 2;
     MdiTabParams.m_bActiveTabCloseButton = TRUE;
-    MdiTabParams.m_bTabIcons = TRUE;
+    MdiTabParams.m_bTabCloseButton = TRUE;
+    MdiTabParams.m_nTabBorderSize = 2;
+    MdiTabParams.m_bTabIcons = FALSE;
     MdiTabParams.m_bAutoColor = TRUE;
     MdiTabParams.m_bDocumentMenu = TRUE;
     MdiTabParams.m_bEnableTabSwap = TRUE;

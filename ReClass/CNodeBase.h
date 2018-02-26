@@ -134,7 +134,7 @@ public:
 
     inline void AddNode( CNodeBase* newNode ) { m_ChildNodes.push_back( newNode ); }
     inline void InsertNode( size_t idx, CNodeBase* newNode ) { m_ChildNodes.insert( m_ChildNodes.begin( ) + idx, newNode ); }
-    inline CNodeBase* GetNode( size_t idx ) { return (CNodeBase*)m_ChildNodes[idx]; }
+    inline CNodeBase* GetNode( size_t idx ) { return m_ChildNodes[idx]; }
     inline int FindNode( CNodeBase* pNode ) {
         auto found = std::find( m_ChildNodes.begin( ), m_ChildNodes.end( ), pNode );
         return (found != m_ChildNodes.end( )) ? (int)(found - m_ChildNodes.begin( )) : -1;
