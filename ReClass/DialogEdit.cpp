@@ -87,7 +87,7 @@ BOOL CDialogEdit::Create( LPCTSTR lpszTemplateName, CWnd* pParentWnd )
     return CDialogEx::Create( lpszTemplateName, pParentWnd );
 }
 
-void CDialogEdit::InitialiseEditor( )
+void CDialogEdit::InitializeEditor( )
 {
     // Punt if we already have a window
     if (::IsWindow( m_Edit.GetSafeHwnd( ) ))
@@ -154,7 +154,7 @@ BOOL CDialogEdit::OnInitDialog( )
 
     SetWindowText( Title );
     // Create the Scintilla editor	
-    InitialiseEditor( );
+    InitializeEditor( );
     m_Edit.SetText( Text );
 
     ShowWindow( SW_NORMAL );
@@ -164,7 +164,6 @@ BOOL CDialogEdit::OnInitDialog( )
 
     return FALSE;  // return TRUE unless you set the focus to a control
 }
-
 
 void CDialogEdit::OnCancel( )
 {

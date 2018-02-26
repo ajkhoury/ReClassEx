@@ -65,23 +65,7 @@ bool g_bFilterProcesses = false;
 bool g_bPrivatePadding = false;
 bool g_bClipboardCopy = false;
 
-CString g_tdHex;
-CString g_tdInt64;
-CString g_tdInt32;
-CString g_tdInt16;
-CString g_tdInt8;
-CString g_tdQWORD;
-CString g_tdDWORD;
-CString g_tdWORD;
-CString g_tdBYTE;
-CString g_tdFloat;
-CString g_tdDouble;
-CString g_tdVec2;
-CString g_tdVec3;
-CString g_tdQuat;
-CString g_tdMatrix;
-CString g_tdPChar;
-CString g_tdPWChar;
+RCTYPEDEFS g_Typedefs;
 
 DWORD g_NodeCreateIndex = 0;
 

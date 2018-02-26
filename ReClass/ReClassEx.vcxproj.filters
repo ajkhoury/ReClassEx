@@ -594,6 +594,15 @@
     <Image Include="res\toolbar1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\icon.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\button.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\about.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="Intrinsics32.asm">

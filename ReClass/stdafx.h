@@ -150,23 +150,27 @@ extern bool g_bFilterProcesses;
 extern bool g_bPrivatePadding;
 extern bool g_bClipboardCopy;
 
-extern CString g_tdHex;
-extern CString g_tdInt64;
-extern CString g_tdInt32;
-extern CString g_tdInt16;
-extern CString g_tdInt8;
-extern CString g_tdQWORD;
-extern CString g_tdDWORD;
-extern CString g_tdWORD;
-extern CString g_tdBYTE;
-extern CString g_tdFloat;
-extern CString g_tdDouble;
-extern CString g_tdVec2;
-extern CString g_tdVec3;
-extern CString g_tdQuat;
-extern CString g_tdMatrix;
-extern CString g_tdPChar;
-extern CString g_tdPWChar;
+typedef struct _RCTYPEDEFS {
+    CString Hex;
+    CString Int64;
+    CString Int32;
+    CString Int16;
+    CString Int8;
+    CString Qword;
+    CString Dword;
+    CString Word;
+    CString Byte;
+    CString Float;
+    CString Double;
+    CString Vec2;
+    CString Vec3;
+    CString Quat;
+    CString Matrix;
+    CString PChar;
+    CString PWChar;
+} RCTYPEDEFS;
+extern RCTYPEDEFS g_Typedefs;
+
 
 //
 // Hotspot, Node, & Item IDs

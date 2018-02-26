@@ -480,10 +480,13 @@
     <ResourceCompile Include="ReClassEx.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\about.bmp" />
+    <Image Include="res\button.bmp" />
     <Image Include="res\file_large.bmp" />
     <Image Include="res\file_small.bmp" />
     <Image Include="res\home_large.bmp" />
     <Image Include="res\home_small.bmp" />
+    <Image Include="res\icon.bmp" />
     <Image Include="res\mainframe.bmp" />
     <Image Include="res\mainframe256.bmp" />
     <Image Include="res\menu_modify.bmp" />

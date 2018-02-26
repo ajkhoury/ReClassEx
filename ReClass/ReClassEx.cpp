@@ -141,23 +141,23 @@ BOOL CReClassExApp::InitInstance( )
     SetRegistryKey( _T( "RCEX" ) );
 
     //Typedefs
-    g_tdHex             = GetProfileString( _T( "Typedefs" ), _T( "Hex" ), _T( "char" ) );
-    g_tdInt64           = GetProfileString( _T( "Typedefs" ), _T( "Int64" ), _T( "__int64" ) );
-    g_tdInt32           = GetProfileString( _T( "Typedefs" ), _T( "Int32" ), _T( "__int32" ) );
-    g_tdInt16           = GetProfileString( _T( "Typedefs" ), _T( "Int16" ), _T( "__int16" ) );
-    g_tdInt8            = GetProfileString( _T( "Typedefs" ), _T( "Int8" ), _T( "__int8" ) );
-    g_tdQWORD           = GetProfileString( _T( "Typedefs" ), _T( "QWORD" ), _T( "DWORD64" ) );
-    g_tdDWORD           = GetProfileString( _T( "Typedefs" ), _T( "DWORD" ), _T( "DWORD" ) );
-    g_tdWORD            = GetProfileString( _T( "Typedefs" ), _T( "WORD" ), _T( "WORD" ) );
-    g_tdBYTE            = GetProfileString( _T( "Typedefs" ), _T( "BYTE" ), _T( "unsigned char" ) );
-    g_tdFloat           = GetProfileString( _T( "Typedefs" ), _T( "Float" ), _T( "float" ) );
-    g_tdDouble          = GetProfileString( _T( "Typedefs" ), _T( "Double" ), _T( "double" ) );
-    g_tdVec2            = GetProfileString( _T( "Typedefs" ), _T( "Vec2" ), _T( "Vector2" ) );
-    g_tdVec3            = GetProfileString( _T( "Typedefs" ), _T( "Vec3" ), _T( "Vector3" ) );
-    g_tdQuat            = GetProfileString( _T( "Typedefs" ), _T( "Quat" ), _T( "Vector4" ) );
-    g_tdMatrix          = GetProfileString( _T( "Typedefs" ), _T( "Matrix" ), _T( "matrix3x4_t" ) );
-    g_tdPChar           = GetProfileString( _T( "Typedefs" ), _T( "PChar" ), _T( "char*" ) );
-    g_tdPWChar          = GetProfileString( _T( "Typedefs" ), _T( "PWChar" ), _T( "wchar_t*" ) );
+    g_Typedefs.Hex      = GetProfileString( _T( "Typedefs" ), _T( "Hex" ), _T( "char" ) );
+    g_Typedefs.Int64    = GetProfileString( _T( "Typedefs" ), _T( "Int64" ), _T( "__int64" ) );
+    g_Typedefs.Int32    = GetProfileString( _T( "Typedefs" ), _T( "Int32" ), _T( "__int32" ) );
+    g_Typedefs.Int16    = GetProfileString( _T( "Typedefs" ), _T( "Int16" ), _T( "__int16" ) );
+    g_Typedefs.Int8     = GetProfileString( _T( "Typedefs" ), _T( "Int8" ), _T( "__int8" ) );
+    g_Typedefs.Qword    = GetProfileString( _T( "Typedefs" ), _T( "Qword" ), _T( "DWORD64" ) );
+    g_Typedefs.Dword    = GetProfileString( _T( "Typedefs" ), _T( "Dword" ), _T( "DWORD" ) );
+    g_Typedefs.Word     = GetProfileString( _T( "Typedefs" ), _T( "Word" ), _T( "WORD" ) );
+    g_Typedefs.Byte     = GetProfileString( _T( "Typedefs" ), _T( "Byte" ), _T( "unsigned char" ) );
+    g_Typedefs.Float    = GetProfileString( _T( "Typedefs" ), _T( "Float" ), _T( "float" ) );
+    g_Typedefs.Double   = GetProfileString( _T( "Typedefs" ), _T( "Double" ), _T( "double" ) );
+    g_Typedefs.Vec2     = GetProfileString( _T( "Typedefs" ), _T( "Vec2" ), _T( "Vector2" ) );
+    g_Typedefs.Vec3     = GetProfileString( _T( "Typedefs" ), _T( "Vec3" ), _T( "Vector3" ) );
+    g_Typedefs.Quat     = GetProfileString( _T( "Typedefs" ), _T( "Quat" ), _T( "Vector4" ) );
+    g_Typedefs.Matrix   = GetProfileString( _T( "Typedefs" ), _T( "Matrix" ), _T( "matrix3x4_t" ) );
+    g_Typedefs.PChar    = GetProfileString( _T( "Typedefs" ), _T( "PChar" ), _T( "char*" ) );
+    g_Typedefs.PWChar   = GetProfileString( _T( "Typedefs" ), _T( "PWChar" ), _T( "wchar_t*" ) );
 
     g_clrBackground     = GetProfileInt( _T( "Colors" ), _T( "Background" ), g_clrBackground );
     g_clrSelect         = GetProfileInt( _T( "Colors" ), _T( "Select" ), g_clrSelect );
@@ -322,54 +322,54 @@ int CReClassExApp::ExitInstance( )
     //
     // Write settings to profile
     //
-    WriteProfileString( _T( "Typedefs" ), _T( "Hex" ), g_tdHex );
-    WriteProfileString( _T( "Typedefs" ), _T( "Int64" ), g_tdInt64 );
-    WriteProfileString( _T( "Typedefs" ), _T( "Int32" ), g_tdInt32 );
-    WriteProfileString( _T( "Typedefs" ), _T( "Int16" ), g_tdInt16 );
-    WriteProfileString( _T( "Typedefs" ), _T( "Int8" ), g_tdInt8 );
-    WriteProfileString( _T( "Typedefs" ), _T( "QWORD" ), g_tdQWORD );
-    WriteProfileString( _T( "Typedefs" ), _T( "DWORD" ), g_tdDWORD );
-    WriteProfileString( _T( "Typedefs" ), _T( "WORD" ), g_tdWORD );
-    WriteProfileString( _T( "Typedefs" ), _T( "BYTE" ), g_tdBYTE );
-    WriteProfileString( _T( "Typedefs" ), _T( "Float" ), g_tdFloat );
-    WriteProfileString( _T( "Typedefs" ), _T( "Double" ), g_tdDouble );
-    WriteProfileString( _T( "Typedefs" ), _T( "Vec2" ), g_tdVec2 );
-    WriteProfileString( _T( "Typedefs" ), _T( "Vec3" ), g_tdVec3 );
-    WriteProfileString( _T( "Typedefs" ), _T( "Quat" ), g_tdQuat );
-    WriteProfileString( _T( "Typedefs" ), _T( "Matrix" ), g_tdMatrix );
-    WriteProfileString( _T( "Typedefs" ), _T( "PChar" ), g_tdPChar );
-    WriteProfileString( _T( "Typedefs" ), _T( "PWChar" ), g_tdPWChar );
+    WriteProfileString( _T( "Typedefs" ),   _T( "Hex" ),    g_Typedefs.Hex );
+    WriteProfileString( _T( "Typedefs" ),   _T( "Int64" ),  g_Typedefs.Int64 );
+    WriteProfileString( _T( "Typedefs" ),   _T( "Int32" ),  g_Typedefs.Int32 );
+    WriteProfileString( _T( "Typedefs" ),   _T( "Int16" ),  g_Typedefs.Int16 );
+    WriteProfileString( _T( "Typedefs" ),   _T( "Int8" ),   g_Typedefs.Int8 );
+    WriteProfileString( _T( "Typedefs" ),   _T( "QWORD" ),  g_Typedefs.Qword );
+    WriteProfileString( _T( "Typedefs" ),   _T( "DWORD" ),  g_Typedefs.Dword );
+    WriteProfileString( _T( "Typedefs" ),   _T( "WORD" ),   g_Typedefs.Word );
+    WriteProfileString( _T( "Typedefs" ),   _T( "BYTE" ),   g_Typedefs.Byte );
+    WriteProfileString( _T( "Typedefs" ),   _T( "Float" ),  g_Typedefs.Float );
+    WriteProfileString( _T( "Typedefs" ),   _T( "Double" ), g_Typedefs.Double );
+    WriteProfileString( _T( "Typedefs" ),   _T( "Vec2" ),   g_Typedefs.Vec2 );
+    WriteProfileString( _T( "Typedefs" ),   _T( "Vec3" ),   g_Typedefs.Vec3 );
+    WriteProfileString( _T( "Typedefs" ),   _T( "Quat" ),   g_Typedefs.Quat );
+    WriteProfileString( _T( "Typedefs" ),   _T( "Matrix" ), g_Typedefs.Matrix );
+    WriteProfileString( _T( "Typedefs" ),   _T( "PChar" ),  g_Typedefs.PChar );
+    WriteProfileString( _T( "Typedefs" ),   _T( "PWChar" ), g_Typedefs.PWChar );
 
-    WriteProfileInt( _T( "Colors" ), _T( "Background" ), g_clrBackground );
-    WriteProfileInt( _T( "Colors" ), _T( "Select" ), g_clrSelect );
-    WriteProfileInt( _T( "Colors" ), _T( "Hidden" ), g_clrHidden );
-    WriteProfileInt( _T( "Colors" ), _T( "Offset" ), g_clrOffset );
-    WriteProfileInt( _T( "Colors" ), _T( "Address" ), g_clrAddress );
-    WriteProfileInt( _T( "Colors" ), _T( "Type" ), g_clrType );
-    WriteProfileInt( _T( "Colors" ), _T( "Name" ), g_clrName );
-    WriteProfileInt( _T( "Colors" ), _T( "Index" ), g_clrIndex );
-    WriteProfileInt( _T( "Colors" ), _T( "Value" ), g_clrValue );
-    WriteProfileInt( _T( "Colors" ), _T( "Comment" ), g_clrComment );
-    WriteProfileInt( _T( "Colors" ), _T( "VTable" ), g_clrVTable );
-    WriteProfileInt( _T( "Colors" ), _T( "Function" ), g_clrFunction );
-    WriteProfileInt( _T( "Colors" ), _T( "Char" ), g_clrChar );
-    WriteProfileInt( _T( "Colors" ), _T( "Custom" ), g_clrCustom );
-    WriteProfileInt( _T( "Colors" ), _T( "Hex" ), g_clrHex );
+    WriteProfileInt( _T( "Colors" ),    _T( "Background" ), g_clrBackground );
+    WriteProfileInt( _T( "Colors" ),    _T( "Select" ),     g_clrSelect );
+    WriteProfileInt( _T( "Colors" ),    _T( "Hidden" ),     g_clrHidden );
+    WriteProfileInt( _T( "Colors" ),    _T( "Offset" ),     g_clrOffset );
+    WriteProfileInt( _T( "Colors" ),    _T( "Address" ),    g_clrAddress );
+    WriteProfileInt( _T( "Colors" ),    _T( "Type" ),       g_clrType );
+    WriteProfileInt( _T( "Colors" ),    _T( "Name" ),       g_clrName );
+    WriteProfileInt( _T( "Colors" ),    _T( "Index" ),      g_clrIndex );
+    WriteProfileInt( _T( "Colors" ),    _T( "Value" ),      g_clrValue );
+    WriteProfileInt( _T( "Colors" ),    _T( "Comment" ),    g_clrComment );
+    WriteProfileInt( _T( "Colors" ),    _T( "VTable" ),     g_clrVTable );
+    WriteProfileInt( _T( "Colors" ),    _T( "Function" ),   g_clrFunction );
+    WriteProfileInt( _T( "Colors" ),    _T( "Char" ),       g_clrChar );
+    WriteProfileInt( _T( "Colors" ),    _T( "Custom" ),     g_clrCustom );
+    WriteProfileInt( _T( "Colors" ),    _T( "Hex" ),        g_clrHex );
 
-    WriteProfileInt( _T( "Display" ), _T( "Offset" ), g_bOffset );
-    WriteProfileInt( _T( "Display" ), _T( "Address" ), g_bAddress );
-    WriteProfileInt( _T( "Display" ), _T( "Text" ), g_bText );
-    WriteProfileInt( _T( "Display" ), _T( "Float" ), g_bFloat );
-    WriteProfileInt( _T( "Display" ), _T( "Int" ), g_bInt );
-    WriteProfileInt( _T( "Display" ), _T( "String" ), g_bString );
-    WriteProfileInt( _T( "Display" ), _T( "Pointers" ), g_bPointers );
-    WriteProfileInt( _T( "Display" ), _T( "Top" ), g_bTop );
-    WriteProfileInt( _T( "Display" ), _T( "ClassBrowser" ), g_bClassBrowser );
-    WriteProfileInt( _T( "Display" ), _T( "FilterProcesses" ), g_bFilterProcesses );
+    WriteProfileInt( _T( "Display" ),   _T( "Offset" ),     g_bOffset );
+    WriteProfileInt( _T( "Display" ),   _T( "Address" ),    g_bAddress );
+    WriteProfileInt( _T( "Display" ),   _T( "Text" ),       g_bText );
+    WriteProfileInt( _T( "Display" ),   _T( "Float" ),      g_bFloat );
+    WriteProfileInt( _T( "Display" ),   _T( "Int" ),        g_bInt );
+    WriteProfileInt( _T( "Display" ),   _T( "String" ),     g_bString );
+    WriteProfileInt( _T( "Display" ),   _T( "Pointers" ),   g_bPointers );
+    WriteProfileInt( _T( "Display" ),   _T( "Top" ),        g_bTop );
+    WriteProfileInt( _T( "Display" ),   _T( "ClassBrowser" ), g_bClassBrowser );
+    WriteProfileInt( _T( "Display" ),   _T( "FilterProcesses" ), g_bFilterProcesses );
 
-    WriteProfileInt( _T( "Misc" ), _T( "RTTI" ), g_bRTTI );
-    WriteProfileInt( _T( "Misc" ), _T( "RandomName" ), g_bRandomName );
-    WriteProfileInt( _T( "Misc" ), _T( "LoadModuleSymbols" ), g_bLoadModuleSymbol );
+    WriteProfileInt( _T( "Misc" ),  _T( "RTTI" ),           g_bRTTI );
+    WriteProfileInt( _T( "Misc" ),  _T( "RandomName" ),     g_bRandomName );
+    WriteProfileInt( _T( "Misc" ),  _T( "LoadModuleSymbols" ), g_bLoadModuleSymbol );
 
     WriteProfileInt( _T( "Class Generation" ), _T( "PrivatePadding" ), g_bPrivatePadding );
     WriteProfileInt( _T( "Class Generation" ), _T( "ClipboardCopy" ), g_bClipboardCopy );
@@ -774,41 +774,41 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
     //---------------------------------------------
     XMLElement* settings = XmlDoc.NewElement( "TypeDef" );
 #ifdef UNICODE
-    settings->SetAttribute( "tdHex",	CW2A( g_tdHex ) );
-    settings->SetAttribute( "tdInt64",	CW2A( g_tdInt64 ) );
-    settings->SetAttribute( "tdInt32",	CW2A( g_tdInt32 ) );
-    settings->SetAttribute( "tdInt16",	CW2A( g_tdInt16 ) );
-    settings->SetAttribute( "tdInt8",	CW2A( g_tdInt8 ) );
-    settings->SetAttribute( "tdQWORD",	CW2A( g_tdQWORD ) );
-    settings->SetAttribute( "tdDWORD",	CW2A( g_tdDWORD ) );
-    settings->SetAttribute( "tdWORD",	CW2A( g_tdWORD ) );
-    settings->SetAttribute( "tdBYTE",	CW2A( g_tdBYTE ) );
-    settings->SetAttribute( "tdFloat",	CW2A( g_tdFloat ) );
-    settings->SetAttribute( "tdDouble", CW2A( g_tdDouble ) );
-    settings->SetAttribute( "tdVec2",	CW2A( g_tdVec2 ) );
-    settings->SetAttribute( "tdVec3",	CW2A( g_tdVec3 ) );
-    settings->SetAttribute( "tdQuat",	CW2A( g_tdQuat ) );
-    settings->SetAttribute( "tdMatrix", CW2A( g_tdMatrix ) );
-    settings->SetAttribute( "tdPChar",	CW2A( g_tdPChar ) );
-    settings->SetAttribute( "tdPWChar", CW2A( g_tdPWChar ) );
+    settings->SetAttribute( "tdHex",    CW2A( g_Typedefs.Hex ) );
+    settings->SetAttribute( "tdInt64",  CW2A( g_Typedefs.Int64 ) );
+    settings->SetAttribute( "tdInt32",  CW2A( g_Typedefs.Int32 ) );
+    settings->SetAttribute( "tdInt16",  CW2A( g_Typedefs.Int16 ) );
+    settings->SetAttribute( "tdInt8",   CW2A( g_Typedefs.Int8 ) );
+    settings->SetAttribute( "tdQword",  CW2A( g_Typedefs.Qword ) );
+    settings->SetAttribute( "tdDword",  CW2A( g_Typedefs.Dword ) );
+    settings->SetAttribute( "tdWord",   CW2A( g_Typedefs.Word ) );
+    settings->SetAttribute( "tdByte",   CW2A( g_Typedefs.Byte ) );
+    settings->SetAttribute( "tdFloat",  CW2A( g_Typedefs.Float ) );
+    settings->SetAttribute( "tdDouble", CW2A( g_Typedefs.Double ) );
+    settings->SetAttribute( "tdVec2",   CW2A( g_Typedefs.Vec2 ) );
+    settings->SetAttribute( "tdVec3",   CW2A( g_Typedefs.Vec3 ) );
+    settings->SetAttribute( "tdQuat",   CW2A( g_Typedefs.Quat ) );
+    settings->SetAttribute( "tdMatrix", CW2A( g_Typedefs.Matrix ) );
+    settings->SetAttribute( "tdPChar",  CW2A( g_Typedefs.PChar ) );
+    settings->SetAttribute( "tdPWChar", CW2A( g_Typedefs.PWChar ) );
 #else
-    settings->SetAttribute( "tdHex",	g_tdHex );
-    settings->SetAttribute( "tdInt64",	g_tdInt64 );
-    settings->SetAttribute( "tdInt32",	g_tdInt32 );
-    settings->SetAttribute( "tdInt16",	g_tdInt16 );
-    settings->SetAttribute( "tdInt8",	g_tdInt8 );
-    settings->SetAttribute( "tdQWORD",	g_tdQWORD );
-    settings->SetAttribute( "tdDWORD",	g_tdDWORD );
-    settings->SetAttribute( "tdWORD",	g_tdWORD );
-    settings->SetAttribute( "tdBYTE",	g_tdBYTE );
-    settings->SetAttribute( "tdFloat",	g_tdFloat );
-    settings->SetAttribute( "tdDouble", g_tdDouble );
-    settings->SetAttribute( "tdVec2",	g_tdVec2 );
-    settings->SetAttribute( "tdVec3",	g_tdVec3 );
-    settings->SetAttribute( "tdQuat",	g_tdQuat );
-    settings->SetAttribute( "tdMatrix", g_tdMatrix );
-    settings->SetAttribute( "tdPChar",	g_tdPChar );
-    settings->SetAttribute( "tdPWChar", g_tdPWChar );
+    settings->SetAttribute( "tdHex",    g_Typedefs.Hex );
+    settings->SetAttribute( "tdInt64",  g_Typedefs.Int64 );
+    settings->SetAttribute( "tdInt32",  g_Typedefs.Int32 );
+    settings->SetAttribute( "tdInt16",  g_Typedefs.Int16 );
+    settings->SetAttribute( "tdInt8",   g_Typedefs.Int8 );
+    settings->SetAttribute( "tdQword",  g_Typedefs.Qword );
+    settings->SetAttribute( "tdDword",  g_Typedefs.Dword );
+    settings->SetAttribute( "tdWord",   g_Typedefs.Word );
+    settings->SetAttribute( "tdByte",   g_Typedefs.Byte );
+    settings->SetAttribute( "tdFloat",  g_Typedefs.Float );
+    settings->SetAttribute( "tdDouble", g_Typedefs.Double );
+    settings->SetAttribute( "tdVec2",   g_Typedefs.Vec2 );
+    settings->SetAttribute( "tdVec3",   g_Typedefs.Vec3 );
+    settings->SetAttribute( "tdQuat",   g_Typedefs.Quat );
+    settings->SetAttribute( "tdMatrix", g_Typedefs.Matrix );
+    settings->SetAttribute( "tdPChar",  g_Typedefs.PChar );
+    settings->SetAttribute( "tdPWChar", g_Typedefs.PWChar );
 #endif
     root->LinkEndChild( settings );
 
@@ -1328,9 +1328,9 @@ void CReClassExApp::OnButtonGenerate( )
                 if (fill > 0)
                 {
                     if (g_bPrivatePadding)
-                        t.Format( _T( "private:\r\n\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\npublic:\r\n" ), g_tdHex, fillStart, fill, fillStart );
+                        t.Format( _T( "private:\r\n\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\npublic:\r\n" ), g_Typedefs.Hex, fillStart, fill, fillStart );
                     else
-                        t.Format( _T( "\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n" ), g_tdHex, fillStart, fill, fillStart );
+                        t.Format( _T( "\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n" ), g_Typedefs.Hex, fillStart, fill, fillStart );
                     var.push_back( t );
                 }
                 fill = 0;
@@ -1349,74 +1349,74 @@ void CReClassExApp::OnButtonGenerate( )
                 }
                 else if (Type == nt_int64)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdInt64, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Int64, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_int32)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdInt32, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Int32, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_int16)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdInt16, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Int16, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_int8)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdInt8, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Int8, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_uint64)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdQWORD, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Qword, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_uint32)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdDWORD, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Dword, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_uint16)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdWORD, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Word, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_uint8)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdBYTE, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Byte, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
 
                 else if (Type == nt_vec2)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdVec2, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Vec2, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_vec3)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdVec3, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Vec3, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_quat)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdQuat, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Quat, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_matrix)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdMatrix, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Matrix, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
 
                 else if (Type == nt_pchar)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdPChar, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.PChar, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_pwchar)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdPWChar, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.PWChar, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_text)
@@ -1434,12 +1434,12 @@ void CReClassExApp::OnButtonGenerate( )
 
                 else if (Type == nt_float)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdFloat, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Float, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
                 else if (Type == nt_double)
                 {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdDouble, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_Typedefs.Double, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
 
@@ -1496,9 +1496,14 @@ void CReClassExApp::OnButtonGenerate( )
         if (fill > 0)
         {
             if (g_bPrivatePadding)
-                t.Format( _T( "private:\r\n\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n" ), g_tdHex, fillStart, fill, fillStart ); //Maybe add public at the end for user impl of class inline functions?: public:\r\n
+            {
+                t.Format( _T( "private:\r\n\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n" ), g_Typedefs.Hex, fillStart, fill, fillStart );
+                // TODO: Maybe add public at the end for user impl of class inline functions?: public:\r\n
+            }
             else
-                t.Format( _T( "\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n" ), g_tdHex, fillStart, fill, fillStart );
+            {
+                t.Format( _T( "\t%s pad_0x%0.4X[0x%X]; //0x%0.4X\r\n" ), g_Typedefs.Hex, fillStart, fill, fillStart );
+            }
 
             var.push_back( t );
         }

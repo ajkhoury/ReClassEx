@@ -15,13 +15,14 @@ public:
     // Sets a Scintilla style
     void SetStyle( int style, COLORREF fore, COLORREF back = RGB( 255, 255, 255 ), int size = -1, const char* face = 0 );
 
-    void InitialiseEditor( );
+    void InitializeEditor( );
     void SizeEditor( );
 
+    enum { IDD = IDD_DIALOG_EDIT };
+
+protected:
     HWND m_hEditWindow;
     CScintillaEdit m_Edit;
-
-    enum { IDD = IDD_DIALOG_EDIT };
 
 protected:
     virtual void DoDataExchange( CDataExchange* pDX );    // DDX/DDV support
