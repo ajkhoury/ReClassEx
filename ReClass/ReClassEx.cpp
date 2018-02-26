@@ -1603,7 +1603,7 @@ void CReClassExApp::DeleteClass( CNodeClass* pClass )
 {
     PrintOut( _T( "DeleteClass(\"%s\") called" ), pClass->GetName( ).GetString( ) );
 
-    if (pClass->m_pChildClassFrame != NULL)
+    if (pClass->m_pChildClassFrame != NULL && ::IsWindow(pClass->m_pChildClassFrame->GetSafeHwnd()))
     {
         pClass->m_pChildClassFrame->SendMessage( WM_CLOSE, 0, 0 );
         pClass->m_pChildClassFrame = NULL;
