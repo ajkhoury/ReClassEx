@@ -138,7 +138,7 @@ BOOL CReClassExApp::InitInstance( )
     GetTooltipManager( )->SetTooltipParams( AFX_TOOLTIP_TYPE_ALL, RUNTIME_CLASS( CMFCToolTipCtrl ), &toolTipInfo );
 
     // Get registry entries
-    SetRegistryKey( _T( "RC16" ) );
+    SetRegistryKey( _T( "RCEX" ) );
 
     //Typedefs
     g_tdHex             = GetProfileString( _T( "Typedefs" ), _T( "Hex" ), _T( "char" ) );
