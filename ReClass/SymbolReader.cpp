@@ -17,35 +17,46 @@ SymbolReader::~SymbolReader( )
 
 BOOLEAN SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
 {
-    TCHAR szExt[MAX_PATH];
+    WCHAR szExt[MAX_PATH];
     DWORD dwMachType = 0;
     HRESULT hr = S_OK;
 
     // Obtain access to the provider
-    hr = CoCreateInstance( __uuidof(DiaSource), NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS( &m_pSource ) );
+    hr = CoCreateInstance( __uuidof( DiaSource ), NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS( &m_pSource ) );
     if (FAILED( hr ))
     {
-        PrintOut( _T( "[LoadDataFromPdb] CoCreateInstance failed - HRESULT = %08X" ), hr );
+        PrintOutDbg( _T( "[LoadDataFromPdb] CoCreateInstance failed - HRESULT = %08X" ), hr );
         return FALSE;
     }
 
-    _tsplitpath_s( m_strFilePath.GetString( ), NULL, 0, NULL, 0, NULL, 0, szExt, MAX_PATH );
-    if (!_tcsicmp( szExt, _T( ".pdb" ) ))
+    _wsplitpath_s( m_strFilePath.GetString( ), NULL, 0, NULL, 0, NULL, 0, szExt, MAX_PATH );
+    if (!_wcsicmp( szExt, L".pdb" ))
     {
         // Open and prepare a program database (.pdb) file as a debug data source
         hr = m_pSource->loadDataFromPdb( m_strFilePath.GetString( ) );
         if (FAILED( hr ))
         {
             _com_error err( hr );
-            LPCTSTR errMsg = err.ErrorMessage( );
-            PrintOut( _T( "[LoadDataFromPdb] loadDataFromPdb failed - %s" ), errMsg );
+            PrintOutDbg( _T( "[LoadDataFromPdb] loadDataFromPdb failed - %s" ), err.ErrorMessage( ) );
             return FALSE;
         }
     }
     else
     {
         // Open and prepare the debug data associated with the executable
-        hr = m_pSource->loadDataForExe( m_strFilePath.GetString( ), pszSearchPath, NULL );
+        if (!pszSearchPath)
+        {
+            hr = m_pSource->loadDataForExe( m_strFilePath.GetString( ), NULL, NULL );
+        }
+        else
+        {
+#ifdef _UNICODE
+            hr = m_pSource->loadDataForExe( m_strFilePath.GetString( ), pszSearchPath, NULL );
+#else
+            hr = m_pSource->loadDataForExe( m_strFilePath.GetString( ), CA2W( pszSearchPath ), NULL );
+#endif
+        }
+        
         if (FAILED( hr ))
         {
             LPCTSTR errMsg = 0;
@@ -72,7 +83,7 @@ BOOLEAN SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
                 break;
             }
 
-            PrintOut( _T( "[LoadDataFromPdb] loadDataForExe failed - %s" ), errMsg );
+            PrintOutDbg( _T( "[LoadDataFromPdb] loadDataForExe failed - %s" ), errMsg );
             return FALSE;
         }
     }
@@ -81,7 +92,7 @@ BOOLEAN SymbolReader::LoadSymbolData( const TCHAR* pszSearchPath )
     hr = m_pSource->openSession( &m_pSession );
     if (FAILED( hr ))
     {
-        PrintOut( _T( "[LoadDataFromPdb] openSession failed - HRESULT = %08X" ), hr );
+        PrintOutDbg( _T( "[LoadDataFromPdb] openSession failed - HRESULT = %08X" ), hr );
         return FALSE;
     }
 
@@ -791,13 +802,18 @@ void SymbolReader::ReadData( IDiaSymbol *pSymbol, CString& outString )
 //
 void SymbolReader::ReadUndName( IDiaSymbol *pSymbol, CString& outString )
 {
-    BSTR strName = NULL;
+    BSTR strName;
+
     if (pSymbol->get_undecoratedName( &strName ) != S_OK)
     {
         if (pSymbol->get_name( &strName ) == S_OK)
         {
             // Print the name of the Symbol instead
+#ifdef _UNICODE
             outString += (strName[0] != _T( '\0' )) ? strName : _T( "" );
+#else
+            outString += (strName[0] != _T( '\0' )) ? CW2A( strName ) : _T( "" );
+#endif
             //wprintf(L"%s", (bstrName[0] != L'\0') ? bstrName : L"(none)");
             SysFreeString( strName );
         }
@@ -1018,8 +1034,13 @@ BOOLEAN SymbolReader::LoadFile( CString FilePath, ULONG_PTR dwBaseAddr, DWORD dw
 
 BOOLEAN SymbolReader::LoadFile( CString FileName, CString FilePath, ULONG_PTR ModuleBaseAddress, DWORD ModuleSize, const TCHAR* pszSearchPath )
 {
+#ifdef _UNICODE
     m_strFileName = FileName;
     m_strFilePath = FilePath;
+#else
+    m_strFileName = CA2W( FileName );
+    m_strFilePath = CA2W( FilePath );
+#endif
 
     m_ModuleBase = ModuleBaseAddress;
     m_ModuleSize = ModuleSize;

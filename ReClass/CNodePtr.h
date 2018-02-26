@@ -13,12 +13,12 @@ public:
 
     virtual NODESIZE Draw( const PVIEWINFO View, int x, int y );
 
-    inline void SetClass( CNodeClass* pNode ) { m_pNode = pNode; }
-    inline CNodeClass* GetClass( void ) { return m_pNode; }
+    inline void SetClass( CNodeClass* pClassNode ) { m_pClassNode = pClassNode; }
+    inline CNodeClass* GetClass( void ) { return m_pClassNode; }
 
     inline CMemory* Memory( ) { return &m_Memory; }
 
 private:
-    CNodeClass* m_pNode;
+    CNodeClass* m_pClassNode;
     CMemory m_Memory;
 };

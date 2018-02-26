@@ -628,8 +628,8 @@ BOOLEAN UpdateMemoryMap( void )
                 Mem.Name = wcsModuleName;
                 Mem.Path = wcsModulePath;
                 #else
-                Mem.Name = CW2A( wcsModule );
-                Mem.Path = CW2A( wcsFullDllName );
+                Mem.Name = CW2A( wcsModuleName );
+                Mem.Path = CW2A( wcsModulePath );
                 #endif
                 g_MemMapModules.push_back( Mem );
 
@@ -670,9 +670,7 @@ BOOLEAN UpdateMemoryMap( void )
     }
     else
     {
-        #ifdef _DEBUG
-        PrintOut( _T( "[UpdateExports]: NtQueryInformationProcess failed! Aborting..." ) );
-        #endif
+        PrintOutDbg( _T( "[UpdateExports]: NtQueryInformationProcess failed! Aborting..." ) );
         if (ProcessInfo)
             free( ProcessInfo );
         return 0;
@@ -706,9 +704,7 @@ BOOLEAN UpdateExports( )
     ProcessInfo = (PPROCESS_BASIC_INFORMATION)malloc( dwSize );
     if (!ProcessInfo)
     {
-        #ifdef _DEBUG
-        PrintOut( _T( "[UpdateExports]: Couldn't allocate heap buffer!" ) );
-        #endif
+        PrintOutDbg( _T( "[UpdateExports]: Couldn't allocate heap buffer!" ) );
         return FALSE;
     }
 
@@ -722,9 +718,7 @@ BOOLEAN UpdateExports( )
         ProcessInfo = (PPROCESS_BASIC_INFORMATION)malloc( dwSizeNeeded );
         if (!ProcessInfo)
         {
-            #ifdef _DEBUG
-            PrintOut( _T( "[UpdateExports]: Couldn't allocate heap buffer!" ) );
-            #endif
+            PrintOutDbg( _T( "[UpdateExports]: Couldn't allocate heap buffer!" ) );
             return FALSE;
         }
 
@@ -737,9 +731,7 @@ BOOLEAN UpdateExports( )
         // Check for PEB
         if (!ProcessInfo->PebBaseAddress)
         {
-            #ifdef _DEBUG
-            PrintOut( _T( "[UpdateExports]: PEB is null! Aborting..." ) );
-            #endif
+            PrintOutDbg( _T( "[UpdateExports]: PEB is null! Aborting..." ) );
             if (ProcessInfo)
                 free( ProcessInfo );
             return FALSE;
@@ -749,9 +741,7 @@ BOOLEAN UpdateExports( )
         SIZE_T dwBytesRead = 0;
         if (ReClassReadMemory( (LPVOID)ProcessInfo->PebBaseAddress, &Peb, sizeof( PEB ), &dwBytesRead ) == 0)
         {
-            #ifdef _DEBUG
-            PrintOut( _T( "[UpdateExports]: Failed to read PEB! Aborting UpdateExports." ) );
-            #endif
+            PrintOutDbg( _T( "[UpdateExports]: Failed to read PEB! Aborting UpdateExports." ) );
             if (ProcessInfo)
                 free( ProcessInfo );
             return FALSE;
@@ -761,9 +751,7 @@ BOOLEAN UpdateExports( )
         dwBytesRead = 0;
         if (ReClassReadMemory( (LPVOID)Peb.Ldr, &LdrData, sizeof( LdrData ), &dwBytesRead ) == 0)
         {
-            #ifdef _DEBUG
-            PrintOut( _T( "[UpdateExports]: Failed to read PEB Ldr Data! Aborting UpdateExports." ) );
-            #endif
+            PrintOutDbg( _T( "[UpdateExports]: Failed to read PEB Ldr Data! Aborting UpdateExports." ) );
             if (ProcessInfo)
                 free( ProcessInfo );
             return 0;
@@ -777,9 +765,7 @@ BOOLEAN UpdateExports( )
             dwBytesRead = 0;
             if (!ReClassReadMemory( (void*)pLdrCurrentNode, &lstEntry, sizeof( LDR_DATA_TABLE_ENTRY ), &dwBytesRead ))
             {
-                #ifdef _DEBUG
-                PrintOut( _T( "[UpdateExports]: Could not read list entry from LDR list. Error = %s" ), Utils::GetLastErrorString( ).GetString( ) );
-                #endif
+                PrintOutDbg( _T( "[UpdateExports]: Could not read list entry from LDR list. Error = %s" ), Utils::GetLastErrorString( ).GetString( ) );
                 if (ProcessInfo)
                     free( ProcessInfo );
                 return 0;
@@ -840,9 +826,7 @@ BOOLEAN UpdateExports( )
     }
     else
     {
-        #ifdef _DEBUG
-        PrintOut( _T( "[UpdateExports]: NtQueryInformationProcess failed! Aborting..." ) );
-        #endif
+        PrintOutDbg( _T( "[UpdateExports]: NtQueryInformationProcess failed! Aborting..." ) );
         if (ProcessInfo)
             free( ProcessInfo );
         return 0;

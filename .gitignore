@@ -63,3 +63,4 @@ DriverPlugin_dbg.rc-plugin64d
 /BIN/plugins-lol/TestPlugin.lib
 *.rc-plugin
 /BIN/plugins/TestPlugin.lib
+*.rc-plugin64

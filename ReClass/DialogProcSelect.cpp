@@ -121,7 +121,7 @@ void CDialogProcSelect::ListRunningProcs( )
                         #ifdef UNICODE
                         Info.strProcessName = ProcessInfo->ImageName.Buffer;
                         #else
-                        Info.strProcessName = CW2A( proc_info->ImageName.Buffer );
+                        Info.strProcessName = CW2A( ProcessInfo->ImageName.Buffer );
                         #endif
 
                         GetModuleFileNameEx( hProcess, NULL, tcsProcessPath, MAX_PATH );

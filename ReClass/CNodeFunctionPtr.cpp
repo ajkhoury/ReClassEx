@@ -59,7 +59,7 @@ NODESIZE CNodeFunctionPtr::Draw( const PVIEWINFO View, int x, int y )
     NODESIZE DrawSize;
     int tx, ax;
 
-    if (m_bHidden)
+    if (IsHidden( ))
         return DrawHidden( View, x, y );
 
     AddSelection( View, 0, y, g_FontHeight );
@@ -99,7 +99,6 @@ NODESIZE CNodeFunctionPtr::Draw( const PVIEWINFO View, int x, int y )
         tx = AddOpenClose( View, tx, y );
 
     tx += g_FontWidth;
-
     tx = AddComment( View, tx, y );
 
     if (m_LevelsOpen[View->Level])
@@ -151,9 +150,7 @@ void CNodeFunctionPtr::Initialize( CWnd* pParentWindow, ULONG_PTR Address )
     {
         m_pAssemblyWindow->Clear( );
         m_pAssemblyWindow->ShowWindow( SW_HIDE );
-
         delete m_pAssemblyWindow;
-        m_pAssemblyWindow = NULL;
     }
 
     m_pAssemblyWindow = new CScintillaEdit;
@@ -304,5 +301,4 @@ void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
 
     // Force a redraw
     m_bRedrawNeeded = TRUE;
-
 }

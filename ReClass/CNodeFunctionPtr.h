@@ -21,12 +21,18 @@ public:
     
     inline void HideAssemblyWindow( )
     {
-        if (m_bRedrawNeeded == FALSE)
+        if (!m_bRedrawNeeded)
         {
             if (m_pAssemblyWindow != NULL)
                 m_pAssemblyWindow->ShowWindow( SW_HIDE );
             m_bRedrawNeeded = TRUE;
         }
+
+        //if (m_pAssemblyWindow != NULL)
+        //{
+        //    m_pAssemblyWindow->ShowWindow( SW_HIDE );
+        //    m_bRedrawNeeded = TRUE;
+        //}
     }
 
 private:

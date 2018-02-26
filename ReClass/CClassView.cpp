@@ -1609,7 +1609,9 @@ void CClassView::ReplaceSelectedWithType( NodeType Type )
 {
     std::vector<CNodeBase*> newSelected;
 
+#if defined(_DEBUG)
     PrintOut( _T( "Replace Node Type %s" ), NodeTypeToString( Type ) );
+#endif
 
     for (size_t i = 0; i < m_Selected.size( ); i++)
     {

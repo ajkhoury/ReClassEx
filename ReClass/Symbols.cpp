@@ -11,10 +11,10 @@ Symbols::Symbols( ) :
     ResolveSearchPath( );
 
     if (!WriteSymSrvDll( ))
-        throw std::exception( "WriteSymSrvDll_failed" );
+        throw std::exception( "WriteSymSrvDll failed" );
 
     if (!Init( ))
-        throw std::exception( "init_failed" );
+        throw std::exception( "init failed" );
 
     ntdll::RtlInitializeCriticalSection( &m_CriticalSection );
 }
@@ -156,36 +156,38 @@ BOOLEAN Symbols::Init( )
 
 BOOLEAN Symbols::LoadSymbolsForModule( CString ModulePath, ULONG_PTR ModuleBaseAddress, ULONG SizeOfModule )
 {
-    int idx = -1;
+    int idx;
     CString ModuleName;
-    const TCHAR* szSearchPath = NULL;
-    SymbolReader* reader = NULL;
-    BOOLEAN bSucc = FALSE;
+    const TCHAR* szSearchPath;
+    SymbolReader* pReader;
+    BOOLEAN bSucc;
 
-    idx = ModulePath.ReverseFind( '/' );
+    idx = ModulePath.ReverseFind( _T( '/' ) );
     if (idx == -1)
-        idx = ModulePath.ReverseFind( '\\' );
+        idx = ModulePath.ReverseFind( _T( '\\' ) );
     ModuleName = ModulePath.Mid( ++idx );
 
     if (!m_strSearchPath.IsEmpty( ))
         szSearchPath = m_strSearchPath.GetString( );
+    else 
+        szSearchPath = NULL;
 
-    reader = new SymbolReader( );
+    pReader = new SymbolReader( );
 
-    //ntdll::RtlEnterCriticalSection( &m_CriticalSection );
+    ntdll::RtlEnterCriticalSection( &m_CriticalSection );
 
-    bSucc = reader->LoadFile( ModuleName, ModulePath, ModuleBaseAddress, SizeOfModule, szSearchPath );
+    bSucc = pReader->LoadFile( ModuleName, ModulePath, ModuleBaseAddress, SizeOfModule, szSearchPath );
 
-    //ntdll::RtlLeaveCriticalSection( &m_CriticalSection );
+    ntdll::RtlLeaveCriticalSection( &m_CriticalSection );
 
     if (bSucc)
     {
         PrintOut( _T( "[Symbols::LoadSymbolsForModule] Symbols for module %s loaded" ), ModuleName.GetString( ) );
-        m_SymbolAddresses.insert( std::make_pair( ModuleBaseAddress, reader ) );
+        m_SymbolAddresses.insert( std::make_pair( ModuleBaseAddress, pReader ) );
         return TRUE;
     }
 
-    delete reader;
+    delete pReader;
 
     return FALSE;
 }

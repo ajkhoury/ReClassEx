@@ -45,32 +45,40 @@ LoadPlugins(
     {
         do
         {
-            PluginBase = LoadLibrary( CString( _T( "plugins\\" ) ) + FileData.cFileName );
+            CString strPluginFileName( FileData.cFileName );
+            CString strPluginFilePath( _T( "plugins\\" ) );
+            strPluginFilePath.Append( strPluginFileName );
+
+            PluginBase = ::LoadLibrary( strPluginFilePath.GetString( ) );
             if (PluginBase == NULL)
             {
-                PrintOut( _T( "plugin %s was not able to be loaded!" ), FileData.cFileName );
+                PrintOut( _T( "plugin %s was not able to be loaded!" ), strPluginFileName.GetString( ) );
                 continue;
             }
 
-            PluginInitFunction = (PPLUGIN_INIT)GetProcAddress( PluginBase, "PluginInit" );
+            PluginInitFunction = (PPLUGIN_INIT)Utils::GetLocalProcAddress( PluginBase, _T( "PluginInit" ) );
             if (!PluginInitFunction)
             {
-                PrintOut( _T( "%s is not a reclass plugin!" ), FileData.cFileName );
+                PrintOut( _T( "%s is not a reclass plugin!" ), strPluginFileName.GetString( ) );
                 FreeLibrary( PluginBase );
                 continue;
             }
 
-            PluginStateChangeFunction = (PPLUGIN_STATE_CHANGE)GetProcAddress( PluginBase, "PluginStateChange" );
+            PluginStateChangeFunction = (PPLUGIN_STATE_CHANGE)Utils::GetLocalProcAddress( PluginBase, _T( "PluginStateChange" ) );
             if (!PluginStateChangeFunction)
             {
-                PrintOut( _T( "%s doesnt have exported state change function! "
-                    "Unable to disable plugin on request, stop reclass and delete the plugin to disable it" ), FileData .cFileName );
+                PrintOut( _T( "%s doesnt have exported state change function! Unable to disable plugin on request, "
+                    "so you must stop reclass and delete the plugin to disable it!" ), strPluginFileName.GetString( ) );
             }
 
-            PluginSettingDlgFunction = (DLGPROC)GetProcAddress( PluginBase, "PluginSettingsDlg" );
+            PluginSettingDlgFunction = (DLGPROC)Utils::GetLocalProcAddress( PluginBase, _T( "PluginSettingsDlg" ) );
 
             Plugin = (PRECLASS_PLUGIN)_aligned_malloc( sizeof( RECLASS_PLUGIN ), 16 );
-            wcscpy_s( Plugin->FileName, FileData.cFileName );
+#ifdef _UNICODE
+            wcscpy_s( Plugin->FileName, strPluginFileName.GetString( ) );
+#else
+            wcscpy_s( Plugin->FileName, CA2W( strPluginFileName ).m_psz );
+#endif
             Plugin->LoadedBase = PluginBase;
             Plugin->InitFunction = PluginInitFunction;
             Plugin->SettingDlgFunction = PluginSettingDlgFunction;
@@ -78,12 +86,16 @@ LoadPlugins(
 
             if (PluginInitFunction( &Plugin->Info ))
             {
-                Plugin->State = g_ReClassApp.GetProfileIntW( L"PluginState", Plugin->Info.Name, 1 ) == 1;
+#ifdef _UNICODE
+                Plugin->State = g_ReClassApp.GetProfileInt( _T( "PluginState" ), Plugin->Info.Name, 1 ) == 1;
+#else
+                Plugin->State = g_ReClassApp.GetProfileInt( _T( "PluginState" ), CW2A( Plugin->Info.Name ), 1 ) == 1;
+#endif
 
                 if (Plugin->Info.DialogId == -1)
                     Plugin->SettingDlgFunction = NULL;
 
-                PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), FileData.cFileName, Plugin->Info.Name, Plugin->Info.Version, Plugin->Info.About );
+                PrintOut( _T( "Loaded plugin %s (%ls version %ls) - %ls" ), strPluginFileName.GetString( ), Plugin->Info.Name, Plugin->Info.Version, Plugin->Info.About );
                 if (Plugin->StateChangeFunction)
                     Plugin->StateChangeFunction( Plugin->State );
 

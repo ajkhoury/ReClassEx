@@ -289,6 +289,18 @@ do { \
     } \
 } while (0);\
 }
+#if _DEBUG
+#define PrintOutDbg(fmt, ...) { \
+do { \
+    if (fmt) { \
+        _sntprintf_s(s_ReClassLogBuf, 1024, fmt, ##__VA_ARGS__); \
+        g_ReClassApp.m_pConsole->PrintText(s_ReClassLogBuf); \
+    } \
+} while (0);\
+}
+#else
+#define PrintOutDbg(fmt, ...) (void)(fmt)
+#endif
 
 //
 // Plugins

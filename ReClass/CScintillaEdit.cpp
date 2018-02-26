@@ -761,10 +761,9 @@ void CScintillaEdit::AddText( CString text, ULONG length )
     else
     {
         #ifdef UNICODE
-        ULONG textLength = text.GetLength( );
-        SendEditor( SCI_ADDTEXT, (WPARAM)textLength, (LPARAM)CW2A( text.GetBuffer( ) ).m_psz );
+        SendEditor( SCI_ADDTEXT, (WPARAM)text.GetLength( ), (LPARAM)CW2A( text.GetBuffer( ) ).m_psz );
         #else
-        SendEditor( SCI_ADDTEXT, (WPARAM)textLength, (LPARAM)text.GetBuffer( ) );
+        SendEditor( SCI_ADDTEXT, (WPARAM)text.GetLength( ), (LPARAM)text.GetBuffer( ) );
         #endif
     }
 }
@@ -782,10 +781,9 @@ void CScintillaEdit::AppendText( CString text, ULONG length )
     else
     {
         #ifdef UNICODE
-        ULONG textLength = text.GetLength( );
-        SendEditor( SCI_APPENDTEXT, (WPARAM)textLength, (LPARAM)CW2A( text.GetBuffer( ) ).m_psz );
+        SendEditor( SCI_APPENDTEXT, (WPARAM)text.GetLength( ), (LPARAM)CW2A( text.GetBuffer( ) ).m_psz );
         #else
-        SendEditor( SCI_APPENDTEXT, (WPARAM)textLength, (LPARAM)text.GetBuffer( ) );
+        SendEditor( SCI_APPENDTEXT, (WPARAM)text.GetLength( ), (LPARAM)text.GetBuffer( ) );
         #endif
     }
 }

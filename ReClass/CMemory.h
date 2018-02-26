@@ -10,11 +10,8 @@ public:
 
     ~CMemory( )
     {
-        if (m_pMemory)
-        {
+        if (m_pMemory != NULL)
             free( m_pMemory );
-            m_pMemory = NULL;
-        }
     }
 
     inline void SetSize( unsigned long Size )

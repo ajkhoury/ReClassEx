@@ -77,47 +77,52 @@ void CDialogPlugins::OnPopupMenuSettings( )
 }
 
 void CDialogPlugins::OnPopupMenuAbout( )
-{
-    CStringW Title;
-    PRECLASS_PLUGIN Plugin = GetSelectedPlugin( );
+{  
+    PRECLASS_PLUGIN Plugin = GetSelectedPlugin( );  
 
     //TODO: make cool about dialog maybe??
 
-    Title.Format( L"%s - About", Plugin->Info.Name );
-    MessageBoxW( Plugin->Info.About, Title, MB_OK | MB_ICONINFORMATION );
+    CStringW Title( Plugin->Info.Name );
+    Title.Append( L" - About" );
+    ::MessageBoxW( GetSafeHwnd( ), Plugin->Info.About, Title, MB_OK | MB_ICONINFORMATION );
 }
 
 void CDialogPlugins::OnPopupMenuChangeState( )
 {
     PRECLASS_PLUGIN Plugin = GetSelectedPlugin( );
 
-    Plugin->StateChangeFunction( Plugin->State = !Plugin->State );
+    Plugin->State = !Plugin->State;
+    Plugin->StateChangeFunction( Plugin->State );
 
-    #ifdef UNICODE
+    #ifdef _UNICODE
     g_ReClassApp.WriteProfileInt( L"PluginState", Plugin->Info.Name, Plugin->State ? 1 : 0 );
     #else
-    g_ReClassApp.WriteProfileInt( "PluginState", CW2A( Plugin.Info.Name ), Plugin.State ? 1 : 0 );
+    g_ReClassApp.WriteProfileInt( "PluginState", CW2A( Plugin->Info.Name ), Plugin->State ? 1 : 0 );
     #endif
+
     RefreshPlugins( );
 }
 
 VOID CDialogPlugins::RefreshPlugins( )
 {
-    LVITEM Item;
+    LVITEMW Item;
 
     m_PluginsList.DeleteAllItems( );
 
     for (PRECLASS_PLUGIN Plugin : g_LoadedPlugins)
     {
-        ZeroMemory( &Item, sizeof( LVITEM ) );
-
+        ZeroMemory( &Item, sizeof( LVITEMW ) );
         Item.mask = LVIF_TEXT;
         Item.pszText = Plugin->Info.Name;
         Item.cchTextMax = (int)wcslen( Plugin->Info.Name ) + 1;
         Item.iItem = m_PluginsList.GetItemCount( );
 
-        int PosIdx = m_PluginsList.InsertItem( &Item );
+        int PosIdx = m_PluginsList.InsertItem( (LVITEM*)&Item );
+#ifdef _UNICODE
         m_PluginsList.SetItemText( PosIdx, 1, Plugin->Info.Version );
+#else
+        m_PluginsList.SetItemText( PosIdx, 1, CW2A( Plugin->Info.Version ) );
+#endif
         m_PluginsList.SetItemText( PosIdx, 2, Plugin->State ? _T( "Enabled" ) : _T( "Disabled" ) );
     }
 }

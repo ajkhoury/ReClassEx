@@ -256,7 +256,7 @@ BOOL CReClassExApp::InitInstance( )
         m_pConsole->ShowWindow( SW_HIDE );
 
     m_pSymbolLoader = new (std::nothrow) Symbols;
-    if (m_pSymbolLoader != nullptr)
+    if (m_pSymbolLoader)
     {
         PrintOut( _T( "Symbol resolution enabled" ) );
         g_bSymbolResolution = true;
@@ -265,13 +265,9 @@ BOOL CReClassExApp::InitInstance( )
     {
         PrintOut( _T( "Failed to init symbol loader, disabling globally" ) );
         g_bSymbolResolution = false;
-        g_bSymbolResolution = false;
     }
 
     LoadPlugins( );
-
-    // Get debug privilege
-    //Utils::SetDebugPrivilege(TRUE);
 
     return TRUE;
 }
@@ -761,7 +757,7 @@ CNodeBase* CReClassExApp::CreateNewNode( NodeType Type )
 
 void CReClassExApp::SaveXML( TCHAR* FileName )
 {
-    PrintOut( _T( "SaveXML(\"%s\") called" ), FileName );
+    PrintOutDbg( _T( "SaveXML(\"%s\") called" ), FileName );
 
     tinyxml2::XMLDocument XmlDoc;
 
@@ -827,15 +823,15 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
     settings->SetAttribute( "Text", CW2A( m_strNotes ) );
     root->LinkEndChild( settings );
 #else
-    settings->SetAttribute( "Text", Header );
+    settings->SetAttribute( "Text", m_strHeader );
     root->LinkEndChild( settings );
 
     settings = XmlDoc.NewElement( "Footer" );
-    settings->SetAttribute( "Text", Footer );
+    settings->SetAttribute( "Text", m_strFooter );
     root->LinkEndChild( settings );
 
     settings = XmlDoc.NewElement( "Notes" );
-    settings->SetAttribute( "Text", Notes );
+    settings->SetAttribute( "Text", m_strNotes );
     root->LinkEndChild( settings );
 #endif
 
@@ -849,10 +845,10 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
         CStringA strClassOffset = CW2A( pClass->GetOffsetString( ) );
         CStringA strClassCode = CW2A( pClass->m_Code );
         #else
-        CStringA strClassName = pClass->Name;
-        CStringA strClassComment = pClass->Comment;
-        CStringA strClassOffset = pClass->strOffset;
-        CStringA strClassCode = pClass->Code;
+        CStringA strClassName = pClass->GetName( );
+        CStringA strClassComment = pClass->GetComment( );
+        CStringA strClassOffset = pClass->GetOffsetString( );
+        CStringA strClassCode = pClass->m_Code;
         #endif
 
         XMLElement* classNode = XmlDoc.NewElement( "Class" );
@@ -897,7 +893,7 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
                 CStringA strArrayNodeComment = CW2A( pArray->GetClass( )->GetComment( ) );
                 #else
                 CStringA strArrayNodeName = pArray->GetClass( )->GetName( );
-                CStringA strArrayNodeComment = pArray->pGetClass( )Node->GetComment( );
+                CStringA strArrayNodeComment = pArray->GetClass( )->GetComment( );
                 #endif
 
                 XMLElement *item = XmlDoc.NewElement( "Array" );
@@ -958,8 +954,8 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
                     CStringA strFunctionNodeName = CW2A( pFunctionPtr->GetName( ) );
                     CStringA strFunctionNodeComment = CW2A( pFunctionPtr->GetComment( ) );
                     #else
-                    CStringA strFunctionNodeName = pNodefun->Name;
-                    CStringA strFunctionNodeComment = pNodefun->GetComment( );
+                    CStringA strFunctionNodeName = pFunctionPtr->GetName( );
+                    CStringA strFunctionNodeComment = pFunctionPtr->GetComment( );
                     #endif
 
                     XMLElement *pXmlFunctionElement = XmlDoc.NewElement( "Function" );
@@ -988,13 +984,13 @@ void CReClassExApp::SaveXML( TCHAR* FileName )
     XMLError err = XmlDoc.SaveFile( fp );
     fclose( fp );
 
-    if (err == XML_SUCCESS)
+    if (err != XML_SUCCESS)
     {
-        PrintOut( _T( "ReClass files saved successfully to \"%s\"" ), FileName );
+        PrintOut( _T( "Failed to save file to \"%s\". Error %d" ), FileName, err );   
         return;
     }
 
-    PrintOut( _T( "Failed to save file to \"%s\". Error %d" ), FileName, err );
+    PrintOut( _T( "ReClass files saved successfully to \"%s\"" ), FileName ); 
 }
 
 void CReClassExApp::OnFileSave( )
@@ -1281,11 +1277,8 @@ void CReClassExApp::OnFileOpen( )
 
 void CReClassExApp::OnButtonGenerate( )
 {
-    PrintOut( _T( "OnButtonGenerate() called" ) );
-
     CString strGeneratedText, t;
-
-    strGeneratedText += _T( "// Generated using ReClass 2016\r\n\r\n" );
+    strGeneratedText += _T( "// Generated using ReClassEx\r\n\r\n" );
 
     if (!m_strHeader.IsEmpty( ))
         strGeneratedText += m_strHeader + _T( "\r\n\r\n" );
@@ -1317,7 +1310,7 @@ void CReClassExApp::OnButtonGenerate( )
         int fill = 0;
         int fillStart = 0;
 
-        for (UINT n = 0; n < pClass->NodeCount( ); n++)
+        for (size_t n = 0; n < pClass->NodeCount( ); n++)
         {
             CNodeBase* pNode = (CNodeBase*)pClass->GetNode( n );
             NodeType Type = pNode->GetType( );
@@ -1339,163 +1332,162 @@ void CReClassExApp::OnButtonGenerate( )
                     var.push_back( t );
                 }
                 fill = 0;
-            }
 
-            if (Type == nt_vtable)
-            {
-                CNodeVTable* pVTable = (CNodeVTable*)pNode;
-                for (UINT f = 0; f < pVTable->NodeCount( ); f++)
+                if (Type == nt_vtable)
                 {
-                    CString fn( pVTable->GetNode( f )->GetName( ) );
-                    if (fn.GetLength( ) == 0)
-                        fn.Format( _T( "void Function%i()" ), f );
-                    t.Format( _T( "\tvirtual %s; //%s\r\n" ), fn, pVTable->GetNode( f )->GetComment( ) );
-                    vfun.push_back( t );
+                    CNodeVTable* pVTable = (CNodeVTable*)pNode;
+                    for (size_t f = 0; f < pVTable->NodeCount( ); f++)
+                    {
+                        CString fn( pVTable->GetNode( f )->GetName( ) );
+                        if (fn.GetLength( ) == 0)
+                            fn.Format( _T( "void Function%i()" ), f );
+                        t.Format( _T( "\tvirtual %s; //%s\r\n" ), fn, pVTable->GetNode( f )->GetComment( ) );
+                        vfun.push_back( t );
+                    }
                 }
-            }
-
-            if (Type == nt_int64)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdInt64, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_int32)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdInt32, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_int16)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdInt16, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_int8)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdInt8, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_uint64)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdQWORD, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_uint32)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdDWORD, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_uint16)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdWORD, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_uint8)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdBYTE, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-
-            if (Type == nt_vec2)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdVec2, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_vec3)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdVec3, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_quat)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdQuat, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_matrix)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdMatrix, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-
-            if (Type == nt_pchar)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdPChar, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_pwchar)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdPWChar, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_text)
-            {
-                CNodeText* pText = (CNodeText*)pNode;
-                t.Format( _T( "\tchar %s[%i]; //0x%0.4X %s\r\n" ), pText->GetName( ), pText->GetMemorySize( ), pText->GetComment( ), pText->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_unicode)
-            {
-                CNodeUnicode* pText = (CNodeUnicode*)pNode;
-                t.Format( _T( "\twchar_t %s[%i]; //0x%0.4X %s\r\n" ), pText->GetName( ), pText->GetMemorySize( ) / sizeof( wchar_t ), pText->GetOffset( ), pText->GetComment( ) );
-                var.push_back( t );
-            }
-
-            if (Type == nt_float)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdFloat, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-            if (Type == nt_double)
-            {
-                t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdDouble, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-
-            if (Type == nt_custom)
-            {
-                t.Format( _T( "\t%s; //0x%0.4X %s\r\n" ), pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-
-            if (Type == nt_functionptr)
-            {
-                t.Format( _T( "\t%s; //0x%0.4X %s\r\n" ), pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
-                var.push_back( t );
-            }
-
-            if (Type == nt_pointer)
-            {
-                CNodePtr* pPointer = (CNodePtr*)pNode;
-                t.Format( _T( "\t%s* %s; //0x%0.4X %s\r\n" ), pPointer->GetClass( )->GetName( ), pPointer->GetName( ), pPointer->GetOffset( ), pPointer->GetComment( ) );
-                var.push_back( t );
-            }
-
-            if (Type == nt_instance)
-            {
-                CNodeClassInstance* pClassInstance = (CNodeClassInstance*)pNode;
-                if (pClassInstance->GetOffset( ) == 0)
+                else if (Type == nt_int64)
                 {
-                    t.Format( _T( " : public %s" ), pClassInstance->GetClass( )->GetName( ) ); // Inheritance
-                    ClassName += t;
-                }
-                else
-                {
-                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), pClassInstance->GetClass( )->GetName( ), pClassInstance->GetName( ), pClassInstance->GetOffset( ), pClassInstance->GetComment( ) );
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdInt64, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
                     var.push_back( t );
                 }
-            }
+                else if (Type == nt_int32)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdInt32, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_int16)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdInt16, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_int8)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdInt8, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_uint64)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdQWORD, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_uint32)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdDWORD, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_uint16)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdWORD, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_uint8)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdBYTE, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
 
-            if (Type == nt_array)
-            {
-                CNodeArray* pArray = (CNodeArray*)pNode;
-                t.Format( _T( "\t%s %s[%i]; //0x%0.4X %s\r\n" ), pArray->GetClass( )->GetName( ), pArray->GetName( ), pArray->GetTotal( ), pArray->GetOffset( ), pArray->GetComment( ) );
-                var.push_back( t );
-            }
+                else if (Type == nt_vec2)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdVec2, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_vec3)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdVec3, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_quat)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdQuat, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_matrix)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdMatrix, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
 
-            if ( Type == nt_ptrarray )
-            {
-                CNodePtrArray* pArray = (CNodePtrArray*) pNode;
-                t.Format( _T( "\t%s* %s[%i]; //0x%0.4X %s\r\n" ), pArray->GetClass( )->GetName( ), pArray->GetName( ), pArray->Count( ), pArray->GetOffset( ), pArray->GetComment( ) );
-                var.push_back( t );
+                else if (Type == nt_pchar)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdPChar, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_pwchar)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdPWChar, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_text)
+                {
+                    CNodeText* pText = (CNodeText*)pNode;
+                    t.Format( _T( "\tchar %s[%i]; //0x%0.4X %s\r\n" ), pText->GetName( ), pText->GetMemorySize( ), pText->GetComment( ), pText->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_unicode)
+                {
+                    CNodeUnicode* pText = (CNodeUnicode*)pNode;
+                    t.Format( _T( "\twchar_t %s[%i]; //0x%0.4X %s\r\n" ), pText->GetName( ), pText->GetMemorySize( ) / sizeof( wchar_t ), pText->GetOffset( ), pText->GetComment( ) );
+                    var.push_back( t );
+                }
+
+                else if (Type == nt_float)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdFloat, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+                else if (Type == nt_double)
+                {
+                    t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), g_tdDouble, pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+
+                else if (Type == nt_custom)
+                {
+                    t.Format( _T( "\t%s; //0x%0.4X %s\r\n" ), pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+
+                else if (Type == nt_functionptr)
+                {
+                    t.Format( _T( "\t%s; //0x%0.4X %s\r\n" ), pNode->GetName( ), pNode->GetOffset( ), pNode->GetComment( ) );
+                    var.push_back( t );
+                }
+
+                else if (Type == nt_pointer)
+                {
+                    CNodePtr* pPointer = (CNodePtr*)pNode;
+                    t.Format( _T( "\t%s* %s; //0x%0.4X %s\r\n" ), pPointer->GetClass( )->GetName( ), pPointer->GetName( ), pPointer->GetOffset( ), pPointer->GetComment( ) );
+                    var.push_back( t );
+                }
+
+                else if (Type == nt_instance)
+                {
+                    CNodeClassInstance* pClassInstance = (CNodeClassInstance*)pNode;
+                    if (pClassInstance->GetOffset( ) == 0)
+                    {
+                        t.Format( _T( " : public %s" ), pClassInstance->GetClass( )->GetName( ) ); // Inheritance
+                        ClassName += t;
+                    }
+                    else
+                    {
+                        t.Format( _T( "\t%s %s; //0x%0.4X %s\r\n" ), pClassInstance->GetClass( )->GetName( ), pClassInstance->GetName( ), pClassInstance->GetOffset( ), pClassInstance->GetComment( ) );
+                        var.push_back( t );
+                    }
+                }
+
+                else if (Type == nt_array)
+                {
+                    CNodeArray* pArray = (CNodeArray*)pNode;
+                    t.Format( _T( "\t%s %s[%i]; //0x%0.4X %s\r\n" ), pArray->GetClass( )->GetName( ), pArray->GetName( ), pArray->GetTotal( ), pArray->GetOffset( ), pArray->GetComment( ) );
+                    var.push_back( t );
+                }
+
+                else if (Type == nt_ptrarray)
+                {
+                    CNodePtrArray* pArray = (CNodePtrArray*)pNode;
+                    t.Format( _T( "\t%s* %s[%i]; //0x%0.4X %s\r\n" ), pArray->GetClass( )->GetName( ), pArray->GetName( ), pArray->Count( ), pArray->GetOffset( ), pArray->GetComment( ) );
+                    var.push_back( t );
+                }
             }
         }
 
@@ -1512,13 +1504,13 @@ void CReClassExApp::OnButtonGenerate( )
         t.Format( _T( "%s\r\n{\r\npublic:\r\n" ), ClassName );
         strGeneratedText += t;
 
-        for (UINT i = 0; i < vfun.size( ); i++)
+        for (size_t i = 0; i < vfun.size( ); i++)
             strGeneratedText += vfun[i];
 
         if (vfun.size( ) > 0)
             strGeneratedText += _T( "\r\n" );
 
-        for (UINT i = 0; i < var.size( ); i++)
+        for (size_t i = 0; i < var.size( ); i++)
             strGeneratedText += var[i];
 
         if (var.size( ) > 0)
@@ -1542,24 +1534,24 @@ void CReClassExApp::OnButtonGenerate( )
     if (g_bClipboardCopy)
     {
         int stringSize = 0;
-        HGLOBAL MemoryBlob = NULL;
+        HGLOBAL hMemBlob = NULL;
 
         ::OpenClipboard( NULL );
         ::EmptyClipboard( );
 
         stringSize = strGeneratedText.GetLength( ) * sizeof( CString::StrTraits::XCHAR );
-        MemoryBlob = ::GlobalAlloc( GMEM_FIXED, stringSize );
-        memcpy( MemoryBlob, strGeneratedText.GetBuffer( ), stringSize );
+        hMemBlob = ::GlobalAlloc( GMEM_FIXED, stringSize );
+        memcpy( hMemBlob, strGeneratedText.GetBuffer( ), stringSize );
 
-        #ifdef UNICODE
-        ::SetClipboardData( CF_UNICODETEXT, MemoryBlob );
+        #ifdef _UNICODE
+        ::SetClipboardData( CF_UNICODETEXT, hMemBlob );
         #else
         ::SetClipboardData( CF_TEXT, hMemBlob );
         #endif
 
         ::CloseClipboard( );
         
-        GetMainWnd( )->MessageBox( _T( "Copied generated code to clipboard" ), _T( "ReClass 2016" ), MB_OK | MB_ICONINFORMATION );
+        GetMainWnd( )->MessageBox( _T( "Copied generated code to clipboard" ), _T( "ReClassEx" ), MB_OK | MB_ICONINFORMATION );
     }
     else
     {
@@ -1601,7 +1593,7 @@ void CReClassExApp::OnUpdateOpenPdb( CCmdUI *pCmdUI )
 
 void CReClassExApp::DeleteClass( CNodeClass* pClass )
 {
-    PrintOut( _T( "DeleteClass(\"%s\") called" ), pClass->GetName( ).GetString( ) );
+    PrintOutDbg( _T( "DeleteClass(\"%s\") called" ), pClass->GetName( ).GetString( ) );
 
     if (pClass->m_pChildClassFrame != NULL)
     {
@@ -1609,11 +1601,10 @@ void CReClassExApp::DeleteClass( CNodeClass* pClass )
         pClass->m_pChildClassFrame = NULL;
     }
 
-    CNodeBase* pNode = IsNodeRef( pClass );
-    
+    CNodeBase* pNode = IsNodeRef( pClass ); 
     if (pNode)
     {
-        PrintOut( _T( "Class still has a reference in %s.%s" ), pNode->GetParent( )->GetName( ).GetString( ), pNode->GetName( ).GetString( ) );
+        //PrintOutDbg( _T( "Class still has a reference in %s.%s" ), pNode->GetParent( )->GetName( ).GetString( ), pNode->GetName( ).GetString( ) );
         CString msg;
         msg.Format( _T( "Class still has a reference in %s.%s" ), pNode->GetParent( )->GetName( ).GetString( ), pNode->GetName( ).GetString( ) );
         GetMainWnd( )->MessageBox( msg );
@@ -1708,7 +1699,7 @@ void CReClassExApp::OnButtonClean( )
         }
     }
     
-    PrintOut( _T( "Unused Classes removed: %i" ), count );
+    //PrintOutDbg( _T( "Unused Classes removed: %i" ), count );
     CString msg; msg.Format( _T( "Unused Classes removed: %i" ), count );
     MessageBox( GetMainWnd( )->GetSafeHwnd( ), msg.GetString( ), _T( "Cleaner" ), MB_OK );
 }

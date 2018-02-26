@@ -18,7 +18,7 @@ CNodeClass::CNodeClass( )
 
     m_RequestPosition = -1;
     m_Idx = 0;
-    m_pChildClassFrame = nullptr;
+    m_pChildClassFrame = NULL;
 }
 
 void CNodeClass::Update( const PHOTSPOT Spot )
@@ -47,6 +47,7 @@ NODESIZE CNodeClass::Draw( const PVIEWINFO View, int x, int y )
 {
     NODESIZE DrawSize;
     NODESIZE ChildDrawSize;
+    int tx;
 
     DrawSize.x = 0;
     DrawSize.y = 0;
@@ -55,7 +56,7 @@ NODESIZE CNodeClass::Draw( const PVIEWINFO View, int x, int y )
     x = AddOpenClose( View, x, y );
 
     // Save tx here
-    int tx = x;
+    tx = x;
 
     x = AddIcon( View, x, y, ICON_CLASS, -1, -1 );
     x = AddText( View, x, y, g_crOffset, 0, _T( "%s" ), m_strOffset ) + g_FontWidth;
@@ -87,21 +88,21 @@ NODESIZE CNodeClass::Draw( const PVIEWINFO View, int x, int y )
             CNodeBase* pNode = m_ChildNodes[i];
             if (!pNode)
             {
-                PrintOut( _T( "Node %d is NULL in class %s!" ), i, m_strName.GetString( ) );
+                PrintOutDbg( _T( "Node %d is NULL in class %s!" ), i, m_strName.GetString( ) );
                 continue;
             }          
                       
             if (pNode->GetType( ) == nt_vtable)
             {
                 CNodeVTable* VTableNode = static_cast<CNodeVTable*>(pNode);
-                if (!VTableNode->IsInitialized( ) && m_pChildClassFrame != nullptr)
+                if (!VTableNode->IsInitialized( ) && m_pChildClassFrame != NULL)
                     VTableNode->Initialize( static_cast<CWnd*>(m_pChildClassFrame->GetChildView( )) );
             }
             
             if (pNode->GetType( ) == nt_function)
             {
                 CNodeFunction* FunctionNode = static_cast<CNodeFunction*>(pNode);
-                if (!FunctionNode->IsInitialized( ) && m_pChildClassFrame != nullptr)
+                if (!FunctionNode->IsInitialized( ) && m_pChildClassFrame != NULL)
                     FunctionNode->Initialize( m_pChildClassFrame->GetChildView( ), m_Offset + FunctionNode->GetOffset( ) );
             }
             

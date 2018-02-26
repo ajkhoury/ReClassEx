@@ -64,7 +64,7 @@ NODESIZE CNodeVTable::Draw( const PVIEWINFO View, int x, int y )
 
         ReClassReadMemory( (LPVOID)NewView.Address, NewView.Data, NeededSize );
 
-        for (UINT i = 0; i < m_ChildNodes.size( ); i++)
+        for (size_t i = 0; i < m_ChildNodes.size( ); i++)
         {
             CNodeFunctionPtr* FunctionPtrNode = static_cast<CNodeFunctionPtr*>(m_ChildNodes[i]);
             
@@ -86,8 +86,10 @@ NODESIZE CNodeVTable::Draw( const PVIEWINFO View, int x, int y )
     }
     else
     {
-        for (UINT i = 0; i < m_ChildNodes.size( ); i++)
+        for (size_t i = 0; i < m_ChildNodes.size( ); i++)
+        {
             static_cast<CNodeFunctionPtr*>(m_ChildNodes[i])->HideAssemblyWindow( );
+        }        
     }
 
     return DrawSize;

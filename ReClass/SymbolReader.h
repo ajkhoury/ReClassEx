@@ -192,13 +192,13 @@ private:
     void ReadSymbol( IDiaSymbol *pSymbol, CString& outString );
 
 private:
-    BOOLEAN			m_bInitialized;
+    BOOLEAN         m_bInitialized;
 
     IDiaDataSource* m_pSource;
-    IDiaSession*	m_pSession;
+    IDiaSession*    m_pSession;
 
-    CString			m_strFileName;
-    CString			m_strFilePath;
-    ULONG_PTR		m_ModuleBase;
-    ULONG			m_ModuleSize;
+    CStringW        m_strFileName;
+    CStringW        m_strFilePath;
+    ULONG_PTR       m_ModuleBase;
+    ULONG           m_ModuleSize;
 };
