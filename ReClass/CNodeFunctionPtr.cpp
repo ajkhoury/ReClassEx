@@ -198,6 +198,9 @@ void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
     m_Assembly.clear( );
     m_nLongestLine = 0;
 
+    // Number of assembly lines
+    m_nLines = 0;
+
     // Read in process bytes
     if (ReClassReadMemory( (LPVOID)VirtualAddress, (LPVOID)&VirtualAddress, sizeof( UIntPtr ) ) && 
         ReClassReadMemory( (LPVOID)VirtualAddress, (LPVOID)Code, 2048 ))
@@ -248,6 +251,7 @@ void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
                 // Create full instruction string
                 sprintf_s( szInstruction, 256, "%IX %-*s %s\r\n", (ULONG_PTR)MyDisasm.VirtualAddr, 20 /* change this l8r */, szBytes, MyDisasm.CompleteInstr );
                 m_Assembly.push_back( szInstruction );
+                m_nLines++;
 
                 // Increment instruction length
                 MyDisasm.EIP = MyDisasm.EIP + disasmLen;
@@ -259,15 +263,14 @@ void CNodeFunctionPtr::DisassembleBytes( ULONG_PTR Address )
         }
 
         // Get rid of new line on last assembly instruction
-        m_Assembly.back( ).Replace( "\r\n", "\0" );
+        if (m_nLines > 0)
+            m_Assembly.back( ).Replace( "\r\n", "\0" );
     }
     else
     {
         m_Assembly.emplace_back( "ERROR: Could not read memory" );
+        m_nLines++;
     }
-
-    // Get number of assembly lines
-    m_nLines = (ULONG)m_Assembly.size( );
 
     // Clear any left over text
     m_pAssemblyWindow->Clear( );
