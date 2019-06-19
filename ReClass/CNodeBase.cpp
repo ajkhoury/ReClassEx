@@ -529,7 +529,7 @@ int CNodeBase::AddComment( const PVIEWINFO View, int x, int y )
             else
                 x = AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%i|0x%X)" ), intVal, intVal );
             #else
-            x = (intVal == 0) ? AddText( View, x, y, g_crValue, HS_NONE, _T( "(%i)" ), intVal ) : AddText( View, x, y, g_crValue, HS_NONE, _T( "(%i|0x%X)" ), intVal, intVal );
+            x = (intVal == 0) ? AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%i)" ), intVal ) : AddText( View, x, y, g_clrValue, HS_NONE, _T( "(%i|0x%X)" ), intVal, intVal );
             #endif
         }
 
