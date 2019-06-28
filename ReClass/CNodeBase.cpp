@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "CNodeBase.h"
+#include <regex>
 
 CNodeBase::CNodeBase( ) :
     m_nodeType( nt_base ),
@@ -210,6 +211,11 @@ void CNodeBase::AddTypeDrop( const PVIEWINFO View, int x, int y )
         AddIcon( View, 0, y, ICON_DROPARROW, 0, HS_DROP );
 }
 
+static CString remangle(const CString& name) {
+	CString manglemore = "??_7" + name.Mid(3) + "6B@";
+    return manglemore;
+}
+
 int CNodeBase::ResolveRTTI( ULONG_PTR Address, int x, const PVIEWINFO View, int y )
 {
 #if defined(_M_AMD64)
@@ -229,9 +235,12 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Address, int x, const PVIEWINFO View, int 
     CString RttiString;
 
     // Get module base that this address falls in
-    ModuleBase = GetModuleBaseFromAddress( Address );
-    if (!ModuleBase)
-        return x;
+    int indirections = -1;
+    while (++indirections < 8 && !((ModuleBase = GetModuleBaseFromAddress(Address)))) {
+        uintptr_t nextAddress = 0;
+        ReClassReadMemory((LPVOID)Address, &nextAddress, sizeof(ULONG_PTR));
+        Address = nextAddress;
+    }
 
     RTTIObjectLocatorPtr = Address - sizeof( ULONG64 ); // Address is Ptr to first VFunc, pRTTI is at -0x8
     if (!IsValidPtr( RTTIObjectLocatorPtr ))
@@ -255,6 +264,11 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Address, int x, const PVIEWINFO View, int 
     if (!IsValidPtr( BaseClassArray ) || !BaseClassArrayOffset)
         return x;
 
+    if (!indirections)
+        RttiString += "vtable for ";
+	else for (int i=0; i<indirections; ++i)
+        RttiString += "pointer to ";
+
     for (ULONG i = 0; i < NumBaseClasses; i++)
     {
         ULONG BaseClassDescriptorOffset = 0;
@@ -263,10 +277,11 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Address, int x, const PVIEWINFO View, int 
         ULONG TypeDescriptorOffset = 0;
         ULONG_PTR TypeDescriptor = 0;
 
-        if (i != 0 && i != NumBaseClasses)
-        {
-            RttiString += TEXT( " : " ); // Base class
-        }
+        if (i == 1)
+            RttiString += TEXT( ": " ); // Base class
+        else if (i > 1)
+            RttiString += TEXT( ", " ); // Parent classes
+
 
         ReClassReadMemory( (LPVOID)(BaseClassArray + (sizeof( ULONG ) * i)), &BaseClassDescriptorOffset, sizeof( ULONG ) );
 
@@ -282,36 +297,37 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Address, int x, const PVIEWINFO View, int 
 
         CString RTTIName;
         BOOLEAN FoundEnd = FALSE;
-        CHAR LastChar = ' ';
-        for (int j = 1; j < 45; j++)
+        //CHAR LastChar = ' ';
+        for (int j = 1; j < 512; j++)
         {
             CHAR RTTINameChar;
             ReClassReadMemory( (LPVOID)(TypeDescriptor + 0x10 + j), &RTTINameChar, 1 );
-            if (RTTINameChar == '@' && LastChar == '@') // Names are ended with @@
-            {
-                FoundEnd = TRUE;
-                RTTIName += RTTINameChar;
+
+            if (!RTTINameChar) {
+                if (RTTIName.Right(2) == "@@") FoundEnd = TRUE;
                 break;
             }
+
             RTTIName += RTTINameChar;
-            LastChar = RTTINameChar;
         }
 
         // Did we find a valid RTTI name or did we just reach end of loop
         if (FoundEnd == TRUE)
         {
             TCHAR Demangled[MAX_PATH] = { 0 };
-            if (_UnDecorateSymbolName( RTTIName, Demangled, MAX_PATH, UNDNAME_NAME_ONLY ) == 0)
+            if (_UnDecorateSymbolName(remangle(RTTIName), Demangled, MAX_PATH, UNDNAME_NAME_ONLY) != 0)
             {
-                RttiString += RTTIName;
+                CString PostProcessing(Demangled);
+                PostProcessing.Replace(L"::`vftable'", L"");
+                RttiString += PostProcessing;
             }
             else
             {
-                RttiString += Demangled;
+                RttiString += RTTIName;
             }
         }
     }
-#else	
+#else   
     ULONG_PTR RTTIObjectLocatorPtr = 0;
     ULONG_PTR RTTIObjectLocator = 0;
 
