@@ -63,10 +63,10 @@ END_MESSAGE_MAP( )
 
 void CDialogModules::BuildList( )
 {
-    for (UINT idx = 0; idx < g_MemMapModules.size( ); idx++)
+    int idx = 0;
+    for (auto mi : g_MemMapModules)
     {
-        MemMapInfo moduleInfo = g_MemMapModules[idx];
-
+        MemMapInfo& moduleInfo = mi.second;
         SHFILEINFO sfi = { 0 };
         SHGetFileInfo( moduleInfo.Path, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof( SHFILEINFO ), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES );
         m_ModuleIcons.Add( sfi.hIcon );
@@ -91,6 +91,7 @@ void CDialogModules::BuildList( )
             const_cast<LPCTSTR>(strSize),
             static_cast<LPARAM>(moduleInfo.Start)
         );
+        idx += 1;
     }
 }
 
@@ -127,11 +128,11 @@ BOOL CDialogModules::OnInitDialog( )
 
 inline int CDialogModules::FindModuleByName( const TCHAR* szName )
 {
-    for (UINT id = 0; id < g_MemMapModules.size( ); id++)
+    for (auto mi : g_MemMapModules)
     {
-        MemMapInfo moduleInfo = g_MemMapModules[id];
+        MemMapInfo& moduleInfo = mi.second;
         if (_tcsicmp( moduleInfo.Name, szName ) == 0)
-            return id;
+            return mi.first;
     }
     return -1;
 }
@@ -151,7 +152,7 @@ void CDialogModules::SetSelected( )
         int nItem = m_ModuleList.GetNextSelectedItem( pos );
         nItem = FindModuleByName( m_ModuleList.GetItemText( nItem, 0 ) );
 
-        MemMapInfo mod = g_MemMapModules[nItem];
+        MemMapInfo& mod = g_MemMapModules[nItem];
 
         if (g_bSymbolResolution && m_SymbolLoad.GetCheck( ) == BST_CHECKED)
             g_ReClassApp.m_pSymbolLoader->LoadSymbolsForModule( mod.Path, mod.Start, mod.Size );

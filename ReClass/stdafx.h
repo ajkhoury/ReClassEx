@@ -33,6 +33,10 @@
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 #include <ShellScalingApi.h>
 
+//
+// C++ Std Lib
+//
+#include <map>
 #include <vector>
 
 //
@@ -95,10 +99,10 @@ extern ULONG_PTR g_AttachedProcessAddress;
 extern DWORD  g_AttachedProcessSize;
 extern CString g_ProcessName;
 
-extern std::vector<struct MemMapInfo> g_MemMap;
+extern std::map<ULONG_PTR, struct MemMapInfo> g_MemMap;
 extern std::vector<struct MemMapInfo> g_MemMapCode;
 extern std::vector<struct MemMapInfo> g_MemMapData;
-extern std::vector<struct MemMapInfo> g_MemMapModules;
+extern std::map<ULONG_PTR, MemMapInfo> g_MemMapModules;
 extern std::vector<struct AddressName> g_Exports;
 extern std::vector<struct AddressName> g_CustomNames;
 
@@ -215,6 +219,7 @@ extern RCTYPEDEFS g_Typedefs;
 // Global functions
 //
 BOOLEAN PauseResumeThreadList( BOOL bResumeThread );
+void UpdateMemoryMapIncremental();
 BOOLEAN UpdateMemoryMap( );
 BOOLEAN UpdateExports( );
 
@@ -225,6 +230,7 @@ BOOLEAN IsData( ULONG_PTR Address );
 BOOLEAN IsMemory( ULONG_PTR Address );
 BOOLEAN IsModule( ULONG_PTR Address );
 
+const MemMapInfo* GetModule(ULONG_PTR Address);
 ULONG_PTR GetModuleBaseFromAddress( ULONG_PTR Address );
 
 CString GetAddressName( ULONG_PTR Address, BOOLEAN bJustAddress );

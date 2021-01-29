@@ -290,10 +290,11 @@ void CDialogProcSelect::OnAttachButton( )
                     ProgressBar.SetStep( 1 );
                     ProgressBar.SetText( _T( "Symbols loading: " ) );
 
-                    for (size_t i = 0; i < g_MemMapModules.size( ); i++)
+                    int i = 0;
+                    for (auto mi : g_MemMapModules)
                     {
                         TCHAR ProgressText[256];
-                        MemMapInfo *CurrentModule = &g_MemMapModules[i];
+                        MemMapInfo* CurrentModule = &mi.second;
 
                         ProgressBar.SetRange32( 0, (int)g_MemMapModules.size( ) );
 
@@ -316,6 +317,7 @@ void CDialogProcSelect::OnAttachButton( )
                             if (!AfxGetApp( )->PumpMessage( ))
                                 ::PostQuitMessage( 0 );
                         }
+                        i += 1;
                     }
 
                     StatusBar->SetPaneText( 1, _T( "" ) );

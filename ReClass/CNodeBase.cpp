@@ -422,7 +422,7 @@ int CNodeBase::ResolveRTTI( ULONG_PTR Address, int x, const PVIEWINFO View, int 
 #endif
 
     x = AddText( View, x, y, g_clrOffset, HS_RTTI, _T( "%s" ), RttiString.GetString( ) );
-
+    
     return x;
 }
 
