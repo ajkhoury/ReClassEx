@@ -714,7 +714,7 @@ void CClassView::OnRButtonDown( UINT nFlags, CPoint point )
 }
 
 void CClassView::OnPaint( )
-{
+{    
     CPaintDC PaintDC( this ); // draw context for painting
     CMemDC MemDC( PaintDC, this );
     CDC *Dc = &MemDC.GetDC( );

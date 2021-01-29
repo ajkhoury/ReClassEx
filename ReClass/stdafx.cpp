@@ -10,12 +10,35 @@ ULONG_PTR g_AttachedProcessAddress = NULL;
 DWORD g_AttachedProcessSize = NULL;
 CString g_ProcessName;
 
-std::vector<MemMapInfo> g_MemMap;
-std::vector<MemMapInfo> g_MemMapCode;
-std::vector<MemMapInfo> g_MemMapData;
-std::vector<MemMapInfo> g_MemMapModules;
-std::vector<AddressName> g_Exports;
-std::vector<AddressName> g_CustomNames;
+/*
+    Memory and module map info
+        
+    ReClass makes it easy to tell at a glance whether a value could be a pointer.
+    When a node is drawn and it hasn't been assigned a type, it will show an extra
+    tag at the end ( e.g. '-> 0x0BADF00D') in red if the data can be interpreted 
+    as a pointer to a mapped portion of memory.  
+
+    To know whether a value is a valid address in the target process' memory space,
+    we maintain a copy of the meta data of the target process' memory map.  This is
+    represented by a map keyed on the last byte of each memory region, with the value
+    at each key being a MemMapInfo class containing the start, end, and size of the 
+    memory region.  The regions are keyed by last byte so that map->lower_bound(addr)
+    will return an iterator to the region thst starts *BEFORE* addr, and then the
+    addr need only be checked to come before the regions last byte to confirm that the
+    addr is within the region.
+
+    We use a map because we have to find what region things are in a *LOT*, and we 
+    typically have a *LOT* of regions.  In my testing, I ended up with ~280,000 regions
+    in our MemMap.  If we had to iterate through that list to find the region containing
+    an address every time we drew a default node, ReClass's performance would slow to a
+    crawl.
+*/
+std::map<ULONG_PTR, MemMapInfo>     g_MemMap;
+std::vector<MemMapInfo>             g_MemMapCode;
+std::vector<MemMapInfo>             g_MemMapData;
+std::map<ULONG_PTR, MemMapInfo>     g_MemMapModules;
+std::vector<AddressName>            g_Exports;
+std::vector<AddressName>            g_CustomNames;
 
 std::vector<HICON> g_Icons;
 
@@ -261,7 +284,7 @@ ULONG_PTR GetBaseAddress( )
 }
 
 BOOLEAN IsCode( ULONG_PTR Address )
-{
+{    
     for (size_t i = 0; i < g_MemMapCode.size( ); i++)
     {
         if ((Address >= g_MemMapCode[i].Start) && (Address <= g_MemMapCode[i].End))
@@ -282,31 +305,37 @@ BOOLEAN IsData( ULONG_PTR Address )
 
 BOOLEAN IsMemory( ULONG_PTR Address )
 {
-    for (size_t i = 0; i < g_MemMap.size( ); i++)
-    {
-        if ((Address >= g_MemMap[i].Start) && (Address <= g_MemMap[i].End))
-            return true;
+    auto containingBlock = g_MemMap.lower_bound(Address);
+    if (containingBlock != g_MemMap.end()
+        && containingBlock->second.Start <= Address) {
+        return true;
     }
     return false;
 }
 
 BOOLEAN IsModule( ULONG_PTR Address )
 {
-    for (size_t i = 0; i < g_MemMapModules.size( ); i++)
-    {
-        if (Address >= g_MemMapModules[i].Start && Address <= g_MemMapModules[i].End)
-            return true;
-    }
-    return false;
+    return GetModule(Address) != nullptr;
+}
+
+const MemMapInfo* GetModule(ULONG_PTR Address)
+{
+    auto containingModule = g_MemMapModules.lower_bound(Address);
+    if (containingModule != g_MemMapModules.end()
+        && containingModule->second.Start <= Address) {
+        return &containingModule->second;
+    }    
+    return nullptr;
 }
 
 ULONG_PTR GetModuleBaseFromAddress( ULONG_PTR Address )
 {
-    for (size_t i = 0; i < g_MemMapModules.size( ); i++)
-    {
-        if ((Address >= g_MemMapModules[i].Start) && (Address <= g_MemMapModules[i].End))
-            return g_MemMapModules[i].Start;
+    auto containingModule = g_MemMapModules.lower_bound(Address);
+    if (containingModule != g_MemMapModules.end()
+        && containingModule->second.Start <= Address) {
+        return containingModule->second.Start;
     }
+    
     return 0;
 }
 
@@ -367,30 +396,24 @@ CString GetAddressName( ULONG_PTR Address, BOOLEAN bJustAddress )
         }
     }
 
-    for (i = 0; i < g_MemMapModules.size( ); i++)
-    {
-        if ((Address >= g_MemMapModules[i].Start) && (Address <= g_MemMapModules[i].End))
-        {
-            #ifdef _WIN64
-            txt.Format( _T( "%s.%IX" ), g_MemMapModules[i].Name, Address );
-            #else
-            txt.Format( _T( "%s.%X" ), g_MemMapModules[i].Name, Address );
-            #endif
-            return txt;
-        }
+    const MemMapInfo *module = GetModule(Address);
+    if (module != nullptr) {
+        #ifdef _WIN64
+        txt.Format( _T( "%s.%IX" ), module->Name, Address );
+        #else
+        txt.Format( _T( "%s.%X" ), module->Name, Address );
+        #endif
+        return txt;
+        
     }
-
-    for (i = 0; i < g_MemMap.size( ); i++)
-    {
-        if ((Address >= g_MemMap[i].Start) && (Address <= g_MemMap[i].End))
-        {
-            #ifdef _WIN64
-            txt.Format( _T( "%IX" ), Address );
-            #else
-            txt.Format( _T( "%X" ), Address );
-            #endif
-            return txt;
-        }
+    
+    if (IsMemory(Address)) {
+        #ifdef _WIN64
+        txt.Format(_T("%IX"), Address);
+        #else
+        txt.Format(_T("%X"), Address);
+        #endif
+        return txt;        
     }
 
     if (bJustAddress)
@@ -407,22 +430,20 @@ CString GetAddressName( ULONG_PTR Address, BOOLEAN bJustAddress )
 
 CString GetModuleName( ULONG_PTR Address )
 {
-    for (size_t i = 0; i < g_MemMapModules.size( ); i++)
-    {
-        if ((Address >= g_MemMapModules[i].Start) && (Address <= g_MemMapModules[i].End))
-            return g_MemMapModules[i].Name;
-    }
+    const MemMapInfo* module = GetModule(Address);    
+    if (module != nullptr)
+        return module->Name;    
     return CString( "<unknown>" );
 }
 
 ULONG_PTR GetAddressFromName( CString moduleName )
 {
     ULONG_PTR moduleAddress = 0;
-    for (size_t i = 0; i < g_MemMapModules.size( ); i++)
+    for (auto mi : g_MemMapModules)
     {
-        if (g_MemMapModules[i].Name == moduleName)
+        if (mi.second.Name == moduleName)
         {
-            moduleAddress = g_MemMapModules[i].Start;
+            moduleAddress = mi.second.Start;
             break;
         }
     }
@@ -440,9 +461,62 @@ BOOLEAN IsProcessHandleValid( HANDLE hProc )
     return (RetVal == WAIT_TIMEOUT) ? TRUE : FALSE;
 }
 
+void UpdateMemoryMapIncremental() {
+    static std::map<ULONG_PTR, struct MemMapInfo> memMap;
+    static bool structsInitialized = false;
+    static bool mapInitialized = false;
+    static SYSTEM_INFO SysInfo;
+    static ULONGLONG lastExitTime = 0;
+    MEMORY_BASIC_INFORMATION MemInfo;
+    static ULONG_PTR pMemory;
+    if (!structsInitialized) {
+        structsInitialized = true;
+        GetSystemInfo(&SysInfo);
+        pMemory = (ULONG_PTR)SysInfo.lpMinimumApplicationAddress;
+    }
+
+    ULONGLONG entryTime = GetTickCount64();
+
+    // Don't fire unless there's been at least 20ms since our last iteration
+    if (lastExitTime - entryTime < 50)
+        return;
+
+    while ((GetTickCount64() - entryTime < 10 || !mapInitialized))
+    {
+        SIZE_T vqBytes = VirtualQueryEx(g_hProcess, (LPCVOID)pMemory, &MemInfo, sizeof(MEMORY_BASIC_INFORMATION));
+        if (vqBytes > 0)
+        {
+            if (MemInfo.State == MEM_COMMIT /*&& MemInfo.Type == MEM_PRIVATE*/)
+            {
+                MemMapInfo Mem;
+                Mem.Start = (ULONG_PTR)pMemory;
+                Mem.End = (ULONG_PTR)pMemory + MemInfo.RegionSize - 1;
+                const MemMapInfo* containingModule = GetModule(Mem.Start);
+                if (containingModule != nullptr)
+                    Mem.Name = containingModule->Name;
+                memMap[Mem.End] = Mem;
+            }
+            pMemory = (ULONG_PTR)MemInfo.BaseAddress + MemInfo.RegionSize;
+        }
+        else
+        {
+            // We've exhausted the memory space of the target process.  Assign our temp
+            // map to the global.  
+            g_MemMap = std::move(memMap);
+            memMap.clear();
+            pMemory = (ULONG_PTR)SysInfo.lpMinimumApplicationAddress;
+            
+            break;
+        }
+    }
+    
+    if (g_MemMap.size() > 0)
+        mapInitialized = true;
+    lastExitTime = GetTickCount64();
+}
+
 BOOLEAN UpdateMemoryMap( void )
-{
-    g_MemMap.clear( );
+{    
     g_MemMapCode.clear( );
     g_MemMapData.clear( );
     g_MemMapModules.clear( );
@@ -458,29 +532,7 @@ BOOLEAN UpdateMemoryMap( void )
         return FALSE;
     }
 
-    SYSTEM_INFO SysInfo;
-    GetSystemInfo( &SysInfo );
-
-    MEMORY_BASIC_INFORMATION MemInfo;
-    ULONG_PTR pMemory = (ULONG_PTR)SysInfo.lpMinimumApplicationAddress;
-    while (pMemory < (ULONG_PTR)SysInfo.lpMaximumApplicationAddress)
-    {
-        if (VirtualQueryEx( g_hProcess, (LPCVOID)pMemory, &MemInfo, sizeof( MEMORY_BASIC_INFORMATION ) ) != FALSE)
-        {
-            if (MemInfo.State == MEM_COMMIT /*&& MemInfo.Type == MEM_PRIVATE*/)
-            {
-                MemMapInfo Mem;
-                Mem.Start = (ULONG_PTR)pMemory;
-                Mem.End = (ULONG_PTR)pMemory + MemInfo.RegionSize - 1;
-                g_MemMap.push_back( Mem );
-            }
-            pMemory = (ULONG_PTR)MemInfo.BaseAddress + MemInfo.RegionSize;
-        }
-        else
-        {
-            pMemory += 1024;
-        }
-    }
+    UpdateMemoryMapIncremental();
 
     PPROCESS_BASIC_INFORMATION ProcessInfo = NULL;
     PEB Peb;
@@ -615,7 +667,7 @@ BOOLEAN UpdateMemoryMap( void )
                 Mem.Name = CW2A( wcsModuleName );
                 Mem.Path = CW2A( wcsModulePath );
                 #endif
-                g_MemMapModules.push_back( Mem );
+                g_MemMapModules[Mem.End] = Mem ;
 
                 // module code
                 IMAGE_DOS_HEADER DosHdr;
@@ -662,12 +714,6 @@ BOOLEAN UpdateMemoryMap( void )
 
     if (ProcessInfo)
         free( ProcessInfo );
-
-    for (UINT i = 0; i < g_MemMap.size( ); i++)
-    {
-        if (IsModule( g_MemMap[i].Start ))
-            g_MemMap[i].Name = GetModuleName( g_MemMap[i].Start );
-    }
 
     return true;
 }
@@ -910,13 +956,13 @@ ULONG_PTR ConvertStrToAddress( CString str )
 
         if (bMod)
         {
-            for (UINT i = 0; i < g_MemMapModules.size( ); i++)
+            for (auto mi : g_MemMapModules)
             {
-                CString ModName = g_MemMapModules[i].Name;
+                CString ModName = mi.second.Name;
                 ModName.MakeLower( );
                 if ( ModName.CompareNoCase( a ) == 0 )
                 {
-                    curadd = g_MemMapModules[ i ].Start;
+                    curadd = mi.second.Start;
                     bMod = true;
                     break;
                 }

@@ -191,10 +191,8 @@ int CMainFrame::OnCreate( LPCREATESTRUCT lpCreateStruct )
     Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_CUSTOM ));      Color->SetColor( g_clrCustom );
     Color = static_cast<CMFCRibbonColorButton*>(m_RibbonBar.FindByID( ID_BUTTON_CLR_HEX ));         Color->SetColor( g_clrHex );
 
-    //
-    // Update memory map every 5 seconds
-    //
-    SetTimer( TIMER_MEMORYMAP_UPDATE, 5000, NULL );
+    
+    SetTimer( TIMER_MEMORYMAP_UPDATE, 30, NULL );
 
     return 0;
 }
