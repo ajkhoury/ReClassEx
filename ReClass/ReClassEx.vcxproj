@@ -332,6 +332,7 @@
   <ItemGroup>
     <ClInclude Include="CCustomEdit.h" />
     <ClInclude Include="CCustomToolTip.h" />
+    <ClInclude Include="ClassDependencyGraph.h" />
     <ClInclude Include="CNodeArray.h" />
     <ClInclude Include="CNodeBase.h" />
     <ClInclude Include="CNodeBits.h" />
@@ -413,6 +414,7 @@
     <ClCompile Include="CCustomToolTip.cpp" />
     <ClCompile Include="CClassFrame.cpp" />
     <ClCompile Include="CClassView.cpp" />
+    <ClCompile Include="ClassDependencyGraph.cpp" />
     <ClCompile Include="CNodeArray.cpp" />
     <ClCompile Include="CNodeBase.cpp" />
     <ClCompile Include="CNodeBits.cpp" />

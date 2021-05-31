@@ -10,6 +10,8 @@
 #include "DialogConsole.h"
 // Symbols
 #include "Symbols.h"
+// Class dependency graph
+#include "ClassDependencyGraph.h"
 
 class CReClassExApp : public CWinAppEx {
 public:
