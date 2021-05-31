@@ -1284,10 +1284,59 @@ void CReClassExApp::OnButtonGenerate( )
 
     if (!m_strHeader.IsEmpty( ))
         strGeneratedText += m_strHeader + _T( "\r\n\r\n" );
+    std::set<const CNodeClass*>  forwardDeclarations; 
+    std::vector<const CNodeClass*>  orderedClassDefinitions;
+    ClassDependencyGraph            depGraph;
+    // Add each class as a node to the graph before adding dependency edges
+    for (auto cNode : this->m_Classes) {
+        depGraph.AddNode(cNode);
+    }
+    for (auto cNode : this->m_Classes) {
+        for (size_t n = 0; n < cNode->NodeCount(); n++)
+        {
+            CNodeBase* pNode = (CNodeBase*)cNode->GetNode(n);
+            NodeType Type = pNode->GetType();
+            switch (Type) {
+            case(nt_pointer):
+            {
+                CNodePtr* pPointer = (CNodePtr*)pNode;
+                CNodeClass* pointerClass = pPointer->GetClass();
+                depGraph.AddEdge(cNode, pointerClass, DependencyType::POINTER);
+                break;
+            }
+            case(nt_instance):
+            {
+                CNodeClassInstance* pClassInstance = (CNodeClassInstance*)pNode;
+                CNodeClass* instanceClass = pClassInstance->GetClass();
+                depGraph.AddEdge(cNode, instanceClass, DependencyType::INSTANCE);
+                break;
+            }
 
-    for (size_t i = 0; i < m_Classes.size( ); i++)
+            case(nt_array):
+            {
+                CNodeArray* pArray = (CNodeArray*)pNode;
+                CNodeClass* instanceClass = pArray->GetClass();
+                depGraph.AddEdge(cNode, instanceClass, DependencyType::INSTANCE);
+                break;
+            }
+
+            case(nt_ptrarray):
+            {
+                CNodePtrArray* pArray = (CNodePtrArray*)pNode;
+                CNodeClass* pointerClass = pArray->GetClass();
+                depGraph.AddEdge(cNode, pointerClass, DependencyType::POINTER);
+                break;
+            }
+            }
+        }
+    }
+
+    depGraph.OrderClassesForGeneration(forwardDeclarations, orderedClassDefinitions);
+    ASSERT(orderedClassDefinitions.size() == m_Classes.size());
+    for (auto forwardDeclared : forwardDeclarations)
     {
-        t.Format( _T( "class %s;\r\n" ), m_Classes[i]->GetName( ) );
+        CNodeClass* pClass = (CNodeClass*)forwardDeclared;
+        t.Format( _T( "class %s;\r\n" ), pClass->GetName( ) );
         strGeneratedText += t;
     }
 
@@ -1298,9 +1347,9 @@ void CReClassExApp::OnButtonGenerate( )
 
     CString ClassName;
 
-    for (UINT c = 0; c < m_Classes.size( ); c++)
+    for (auto constantClass : orderedClassDefinitions)
     {
-        CNodeClass* pClass = m_Classes[c];
+        CNodeClass* pClass = (CNodeClass*)constantClass;
 
         CalcOffsets( pClass );
 
